@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>用 YouTube 影片做教材：完整安裝與使用教學</title>
+<style>
+  :root {
+    --bg: #f3f5f7;
+    --surface: #ffffff;
+    --surface-2: #eef1f4;
+    --border: #dde2e8;
+    --text: #1b2129;
+    --text-dim: #5b6572;
+    --accent: #d9581f;
+    --accent-ink: #ffffff;
+    --accent-soft: rgba(217, 88, 31, 0.1);
+    --accent2: #0d9488;
+    --accent2-soft: rgba(13, 148, 136, 0.1);
+    --warn: #92650a;
+    --warn-bg: #fbf1da;
+    --warn-border: #eddab3;
+    --danger: #b3261e;
+    --danger-bg: #fbeceb;
+    --danger-border: #f2cdc9;
+    --code-bg: #1b2129;
+    --code-text: #e9ecf1;
+    --shadow: 0 1px 2px rgba(20, 24, 30, 0.04), 0 8px 24px rgba(20, 24, 30, 0.06);
+    --radius: 14px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14181f;
+      --surface: #1c222b;
+      --surface-2: #232a34;
+      --border: #2d3540;
+      --text: #e9ecf1;
+      --text-dim: #98a2b0;
+      --accent: #ff7a45;
+      --accent-ink: #1b1006;
+      --accent-soft: rgba(255, 122, 69, 0.14);
+      --accent2: #4fd1c5;
+      --accent2-soft: rgba(79, 209, 197, 0.14);
+      --warn: #f2c76b;
+      --warn-bg: #2e2712;
+      --warn-border: #4a3d17;
+      --danger: #f2938c;
+      --danger-bg: #2e1a19;
+      --danger-border: #4a2523;
+      --code-bg: #10141a;
+      --code-text: #e9ecf1;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 8px 28px rgba(0, 0, 0, 0.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #14181f;
+    --surface: #1c222b;
+    --surface-2: #232a34;
+    --border: #2d3540;
+    --text: #e9ecf1;
+    --text-dim: #98a2b0;
+    --accent: #ff7a45;
+    --accent-ink: #1b1006;
+    --accent-soft: rgba(255, 122, 69, 0.14);
+    --accent2: #4fd1c5;
+    --accent2-soft: rgba(79, 209, 197, 0.14);
+    --warn: #f2c76b;
+    --warn-bg: #2e2712;
+    --warn-border: #4a3d17;
+    --danger: #f2938c;
+    --danger-bg: #2e1a19;
+    --danger-border: #4a2523;
+    --code-bg: #10141a;
+    --code-text: #e9ecf1;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 8px 28px rgba(0, 0, 0, 0.35);
+  }
+  :root[data-theme="light"] {
+    --bg: #f3f5f7;
+    --surface: #ffffff;
+    --surface-2: #eef1f4;
+    --border: #dde2e8;
+    --text: #1b2129;
+    --text-dim: #5b6572;
+    --accent: #d9581f;
+    --accent-ink: #ffffff;
+    --accent-soft: rgba(217, 88, 31, 0.1);
+    --accent2: #0d9488;
+    --accent2-soft: rgba(13, 148, 136, 0.1);
+    --warn: #92650a;
+    --warn-bg: #fbf1da;
+    --warn-border: #eddab3;
+    --danger: #b3261e;
+    --danger-bg: #fbeceb;
+    --danger-border: #f2cdc9;
+    --code-bg: #1b2129;
+    --code-text: #e9ecf1;
+    --shadow: 0 1px 2px rgba(20, 24, 30, 0.04), 0 8px 24px rgba(20, 24, 30, 0.06);
+  }
+
+  * { box-sizing: border-box; }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Segoe UI", system-ui, sans-serif;
+    line-height: 1.8;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .mono {
+    font-family: "Cascadia Code", "SF Mono", "Consolas", ui-monospace, monospace;
+  }
+
+  .eyebrow {
+    font-family: "Segoe UI", system-ui, sans-serif;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: var(--accent);
+  }
+
+  a { color: var(--accent2); }
+
+  h1, h2, h3 {
+    text-wrap: balance;
+    font-weight: 800;
+    margin: 0;
+  }
+
+  .wrap {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ---------- top nav ---------- */
+  .topnav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .topnav-scroll {
+    position: relative;
+  }
+  .topnav-scroll::before,
+  .topnav-scroll::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 28px;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .topnav-scroll::before {
+    left: 0;
+    background: linear-gradient(to right, var(--bg), transparent);
+  }
+  .topnav-scroll::after {
+    right: 0;
+    background: linear-gradient(to left, var(--bg), transparent);
+  }
+  .topnav-inner {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 12px 24px;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+  .topnav a {
+    flex: none;
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 7px 12px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .topnav a:hover { background: var(--surface-2); color: var(--text); }
+
+  @media (max-width: 640px) {
+    .topnav-inner { padding: 10px 14px; gap: 2px; }
+    .topnav a { font-size: 12.5px; padding: 6px 10px; }
+    .topnav-scroll::before,
+    .topnav-scroll::after { width: 16px; }
+  }
+
+  /* ---------- hero ---------- */
+  .hero {
+    padding: 56px 0 40px;
+  }
+  .hero h1 {
+    font-size: clamp(30px, 5vw, 42px);
+    line-height: 1.25;
+  }
+  .hero .lede {
+    color: var(--text-dim);
+    font-size: 17.5px;
+    max-width: none;
+    margin-top: 14px;
+  }
+
+  .layers-diagram {
+    margin-top: 32px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .layer-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    box-shadow: var(--shadow);
+    font-weight: 700;
+    font-size: 14.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .layer-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .layer-plus {
+    align-self: center;
+    color: var(--text-dim);
+    font-weight: 700;
+    font-size: 15px;
+  }
+  .diagram-arrow {
+    color: var(--text-dim);
+    font-size: 20px;
+  }
+  .layer-result {
+    background: var(--accent-soft);
+    border: 1px solid var(--accent);
+    color: var(--text);
+  }
+  .dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+  .dot.visual { background: var(--accent); }
+  .dot.audio { background: var(--accent2); }
+
+  @media (max-width: 720px) {
+    .layers-diagram { flex-direction: column; align-items: stretch; }
+    .layer-stack { width: 100%; }
+    .diagram-arrow { align-self: center; transform: rotate(90deg); }
+    .layer-result { width: 100%; justify-content: center; text-align: center; }
+  }
+
+  /* ---------- generic section ---------- */
+  section { padding: 40px 0; border-top: 1px solid var(--border); }
+  section[id], h3[id] { scroll-margin-top: 72px; }
+  section:first-of-type { border-top: none; }
+  .section-head { margin-bottom: 22px; }
+  .section-head .eyebrow { display: block; margin-bottom: 8px; }
+  .section-head h2 { font-size: 25px; }
+  .section-head p { color: var(--text-dim); margin-top: 8px; }
+
+  /* ---------- callouts ---------- */
+  .callout {
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin: 18px 0;
+    border: 1px solid var(--border);
+    font-size: 15px;
+  }
+  .callout.warn { background: var(--warn-bg); border-color: var(--warn-border); color: var(--warn); }
+  .callout.warn strong { color: var(--warn); }
+  .callout.info { background: var(--accent2-soft); border-color: var(--accent2); }
+  .callout.danger { background: var(--danger-bg); border-color: var(--danger-border); color: var(--danger); }
+  .callout p { margin: 0; color: inherit; }
+  .callout p + p { margin-top: 8px; }
+  .callout b, .callout strong { color: var(--text); }
+  .callout.warn b, .callout.warn strong { color: var(--warn); }
+
+  /* ---------- code blocks ---------- */
+  .code-block {
+    position: relative;
+    background: var(--code-bg);
+    color: var(--code-text);
+    border-radius: 10px;
+    margin: 14px 0;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .code-block .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.04);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .code-block .bar span {
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(233,236,241,0.5);
+    font-weight: 700;
+  }
+  .code-block pre {
+    margin: 0;
+    padding: 14px 16px;
+    overflow-x: auto;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .copy-btn {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.14);
+    color: var(--code-text);
+    border-radius: 6px;
+    font-size: 12px;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .copy-btn:hover { background: rgba(255,255,255,0.16); }
+  .copy-btn:focus-visible, a:focus-visible, .tab-btn:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--accent2);
+    outline-offset: 2px;
+  }
+
+  /* ---------- timeline (install steps) ---------- */
+  .timeline {
+    position: relative;
+    margin-top: 8px;
+  }
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 19px;
+    top: 6px;
+    bottom: 6px;
+    width: 2px;
+    background: var(--border);
+  }
+  .step {
+    position: relative;
+    padding: 0 0 36px 56px;
+  }
+  .step:last-child { padding-bottom: 4px; }
+  .step-num {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 15px;
+    font-family: "Segoe UI", system-ui, sans-serif;
+  }
+  .step h3 { font-size: 18.5px; margin-bottom: 6px; }
+  .step .step-why { color: var(--text-dim); font-size: 14.5px; margin-bottom: 10px; }
+  .step-check {
+    margin-top: 10px;
+    font-size: 14px;
+    color: var(--text-dim);
+  }
+  .step-check b { color: var(--text); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14.5px;
+  }
+  .table-scroll { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); }
+  th, td {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  thead th {
+    background: var(--surface-2);
+    font-size: 12.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: var(--surface-2); }
+
+  .pill {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  /* ---------- no-caption methods ---------- */
+  .method-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 8px;
+  }
+  @media (max-width: 720px) {
+    .method-grid { grid-template-columns: 1fr; }
+  }
+  .method-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .method-card .tag {
+    align-self: flex-start;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    padding: 3px 10px;
+    border-radius: 999px;
+  }
+  .method-card.a .tag { background: var(--accent-soft); color: var(--accent); }
+  .method-card.b .tag { background: var(--accent2-soft); color: var(--accent2); }
+  .method-card h3 { font-size: 19px; }
+  .method-card .fit { font-size: 14px; color: var(--text-dim); }
+  .method-card ol { margin: 4px 0 0; padding-left: 20px; font-size: 14.5px; }
+  .method-card ol li + li { margin-top: 6px; }
+  .method-card .limit {
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px dashed var(--border);
+    font-size: 13.5px;
+    color: var(--text-dim);
+  }
+
+  /* ---------- case study ---------- */
+  .case {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-top: 12px;
+  }
+  .case-head {
+    padding: 20px 24px;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .case-head h3 { font-size: 18px; margin-bottom: 4px; }
+  .case-head .meta { font-size: 13.5px; color: var(--text-dim); }
+  .case-head .meta a { color: var(--text-dim); text-decoration: underline; }
+  .case-body { padding: 22px 24px; }
+  .case-body h4 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent2);
+    margin: 20px 0 8px;
+  }
+  .case-body h4:first-child { margin-top: 0; }
+  .case-body ul { margin: 0; padding-left: 20px; font-size: 14.5px; }
+  .case-body ul li + li { margin-top: 6px; }
+  .layer-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 10px 0 0;
+  }
+  @media (max-width: 640px) { .layer-list { grid-template-columns: 1fr 1fr; } }
+  .layer-list div {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+  .layer-list div b { display: block; font-size: 12px; color: var(--text-dim); font-weight: 700; margin-bottom: 3px; }
+  .finding {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .finding:last-child { border-bottom: none; }
+  .finding .num {
+    display: inline-flex;
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 800;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+  }
+  .finding-title { font-weight: 700; font-size: 14.5px; }
+  .finding-body { color: var(--text-dim); font-size: 14px; margin-top: 4px; }
+  .case-footer {
+    padding: 16px 24px;
+    background: var(--accent-soft);
+    border-top: 1px solid var(--border);
+    font-size: 13.5px;
+  }
+
+  /* ---------- security checklist ---------- */
+  .checklist { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 10px; }
+  .checklist li {
+    display: flex; gap: 10px; align-items: flex-start;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 14px; font-size: 14.5px;
+  }
+  .checklist li .n {
+    flex: none; width: 22px; height: 22px; border-radius: 50%;
+    background: var(--accent2-soft); color: var(--accent2);
+    font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;
+  }
+
+  footer {
+    padding: 32px 0 56px;
+    color: var(--text-dim);
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+  }
+
+  details.faq {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 4px 16px;
+    margin: 10px 0;
+  }
+  details.faq summary {
+    cursor: pointer;
+    padding: 12px 0;
+    font-weight: 700;
+    font-size: 15px;
+  }
+  details.faq p { color: var(--text-dim); padding-bottom: 14px; margin: 0; font-size: 14.5px; }
+
+  .top-back {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    border: none;
+    border-radius: 999px;
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 60;
+  }
+  .top-back.show { display: flex; }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-scroll">
+    <div class="topnav-inner">
+      <a href="#concept">核心概念</a>
+      <a href="#prep">開始前</a>
+      <a href="#install">安裝步驟</a>
+      <a href="#usage">開始使用</a>
+      <a href="#troubleshoot">常見問題</a>
+      <a href="#no-caption">沒字幕怎麼辦</a>
+      <a href="#case-study">成功案例</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <span class="eyebrow">Claude Code · /watch 插件教學</span>
+    <h1>用 YouTube 影片做教材<br>完整安裝教學</h1>
+    <p class="lede">給完全沒裝過任何工具的人。全程在 Windows 的 PowerShell 操作，照著打就好，大約 15–20 分鐘。裝好之後，貼一個網址，Claude 就能同時「看畫面」又「聽內容」，幫你整理出一份教材。</p>
+
+    <div class="layers-diagram">
+      <div class="layer-stack">
+        <div class="layer-card"><span class="dot visual"></span>畫面（投影片、圖表、字卡）</div>
+        <span class="layer-plus">＋</span>
+        <div class="layer-card"><span class="dot audio"></span>聲音（逐字稿）</div>
+      </div>
+      <span class="diagram-arrow">→</span>
+      <div class="layer-card layer-result">Claude 讀得懂的教材</div>
+    </div>
+  </section>
+
+  <section id="concept">
+    <div class="section-head">
+      <span class="eyebrow">先建立觀念</span>
+      <h2>這套工具在做什麼？</h2>
+    </div>
+    <p>一支影片其實只有兩層東西：<b>畫面</b>（投影片、圖表、數據、螢幕字卡）和<b>聲音</b>（講者說出來的話）。大多數「影片摘要工具」只抓聲音那一層，畫面上的重點——一張趨勢圖、一個數字、一句字卡——全部漏掉。</p>
+    <p>這套流程兩層都抓：</p>
+    <ol style="font-size:15px; padding-left:20px;">
+      <li>用 <b class="mono">yt-dlp</b> 把影片下載下來</li>
+      <li>用 <b class="mono">ffmpeg</b> 在畫面變化時截圖（等於自動抓下每一頁投影片）</li>
+      <li>拿到逐字稿（有字幕直接用；沒字幕才需要另外處理，見下方「沒字幕怎麼辦」）</li>
+      <li>把「截圖 ＋ 逐字稿」一起交給 Claude</li>
+    </ol>
+    <div class="callout info"><p>一句話：<b>別的工具讓 Claude「讀」影片，這套讓 Claude「看」影片。</b></p></div>
+  </section>
+
+  <section id="prep">
+    <div class="section-head">
+      <span class="eyebrow">開始前</span>
+      <h2>兩個貫穿全程的觀念</h2>
+    </div>
+
+    <div class="callout warn">
+      <p><strong>裝完一定要「關掉重開」</strong></p>
+      <p>每次用 <span class="mono">winget</span> 裝完一個工具，都要把 PowerShell 完全關掉、重新開一個，新裝的工具才叫得出來。系統靠一份叫「PATH」的清單記得「哪些工具可以直接呼叫」，已經開著的視窗還在讀舊清單。</p>
+      <p>🔑 之後只要看到「無法辨識 XXX」的錯誤，第一個動作永遠是：<b>關掉 PowerShell、重開、再試一次。</b>九成的問題都是這個。</p>
+    </div>
+
+    <h3 style="font-size:17px; margin:22px 0 8px;">怎麼打開 PowerShell？</h3>
+    <p style="font-size:14.5px; color:var(--text-dim);">方法一：按左下角 <b>開始鍵（⊞）</b>，打 <span class="mono">PowerShell</span>，點藍色圖示。<br>方法二：按 <span class="mono">Win + R</span> 打開「執行」視窗，輸入 <span class="mono">powershell</span>，按 Enter 或按「確定」。</p>
+    <p style="font-size:14.5px; color:var(--text-dim);">打開後會看到一行像這樣，之後指令都打在 <span class="mono">&gt;</span> 後面，打完按 Enter：</p>
+    <div class="code-block">
+      <div class="bar"><span>PowerShell</span></div>
+      <pre class="mono">PS C:\Users\你的名字&gt;</pre>
+    </div>
+  </section>
+
+  <section id="install">
+    <div class="section-head">
+      <span class="eyebrow">安裝流程</span>
+      <h2>五個步驟，裝好整套工具</h2>
+      <p>每一步裝完都要「關掉 PowerShell、重新開一個」再繼續下一步。</p>
+    </div>
+
+    <div class="timeline">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>安裝 yt-dlp 和 ffmpeg</h3>
+        <p class="step-why">整套工具的「引擎」——一個負責下載影片，一個負責處理影音、截圖。</p>
+        <div class="code-block">
+          <div class="bar"><span>PowerShell</span><button class="copy-btn" data-copy="winget install yt-dlp.yt-dlp">複製</button></div>
+          <pre class="mono">winget install yt-dlp.yt-dlp</pre>
+        </div>
+        <div class="code-block">
+          <div class="bar"><span>PowerShell</span><button class="copy-btn" data-copy="winget install Gyan.FFmpeg">複製</button></div>
+          <pre class="mono">winget install Gyan.FFmpeg</pre>
+        </div>
+        <p style="font-size:14px; color:var(--text-dim);">看到最後一行 <span class="mono">Successfully installed</span> 就是成功了。中途跳出「是否允許以系統管理員身分執行」按「是」即可。</p>
+        <div class="step-check">
+          <b>裝完關掉重開後確認：</b>
+          <div class="code-block">
+            <div class="bar"><span>確認版本</span></div>
+            <pre class="mono">yt-dlp --version
+ffmpeg -version</pre>
+          </div>
+          會分別看到版本號，像 <span class="mono">2025.06.30</span> 和 <span class="mono">ffmpeg version 7.x ...</span>。
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>安裝 git</h3>
+        <p class="step-why">等一下的 watch 插件放在 GitHub 上。要把 GitHub 上的東西抓到電腦，需要 git 這個「搬運工」，少了它裝插件那步會直接報錯。</p>
+        <div class="code-block">
+          <div class="bar"><span>PowerShell</span><button class="copy-btn" data-copy="winget install Git.Git">複製</button></div>
+          <pre class="mono">winget install Git.Git</pre>
+        </div>
+        <div class="step-check">
+          <b>裝完關掉重開後確認：</b>
+          <div class="code-block"><pre class="mono">git --version</pre></div>
+          會看到像 <span class="mono">git version 2.55.0.windows.2</span>。
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>在 Claude Code 裡安裝 watch 插件</h3>
+        <div class="callout warn" style="margin-top:0;">
+          <p><strong>關鍵區別：</strong>凡是開頭有斜線 <span class="mono">/</span> 的指令（像 <span class="mono">/plugin</span>、<span class="mono">/watch</span>），都是打在 <b>Claude Code 裡面</b>，不是打在 PowerShell。先打 <span class="mono">claude</span> 進入 Claude Code 的介面，PowerShell 不認得斜線指令，打了會出錯。</p>
+        </div>
+        <p class="step-why">確認你人在 Claude Code 裡（不是 PowerShell），依序打這兩行：</p>
+        <div class="code-block">
+          <div class="bar"><span>Claude Code</span><button class="copy-btn" data-copy="/plugin marketplace add bradautomates/claude-video">複製</button></div>
+          <pre class="mono">/plugin marketplace add bradautomates/claude-video</pre>
+        </div>
+        <div class="code-block">
+          <div class="bar"><span>Claude Code</span><button class="copy-btn" data-copy="/plugin install watch@claude-video">複製</button></div>
+          <pre class="mono">/plugin install watch@claude-video</pre>
+        </div>
+        <p style="font-size:14px; color:var(--text-dim);">第一行＝告訴 Claude Code「這個開源專案是可信的貨源」；第二行＝把 <span class="mono">watch</span> 插件真正裝進來。過程中會問「裝給誰用」，選第一個：</p>
+        <div class="table-scroll">
+          <table>
+            <tbody>
+              <tr><td><span class="pill">選這個</span></td><td><b>Install for you (user scope)</b> — 個人自用，跨資料夾都能用</td></tr>
+              <tr><td></td><td>Install for all collaborators (project scope) — 團隊共用才需要</td></tr>
+              <tr><td></td><td>Install for you, in this repo only (local scope) — 只在單一資料夾</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:14px; color:var(--text-dim);">它也會顯示驚嘆號警告「Anthropic 不控管第三方插件」——這是所有插件的公版提醒，不用擔心。</p>
+        <div class="step-check">
+          <b>裝好後讓插件生效：</b>
+          <div class="code-block"><pre class="mono">/reload-plugins</pre></div>
+          看到 <span class="mono">Successfully loaded skill</span> 就代表啟用了。
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <h3>第一次設定</h3>
+        <p class="step-why">第一次載入插件時，會問兩個問題：</p>
+        <p style="font-size:14.5px;"><b>5-1　Whisper API key</b>（語音轉逐字稿）——選 <b>「No key, skip for now」</b>。這把 key 只有影片完全沒字幕、要拿聲音轉逐字稿時才用得到；有字幕的影片（多數 YouTube 影片）用不到，先跳過完全不影響，之後常遇到沒字幕影片再申請也來得及。</p>
+        <p style="font-size:14.5px;"><b>5-2　Detail level</b>（要截多少畫面）——選 <b>「balanced (recommended)」</b>。</p>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>選項</th><th>意思</th><th>適合</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">efficient</td><td>最多 50 張，快</td><td>只要大概摘要</td></tr>
+              <tr><td class="mono"><b>balanced</b></td><td>場景變化才截，最多 100 張</td><td><b>做教材（推薦）</b></td></tr>
+              <tr><td class="mono">transcript</td><td>完全不截圖，只要逐字稿</td><td>不需要畫面時</td></tr>
+              <tr><td class="mono">token-burner</td><td>張數無上限，最完整也最貴</td><td>要看每個畫面細節</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <h3 id="usage">開始使用</h3>
+        <p class="step-why">在 Claude Code 裡，貼上影片網址加你的問題：</p>
+        <div class="code-block">
+          <div class="bar"><span>語法</span><button class="copy-btn" data-copy="/watch 影片網址 你想問的問題">複製</button></div>
+          <pre class="mono">/watch 影片網址 你想問的問題</pre>
+        </div>
+        <p style="font-size:14.5px; margin-top:14px;"><b>看整支影片：</b></p>
+        <div class="code-block">
+          <pre class="mono">/watch https://www.youtube.com/watch?v=影片ID 幫我整理這支影片的重點，包含講者說的內容和畫面上的資訊</pre>
+        </div>
+        <p style="font-size:14.5px;"><b>只看某一段（省時間）：</b></p>
+        <div class="code-block">
+          <pre class="mono">/watch https://www.youtube.com/watch?v=影片ID --start 00:35 --end 01:30 分析這一段</pre>
+        </div>
+        <p style="font-size:14px; color:var(--text-dim);">它會自動：下載影片 → 截圖 → 抓逐字稿 → 把畫面和文字讀進去 → 回答你。第一次跑要下載影片會花一點時間，畫面一直捲動是正常的。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="troubleshoot">
+    <div class="section-head">
+      <span class="eyebrow">踩雷排解</span>
+      <h2>常見問題</h2>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>症狀</th><th>原因</th><th>解法</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">無法辨識 'yt-dlp'（或 git / node）</td><td>裝了但沒重開視窗</td><td>關掉 PowerShell、重開、再試</td></tr>
+          <tr><td class="mono">git not found</td><td>裝插件時沒裝 git</td><td>回步驟二裝 git、重開</td></tr>
+          <tr><td>跑影片後只有畫面、沒逐字稿</td><td>該影片沒字幕，又跳過了 key</td><td>靠畫面資訊即可；或見下方「沒字幕怎麼辦」</td></tr>
+          <tr><td>中文標題讓腳本 crash</td><td>Windows 終端機編碼問題</td><td>插件通常會自動重試、強制 UTF-8，不用理</td></tr>
+          <tr><td>下載失敗 / 要你「確認不是機器人」</td><td>YouTube 擋自動下載</td><td>① 先更新 <span class="mono">yt-dlp -U</span>；② 還不行，指令加 <span class="mono">--cookies-from-browser chrome</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="no-caption">
+    <div class="section-head">
+      <span class="eyebrow">沒有官方字幕怎麼辦</span>
+      <h2>影片沒字幕，還是能做出教材</h2>
+      <p>貼上網址後發現逐字稿是空的、或 /watch 提示這支影片沒有字幕？不需要申請 Whisper key，有兩條路可以走。</p>
+    </div>
+
+    <div class="method-grid">
+      <div class="method-card a">
+        <span class="tag">方法 A</span>
+        <h3>純靠畫面重建</h3>
+        <p class="fit">最快、免申請任何 key</p>
+        <p style="font-size:14.5px; margin:0;"><span class="mono">/watch</span> 本身就會截圖，沒有字幕不影響截圖這件事。直接照平常的方式問，讓 Claude 單靠畫面（投影片、圖表、新聞截圖、字卡）重建重點。</p>
+        <ol>
+          <li>照常打 <span class="mono">/watch 影片網址 你的問題</span></li>
+          <li>心裡預期「這次沒有逐字稿可以核對」</li>
+          <li>問題盡量具體，例如請它列出畫面中出現的數字、圖表、關鍵字卡</li>
+        </ol>
+        <div class="limit"><b>適合：</b>投影片、圖表、新聞截圖、字卡資訊量大的影片。<br><b>限制：</b>講者純口述、畫面沒什麼字或圖的段落會遺漏，無法 100% 還原逐字內容。下方〈成功案例〉就是用這個方法做出來的。</div>
+      </div>
+
+      <div class="method-card b">
+        <span class="tag">方法 B</span>
+        <h3>轉逐字稿再交給 Claude</h3>
+        <p class="fit">較完整、免 key，但要跑兩個網站</p>
+        <p style="font-size:14.5px; margin:0;">用 TurboScribe 把音訊轉成逐字稿，再連同截圖一起交給 Claude 整理。</p>
+        <ol>
+          <li>下載音訊存成 mp3：
+            <div class="code-block" style="margin-top:8px;">
+              <div class="bar"><span>PowerShell</span><button class="copy-btn" data-copy='yt-dlp -x --audio-format mp3 -o "%(title)s.%(ext)s" 影片網址'>複製</button></div>
+              <pre class="mono">yt-dlp -x --audio-format mp3 -o "%(title)s.%(ext)s" 影片網址</pre>
+            </div>
+          </li>
+          <li>到 <a href="https://turboscribe.ai" target="_blank" rel="noopener">TurboScribe</a> 上傳這個 mp3，選中文，等它跑完下載逐字稿（txt）</li>
+          <li>把逐字稿貼給 Claude，附上想問的問題，需要的話也可以把 <span class="mono">/watch</span> 截到的畫面一起附上：<br>
+            <div class="code-block" style="margin-top:8px;">
+              <pre class="mono">這是一支影片的逐字稿，請幫我整理重點，並標出重要數字和結論
+[貼上逐字稿內容]</pre>
+            </div>
+          </li>
+        </ol>
+        <div class="limit"><b>適合：</b>訪談、Podcast、純講述型影片，講者內容比畫面重要。<br><b>限制：</b>多一道手動步驟，速度較慢；TurboScribe 免費額度有限，超過需要付費。</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="case-study">
+    <div class="section-head">
+      <span class="eyebrow">成功案例 · 真實測試結果</span>
+      <h2>沒字幕的影片，靠畫面也整理得出重點</h2>
+      <p>這是用「方法 A：純靠畫面重建」實測的結果，沒有經過任何潤飾，直接呈現 Claude 產出的內容結構。</p>
+    </div>
+
+    <div class="case">
+      <div class="case-head">
+        <div>
+          <h3>AI 巨頭資本混戰 影片重點整理</h3>
+          <div class="meta">影片來源：小 Lin 說《AI 巨頭們之間的資本混戰，到底是個什麼情況？》· 片長 19:28 ·
+            <a href="https://www.youtube.com/watch?v=OcKl98ZQbMQ" target="_blank" rel="noopener">原始連結</a>
+          </div>
+        </div>
+        <span class="pill">無官方字幕</span>
+      </div>
+
+      <div class="case-body">
+        <h4>影片框架</h4>
+        <p style="font-size:14.5px; margin:0;">主持人開場說明：這期不評價模型好壞、不比較晶片性能，只從「資本操作」（股權投資、供應鏈綁定、合作協議）的角度，梳理各大 AI 巨頭之間盤根錯節的關係。影片用一張分層圖貫穿全片，把 AI 產業分成四層：</p>
+        <div class="layer-list">
+          <div><b>應用層</b>Microsoft</div>
+          <div><b>模型層</b>OpenAI、Anthropic、Google、Amazon、Meta</div>
+          <div><b>算力／雲端層</b>Azure、Oracle、Google Cloud/TPU、AWS/Trainium</div>
+          <div><b>晶片層</b>NVIDIA、AMD、博通</div>
+        </div>
+
+        <h4>主要內容重點</h4>
+        <div class="finding"><span class="num">1</span><span class="finding-title">Anthropic 爆發式成長</span><div class="finding-body">Claude 於 2023 年 3 月發布，2 年內 ARR 從近 0 衝到約 10 億美元，2025 年 8 月已突破 50 億美元，是史上成長最快的科技公司之一。</div></div>
+        <div class="finding"><span class="num">2</span><span class="finding-title">OpenAI 的股權與融資</span><div class="finding-body">微軟持股約 27%，投資規模提及 130 億美元；SoftBank 出售 58 億美元輝達股票為 AI 投資募資。</div></div>
+        <div class="finding"><span class="num">3</span><span class="finding-title">Google 與 Anthropic 深度綁定</span><div class="finding-body">Google 向 Anthropic 投資 40 億美元；2025 年 10 月公告 Anthropic 大規模擴大使用 Google Cloud 的 TPU 算力。</div></div>
+        <div class="finding"><span class="num">4</span><span class="finding-title">NVIDIA 的多重角色</span><div class="finding-body">黃仁勳既是晶片供應商，又透過投資成為 OpenAI/Anthropic 的股東，畫面用撲克牌局比喻各巨頭同坐一張牌桌。</div></div>
+        <div class="finding"><span class="num">5</span><span class="finding-title">OpenAI「星際之門」基建計畫</span><div class="finding-body">190 億美元規模資料中心專案，Oracle 承建，畫面展示德州工廠、阿根廷 AI 基建空拍。</div></div>
+        <div class="finding"><span class="num">6</span><span class="finding-title">馬斯克表態緩和</span><div class="finding-body">推文截圖顯示馬斯克稱 Claude「for humanity is good」，並將 Colossus 1 算力租給 Anthropic。</div></div>
+        <div class="finding"><span class="num">7</span><span class="finding-title">AMD 的晶片聯盟</span><div class="finding-body">AMD 與 OpenAI、Meta 達成合作，畫面顯示「1.6 億股股票」交易細節。</div></div>
+
+        <h4>總結比喻</h4>
+        <p style="font-size:14.5px; margin:0;">片尾用鎖鏈圖像象徵各巨頭互相綁定、「一起抵禦風浪」；火燒赤壁的燃燒戰船動畫暗示高度捆綁的聯盟一旦出問題，可能引發連鎖式崩潰。主持人總結：表面上是競爭對手，實際上透過投資、算力、雲端服務彼此深度交織。</p>
+      </div>
+
+      <div class="case-footer">
+        <b>局限說明（Claude 誠實自報）：</b>由於該影片沒有官方字幕，且未使用 Whisper 進行語音轉錄，以上內容是基於畫面（含影片內嵌字幕片段）重建的，講者的完整逐字表述無法 100% 還原。如需更精確的逐句內容，可改用上方「方法 B」補上逐字稿。
+      </div>
+    </div>
+  </section>
+
+  <details class="faq" id="faq-groq" style="margin-top:8px;">
+    <summary>之後想補 Whisper key 該怎麼做？</summary>
+    <p>常遇到沒字幕的影片，想要更精確的逐字稿，可以去 Groq 或 OpenAI 申請一組 API key，再回到 Claude Code 用插件的設定流程補上即可，不需要重新安裝整套工具。</p>
+  </details>
+
+  <footer>
+    本頁涵蓋：yt-dlp / ffmpeg / git / watch 插件的從零安裝，以及影片沒有官方字幕時的兩種應對方法，適用 Windows（需已安裝 Claude Code）。
+  </footer>
+
+</div>
+
+<button class="top-back" id="topBack" aria-label="回到頂端">↑</button>
+
+<script>
+  document.querySelectorAll('.copy-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var text = btn.getAttribute('data-copy');
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(function () {
+        var original = btn.textContent;
+        btn.textContent = '已複製';
+        setTimeout(function () { btn.textContent = original; }, 1500);
+      });
+    });
+  });
+
+  var backBtn = document.getElementById('topBack');
+  window.addEventListener('scroll', function () {
+    backBtn.classList.toggle('show', window.scrollY > 500);
+  });
+  backBtn.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+
+</body>
+</html>
