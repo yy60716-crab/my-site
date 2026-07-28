@@ -1,12 +1,80 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="utf-8">
-  <title>部署測試</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light only">
+<title>菜菜的學習筆記</title>
+<style>
+  :root{color-scheme:light only;}
+  html{background:#faf8f4;}
+  *{box-sizing:border-box;}
+  body{
+    font-family:"Microsoft JhengHei","微軟正黑體",system-ui,sans-serif;
+    max-width:820px;margin:0 auto;padding:56px 24px;
+    color:#2d2a26;background:#faf8f4;line-height:1.6;
+  }
+  header{margin-bottom:48px;}
+  h1{font-size:32px;margin:0 0 8px;}
+  .sub{color:#8a8378;font-size:16px;}
+  .section{margin-bottom:44px;}
+  h2{font-size:22px;margin:0 0 20px;display:flex;align-items:center;gap:8px;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;}
+  .card{
+    display:block;padding:22px 20px;border-radius:14px;
+    text-decoration:none;color:inherit;
+    background:#fff;border:1px solid #ece7de;
+    box-shadow:0 1px 3px rgba(0,0,0,.04);
+    transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease;
+  }
+  .card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.08);border-color:#d9cfbf;}
+  .card .icon{font-size:26px;display:block;margin-bottom:10px;}
+  .card .title{font-size:17px;font-weight:600;color:#2d2a26;display:block;}
+  .card .desc{font-size:13px;color:#9a9284;margin-top:6px;display:block;}
+  .card.ai{background:#f4f1fa;border-color:#e7e1f2;}
+  .card.ai:hover{border-color:#cfc3e8;}
+  .card.study{background:#f0f5f2;border-color:#dde9e2;}
+  .card.study:hover{border-color:#c3ddce;}
+  .badge{display:inline-block;font-size:11px;color:#b0a898;
+    border:1px solid #ddd6ca;border-radius:20px;padding:1px 9px;margin-top:8px;}
+  footer{margin-top:60px;color:#b0a898;font-size:13px;text-align:center;}
+</style>
 </head>
 <body>
-  <h1>部署成功 🎉</h1>
-  <p>這是一個測試頁面。</p>
-  <p><a href="yt_video_teaching_guide.html">看 YouTube 教學筆記</a></p>
+  <header>
+    <h1>菜菜的學習筆記</h1>
+    <p class="sub">記錄學習歷程與 AI 工具使用心得</p>
+  </header>
+
+  <div class="section">
+    <h2>🤖 使用 AI</h2>
+    <div class="grid">
+      <a class="card ai" href="claude-code.html">
+        <span class="icon">💻</span>
+        <span class="title">Claude Code 安裝教學</span>
+        <span class="desc">從零安裝到跑起來</span>
+        <span class="badge">尚未上線</span>
+      </a>
+      <a class="card ai" href="yt_video_teaching_guide.html">
+        <span class="icon">🎬</span>
+        <span class="title">YouTube 轉投影片工作流</span>
+        <span class="desc">影片內容變教學簡報</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>📊 學習</h2>
+    <div class="grid">
+      <a class="card study" href="econometrics.html">
+        <span class="icon">📈</span>
+        <span class="title">計量分析方法</span>
+        <span class="desc">Staggered DiD</span>
+        <span class="badge">尚未上線</span>
+      </a>
+    </div>
+  </div>
+
+  <footer>© 2026 菜菜 · Built with GitHub Pages</footer>
 </body>
 </html>

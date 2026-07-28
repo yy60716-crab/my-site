@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code 入門教學(Windows)</title>
+<meta name="description" content="研究室教學簡報：從安裝到日常使用">
+
+<style>
+  :root{
+    --paper:#F3F5FA;
+    --surface:#FFFFFF;
+    --surface-2:#EAEEF6;
+    --ink:#10152A;
+    --ink-dim:#4B5470;
+    --border:#DCE1EC;
+    --accent:#3452D9;
+    --accent-ink:#FFFFFF;
+    --accent-soft:#E4E9FC;
+    --warn:#B5790E;
+    --warn-soft:#FBF0DA;
+    --warn-border:#EAD3A0;
+    --term-bg:#141A2A;
+    --term-ink:#E7ECF8;
+    --term-chrome:#1E2438;
+    --risk-low:#E2EFDA;
+    --risk-mid:#FFF2CC;
+    --risk-high:#FCE4D6;
+    --shadow: 0 1px 2px rgba(16,21,42,.04), 0 8px 24px -12px rgba(16,21,42,.18);
+
+    --font-body: "Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,"Microsoft JhengHei",sans-serif;
+    --font-mono: "Cascadia Mono","Cascadia Code",Consolas,"SFMono-Regular",ui-monospace,monospace;
+  }
+
+  :root[data-theme="dark"]{
+    --paper:#0A0E1A;
+    --surface:#111729;
+    --surface-2:#171F35;
+    --ink:#E8ECF7;
+    --ink-dim:#9AA4C4;
+    --border:#242C48;
+    --accent:#7C97FF;
+    --accent-ink:#0A0E1A;
+    --accent-soft:#1B2444;
+    --warn:#F0B429;
+    --warn-soft:#2A2312;
+    --warn-border:#4A3B14;
+    --term-bg:#080B14;
+    --term-ink:#E7ECF8;
+    --term-chrome:#12172A;
+    --risk-low:#1C3324;
+    --risk-mid:#3A2F10;
+    --risk-high:#3A1C15;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px -12px rgba(0,0,0,.6);
+  }
+
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0A0E1A;
+      --surface:#111729;
+      --surface-2:#171F35;
+      --ink:#E8ECF7;
+      --ink-dim:#9AA4C4;
+      --border:#242C48;
+      --accent:#7C97FF;
+      --accent-ink:#0A0E1A;
+      --accent-soft:#1B2444;
+      --warn:#F0B429;
+      --warn-soft:#2A2312;
+      --warn-border:#4A3B14;
+      --term-bg:#080B14;
+      --term-ink:#E7ECF8;
+      --term-chrome:#12172A;
+      --risk-low:#1C3324;
+      --risk-mid:#3A2F10;
+      --risk-high:#3A1C15;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px -12px rgba(0,0,0,.6);
+    }
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ height:100%; }
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 0) 0 0/28px 28px,
+      var(--paper);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.5;
+  }
+  @media (prefers-reduced-motion: no-preference){
+    html{ scroll-behavior:smooth; }
+  }
+
+  code, .cmd{
+    font-family:var(--font-mono);
+    font-size:.92em;
+  }
+  .cmd{
+    display:inline-block;
+    padding:.12em .5em;
+    border-radius:5px;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    color:var(--ink);
+    white-space:nowrap;
+  }
+
+  h1,h2,h3{ text-wrap:balance; margin:0; }
+
+  .progress{
+    position:fixed; top:0; left:0; height:3px; width:0%;
+    background:var(--accent);
+    z-index:50;
+    transition:width .12s linear;
+  }
+  @media (prefers-reduced-motion: reduce){ .progress{ transition:none; } }
+
+  .deck{
+    height:100vh;
+    height:100dvh;
+    overflow-y:auto;
+    scroll-snap-type:y proximity;
+    scrollbar-width:thin;
+  }
+
+  .slide{
+    min-height:100vh;
+    min-height:100dvh;
+    scroll-snap-align:start;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:64px clamp(20px,5vw,72px);
+    position:relative;
+    border-top:3px solid transparent;
+  }
+  .slide[data-tone="warn"]{ border-top-color:var(--warn); }
+  .slide:not([data-tone="warn"]){ border-top-color:var(--accent); }
+
+  .slide-inner{
+    width:100%;
+    max-width:880px;
+  }
+
+  .slide-index{
+    position:absolute;
+    top:28px; right:clamp(20px,5vw,72px);
+    font-family:var(--font-mono);
+    font-variant-numeric:tabular-nums;
+    color:var(--ink-dim);
+    font-size:.85rem;
+    letter-spacing:.04em;
+  }
+
+  .eyebrow{
+    font-family:var(--font-mono);
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    font-size:.78rem;
+    color:var(--accent);
+    margin:0 0 14px;
+  }
+  .slide[data-tone="warn"] .eyebrow{ color:var(--warn); }
+
+  .slide-title{
+    font-size:clamp(1.6rem, 2.6vw + 1rem, 2.5rem);
+    font-weight:700;
+    color:var(--ink);
+    margin-bottom:22px;
+  }
+
+  .lead{
+    font-size:1.1rem;
+    color:var(--ink-dim);
+    max-width:62ch;
+    margin:0 0 26px;
+  }
+
+  .cover .slide-inner{ text-align:left; }
+  .cover .brand-line{
+    font-family:var(--font-mono);
+    color:var(--ink-dim);
+    letter-spacing:.08em;
+    font-size:.85rem;
+    text-transform:uppercase;
+    margin-bottom:22px;
+  }
+  .cover h1{
+    font-size:clamp(2.1rem, 4vw + 1rem, 3.4rem);
+    line-height:1.15;
+    margin-bottom:18px;
+  }
+  .cover .subtitle{
+    font-size:1.15rem;
+    color:var(--ink-dim);
+    margin-bottom:34px;
+  }
+  .cover .meta-row{
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  .tag{
+    font-family:var(--font-mono);
+    font-size:.78rem;
+    padding:6px 12px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    color:var(--ink-dim);
+    background:var(--surface);
+  }
+
+  .goal-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:14px;
+  }
+  .goal-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:18px 16px;
+    box-shadow:var(--shadow);
+  }
+  .goal-card .num{
+    font-family:var(--font-mono);
+    color:var(--accent);
+    font-size:.85rem;
+    font-variant-numeric:tabular-nums;
+  }
+  .goal-card p{ margin:8px 0 0; font-size:.96rem; }
+
+  ol.steps{
+    list-style:none;
+    counter-reset:step;
+    margin:0 0 22px;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  ol.steps li{
+    counter-increment:step;
+    display:flex;
+    gap:14px;
+    align-items:flex-start;
+    font-size:1.02rem;
+  }
+  ol.steps li::before{
+    content:counter(step);
+    flex:none;
+    width:28px; height:28px;
+    border-radius:8px;
+    background:var(--accent-soft);
+    color:var(--accent);
+    font-family:var(--font-mono);
+    font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+    font-size:.85rem;
+  }
+  ol.steps li > div{ padding-top:3px; }
+
+  ul.points{
+    list-style:none;
+    margin:0 0 22px;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  ul.points li{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    font-size:1.02rem;
+  }
+  ul.points li::before{
+    content:"";
+    flex:none;
+    width:8px; height:8px;
+    margin-top:8px;
+    border-radius:2px;
+    background:var(--accent);
+  }
+
+  .terminal{
+    background:var(--term-bg);
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+    margin:10px 0 20px;
+  }
+  .terminal .chrome{
+    background:var(--term-chrome);
+    padding:9px 12px;
+    display:flex;
+    gap:6px;
+  }
+  .terminal .chrome span{
+    width:10px;height:10px;border-radius:50%;
+    display:inline-block;
+  }
+  .terminal .chrome span:nth-child(1){ background:#ED6A5E; }
+  .terminal .chrome span:nth-child(2){ background:#F4BF4F; }
+  .terminal .chrome span:nth-child(3){ background:#61C454; }
+  .terminal pre{
+    margin:0;
+    padding:14px 16px 18px;
+    font-family:var(--font-mono);
+    color:var(--term-ink);
+    font-size:.92rem;
+    line-height:1.6;
+    white-space:pre-wrap;
+    word-break:break-word;
+  }
+
+  .callout{
+    border-radius:12px;
+    padding:18px 20px;
+    margin-top:8px;
+    border:1px solid var(--border);
+    background:var(--surface);
+  }
+  .callout.warn{
+    background:var(--warn-soft);
+    border-color:var(--warn-border);
+  }
+  .callout h3{
+    font-size:1rem;
+    margin-bottom:6px;
+    color:var(--ink);
+  }
+  .callout p{ margin:0 0 10px; color:var(--ink-dim); font-size:.96rem; }
+  .callout .fix-steps{
+    list-style:none;
+    counter-reset:fx;
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .callout .fix-steps li{
+    counter-increment:fx;
+    font-size:.94rem;
+  }
+  .callout .fix-steps li::before{
+    content:counter(fx) ". ";
+    font-family:var(--font-mono);
+    color:var(--warn);
+    font-weight:700;
+  }
+  .callout .note{
+    margin-top:10px;
+    font-size:.86rem;
+    color:var(--ink-dim);
+  }
+
+  .shot{
+    border:1.5px dashed var(--border);
+    border-radius:10px;
+    padding:16px 18px;
+    color:var(--ink-dim);
+    font-size:.86rem;
+    font-family:var(--font-mono);
+    background:var(--surface-2);
+    margin:6px 0 20px;
+  }
+
+  .mode-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+  }
+  .mode-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:20px 18px;
+    box-shadow:var(--shadow);
+  }
+  .mode-card h3{ font-size:1.05rem; margin-bottom:8px; }
+  .mode-card p{ margin:0; font-size:.92rem; color:var(--ink-dim); }
+  .mode-card.warn{
+    background:var(--warn-soft);
+    border-color:var(--warn-border);
+  }
+  .mode-card .flag{
+    display:inline-block;
+    margin-top:10px;
+    font-family:var(--font-mono);
+    font-size:.72rem;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:var(--warn);
+    border:1px solid var(--warn-border);
+    padding:3px 8px;
+    border-radius:999px;
+  }
+  .switch-hint{
+    margin-top:20px;
+    font-size:.92rem;
+    color:var(--ink-dim);
+  }
+
+  .cmd-groups{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:16px;
+  }
+  .cmd-group{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:16px 16px 6px;
+    box-shadow:var(--shadow);
+  }
+  .cmd-group h3{
+    font-size:.82rem;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--ink-dim);
+    margin-bottom:10px;
+  }
+  .cmd-group dl{ margin:0; }
+  .cmd-group dt{ margin-bottom:2px; }
+  .cmd-group dd{
+    margin:0 0 12px;
+    font-size:.88rem;
+    color:var(--ink-dim);
+  }
+
+  .table-wrap{
+    overflow-x:auto;
+    border:1px solid var(--border);
+    border-radius:12px;
+    box-shadow:var(--shadow);
+  }
+  table.ref-table{
+    width:100%;
+    border-collapse:collapse;
+    background:var(--surface);
+    font-size:.88rem;
+    min-width:640px;
+  }
+  table.ref-table th{
+    text-align:left;
+    font-family:var(--font-mono);
+    text-transform:uppercase;
+    font-size:.72rem;
+    letter-spacing:.05em;
+    color:var(--ink-dim);
+    background:var(--surface-2);
+    padding:10px 14px;
+    position:sticky; top:0;
+  }
+  table.ref-table td{
+    padding:10px 14px;
+    border-top:1px solid var(--border);
+    vertical-align:top;
+  }
+  table.ref-table tr:nth-child(even) td{ background:color-mix(in srgb, var(--surface-2) 35%, transparent); }
+
+  .practice-block{ margin-bottom:26px; }
+
+  .nav{
+    position:fixed;
+    right:20px; bottom:20px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:999px;
+    padding:6px 10px;
+    box-shadow:var(--shadow);
+    z-index:40;
+  }
+  .nav button{
+    width:32px; height:32px;
+    border-radius:50%;
+    border:1px solid var(--border);
+    background:var(--surface-2);
+    color:var(--ink);
+    font-size:1rem;
+    cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .nav button:hover{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+  .nav button:focus-visible, .theme-toggle:focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:2px;
+  }
+  .nav .counter{
+    font-family:var(--font-mono);
+    font-variant-numeric:tabular-nums;
+    font-size:.82rem;
+    color:var(--ink-dim);
+    min-width:44px;
+    text-align:center;
+  }
+
+  .theme-toggle{
+    position:fixed;
+    left:20px; bottom:20px;
+    border:1px solid var(--border);
+    background:var(--surface);
+    color:var(--ink-dim);
+    border-radius:999px;
+    padding:8px 14px;
+    font-size:.78rem;
+    font-family:var(--font-mono);
+    cursor:pointer;
+    z-index:40;
+    box-shadow:var(--shadow);
+  }
+  .theme-toggle:hover{ color:var(--accent); border-color:var(--accent); }
+
+  @media (max-width:760px){
+    .goal-grid, .mode-grid, .cmd-groups{ grid-template-columns:1fr; }
+    .slide{ padding:56px 20px; }
+  }
+
+  @media print{
+    .nav, .theme-toggle, .progress{ display:none; }
+    .deck{ height:auto; overflow:visible; scroll-snap-type:none; }
+    .slide{ min-height:100vh; page-break-after:always; border-top-width:2px; }
+    .slide:last-child{ page-break-after:auto; }
+    body{ background:#fff; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- 1 封面 -->
+  <section class="slide cover" data-tone="accent">
+    <div class="slide-index">01 / 09</div>
+    <div class="slide-inner">
+      <div class="brand-line">研究室教學 · Windows 版</div>
+      <h1>Claude Code 入門教學(Windows)</h1>
+      <div class="meta-row">
+        <span class="tag">從安裝到日常使用</span>
+        <span class="tag">PowerShell 實作</span>
+        <span class="tag">共 9 頁</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 什麼是 Claude Code -->
+  <section class="slide" data-tone="accent">
+    <div class="slide-index">02 / 09</div>
+    <div class="slide-inner">
+      <p class="eyebrow">認識工具</p>
+      <h2 class="slide-title">什麼是 Claude Code？</h2>
+      <p class="lead">一句話講完：在終端機裡運作的 AI 助手，可以直接讀寫你電腦裡的檔案、幫你執行任務。</p>
+      <div class="goal-grid">
+        <div class="goal-card"><div class="num">今天學 1</div><p>一次性安裝</p></div>
+        <div class="goal-card"><div class="num">今天學 2</div><p>每次啟動的標準流程</p></div>
+        <div class="goal-card"><div class="num">今天學 3</div><p>常用操作與快捷鍵</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 初始安裝 -->
+  <section class="slide" data-tone="warn">
+    <div class="slide-index">03 / 09</div>
+    <div class="slide-inner">
+      <p class="eyebrow">Step 1 · 只做一次</p>
+      <h2 class="slide-title">初始安裝</h2>
+
+      <ol class="steps">
+        <li><div>按 <span class="cmd">Win + R</span>，輸入 <span class="cmd">powershell</span>，按 Enter</div></li>
+        <li><div>貼上並執行安裝指令：
+          <div class="terminal">
+            <div class="chrome"><span></span><span></span><span></span></div>
+            <pre>irm https://claude.ai/install.ps1 | iex</pre>
+          </div>
+        </div></li>
+        <li><div>依畫面指示登入 Claude 帳號</div></li>
+      </ol>
+
+      <div class="shot">[截圖位置：PowerShell 安裝過程畫面]</div>
+
+      <div class="callout warn">
+        <h3>常見狀況：裝好了，但打 claude 沒反應</h3>
+        <p>這是「安裝成功，但指令找不到」——電腦不知道去哪找 claude.exe，不是壞掉。原因是安裝資料夾沒有被加進 PATH。</p>
+        <ol class="fix-steps">
+          <li>永久加入 PATH（做一次就好；記得把路徑裡的帳號換成自己的）：
+            <div class="terminal">
+              <div class="chrome"><span></span><span></span><span></span></div>
+              <pre>[Environment]::SetEnvironmentVariable("Path", [Environment]::GetEnvironmentVariable("Path","User") + ";C:\Users\HP\.local\bin", "User")</pre>
+            </div>
+          </li>
+          <li>關掉 PowerShell、重新開一個（PATH 要重開才生效）</li>
+          <li>再打 <span class="cmd">claude</span>，就會動了</li>
+        </ol>
+        <p class="note">想在「目前這個視窗」馬上試、不想重開：<span class="cmd">$env:Path += ";C:\Users\HP\.local\bin"</span>（只在這個視窗有效，要永久生效仍要做上面第 1 步）</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 每次開始工作的標準流程 -->
+  <section class="slide" data-tone="accent">
+    <div class="slide-index">04 / 09</div>
+    <div class="slide-inner">
+      <p class="eyebrow">Step 2 · 每次都要做</p>
+      <h2 class="slide-title">每次開始工作的標準流程</h2>
+      <ol class="steps">
+        <li><div>在檔案總管開到要工作的資料夾，從該處開啟 PowerShell</div></li>
+        <li><div>輸入 <span class="cmd">claude</span> 啟動</div></li>
+        <li><div>畫面下方的 statusline（狀態列）會顯示用量資訊</div></li>
+        <li><div>小技巧：PowerShell 裡貼上文字用 <span class="cmd">Shift + 右鍵</span></div></li>
+      </ol>
+      <div class="shot">[截圖位置：啟動後畫面與 statusline]</div>
+    </div>
+  </section>
+
+  <!-- 5 三種模式 -->
+  <section class="slide" data-tone="warn">
+    <div class="slide-index">05 / 09</div>
+    <div class="slide-inner">
+      <p class="eyebrow">切換方式：<span class="cmd">Shift + Tab</span></p>
+      <h2 class="slide-title">三種工作模式</h2>
+      <div class="mode-grid">
+        <div class="mode-card">
+          <h3>Auto mode</h3>
+          <p>預設、最常用</p>
+        </div>
+        <div class="mode-card">
+          <h3>Plan mode</h3>
+          <p>先分析規劃再動手，適合寫網站這類較大的任務</p>
+        </div>
+        <div class="mode-card warn">
+          <h3>Dangerous mode</h3>
+          <p>Claude 完全自由執行、不逐一確認</p>
+          <span class="flag">新手先不要用</span>
+        </div>
+      </div>
+      <p class="switch-hint">按 <span class="cmd">Shift + Tab</span> 依序切換這三種模式。</p>
+    </div>
+  </section>
+
+  <!-- 6 Claude Code 常見權限提示說明表 -->
+  <section class="slide" data-tone="warn" style="align-items:flex-start;">
+    <div class="slide-index">06 / 09</div>
+    <div class="slide-inner">
+      <p class="eyebrow">參考資料</p>
+      <h2 class="slide-title">Claude Code 常見權限提示說明表</h2>
+      <p class="lead" style="max-width:none;">看到權限提示時，名稱＝Claude 想使用的工具。判斷原則：唯讀類可放心允許；會改動檔案或執行指令的，看內容再決定；MCP 看是哪個服務的哪個動作。整理日期：2026-07-15</p>
+
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead>
+            <tr><th>權限名稱</th><th>做什麼</th><th>類型</th><th>風險</th><th>建議</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Read</strong></td>
+              <td>讀取檔案內容</td>
+              <td>唯讀</td>
+              <td style="text-align:center;background:var(--risk-low);">低</td>
+              <td>可放心允許。只能看、不能改。</td>
+            </tr>
+            <tr>
+              <td><strong>Glob</strong></td>
+              <td>用檔名模式找檔案（如 *.docx）</td>
+              <td>唯讀</td>
+              <td style="text-align:center;background:var(--risk-low);">低</td>
+              <td>可放心允許。只列出檔名清單。</td>
+            </tr>
+            <tr>
+              <td><strong>Grep</strong></td>
+              <td>在檔案內容中搜尋關鍵字</td>
+              <td>唯讀</td>
+              <td style="text-align:center;background:var(--risk-low);">低</td>
+              <td>可放心允許。只回傳符合的文字行。</td>
+            </tr>
+            <tr>
+              <td><strong>Write</strong></td>
+              <td>建立新檔案或整份覆寫</td>
+              <td>寫入</td>
+              <td style="text-align:center;background:var(--risk-mid);">中</td>
+              <td>看它要寫哪個路徑：新檔案通常沒問題，覆寫舊檔要留意。</td>
+            </tr>
+            <tr>
+              <td><strong>Edit</strong></td>
+              <td>修改既有檔案的部分內容</td>
+              <td>寫入</td>
+              <td style="text-align:center;background:var(--risk-mid);">中</td>
+              <td>看它要改哪個檔、改什麼。重要文件建議先備份。</td>
+            </tr>
+            <tr>
+              <td><strong>PowerShell / Bash</strong></td>
+              <td>執行終端指令（跑程式、裝套件、刪檔、改設定都可能）</td>
+              <td>執行</td>
+              <td style="text-align:center;background:var(--risk-high);">高</td>
+              <td>務必看指令內容再決定。你的設定已預設 shell 指令一律詢問。</td>
+            </tr>
+            <tr>
+              <td><strong>WebSearch / WebFetch</strong></td>
+              <td>搜尋網路／抓取網頁內容</td>
+              <td>網路（讀）</td>
+              <td style="text-align:center;background:var(--risk-low);">低–中</td>
+              <td>查資料用，基本安全；留意是否抓取奇怪網址。</td>
+            </tr>
+            <tr>
+              <td><strong>Agent / Task</strong></td>
+              <td>派出子代理執行搜尋或多步驟任務</td>
+              <td>委派</td>
+              <td style="text-align:center;background:var(--risk-mid);">中</td>
+              <td>子代理仍受相同權限管制；通常可允許。</td>
+            </tr>
+            <tr>
+              <td><strong>Skill</strong></td>
+              <td>呼叫技能（如 /discord:access、pdf、xlsx）</td>
+              <td>依技能而定</td>
+              <td style="text-align:center;background:var(--risk-mid);">依技能</td>
+              <td>看技能名稱：存取控制類（access/configure）要自己在終端跑。</td>
+            </tr>
+            <tr>
+              <td><strong>MCP：discord reply / react / edit_message</strong></td>
+              <td>回覆 Discord 訊息、加表情、編輯訊息</td>
+              <td>外部服務（發送）</td>
+              <td style="text-align:center;background:var(--risk-mid);">中</td>
+              <td>內容會發到 Discord；確認訊息對象與內容合理。</td>
+            </tr>
+            <tr>
+              <td><strong>MCP：discord fetch_messages</strong></td>
+              <td>讀取 Discord 歷史訊息</td>
+              <td>外部服務（讀）</td>
+              <td style="text-align:center;background:var(--risk-low);">低</td>
+              <td>唯讀，可允許。</td>
+            </tr>
+            <tr>
+              <td><strong>MCP：discord download_attachment</strong></td>
+              <td>下載 Discord 附件到本機</td>
+              <td>外部服務（下載）</td>
+              <td style="text-align:center;background:var(--risk-mid);">中</td>
+              <td>受頻道允許名單管制；要開放需在終端跑 /discord:access。</td>
+            </tr>
+            <tr>
+              <td><strong>Artifact</strong></td>
+              <td>把檔案發佈成 claude.ai 網頁</td>
+              <td>對外發佈</td>
+              <td style="text-align:center;background:var(--risk-high);">中–高</td>
+              <td>內容會上雲端（預設私人）；敏感內容不要發佈。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        <h3>備註</h3>
+        <p>一、權限模式可在終端用 Shift+Tab 切換（一般／自動接受編輯／計畫模式）。<br>
+        二、常用且安全的工具可加入允許清單（settings.json），之後不再逐次詢問——回終端叫 Claude 幫你設定即可。<br>
+        三、透過 Discord 遠端操作時，任何權限提示都會等你在 Discord 上按允許／拒絕，拒絕不會中斷對話。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 常用操作總覽 -->
+  <section class="slide" data-tone="accent">
+    <div class="slide-index">07 / 09</div>
+    <div class="slide-inner">
+      <p class="eyebrow">隨查即用</p>
+      <h2 class="slide-title">常用操作總覽</h2>
+      <div class="cmd-groups">
+        <div class="cmd-group">
+          <h3>斜線指令</h3>
+          <dl>
+            <dt class="cmd">/</dt><dd>叫出斜線指令選單</dd>
+            <dt class="cmd">/usage</dt><dd>查看用量</dd>
+            <dt class="cmd">/model</dt><dd>切換模型</dd>
+            <dt class="cmd">/plugins</dt><dd>安裝與管理插件，可串接 Telegram、Discord</dd>
+          </dl>
+        </div>
+        <div class="cmd-group">
+          <h3>快捷鍵</h3>
+          <dl>
+            <dt class="cmd">@</dt><dd>選取檔案帶進對話</dd>
+            <dt class="cmd">Esc</dt><dd>中斷 Claude 正在進行的動作</dd>
+            <dt class="cmd">Alt + V</dt><dd>把剪貼簿的圖片貼給 Claude Code</dd>
+          </dl>
+          <div class="shot">[截圖位置：貼圖片給 Claude 的畫面]</div>
+        </div>
+        <div class="cmd-group">
+          <h3>啟動參數（接在 claude 後面）</h3>
+          <dl>
+            <dt class="cmd">claude -h</dt><dd>查看說明（help）</dd>
+            <dt class="cmd">claude -c</dt><dd>接續上一次的對話</dd>
+            <dt class="cmd">claude -r</dt><dd>列出更多歷史紀錄，挑一個繼續</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 Skills -->
+  <section class="slide" data-tone="accent">
+    <div class="slide-index">08 / 09</div>
+    <div class="slide-inner">
+      <p class="eyebrow">進階</p>
+      <h2 class="slide-title">Skills（推薦安裝）</h2>
+      <ul class="points">
+        <li>Skill = 給 Claude 的工作手冊，教它照你的流程做事</li>
+        <li>安裝方式：把 skill 的網址直接貼給 Claude Code，請它安裝到「家」目錄（home）</li>
+        <li>好處：裝在家目錄後，同一位使用者的所有專案都能使用</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 9 課後練習 + 總表 -->
+  <section class="slide" data-tone="accent" style="align-items:flex-start;">
+    <div class="slide-index">09 / 09</div>
+    <div class="slide-inner">
+      <p class="eyebrow">課後複習</p>
+      <h2 class="slide-title">課後小練習 &amp; 指令總表</h2>
+
+      <div class="practice-block">
+        <ol class="steps">
+          <li><div>自己完成安裝並登入</div></li>
+          <li><div>在任一資料夾啟動 <span class="cmd">claude</span>，請它列出這個資料夾裡有哪些檔案</div></li>
+          <li><div>用 <span class="cmd">Shift + Tab</span> 把三種模式各切換一輪，最後停在 Auto mode</div></li>
+        </ol>
+      </div>
+
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead>
+            <tr><th>指令 / 快捷鍵</th><th>功能</th><th>什麼時候用</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="cmd">irm .../install.ps1 | iex</span></td><td>安裝 Claude Code</td><td>第一次設定電腦時（只做一次）</td></tr>
+            <tr><td><span class="cmd">SetEnvironmentVariable(...)</span></td><td>把安裝資料夾加進 PATH</td><td>打 claude 出現「無法辨識」時</td></tr>
+            <tr><td><span class="cmd">claude</span></td><td>啟動 Claude Code</td><td>每次要開始工作時</td></tr>
+            <tr><td><span class="cmd">Shift + Tab</span></td><td>切換 Auto / Accept Edits / Plan 模式</td><td>想改變 Claude 的執行方式時</td></tr>
+            <tr><td><span class="cmd">claude --dangerously-skip-permissions</span></td><td>啟動 Dangerous（Bypass Permissions）模式</td><td>只在完全了解風險、且在隔離環境時使用</td></tr>
+            <tr><td><span class="cmd">Shift + 右鍵</span></td><td>在 PowerShell 貼上文字</td><td>要貼指令或文字到終端機時</td></tr>
+            <tr><td><span class="cmd">/</span></td><td>叫出斜線指令選單</td><td>忘記指令時</td></tr>
+            <tr><td><span class="cmd">/usage</span></td><td>查看用量</td><td>想知道自己用了多少額度時</td></tr>
+            <tr><td><span class="cmd">/model</span></td><td>切換模型</td><td>想換用不同模型時</td></tr>
+            <tr><td><span class="cmd">/plugins</span></td><td>安裝與管理插件</td><td>想串接 Telegram、Discord 等服務時</td></tr>
+            <tr><td><span class="cmd">@</span></td><td>選取檔案帶進對話</td><td>想針對特定檔案討論時</td></tr>
+            <tr><td><span class="cmd">Esc</span></td><td>中斷 Claude 正在進行的動作</td><td>方向錯了，想先喊停時</td></tr>
+            <tr><td><span class="cmd">Alt + V</span></td><td>貼剪貼簿圖片給 Claude Code</td><td>想直接貼截圖給 Claude 看時</td></tr>
+            <tr><td><span class="cmd">claude -h</span></td><td>查看說明（help）</td><td>忘記啟動參數時</td></tr>
+            <tr><td><span class="cmd">claude -c</span></td><td>接續上一次的對話</td><td>想接著上次沒講完的任務時</td></tr>
+            <tr><td><span class="cmd">claude -r</span></td><td>列出更多歷史紀錄，挑一個繼續</td><td>想回到更早之前的某次對話時</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="nav" role="group" aria-label="投影片導覽">
+  <button id="prevBtn" aria-label="上一頁">‹</button>
+  <span class="counter" id="counter">01 / 09</span>
+  <button id="nextBtn" aria-label="下一頁">›</button>
+</div>
+
+<button class="theme-toggle" id="themeToggle" type="button">深色 / 淺色</button>
+
+<script>
+(function(){
+  var deck = document.getElementById('deck');
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var counter = document.getElementById('counter');
+  var progress = document.getElementById('progress');
+  var total = slides.length;
+
+  function pad(n){ return n < 10 ? '0' + n : '' + n; }
+
+  function currentIndex(){
+    var mid = deck.scrollTop + deck.clientHeight / 3;
+    var idx = 0;
+    slides.forEach(function(s, i){
+      if(s.offsetTop <= mid) idx = i;
+    });
+    return idx;
+  }
+
+  function updateChrome(){
+    var idx = currentIndex();
+    counter.textContent = pad(idx + 1) + ' / ' + pad(total);
+    var max = deck.scrollHeight - deck.clientHeight;
+    var pct = max > 0 ? (deck.scrollTop / max) * 100 : 0;
+    progress.style.width = pct + '%';
+  }
+
+  function goTo(idx){
+    idx = Math.max(0, Math.min(total - 1, idx));
+    slides[idx].scrollIntoView({ block:'start', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  }
+
+  deck.addEventListener('scroll', updateChrome, { passive:true });
+  window.addEventListener('resize', updateChrome);
+
+  document.getElementById('prevBtn').addEventListener('click', function(){ goTo(currentIndex() - 1); });
+  document.getElementById('nextBtn').addEventListener('click', function(){ goTo(currentIndex() + 1); });
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'ArrowDown' || e.key === 'PageDown'){ e.preventDefault(); goTo(currentIndex() + 1); }
+    if(e.key === 'ArrowUp' || e.key === 'PageUp'){ e.preventDefault(); goTo(currentIndex() - 1); }
+  });
+
+  var themeToggle = document.getElementById('themeToggle');
+  var root = document.documentElement;
+  themeToggle.addEventListener('click', function(){
+    var cur = root.getAttribute('data-theme');
+    root.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+  });
+
+  updateChrome();
+})();
+</script>
+</body>
+</html>
