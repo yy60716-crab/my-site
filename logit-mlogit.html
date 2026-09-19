@@ -85,6 +85,8 @@
   .cutline .ax{font-size:13px;fill:#8a8378;}
   #sum .table-wrap.wide{width:min(1080px,calc(100vw - 32px));margin-left:calc(50% - min(540px,50vw - 16px));}
   #sum .table-wrap.wide code{white-space:nowrap;}
+  .term{margin:-10px 0 18px;color:var(--muted);font-size:15px;}
+  .term b{color:var(--ink);}
   .widget{margin:18px 0 22px;}
   .widget-hint{font-size:14px;color:var(--muted);margin:0 0 8px;}
 
@@ -101,6 +103,13 @@
   .quiz .a{padding:12px 18px 14px;border-top:1px dashed var(--line-2);background:#fbfaf7;}
   .quiz .a p:last-child{margin-bottom:0;}
 
+  .refs{border-top:1px solid var(--line);padding-top:28px;margin-top:8px;scroll-margin-top:24px;}
+  .refs h2{font-size:18px;margin-bottom:8px;}
+  .refs-note{font-size:14px;color:var(--muted);}
+  .refs ol{font-size:14px;line-height:1.7;color:var(--muted);padding-left:1.6em;}
+  .refs li{margin-bottom:10px;}
+  .refs li span{display:block;font-size:12.5px;color:var(--faint);}
+  .refs li span::before{content:"→ ";}
   footer{margin-top:60px;color:#b0a898;font-size:13px;text-align:center;}
   footer a{color:inherit;}
 </style>
@@ -122,6 +131,7 @@
       <li><a href="#s3">第三關｜mlogit：飲料店三選一</a></li>
       <li><a href="#s4">第四關｜ologit：不及格／及格／高分</a></li>
       <li><a href="#sum">總整理</a></li>
+      <li><a href="#refs">參考資料</a></li>
     </ol>
   </nav>
 
@@ -129,6 +139,7 @@
   <section class="stage" id="s1">
     <span class="stage-tag">第一關</span>
     <h2>IIA：紅巴士藍巴士</h2>
+    <p class="term"><b>IIA</b> = <i>Independence of Irrelevant Alternatives</i>（無關選項獨立性）</p>
 
     <div class="aside">
       <p>紅巴士藍巴士是學 mlogit 一定會遇到的經典例子，幾乎每本講「離散選擇模型」的計量課本都有，像 Kenneth Train 的《Discrete Choice Methods with Simulation》講 logit 那章就用它。它不是拿來示範怎麼用 mlogit，而是說明 <strong>mlogit 什麼時候會翻車</strong>。課本版第一次看常常看不懂，所以這關先看課本版，再用生活例子拆解。</p>
@@ -212,7 +223,7 @@
     </div>
 
     <h3>為什麼會這樣？</h3>
-    <p>mlogit 內建一條規則，叫 <strong>IIA（無關選項獨立性）</strong>：任兩個選項之間的比例，不管多了或少了別的選項，都不會變。所以 mlogit 堅持開車 : 紅巴士還是 1 : 1，藍巴士又跟紅巴士一模一樣，就變成 1 : 1 : 1，每個 100 ÷ 3 ≈ 33%。開車從 50% 掉到 33%，等於以為「公車漆成藍色，就有 17% 的人不開車了」，很荒謬。</p>
+    <p>mlogit 內建一條規則，叫 <strong>IIA（Independence of Irrelevant Alternatives，無關選項獨立性）</strong>：任兩個選項之間的比例，不管多了或少了別的選項，都不會變。所以 mlogit 堅持開車 : 紅巴士還是 1 : 1，藍巴士又跟紅巴士一模一樣，就變成 1 : 1 : 1，每個 100 ÷ 3 ≈ 33%。開車從 50% 掉到 33%，等於以為「公車漆成藍色，就有 17% 的人不開車了」，很荒謬。</p>
 
     <h3>生活版：換成你熟悉的場景</h3>
     <h4>🍜 拉麵店</h4>
@@ -897,6 +908,19 @@ margins, dydx(hours)        <span class="c">// 三個等級各自的機率變化
       </ul>
       <p style="margin-top:8px">⚠️ 有順序的選項（不及格／及格／高分）不能用 mlogit，要用 ologit（第四關）：mlogit 會把「不及格 &lt; 及格 &lt; 高分」這個高低順序丟掉。</p>
     </div>
+  </section>
+
+  <!-- ============ 參考資料 ============ -->
+  <section class="refs" id="refs">
+    <h2>參考資料</h2>
+    <p class="refs-note">文中的數字（及格機率、飲料店比例、成績三級）都是教學用的假設例子。</p>
+    <ol>
+      <li>McFadden, Daniel (1974). Conditional logit analysis of qualitative choice behavior. In Paul Zarembka (Editor), <i>Frontiers in Econometrics</i>, pages 105–142. New York: Academic Press.<span>mlogit、紅巴士藍巴士</span></li>
+      <li>Train, Kenneth E. (2009). <i>Discrete Choice Methods with Simulation</i>, Second Edition. Cambridge: Cambridge University Press.<span>第 3 章 logit、IIA</span></li>
+      <li>Hausman, Jerry, and Daniel McFadden (1984). Specification tests for the multinomial logit model. <i>Econometrica</i>, Volume 52, Issue 5, pages 1219–1240.<span>Hausman 檢定（IIA）</span></li>
+      <li>Brant, Rollin (1990). Assessing proportionality in the proportional odds model for ordinal logistic regression. <i>Biometrics</i>, Volume 46, Issue 4, pages 1171–1178.<span>Brant 檢定（ologit 平行線假設）</span></li>
+      <li>Long, J. Scott, and Jeremy Freese (2014). <i>Regression Models for Categorical Dependent Variables Using Stata</i>, Third Edition. College Station, Texas: Stata Press.<span>Stata 實作：logit、mlogit、ologit、margins</span></li>
+    </ol>
   </section>
 
   <footer><a href="index.html">← 回學習筆記</a> · © 2026 · Built with GitHub Pages</footer>
