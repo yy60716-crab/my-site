@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light only">
+<title>DiD 與事件研究法</title>
+<meta name="description" content="用拉肚子和颱風假學 DiD 與事件研究法：四關教學、3 個互動元件、19 題動動腦">
+<style>
+  :root{
+    color-scheme:light only;
+    --paper:#faf8f4;
+    --surface:#fff;
+    --ink:#2d2a26;
+    --muted:#6f685d;
+    --faint:#9a9284;
+    --line:#ece7de;
+    --line-2:#ddd6ca;
+    --study:#f0f5f2;
+    --study-line:#dde9e2;
+    --study-ink:#3d6b52;
+    --key:#fdf6e6;
+    --key-line:#efdfb8;
+    --code-bg:#2f2b27;
+    --code-ink:#f1ece4;
+  }
+  html{background:var(--paper);}
+  *{box-sizing:border-box;}
+  body{
+    font-family:"Microsoft JhengHei","微軟正黑體",system-ui,sans-serif;
+    max-width:820px;margin:0 auto;padding:40px 16px 56px;
+    color:var(--ink);background:var(--paper);line-height:1.8;font-size:16px;
+  }
+  @media (min-width:600px){ body{padding:56px 24px;} }
+  a{color:var(--study-ink);}
+  .back{display:inline-block;font-size:14px;color:var(--faint);text-decoration:none;margin-bottom:28px;}
+  .back:hover{color:var(--ink);}
+  header{margin-bottom:36px;}
+  .eyebrow{font-size:13px;color:var(--study-ink);letter-spacing:.05em;margin:0 0 6px;}
+  h1{font-size:30px;line-height:1.35;margin:0 0 10px;text-wrap:balance;}
+  .sub{color:var(--muted);font-size:16px;margin:0;}
+
+  nav.toc{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin-bottom:48px;}
+  nav.toc strong{font-size:14px;color:var(--faint);font-weight:600;}
+  nav.toc ol{margin:6px 0 0;padding-left:1.4em;}
+  nav.toc a{text-decoration:none;}
+  nav.toc a:hover{text-decoration:underline;}
+
+  section.stage{margin-bottom:64px;scroll-margin-top:24px;}
+  .stage-tag{display:inline-block;font-size:12px;font-weight:600;color:var(--study-ink);
+    background:var(--study);border:1px solid var(--study-line);border-radius:20px;padding:1px 10px;margin-bottom:8px;}
+  h2{font-size:24px;line-height:1.4;margin:0 0 20px;text-wrap:balance;}
+  h3{font-size:18px;margin:32px 0 8px;}
+  h4{font-size:16px;margin:24px 0 6px;color:var(--muted);}
+  p{margin:0 0 14px;}
+  ul,ol{margin:0 0 14px;padding-left:1.4em;}
+  li{margin-bottom:4px;}
+
+  .table-wrap{overflow-x:auto;margin:14px 0 18px;border:1px solid var(--line);border-radius:12px;background:var(--surface);}
+  table{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:tabular-nums;}
+  th,td{padding:9px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top;}
+  th{background:#f6f3ed;font-weight:600;white-space:nowrap;}
+  tr:last-child td{border-bottom:none;}
+  td.hl{background:var(--key);font-weight:600;}
+  #sum td:first-child{white-space:nowrap;font-weight:600;}
+  .note{font-size:13px;color:var(--faint);margin-top:-10px;}
+
+  pre{background:var(--code-bg);color:var(--code-ink);border-radius:12px;padding:14px 16px;
+    overflow-x:auto;font-size:14px;line-height:1.7;margin:14px 0 18px;}
+  code{font-family:"Cascadia Mono",Consolas,ui-monospace,monospace;}
+  :not(pre)>code{background:#f1ede5;border-radius:5px;padding:.1em .4em;font-size:.9em;}
+  pre .c{color:#a9a193;}
+
+  .key{background:var(--key);border:1px solid var(--key-line);border-radius:12px;padding:14px 18px;margin:20px 0;font-weight:600;}
+  .key::before{content:"📌 一句話重點";display:block;font-size:13px;color:#9b7a2e;font-weight:600;margin-bottom:2px;}
+  .aside{background:var(--study);border:1px solid var(--study-line);border-radius:12px;padding:14px 18px;margin:16px 0 20px;}
+  .aside > strong:first-child{display:block;margin-bottom:4px;}
+  .aside p:last-child{margin-bottom:0;}
+
+  .cutline{margin:14px 0 18px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px 6px;}
+  .cutline svg{display:block;width:100%;height:auto;}
+  .cutline text{font-family:inherit;}
+  .cutline .cut{font-size:14px;font-weight:600;fill:#2d2a26;}
+  .cutline .bd{font-size:15px;font-weight:600;fill:#2d2a26;}
+  .cutline .ax{font-size:13px;fill:#8a8378;}
+  #sum .table-wrap.wide{width:min(1080px,calc(100vw - 32px));margin-left:calc(50% - min(540px,50vw - 16px));}
+  #sum .table-wrap.wide code{white-space:nowrap;}
+  .term{margin:-10px 0 18px;color:var(--muted);font-size:15px;}
+  .term b{color:var(--ink);}
+  .pat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:16px 0 8px;}
+  .pat{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px 12px;}
+  .pat svg{display:block;width:100%;height:auto;}
+  .pat svg text.t{font-family:inherit;font-size:9px;fill:#9a9284;}
+  .pat .z{stroke:#ddd6ca;stroke-width:1;}
+  .pat .ev{stroke:#C07A2C;stroke-width:1.2;stroke-dasharray:4 3;}
+  .pat .ci{stroke:#4E6E86;stroke-width:1.8;opacity:.4;}
+  .pat .pt{fill:#4E6E86;}
+  .pat figcaption b{display:block;font-size:14px;margin-top:4px;}
+  .pat figcaption span{display:block;font-size:13px;color:var(--muted);line-height:1.5;}
+  .pat.ok .pt{fill:#4F7A61;} .pat.ok .ci{stroke:#4F7A61;}
+  .pat.warn .pt{fill:#C07A2C;} .pat.warn .ci{stroke:#C07A2C;}
+  .pat.bad .pt{fill:#A8452F;} .pat.bad .ci{stroke:#A8452F;}
+  .pat.mute .pt{fill:#8a8378;} .pat.mute .ci{stroke:#8a8378;}
+  .play-h{font-size:18px;margin:34px 0 4px;}
+  .play-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin:12px 0 8px;}
+  .play-grid .playcard{margin:0;height:100%;display:flex;flex-direction:column;}
+  .play-grid .pc-tag{align-self:flex-start;}
+  .play-grid .pc-go{margin-top:auto;padding-top:14px;}
+  .playcard{display:block;text-decoration:none;color:inherit;background:var(--study);
+    border:1px solid var(--study-line);border-radius:16px;padding:20px 22px;margin:28px 0 8px;
+    transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease;}
+  .playcard:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.07);border-color:#c3ddce;}
+  .pc-tag{display:inline-block;font-size:12px;font-weight:600;color:#fff;background:var(--study-ink);
+    border-radius:20px;padding:2px 11px;margin-bottom:10px;}
+  .pc-title{display:block;font-size:20px;font-weight:700;line-height:1.35;}
+  .pc-desc{display:block;font-size:15px;color:var(--muted);margin-top:6px;}
+  .pc-list{display:block;font-size:14px;color:var(--faint);margin-top:8px;}
+  .pc-go{display:inline-block;margin-top:14px;font-size:15px;font-weight:600;color:var(--study-ink);}
+  .widget{margin:18px 0 22px;}
+  .widget-hint{font-size:14px;color:var(--muted);margin:0 0 8px;}
+
+  .quiz{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--study-ink);
+    border-radius:12px;margin:22px 0;overflow:hidden;}
+  .quiz .q{padding:14px 18px 4px;}
+  .quiz .q b{display:block;font-size:13px;color:var(--study-ink);margin-bottom:2px;}
+  .quiz .q p{margin:0;}
+  .quiz summary{cursor:pointer;list-style:none;padding:8px 18px 14px;font-size:15px;color:var(--study-ink);font-weight:600;}
+  .quiz summary::-webkit-details-marker{display:none;}
+  .quiz summary::before{content:"▸ ";}
+  .quiz details[open] summary::before{content:"▾ ";}
+  .quiz summary:focus-visible{outline:2px solid var(--study-ink);outline-offset:-2px;}
+  .quiz .a{padding:12px 18px 14px;border-top:1px dashed var(--line-2);background:#fbfaf7;}
+  .quiz .a p:last-child{margin-bottom:0;}
+
+  .refs{border-top:1px solid var(--line);padding-top:28px;margin-top:8px;scroll-margin-top:24px;}
+  .refs h2{font-size:18px;margin-bottom:8px;}
+  .refs-note{font-size:14px;color:var(--muted);}
+  .refs ol{font-size:14px;line-height:1.7;color:var(--muted);padding-left:1.6em;}
+  .refs li{margin-bottom:10px;}
+  .refs li span{display:block;font-size:12.5px;color:var(--faint);}
+  .refs li span::before{content:"→ ";}
+  footer{margin-top:60px;color:#b0a898;font-size:13px;text-align:center;}
+  footer a{color:inherit;}
+</style>
+</head>
+<body>
+  <a class="back" href="index.html">← 回學習筆記</a>
+
+  <header>
+    <p class="eyebrow">計量分析方法</p>
+    <h1>用拉肚子和颱風假學 DiD 與事件研究法</h1>
+    <p class="sub">四關：吃完拉肚子算不算 DiD、事件研究法的兩種意思、staggered 的兩個解法、事件研究法四步驟。每關都有互動元件和先想再點開的動動腦。</p>
+  </header>
+
+  <nav class="toc" aria-label="目錄">
+    <strong>目錄</strong>
+    <ol>
+      <li><a href="#s1">第一關｜經典案例：吃完拉肚子，是 DiD 嗎？</a></li>
+      <li><a href="#s2">第二關｜事件研究法是什麼？兩種意思</a></li>
+      <li><a href="#s3">第三關｜csdid 與 eventstudyinteract</a></li>
+      <li><a href="#s4">第四關｜事件研究法四步驟：颱風假 × 泡麵</a></li>
+      <li><a href="#sum">總整理</a></li>
+      <li><a href="#stag">補充｜DiD 和 staggered DiD 差在哪</a></li>
+      <li><a href="#refs">參考資料</a></li>
+    </ol>
+  </nav>
+
+  <!-- ============ 第一關 ============ -->
+  <section class="stage" id="s1">
+    <span class="stage-tag">第一關</span>
+    <h2>經典案例：吃完拉肚子，是 DiD 嗎？</h2>
+    <p class="term"><b>DiD</b> = <i>Difference-in-Differences</i>（差異中的差異，也有人叫雙重差分）</p>
+
+    <div class="aside">
+      <strong>為什麼從拉肚子開始？</strong>
+      <p>DiD 最有名的經典案例，剛好就是在研究「拉肚子」。1850 年代倫敦霍亂大流行（霍亂會造成嚴重腹瀉），醫生 John Snow 注意到，供應南倫敦的兩家自來水公司，原本都從被污水污染的泰晤士河段取水。後來 Lambeth 公司在 1852 年前後把取水口移到上游乾淨的河段，另一家 Southwark &amp; Vauxhall 沒有移。1849 年的霍亂流行，兩家公司供水的地區並沒有這個差距；到了 1854 年的流行，差距就非常明顯：Southwark &amp; Vauxhall 供水的房子每一萬戶死了 315 人，Lambeth 只有 37 人。看「取水口移動前後，兩邊的變化差多少」，就是 DiD 的邏輯，這也成了霍亂經由水傳播的關鍵證據。</p>
+    </div>
+
+    <h3>起點問題</h3>
+    <p>「吃東西前都沒症狀，吃完卻拉肚子」，這算 DiD 嗎？</p>
+    <p>不算，這是<strong>單純前後比較</strong>。問題是那段時間可能還發生了別的事：天氣突然變冷著涼、腸胃型感冒正在流行、期末熬夜壓力大……只有你一個人的前後資料，分不出是食物害的，還是那段時間的其他事害的。</p>
+
+    <h3>DiD 是什麼：減兩次</h3>
+    <p>DiD 是 Difference-in-Differences，中文叫「差異中的差異」（也有人叫雙重差分）。名字就是做法：</p>
+    <ul>
+      <li><strong>第一次減</strong>：每組各自算「事件後 − 事件前」，看自己變了多少。</li>
+      <li><strong>第二次減</strong>：拿「有遇到事件那組的變化」減掉「沒遇到那組的變化」。</li>
+    </ul>
+    <p>對照組的功能，是吸收「大家都會遇到的變化」，扣掉之後剩下的，才是事件本身的效果。</p>
+
+    <h3>升級成 DiD 版：吃到飽與生蠔</h3>
+    <p>你跟同學去吃到飽，一半的人吃了生蠔（處理組），一半沒吃（對照組），記錄大家平均每天跑幾次廁所：</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th>吃之前</th><th>吃之後</th><th>變化</th></tr></thead>
+        <tbody>
+          <tr><td>吃生蠔組</td><td>2</td><td>7</td><td class="hl">+5</td></tr>
+          <tr><td>沒吃生蠔組</td><td>1</td><td>3</td><td>+2</td></tr>
+        </tbody>
+      </table>
+    </div>
+<pre><code>吃生蠔組的變化：7 − 2 = +5
+沒吃生蠔組的變化：3 − 1 = +2  <span class="c">（吃到飽吃太撐，大家都有）</span>
+DiD = 5 − 2 = 3 → 生蠔真正讓人多跑 3 次廁所</code></pre>
+
+    <p>兩種常見的錯：</p>
+    <ul>
+      <li>只看吃生蠔組自己前後（+5）：把「吃到飽吃太撐」的 2 次也算到生蠔頭上，高估。</li>
+      <li>只比吃完後兩組（7 − 3 = 4）：把「生蠔組本來就比較常跑廁所」（2 vs 1）也算進去，也高估。</li>
+    </ul>
+    <p>DiD 減兩次，剛好把這兩個問題一起處理掉。</p>
+
+    <div class="widget">
+      <p class="widget-hint">🎮 改四格數字，看 DiD 怎麼算，以及「只看前後」「只比事後」各差在哪裡。預設是吃生蠔的數字；動動腦 3 的冰飲數字也可以放進來驗算。</p>
+<div class="es-did">
+<style>
+.es-did{--ink:#2d2a26;--muted:#6f685d;--line:#ece7de;--surface:#ffffff;--soft:#f6f3ed;--sea:#4E6E86;--warn:#C07A2C;--bad:#A8452F;color:var(--ink);font-variant-numeric:tabular-nums;max-width:640px}
+.es-did .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 16px;margin-bottom:8px}
+.es-did label{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--muted)}
+.es-did input{font:inherit;font-size:16px;padding:6px 10px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink);width:100%;box-sizing:border-box}
+.es-did input:focus-visible{outline:2px solid var(--sea);outline-offset:1px}
+.es-did .err{color:var(--bad);font-size:14px;min-height:1.4em}
+.es-did .res{background:var(--soft);border-radius:8px;padding:12px 14px;font-size:15px;line-height:1.8}
+.es-did .big{font-size:18px;font-weight:600;color:var(--sea)}
+</style>
+<div class="grid">
+<label>處理組｜事件前<input type="number" step="any" id="es-d-t0" value="2"></label>
+<label>處理組｜事件後<input type="number" step="any" id="es-d-t1" value="7"></label>
+<label>對照組｜事件前<input type="number" step="any" id="es-d-c0" value="1"></label>
+<label>對照組｜事件後<input type="number" step="any" id="es-d-c1" value="3"></label>
+</div>
+<div class="err" id="es-d-err" role="alert"></div>
+<div class="res" id="es-d-out" aria-live="polite"></div>
+<script>
+(function(){
+  var root = document.currentScript.parentElement;
+  var q = function(s){ return root.querySelector(s); };
+  var ids = ['#es-d-t0', '#es-d-t1', '#es-d-c0', '#es-d-c1'];
+  function r2(x){ var r = Math.round(x * 100) / 100; return Object.is(r, -0) ? 0 : r; }
+  function num(x){ var r = r2(x); return r < 0 ? '−' + (-r) : String(r); }
+  function sgn(x){ var r = r2(x); return r > 0 ? '+' + r : (r < 0 ? '−' + (-r) : '0'); }
+  function update(){
+    var v = ids.map(function(s){ return q(s).value.trim(); });
+    if (v.some(function(s){ return s === '' || isNaN(Number(s)); })) {
+      q('#es-d-err').textContent = '四格都要填數字，才算得出 DiD。';
+      q('#es-d-out').textContent = '';
+      return;
+    }
+    q('#es-d-err').textContent = '';
+    var t0 = Number(v[0]), t1 = Number(v[1]), c0 = Number(v[2]), c1 = Number(v[3]);
+    var dT = t1 - t0, dC = c1 - c0, did = dT - dC;
+    q('#es-d-out').innerHTML =
+      '處理組的變化：' + num(t1) + ' − ' + num(t0) + ' ＝ ' + sgn(dT) + '<br>' +
+      '對照組的變化：' + num(c1) + ' − ' + num(c0) + ' ＝ ' + sgn(dC) + '（大家都會有的變化）<br>' +
+      '<span class="big">DiD ＝ ' + sgn(dT) + ' − (' + sgn(dC) + ') ＝ ' + sgn(did) + '</span><br>' +
+      '只看處理組前後：' + sgn(dT) + '（跟 DiD 差 ' + sgn(dT - did) + '，就是大家共同的變化）<br>' +
+      '只比事後兩組：' + sgn(t1 - c1) + '（跟 DiD 差 ' + sgn(t1 - c1 - did) + '，就是兩組本來的差距）';
+  }
+  ids.forEach(function(s){ q(s).addEventListener('input', update); });
+  update();
+})();
+</script>
+</div>
+    </div>
+
+    <h3>最重要的前提：平行趨勢</h3>
+    <p>如果生蠔組沒吃生蠔，他們的變化應該跟對照組一樣（也是 +2）。次數不用一樣多，但「走勢」要一起持平、一起升降。</p>
+    <p>會破功的情況：吃生蠔的剛好都是吃最兇、還狂灌冰啤酒的那群人，+5 裡面就混了「吃更多＋冰啤酒」的效果，算出來的 3 就不能全怪生蠔。</p>
+
+    <h3>判斷是不是 DiD 的三個條件</h3>
+    <ol>
+      <li>至少兩組，一組有遇到事件（處理組）、一組沒有（對照組）</li>
+      <li>事件前、事件後都要有資料</li>
+      <li>比的是「變化」的差，不是事後誰高誰低</li>
+    </ol>
+
+    <h3>看的是因果，但沒有絕對</h3>
+    <ul>
+      <li>DiD 的目標，是從「一起發生」往「誰造成誰」推，對照組就是為了這個存在的。</li>
+      <li>它估的是「平均」效果：平均多跑 3 次，不代表每個人都剛好 3 次，可能有人 0 次、有人 8 次（效果異質）。</li>
+      <li>它建立在假設上（平行趨勢），也有不確定性，所以結論要搭配信賴區間來看。</li>
+    </ul>
+
+    <div class="key">DiD 比的不是「前後差多少」，而是「兩組的前後變化差多少」；而且是平均的、有前提的因果。</div>
+
+    <div class="quiz">
+      <div class="q"><b>動動腦 1</b><p>John Snow 的霍亂研究裡，誰是處理組？誰是對照組？「事件」是什麼？</p></div>
+      <details><summary>想好了，看答案</summary>
+        <div class="a"><p>處理組是 Lambeth 公司供水的家戶（取水口移到上游），對照組是 Southwark &amp; Vauxhall 供水的家戶（沒有移）。事件是「取水口移到乾淨的上游」。事件前是 1849 年的流行，事件後是 1854 年的流行，比的是兩邊死亡率的「變化」差多少。</p></div>
+      </details>
+    </div>
+
+    <div class="quiz">
+      <div class="q"><b>動動腦 2</b><p>下面哪一個是 DiD？</p>
+        <ul>
+          <li>A. 只量你自己喝珍奶前、喝珍奶後的睡眠時間</li>
+          <li>B. 比較喝珍奶和沒喝珍奶的同學，只比「喝完那天晚上」誰睡得比較少</li>
+          <li>C. 比較喝珍奶和沒喝珍奶的同學，喝之前、喝之後各量一次睡眠時間，再比兩組的變化</li>
+        </ul>
+      </div>
+      <details><summary>想好了，看答案</summary>
+        <div class="a"><p>C。A 是單純前後比較（少了對照組）；B 只比事後（少了事前，會把兩組本來的差距也算進去）；C 有兩組、前後都量、比變化，三個條件都符合。</p></div>
+      </details>
+    </div>
+
+    <div class="quiz">
+      <div class="q"><b>動動腦 3</b><p>換一組數字：喝了路邊冰飲的人，喝之前平均每天跑 1 次廁所，喝之後 4 次；沒喝的人從 1 次變 2 次。冰飲的效果是多少？</p></div>
+      <details><summary>想好了，看答案</summary>
+        <div class="a"><p>2 次。喝的人變化 4 − 1 = +3，沒喝的人變化 2 − 1 = +1，DiD = 3 − 1 = 2。可以用上面的小算盤驗算看看。</p></div>
+      </details>
+    </div>
+
+    <div class="quiz">
+      <div class="q"><b>動動腦 4</b><p>你想知道某道菜是不是讓你拉肚子，找了「跟你吃一模一樣東西的家人」當對照組，這樣可以嗎？</p></div>
+      <details><summary>想好了，看答案</summary>
+        <div class="a"><p>不行。家人也吃了，等於也是處理組，就沒有人能告訴你「沒吃的話會怎樣」。但家人其實是很好的對照組人選，前提是他們沒吃那道菜：例如你跟媽媽吃了冰箱裡的隔夜壽司，爸爸跟弟弟沒吃。只有你跟媽媽拉肚子 → 壽司嫌疑很大；四個人全都在拉 → 比較可能是家裡的水，或全家一起中了腸胃型感冒。</p>
+        <p>家人好用，是因為除了那道菜，其他條件幾乎都一樣（同一個家、同樣的天氣、同一波流行），平行趨勢比較站得住。</p></div>
+      </details>
+    </div>
+
+    <div class="quiz">
+      <div class="q"><b>動動腦 5</b><p>全家出去玩，分著吃炸彈蔥油餅，結果只有你上吐下瀉，其他人都沒事。這算什麼？</p></div>
+      <details><summary>想好了，看答案</summary>
+        <div class="a"><p>不是 DiD：大家都吃了，全部都是處理組，沒有對照組。但這個結果是很好的線索：如果蔥油餅真的有問題，應該不會只有你中，所以要反過來找「你跟大家哪裡不一樣」，例如只有你另外喝了冰飲、你那幾天熬夜著涼，或你剛好吃到半熟蛋最多的那一塊。</p>
+        <p>也可能是同一份蔥油餅對你的影響特別大，這就是<strong>效果異質</strong>：同樣的處理，每個人的效果不一樣。</p></div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ============ 第二關 ============ -->
+  <section class="stage" id="s2">
+    <span class="stage-tag">第二關</span>
+    <h2>事件研究法是什麼？兩種意思</h2>
+
+    <p>「事件研究法」在不同領域，意思不太一樣：</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th>計量版（DiD 版）</th><th>財務版</th></tr></thead>
+        <tbody>
+          <tr><td>看什麼</td><td>事件前後「每一期」，處理組跟對照組差多少</td><td>公司公布消息後，股價有沒有「異常報酬」</td></tr>
+          <tr><td>跟誰比</td><td>對照組（沒遇到事件的）</td><td>用事件前的資料估出「正常應該怎麼動」（會考慮大盤）</td></tr>
+          <tr><td>颱風版例子</td><td>放颱風假的縣市 vs 沒放的縣市，颱風前後每天的泡麵銷量</td><td>颱風消息一出，泡麵公司的股價有沒有比平常多漲</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>計量版就是把 DiD「逐期攤開」：不是只分前、後兩期，而是把颱風假前 7 天、前 6 天……當天、後 1 天……每一天都算一次兩組的差距。好處有兩個：</p>
+    <ol>
+      <li>可以檢查事件前兩組是不是本來就平行（平行趨勢）</li>
+      <li>可以看效果怎麼隨時間變化（哪天開始、哪天最高、多久消退）</li>
+    </ol>
+
+    <div class="key">計量的事件研究法＝把 DiD 逐期攤開來看；財務的事件研究法＝看實際跟「正常值」差多少。</div>
+
+    <div class="quiz">
+      <div class="q"><b>動動腦 6</b><p>下面兩個研究，各是哪一種事件研究法？</p>
+        <ul>
+          <li>A. 颱風消息公布那幾天，泡麵公司的股價有沒有比預期多漲</li>
+          <li>B. 比較放颱風假和沒放颱風假的縣市，颱風前後每天的泡麵銷量</li>
+        </ul>
+      </div>
+      <details><summary>想好了，看答案</summary>
+        <div class="a"><p>A 是財務版：用平常的資料估出股價「正常」會怎麼動，再看實際多漲多少（異常報酬）。B 是計量版（DiD 版）：有處理組（放假的縣市）和對照組（沒放的），逐天比差距。</p></div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ============ 第三關 ============ -->
+  <section class="stage" id="s3">
+    <span class="stage-tag">第三關</span>
+    <h2>複習：csdid 與 eventstudyinteract</h2>
+    <p class="term">staggered（處理時間錯開）的兩個解法</p>
+
+    <div class="aside">
+      <p>7/8 學 staggered DiD 時用的是醫院 A/B/C（見 <a href="staggered-did.html">冒牌對照組：一場醫療統計偵探故事</a>），這裡換成颱風假，邏輯完全一樣。</p>
+    </div>
+
+    <h3>情境：大家放颱風假的時間錯開</h3>
+    <p>假設 A 縣 7 月放颱風假、B 縣 8 月、C 縣 9 月，D 縣整年都沒放。想看颱風假對每月泡麵銷量的影響。處理時間錯開，就是 staggered。</p>
+
+    <h3>問題在哪：已經放過假的，不能當對照組</h3>
+    <p><strong>TWFE</strong>（Two-Way Fixed Effects，雙向固定效果）是傳統做 DiD 的迴歸寫法：同時放「單位固定效果」（每個縣自己的高低）和「時間固定效果」（每個月大家共同的高低），剩下的差距就當成處理效果。兩組兩期時它就等於前面算的 DiD；但處理時間錯開時，它會把所有可能的比較混在一起算，包括「拿 7 月就放過假的 A 縣，當 8 月 B 縣的對照組」。但 A 縣放完假，家裡還堆著泡麵，接下來反而買得少，它自己還在「囤貨後遺症」裡。拿它當對照，會把這個變化一起扣掉，B 的效果就被算歪了。</p>
+    <p>一句話：<strong>已經放過颱風假的縣，不能當還沒放假的縣的對照組。</strong></p>
+    <div class="aside">
+      <strong>換個比喻（疫苗）</strong>
+      <p>這個規則跟疫苗一樣：想知道疫苗有沒有效，對照組要找<strong>沒打過</strong>疫苗的人；拿已經打過的人來當對照，看到的差距裡就混了疫苗本身的效果。颱風假也是：A 縣放過假（＝打過疫苗），它的泡麵銷量已經被影響了，不能再代表「沒放假會怎樣」。</p>
+    </div>
+    <p>csdid 和 eventstudyinteract 都是解法，共同原則只有一條：絕不讓已處理的單位當別人的對照組。</p>
+
+    <h3>csdid：先拆成很多個小 DiD，再拼起來</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>想算的</th><th>怎麼比</th><th>行不行</th></tr></thead>
+        <tbody>
+          <tr><td>A 縣 7 月</td><td>A 的「6 月 → 7 月」變化 − B、C、D 同期的變化</td><td>✅ B、C 還沒放，D 從沒放</td></tr>
+          <tr><td>B 縣 8 月</td><td>B 的「7 月 → 8 月」變化 − C、D 同期的變化</td><td>✅ A 已經放過，排除</td></tr>
+          <tr><td>C 縣 9 月</td><td>C 的「8 月 → 9 月」變化 − D 同期的變化</td><td>✅ 只剩 D 能比</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul>
+      <li>每一格叫 ATT(g,t)：g 是哪一批（哪個月放假），t 是哪個月。</li>
+      <li>小 DiD 都算好之後，再依需要拼成整體平均、各縣、各月，或「放假後第幾個月」（也就是事件研究圖）。</li>
+      <li>對照組可以只用「從沒放過的」（D，預設），也可以加 <code>notyet</code>，把「還沒放的」也算進來（上面的表就是這種）。</li>
+      <li>如果沒有 D，9 月以後大家都放過了，就沒有人能當對照，C 的效果算不出來。</li>
+      <li>比喻：拍照時每張都只拍乾淨的畫面，之後再依需要排成不同相簿：照人排、照日期排，或照「事件後第幾天」排。</li>
+    </ul>
+
+    <div class="key">csdid ＝ 先算很多個乾淨的小 DiD，再拼成你要的答案。</div>
+
+    <h3>eventstudyinteract：每組各自做事件研究，再加權平均</h3>
+    <ul>
+      <li>它從事件研究迴歸出發，放「放假前 2 個月、前 1 個月、當月、後 1 個月……」這些虛擬變數。</li>
+      <li>如果直接用 TWFE 跑，各組混在一起，「後 1 個月」的係數會偷偷混進別組、別期的效果。</li>
+      <li>解法：讓每一組都有自己一套「第幾個月」的係數（組別 × 第幾個月，就是名字裡的 interact），每組都只跟乾淨的對照組比；最後在每一個「第幾個月」，把各組的效果依比重平均。</li>
+      <li>例如「放假後第 1 個月」：A 是 8 月、B 是 9 月，各自跟 D 比出效果，再平均成一個「第 1 個月效果」。A 跟 B 從頭到尾不互比。</li>
+      <li>對照組用「從沒放過的」（D），或「最後一批放的」（C，但只能用 C 放假前的月份）。</li>
+      <li>比喻：每個縣先畫自己的「差距曲線」（自己 − 對照縣），再依各縣大小疊成一條平均線。</li>
+    </ul>
+
+    <div class="key">eventstudyinteract ＝ 每組各自做事件研究，再加權平均成一條。</div>
+
+    <h3>兩個比一比</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th>csdid</th><th>eventstudyinteract</th></tr></thead>
+        <tbody>
+          <tr><td>做法</td><td>先算每組每期的小 DiD，再拼起來</td><td>每組各自做事件研究，再加權平均</td></tr>
+          <tr><td>對照組</td><td>從未處理（預設），或還沒處理（<code>notyet</code>）</td><td>從未處理，或最後一批處理的</td></tr>
+          <tr><td>要準備什麼</td><td>每個單位「第一次被處理的時間」（從未處理填 0）</td><td>自己做好「事件前後第幾期」的虛擬變數，加上組別、對照組標記</td></tr>
+          <tr><td>產出</td><td>整體、分組、分期、事件研究圖都能拼</td><td>主要就是事件研究的逐期係數</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>兩個的精神一樣，用同一種對照組時結果通常很接近，所以很多論文會兩個都跑，互相檢查結果穩不穩。</p>
+
+    <h3>最常見的誤會：「eventstudyinteract 是跟自己比」</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th>跟別組比</th><th>看前後變化</th></tr></thead>
+        <tbody>
+          <tr><td>csdid</td><td>✅</td><td>✅</td></tr>
+          <tr><td>eventstudyinteract</td><td>✅</td><td>✅</td></tr>
+          <tr><td>只跟自己比前後</td><td>❌</td><td>✅ → 不算 DiD</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>事件研究圖的<strong>橫軸</strong>是照每組「自己的事件時間」排的，所以看起來很像在跟自己比；但<strong>每個點的高度</strong>，都是跟對照組比出來的差距。</p>
+
+    <h3>「哪個月」vs「第幾個月」只是標籤不同</h3>
+    <p>csdid 的格子用「哪個月」標記（A 縣 8 月），eventstudyinteract 用「放假後第幾個月」標記（A 縣第 1 個月）。A 是 7 月放假，所以「A 縣 8 月」就等於「A 縣第 1 個月」，是同一格。就像同一張照片，一個用拍攝日期命名，一個用「旅行第幾天」命名。真正的差別在算法：csdid 一格一格分開算，eventstudyinteract 用一條迴歸一次估出來。</p>
+
+    <div class="key">兩個都「跟別組比、看前後變化」，差在怎麼算、怎麼拼，不是跟誰比。</div>
+
+    <div class="aside">
+      <strong>記不住的話，先記三句</strong>
+      <ol style="margin:0">
+        <li>只跟「還沒處理」的比，處理過的不能當對照組。</li>
+        <li>比的是「變化」，不是當下誰高誰低。</li>
+        <li>大家處理的時間不同沒關係，對齊成「第幾期」再看。</li>
+      </ol>
+    </div>
+
+    <div class="quiz">
+      <div class="q"><b>動動腦 7</b><p>「eventstudyinteract 是跟自己比，看自己放假前後的變化」，這句話對嗎？</p></div>
+      <details><summary>想好了，看答案</summary>
+        <div class="a"><p>不對。如果只跟自己比前後，就變回「吃完拉肚子」那種單純前後比較了。eventstudyinteract 的每一組都要跟乾淨的對照組（從沒放假的，或最後一批放的）比；只是橫軸照各組自己的事件時間排，所以看起來像在跟自己比。</p></div>
+      </details>
+    </div>
+
+    <div class="quiz">
+      <div class="q"><b>動動腦 8</b><p>8 月 B 縣放颱風假，可以拿 7 月就放過假的 A 縣當對照組嗎？為什麼？</p></div>
+      <details><summary>想好了，看答案</summary>
+        <div class="a"><p>不行。A 縣 7 月就放過颱風假了，它自己已經「被處理過」：放完假家裡還堆著泡麵，接下來的銷量還在變。拿它代表「B 縣沒放假會怎樣」，會把 A 自己的囤貨後遺症也一起扣掉，B 的效果就被算歪了。（用前面的疫苗比喻說，A 縣就是已經打過疫苗的人。）</p></div>
+      </details>
+    </div>
+
+    <div class="quiz">
+      <div class="q"><b>動動腦 9</b><p>在 csdid 裡算「A 縣 8 月」的效果，跟在 eventstudyinteract 裡算「A 縣放假後第 1 個月」，是不是同一件事？</p></div>
+      <details><summary>想好了，看答案</summary>
+        <div class="a"><p>是同一格，只是標籤不同。A 縣 7 月放假，8 月就是放假後第 1 個月。csdid 用「哪個月」命名，eventstudyinteract 用「第幾個月」命名；兩個指令真正的差別在算法，不在標籤。</p></div>
+      </details>
+    </div>
+
+    <div class="quiz">
+      <div class="q"><b>動動腦 10</b><p>如果 D 縣也會在 10 月放颱風假（所有縣都會放），10 月以後還能算效果嗎？</p></div>
+      <details><summary>想好了，看答案</summary>
+        <div class="a"><p>不能。10 月以後所有縣都放過了，沒有「還沒放」的縣可以當對照組。規則是：對照組在被比較的當下，必須真的還沒被處理。</p></div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ============ 第四關 ============ -->
+  <section class="stage" id="s4">
+    <span class="stage-tag">第四關</span>
+    <h2>事件研究法四步驟：颱風假 × 泡麵</h2>
+
+    <h3>情境</h3>
+    <p>想知道「颱風假」對泡麵銷量的影響。處理組是放颱風假的地區，對照組是沒放的地區，每天記錄泡麵銷量。下面的數字都是「比平常多賣幾碗」，而且都已經跟對照組比過。</p>
+
+    <div class="aside">
+      <strong>學習地圖</strong>
+      <p>① 對齊第 0 期 → ② 決定事件窗 → ③ 選基準期 → ④ 讀事件研究圖</p>
+    </div>
+
+    <h3>① 對齊第 0 期</h3>
+    <p>每個颱風來的時間不一樣，所以要把時間軸從「日曆時間」（幾月幾號）改成「事件時間」（事件前後第幾天）。颱風假當天叫第 0 天，之前是 −1、−2……，之後是 +1、+2……。「期」可以是天、週、月或年，看資料的單位。</p>
+<pre><code>事件時間 ＝ 這一天的日期 − 颱風假的日期</code></pre>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th>颱風假</th><th>第 −1 天</th><th>第 0 天</th><th>第 +1 天</th></tr></thead>
+        <tbody>
+          <tr><td>颱風甲</td><td>8/5</td><td>8/4</td><td>8/5</td><td>8/6</td></tr>
+          <tr><td>颱風乙</td><td>8/14</td><td>8/13</td><td>8/14</td><td>8/15</td></tr>
+          <tr><td>颱風丙</td><td>8/23</td><td>8/22</td><td>8/23</td><td>8/24</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>對齊之後，8/4、8/13、8/22 雖然是不同日期，但都叫「第 −1 天」，可以放在一起平均。</p>
+    <p>為什麼一定要對齊？如果照日期看，8/4 只有颱風甲的地區在搶泡麵，另外兩個颱風都還沒來，平均起來尖峰就被稀釋了；對齊之後，三個颱風的「前一天」疊在同一格，尖峰就很明顯。</p>
+    <p>對齊只是在整理時間軸：每一天的效果，還是跟「同一天、沒放颱風假的地區」比。</p>
+
+    <div class="key">對齊第 0 期，就是把「大家在不同時間發生的事」排到同一條起跑線上。</div>
+
+    <div class="widget">
+      <p class="widget-hint">🎮 切換「照日期排」和「對齊成第 0 天」，看三個颱風的平均尖峰怎麼從被稀釋，變回清楚的一根。長條是「比平常多賣幾碗泡麵」，橘色是颱風假當天。</p>
+<div class="es-align">
+<style>
+.es-align{--ink:#2d2a26;--muted:#6f685d;--line:#ece7de;--surface:#ffffff;--soft:#f6f3ed;--sea:#4E6E86;--warn:#C07A2C;color:var(--ink);font-variant-numeric:tabular-nums;max-width:640px}
+.es-align .seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:12px}
+.es-align .seg button{font:inherit;font-size:14px;padding:6px 14px;border:0;background:var(--surface);color:var(--muted);cursor:pointer}
+.es-align .seg button[aria-pressed="true"]{background:var(--sea);color:var(--surface)}
+.es-align .seg button:focus-visible{outline:2px solid var(--warn);outline-offset:-2px}
+.es-align .row{display:grid;grid-template-columns:64px minmax(0,1fr);align-items:end;gap:8px;margin:6px 0}
+.es-align .name{font-size:13px;color:var(--muted);padding-bottom:2px}
+.es-align .strip{display:flex;align-items:flex-end;gap:2px;height:52px;border-bottom:1px solid var(--line)}
+.es-align .avg .strip{height:72px}
+.es-align .avg .name{color:var(--ink);font-weight:600}
+.es-align .bar{flex:1 1 0;background:var(--sea);border-radius:2px 2px 0 0}
+.es-align .bar.day0{background:var(--warn)}
+.es-align .axis{display:flex;gap:2px;margin-left:72px;font-size:11px;color:var(--muted)}
+.es-align .axis span{flex:1 1 0;text-align:center;white-space:nowrap;overflow:visible}
+.es-align .out{font-size:15px;line-height:1.7;margin-top:10px}
+</style>
+<div class="seg" role="group" aria-label="排列方式">
+<button type="button" id="es-a-cal" aria-pressed="true">照日期排</button>
+<button type="button" id="es-a-ev" aria-pressed="false">對齊成第 0 天</button>
+</div>
+<div id="es-a-rows"></div>
+<div class="axis" id="es-a-axis" aria-hidden="true"></div>
+<div class="out" id="es-a-out" aria-live="polite"></div>
+<script>
+(function(){
+  var root = document.currentScript.parentElement;
+  var q = function(s){ return root.querySelector(s); };
+  var T = [
+    { name: '颱風甲', day0: 5,  v: [25, 55, 100, 45, 10] },
+    { name: '颱風乙', day0: 14, v: [15, 45, 95, 35, 5] },
+    { name: '颱風丙', day0: 23, v: [20, 50, 105, 40, 15] }
+  ];
+  var OFF = [-3, -2, -1, 0, 1];
+  var DAYS = 26, MAX = 105, mode = 'cal';
+  function lab(k){ return k > 0 ? '+' + k : (k < 0 ? '−' + (-k) : '0'); }
+  function onCalendar(t){
+    var a = [];
+    for (var d = 1; d <= DAYS; d++) { var i = OFF.indexOf(d - t.day0); a.push(i >= 0 ? t.v[i] : 0); }
+    return a;
+  }
+  function strip(vals, flags){
+    var s = document.createElement('div'); s.className = 'strip';
+    vals.forEach(function(x, i){
+      var b = document.createElement('div');
+      b.className = 'bar' + (flags[i] ? ' day0' : '');
+      b.style.height = (x / MAX * 100) + '%';
+      b.title = '比平常多賣 ' + Math.round(x) + ' 碗';
+      s.appendChild(b);
+    });
+    return s;
+  }
+  function row(name, vals, flags, cls){
+    var r = document.createElement('div'); r.className = 'row' + (cls ? ' ' + cls : '');
+    var n = document.createElement('div'); n.className = 'name'; n.textContent = name;
+    r.appendChild(n); r.appendChild(strip(vals, flags));
+    return r;
+  }
+  function render(){
+    var series, flags, labels = [];
+    if (mode === 'cal') {
+      series = T.map(onCalendar);
+      flags = T.map(function(t){ var f = []; for (var d = 1; d <= DAYS; d++) f.push(d === t.day0); return f; });
+      for (var d = 1; d <= DAYS; d++) labels.push(d === 1 || d % 5 === 0 ? '8/' + d : '');
+    } else {
+      series = T.map(function(t){ return t.v.slice(); });
+      flags = T.map(function(){ return OFF.map(function(k){ return k === 0; }); });
+      labels = OFF.map(lab);
+    }
+    var avg = series[0].map(function(_, i){ return (series[0][i] + series[1][i] + series[2][i]) / 3; });
+    var avgFlags = mode === 'cal' ? avg.map(function(){ return false; }) : OFF.map(function(k){ return k === 0; });
+    var rows = q('#es-a-rows'); rows.innerHTML = '';
+    T.forEach(function(t, i){ rows.appendChild(row(t.name, series[i], flags[i])); });
+    rows.appendChild(row('三個平均', avg, avgFlags, 'avg'));
+    var ax = q('#es-a-axis'); ax.innerHTML = '';
+    labels.forEach(function(l){ var s = document.createElement('span'); s.textContent = l; ax.appendChild(s); });
+    var peak = Math.round(Math.max.apply(null, avg));
+    q('#es-a-out').textContent = mode === 'cal'
+      ? '照日期排：三個颱風的高峰落在不同天，平均起來最高只有 ' + peak + ' 碗，尖峰被稀釋了。橘色是各自的颱風假。'
+      : '對齊成第 0 天：三個颱風假疊在同一格，平均的高峰回到 ' + peak + ' 碗，就在第 −1 天（颱風假前一天）。';
+    q('#es-a-cal').setAttribute('aria-pressed', String(mode === 'cal'));
+    q('#es-a-ev').setAttribute('aria-pressed', String(mode === 'ev'));
+  }
+  q('#es-a-cal').addEventListener('click', function(){ mode = 'cal'; render(); });
+  q('#es-a-ev').addEventListener('click', function(){ mode = 'ev'; render(); });
+  render();
+})();
+</script>
+</div>
+    </div>
+
+    <div class="quiz">
+      <div class="q"><b>動動腦 11</b><p>8/12 對颱風乙來說是第幾天？對颱風甲呢？</p></div>
+      <details><summary>想好了，看答案</summary>
+        <div class="a"><p>對颱風乙是第 −2 天（8/12 − 8/14），對颱風甲是第 +7 天（8/12 − 8/5）。同一天，對不同事件可能是完全不同的事件時間，這就是要對齊的原因。</p></div>
+      </details>
+    </div>
+
+    <h3>② 決定事件窗</h3>
+
+    <div class="quiz">
+      <div class="q"><b>動動腦 12</b><p>先想想再往下看：要看颱風假對泡麵銷量的影響，事件窗前面只留 1 天（第 −1 天）夠嗎？提示：颱風來之前，大家都在幹嘛？</p></div>
+      <details><summary>想好了，看答案</summary>
+        <div class="a"><p>不夠。颱風還沒來，新聞就開始報了，大家會提前囤泡麵，而且颱風假前一天買得最兇。只留 1 天，看到的全是「已經在囤貨」的日子，看不到正常的樣子。前面要留到大家還很正常的日子，保險一點可以往前抓一週左右；更好的做法是直接看資料，泡麵從哪天開始變多，就再往前多留幾天。</p></div>
+      </details>
+    </div>
+
+    <p>事件窗就是「事件前後要看幾期」，它就像拍照的取景框：</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>事件窗</th><th>會怎樣</th></tr></thead>
+        <tbody>
+          <tr><td>太短：前後各 1 天</td><td>看不到正常的樣子，也看不到囤貨從哪天開始、效果何時結束</td></tr>
+          <tr><td class="hl">剛好：前 7 天到後 5 天</td><td>看得到正常 → 囤貨升溫 → 颱風假 → 回到正常</td></tr>
+          <tr><td>太長：前後各 60 天</td><td>混進中秋節、開學、別的颱風，雜訊越來越多</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>預期效果</strong>：事件還沒發生，大家就因為「知道它要來」而先改變行為（例如颱風前囤貨）。有預期效果時，事件窗前面要留得更長。</p>
+
+    <h4>事件窗多長才合適？沒有標準答案，看這四件事</h4>
+    <ol>
+      <li><strong>影響從哪天開始、持續多久</strong>：吃壞肚子是幾天內的事，颱風要多看前面的囤貨期，政策可能要看好幾年。重點是影響的「時間長短」，不是影響有多大。</li>
+      <li><strong>前面要涵蓋預期效果之前的正常期</strong>：留到大家還正常的日子，才看得出平行趨勢。</li>
+      <li><strong>資料夠不夠</strong>：如果資料只記到 8/26，颱風丙（8/23）最多只看得到第 +3 天。窗開得越大，越後面的期數能用的事件就越少，結果也越不穩。</li>
+      <li><strong>換幾種窗口試試看</strong>：例如前後開 ±5 天跟 ±10 天都跑一次，結論差不多才放心。這叫穩健性檢查。</li>
+    </ol>
+
+    <div class="key">事件窗前面要留夠看平行趨勢，後面要夠看完效果，但別大到把雜物也框進來。</div>
+
+    <div class="quiz">
+      <div class="q"><b>動動腦 13</b><p>研究「開學」對文具店銷量的影響，事件窗前面要注意什麼？</p></div>
+      <details><summary>想好了，看答案</summary>
+        <div class="a"><p>開學前一兩週大家就會去買文具，這是預期效果。事件窗前面要留到還沒開始採買的日子，才看得到正常的樣子；基準期也不能選開學前一天，那時候已經在搶購了。</p></div>
+      </details>
+    </div>
+
+    <h3>③ 選基準期</h3>
+    <p>事件研究圖上的每一個點，都是「跟基準期比，差了多少」。基準期那一點固定是 0，當作尺，所以它一定要選「還沒被事件影響、最正常」的那一期。</p>
+    <p>最常選第 −1 期：它是事件前的最後一期，條件跟事件最接近，又還沒被影響。但有預期效果時，第 −1 期已經不正常了，要往前挪。</p>
+
+    <div class="quiz">
+      <div class="q"><b>動動腦 14</b><p>先想想再往下看：颱風泡麵的例子，如果拿第 −1 天（颱風假前一天）當基準，會有什麼問題？</p></div>
+      <details><summary>想好了，看答案</summary>
+        <div class="a"><p>第 −1 天是大家囤貨最瘋的一天，不是「平常的樣子」。拿它當尺，每一天都會被往下扣一大截，結論會整個歪掉（看下面的表）。</p></div>
+      </details>
+    </div>
+
+    <p>同一份資料，換一把尺看看（數字是「比平常多賣幾碗」）：</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>事件時間</th><th>第 −7 天當基準（正常日）</th><th>第 −1 天當基準（囤貨最瘋）</th></tr></thead>
+        <tbody>
+          <tr><td>第 −7 天</td><td>0</td><td>−100</td></tr>
+          <tr><td>第 −3 天</td><td>+20</td><td>−80</td></tr>
+          <tr><td>第 −2 天</td><td>+50</td><td>−50</td></tr>
+          <tr><td>第 −1 天</td><td>+100</td><td>0</td></tr>
+          <tr><td>第 0 天（颱風假）</td><td class="hl">+40</td><td class="hl">−60</td></tr>
+          <tr><td>第 +1 天</td><td>+10</td><td>−90</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>左邊看得出「颱風前越買越多，颱風假當天還是多賣，之後慢慢回到正常」；右邊每一格都被扣掉 100，颱風假當天變成 −60，看起來像颱風讓泡麵賣不好，結論整個顛倒。</p>
+
+    <h4>基準期在 Stata 裡怎麼設：沒有開關的那一期</h4>
+    <p>事件研究迴歸裡，每一期都有一個「開關」（虛擬變數）：資料是那一期就打開（＝1），不是就關著（＝0）。</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>這筆資料是</th><th>−3 開關</th><th>−2 開關</th><th>0 開關</th><th>+1 開關</th></tr></thead>
+        <tbody>
+          <tr><td>第 −3 期</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+          <tr><td>第 −2 期</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+          <tr><td class="hl">第 −1 期</td><td class="hl">0</td><td class="hl">0</td><td class="hl">0</td><td class="hl">0</td></tr>
+          <tr><td>第 0 期</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+          <tr><td>第 +1 期</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>第 −1 期沒有自己的開關，所以開關全都是關著的。每個係數的意思都是「這一期跟開關全關的那一期比，差距變了多少」，所以第 −1 期就自動變成基準。</p>
+    <p>比喻：全家都跟爸爸比身高，媽媽 −10、哥哥 +5，爸爸自己不用列，因為他就是那把尺。想改成跟媽媽比，就換成媽媽不列。</p>
+    <ul>
+      <li>想用第 −7 天當基準：幫 −1 做開關，改成 −7 不做。</li>
+      <li>一定要留一期不做開關：每一期都有開關的話，就沒有「全關」的那一期可以當尺，電腦不知道要跟誰比；Stata 可能會自己丟掉一個，基準就變成它挑的那期。</li>
+    </ul>
+
+    <div class="key">基準期就是「正常的樣子」，也就是沒有開關的那一期；通常選第 −1 期，但有預期效果就要往前挪。</div>
+
+    <div class="widget">
+      <p class="widget-hint">🎮 切換三種基準期。選正常的日子（−7、−4）當尺，整張圖幾乎一樣；選囤貨最瘋的 −1 當尺，整張圖被往下拉，結論顛倒。直線是 95% 信賴區間（示意），空心點是基準期。</p>
+<div class="es-base">
+<style>
+.es-base{--ink:#2d2a26;--muted:#6f685d;--line:#ece7de;--surface:#ffffff;--soft:#f6f3ed;--sea:#4E6E86;--warn:#C07A2C;color:var(--ink);font-variant-numeric:tabular-nums;max-width:640px}
+.es-base .seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:10px}
+.es-base .seg button{font:inherit;font-size:14px;padding:6px 12px;border:0;background:var(--surface);color:var(--muted);cursor:pointer}
+.es-base .seg button[aria-pressed="true"]{background:var(--sea);color:var(--surface)}
+.es-base .seg button:focus-visible{outline:2px solid var(--warn);outline-offset:-2px}
+.es-base svg{display:block;width:100%;height:auto}
+.es-base .tick{font-size:11px;fill:var(--muted)}
+.es-base .lab{font-size:12px;fill:var(--muted)}
+.es-base .grid{stroke:var(--line);stroke-width:1}
+.es-base .zero{stroke:var(--muted);stroke-width:1}
+.es-base .ev{stroke:var(--warn);stroke-width:1.5;stroke-dasharray:5 4}
+.es-base .evlab{font-size:12px;fill:var(--warn)}
+.es-base .ci{stroke:var(--sea);stroke-width:2;opacity:.45}
+.es-base .pt{fill:var(--sea);stroke:var(--surface);stroke-width:2}
+.es-base .pt.base{fill:var(--surface);stroke:var(--sea);stroke-width:2.5}
+.es-base .out{font-size:15px;line-height:1.7;margin-top:8px}
+</style>
+<div class="seg" role="group" aria-label="選擇基準期">
+<button type="button" data-b="-7" aria-pressed="true">第 −7 天當基準</button>
+<button type="button" data-b="-4" aria-pressed="false">第 −4 天當基準</button>
+<button type="button" data-b="-1" aria-pressed="false">第 −1 天當基準</button>
+</div>
+<svg id="es-b-svg" viewBox="0 0 640 300" role="img" aria-label="事件研究圖"></svg>
+<div class="out" id="es-b-out" aria-live="polite"></div>
+<script>
+(function(){
+  var root = document.currentScript.parentElement;
+  var q = function(s){ return root.querySelector(s); };
+  var NS = 'http://www.w3.org/2000/svg';
+  var G = { '-7': 0, '-6': 3, '-5': -2, '-4': 4, '-3': 20, '-2': 50, '-1': 100, '0': 40, '1': 10, '2': -20, '3': -25, '4': -10, '5': 0 };
+  var KS = [-7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
+  var CI = 15, YMIN = -140, YMAX = 130, W = 640, H = 300, L = 52, R = 16, TOP = 20, BOT = 42;
+  var pw = W - L - R, ph = H - TOP - BOT;
+  var MSG = {
+    '-7': '選正常的第 −7 天當尺：−7 到 −4 天貼著 0，平行趨勢 OK；−3 天開始往上，是颱風前的囤貨（預期效果）；颱風假當天還是多賣；+2、+3 天掉到 0 以下，因為家裡還有存貨；+5 天回到 0。',
+    '-4': '換成另一個正常的日子（第 −4 天）當尺，整張圖幾乎一樣。只要基準選在「還正常」的日子，結論就不會變。',
+    '-1': '拿囤貨最瘋的第 −1 天當尺：每個點都被往下拉 100，颱風假當天變成 −60，看起來像颱風讓泡麵賣不好，結論整個顛倒！'
+  };
+  function x(k){ return L + (k + 7) * pw / 12; }
+  function y(v){ return TOP + (YMAX - v) / (YMAX - YMIN) * ph; }
+  function lab(k){ return k > 0 ? '+' + k : (k < 0 ? '−' + (-k) : '0'); }
+  function el(tag, attrs, text){
+    var e = document.createElementNS(NS, tag);
+    for (var a in attrs) e.setAttribute(a, attrs[a]);
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function render(b){
+    var svg = q('#es-b-svg');
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    [-120, -80, -40, 40, 80, 120].forEach(function(t){
+      svg.appendChild(el('line', { 'class': 'grid', x1: L, x2: W - R, y1: y(t), y2: y(t) }));
+      svg.appendChild(el('text', { 'class': 'tick', x: L - 8, y: y(t) + 4, 'text-anchor': 'end' }, lab(t)));
+    });
+    svg.appendChild(el('line', { 'class': 'zero', x1: L, x2: W - R, y1: y(0), y2: y(0) }));
+    svg.appendChild(el('text', { 'class': 'tick', x: L - 8, y: y(0) + 4, 'text-anchor': 'end' }, '0'));
+    svg.appendChild(el('line', { 'class': 'ev', x1: x(0), x2: x(0), y1: TOP, y2: H - BOT }));
+    svg.appendChild(el('text', { 'class': 'evlab', x: x(0) + 6, y: TOP + 12 }, '颱風假'));
+    KS.forEach(function(k){
+      svg.appendChild(el('text', { 'class': 'tick', x: x(k), y: H - BOT + 18, 'text-anchor': 'middle' }, lab(k)));
+    });
+    svg.appendChild(el('text', { 'class': 'lab', x: L + pw / 2, y: H - 6, 'text-anchor': 'middle' }, '事件時間（天）'));
+    var base = G[String(b)];
+    KS.forEach(function(k){
+      var v = G[String(k)] - base;
+      if (k !== b) svg.appendChild(el('line', { 'class': 'ci', x1: x(k), x2: x(k), y1: y(v - CI), y2: y(v + CI) }));
+      var c = el('circle', { 'class': 'pt' + (k === b ? ' base' : ''), cx: x(k), cy: y(v), r: 5 });
+      c.appendChild(el('title', {}, '第 ' + lab(k) + ' 天：' + lab(v) + ' 碗'));
+      svg.appendChild(c);
+      if (k === b) svg.appendChild(el('text', { 'class': 'lab', x: x(k), y: y(v) - 12, 'text-anchor': 'middle' }, '基準'));
+    });
+    svg.setAttribute('aria-label', '事件研究圖，以第 ' + lab(b) + ' 天為基準，颱風假當天為 ' + lab(G['0'] - base) + ' 碗');
+    q('#es-b-out').textContent = MSG[String(b)];
+    root.querySelectorAll('.seg button').forEach(function(btn){
+      btn.setAttribute('aria-pressed', String(Number(btn.getAttribute('data-b')) === b));
+    });
+  }
+  root.querySelectorAll('.seg button').forEach(function(btn){
+    btn.addEventListener('click', function(){ render(Number(btn.getAttribute('data-b'))); });
+  });
+  render(-7);
+})();
+</script>
+</div>
+    </div>
+
+    <div class="quiz">
+      <div class="q"><b>動動腦 15</b><p>想把基準期從第 −1 天改成第 −5 天，虛擬變數（開關）要怎麼放？</p></div>
+      <details><summary>想好了，看答案</summary>
+        <div class="a"><p>幫第 −1 天做開關，改成第 −5 天不做開關。沒有開關的那一期，就會變成大家拿來比的尺。</p></div>
+      </details>
+    </div>
+
+    <h3>④ 讀事件研究圖</h3>
+    <p>圖有兩種：</p>
+    <ul>
+      <li><strong>原始走勢圖（分析前就能畫）</strong>：把處理組、對照組的平均照事件時間畫成兩條線，先用眼睛看事件前有沒有平行、事件後有沒有分開。</li>
+      <li><strong>事件研究圖（分析後才有）</strong>：跑完 csdid 或 eventstudyinteract 才畫得出來。每一期一個點，是「兩組差距跟基準期比多了多少」，再加上信賴區間；基準期固定在 0。影響程度主要看這張，論文裡通常會放這張圖，再附一張每一期係數的表。</li>
+    </ul>
+
+    <p>讀圖分兩半：</p>
+    <ul>
+      <li><strong>事件前：看平行趨勢</strong>。點貼著 0（區間也蓋到 0），代表事件前兩組走勢差不多，對照組可信。</li>
+      <li><strong>事件後：看效果</strong>。往上跳代表事件讓結果增加。「大不大」要用口訣：不要看數字大小，要看離 0 多遠、信賴區間有沒有蓋到 0；也要跟平常的水準比（平常一天賣 1000 碗，多 3 碗幾乎沒差）。</li>
+    </ul>
+
+    <div class="pat-grid">
+      <figure class="pat ok">
+        <svg viewBox="0 0 210 126" role="img" aria-label="事件前貼著 0">
+          <line class="z" x1="26" x2="200" y1="65.2" y2="65.2"/>
+          <text class="t" x="22" y="68.7" text-anchor="end">0</text>
+          <line class="ev" x1="113.0" x2="113.0" y1="10" y2="102"/>
+          <line class="ci" x1="26.0" x2="26.0" y1="71.3" y2="59.1"/>
+          <circle class="pt" cx="26.0" cy="65.2" r="3.2"/>
+          <line class="ci" x1="47.8" x2="47.8" y1="68.9" y2="56.6"/>
+          <circle class="pt" cx="47.8" cy="62.7" r="3.2"/>
+          <line class="ci" x1="69.5" x2="69.5" y1="73.2" y2="60.9"/>
+          <circle class="pt" cx="69.5" cy="67.0" r="3.2"/>
+          <line class="ci" x1="91.2" x2="91.2" y1="70.1" y2="57.8"/>
+          <circle class="pt" cx="91.2" cy="64.0" r="3.2"/>
+          <line class="ci" x1="113.0" x2="113.0" y1="34.5" y2="22.3"/>
+          <circle class="pt" cx="113.0" cy="28.4" r="3.2"/>
+          <line class="ci" x1="134.8" x2="134.8" y1="37.6" y2="25.3"/>
+          <circle class="pt" cx="134.8" cy="31.5" r="3.2"/>
+          <line class="ci" x1="156.5" x2="156.5" y1="40.7" y2="28.4"/>
+          <circle class="pt" cx="156.5" cy="34.5" r="3.2"/>
+          <line class="ci" x1="178.2" x2="178.2" y1="43.7" y2="31.5"/>
+          <circle class="pt" cx="178.2" cy="37.6" r="3.2"/>
+          <line class="ci" x1="200.0" x2="200.0" y1="46.8" y2="34.5"/>
+          <circle class="pt" cx="200.0" cy="40.7" r="3.2"/>
+          <text class="t" x="113.0" y="118" text-anchor="middle">事件</text>
+        </svg>
+        <figcaption><b>事件前貼著 0</b><span>平行趨勢看起來成立 ✅</span></figcaption>
+      </figure>
+      <figure class="pat warn">
+        <svg viewBox="0 0 210 126" role="img" aria-label="事件前就一路往上">
+          <line class="z" x1="26" x2="200" y1="65.2" y2="65.2"/>
+          <text class="t" x="22" y="68.7" text-anchor="end">0</text>
+          <line class="ev" x1="113.0" x2="113.0" y1="10" y2="102"/>
+          <line class="ci" x1="26.0" x2="26.0" y1="71.3" y2="59.1"/>
+          <circle class="pt" cx="26.0" cy="65.2" r="3.2"/>
+          <line class="ci" x1="47.8" x2="47.8" y1="65.8" y2="53.5"/>
+          <circle class="pt" cx="47.8" cy="59.7" r="3.2"/>
+          <line class="ci" x1="69.5" x2="69.5" y1="60.3" y2="48.0"/>
+          <circle class="pt" cx="69.5" cy="54.2" r="3.2"/>
+          <line class="ci" x1="91.2" x2="91.2" y1="54.8" y2="42.5"/>
+          <circle class="pt" cx="91.2" cy="48.6" r="3.2"/>
+          <line class="ci" x1="113.0" x2="113.0" y1="34.5" y2="22.3"/>
+          <circle class="pt" cx="113.0" cy="28.4" r="3.2"/>
+          <line class="ci" x1="134.8" x2="134.8" y1="33.3" y2="21.0"/>
+          <circle class="pt" cx="134.8" cy="27.2" r="3.2"/>
+          <line class="ci" x1="156.5" x2="156.5" y1="32.1" y2="19.8"/>
+          <circle class="pt" cx="156.5" cy="25.9" r="3.2"/>
+          <line class="ci" x1="178.2" x2="178.2" y1="30.9" y2="18.6"/>
+          <circle class="pt" cx="178.2" cy="24.7" r="3.2"/>
+          <line class="ci" x1="200.0" x2="200.0" y1="29.6" y2="17.4"/>
+          <circle class="pt" cx="200.0" cy="23.5" r="3.2"/>
+          <text class="t" x="113.0" y="118" text-anchor="middle">事件</text>
+        </svg>
+        <figcaption><b>事件前就一路往上</b><span>兩組事前就在分開，或有預期效果 ⚠️</span></figcaption>
+      </figure>
+      <figure class="pat ok">
+        <svg viewBox="0 0 210 126" role="img" aria-label="事件後往上跳，區間沒蓋到 0">
+          <line class="z" x1="26" x2="200" y1="65.2" y2="65.2"/>
+          <text class="t" x="22" y="68.7" text-anchor="end">0</text>
+          <line class="ev" x1="113.0" x2="113.0" y1="10" y2="102"/>
+          <line class="ci" x1="26.0" x2="26.0" y1="70.7" y2="59.7"/>
+          <circle class="pt" cx="26.0" cy="65.2" r="3.2"/>
+          <line class="ci" x1="47.8" x2="47.8" y1="68.9" y2="57.8"/>
+          <circle class="pt" cx="47.8" cy="63.4" r="3.2"/>
+          <line class="ci" x1="69.5" x2="69.5" y1="71.9" y2="60.9"/>
+          <circle class="pt" cx="69.5" cy="66.4" r="3.2"/>
+          <line class="ci" x1="91.2" x2="91.2" y1="70.1" y2="59.1"/>
+          <circle class="pt" cx="91.2" cy="64.6" r="3.2"/>
+          <line class="ci" x1="113.0" x2="113.0" y1="30.9" y2="19.8"/>
+          <circle class="pt" cx="113.0" cy="25.3" r="3.2"/>
+          <line class="ci" x1="134.8" x2="134.8" y1="27.8" y2="16.7"/>
+          <circle class="pt" cx="134.8" cy="22.3" r="3.2"/>
+          <line class="ci" x1="156.5" x2="156.5" y1="30.2" y2="19.2"/>
+          <circle class="pt" cx="156.5" cy="24.7" r="3.2"/>
+          <line class="ci" x1="178.2" x2="178.2" y1="29.0" y2="18.0"/>
+          <circle class="pt" cx="178.2" cy="23.5" r="3.2"/>
+          <line class="ci" x1="200.0" x2="200.0" y1="31.5" y2="20.4"/>
+          <circle class="pt" cx="200.0" cy="25.9" r="3.2"/>
+          <text class="t" x="113.0" y="118" text-anchor="middle">事件</text>
+        </svg>
+        <figcaption><b>事件後往上跳，區間沒蓋到 0</b><span>事件讓結果增加 ✅</span></figcaption>
+      </figure>
+      <figure class="pat mute">
+        <svg viewBox="0 0 210 126" role="img" aria-label="事件後有跳，但區間蓋到 0">
+          <line class="z" x1="26" x2="200" y1="65.2" y2="65.2"/>
+          <text class="t" x="22" y="68.7" text-anchor="end">0</text>
+          <line class="ev" x1="113.0" x2="113.0" y1="10" y2="102"/>
+          <line class="ci" x1="26.0" x2="26.0" y1="70.7" y2="59.7"/>
+          <circle class="pt" cx="26.0" cy="65.2" r="3.2"/>
+          <line class="ci" x1="47.8" x2="47.8" y1="68.3" y2="57.2"/>
+          <circle class="pt" cx="47.8" cy="62.7" r="3.2"/>
+          <line class="ci" x1="69.5" x2="69.5" y1="73.2" y2="62.1"/>
+          <circle class="pt" cx="69.5" cy="67.7" r="3.2"/>
+          <line class="ci" x1="91.2" x2="91.2" y1="69.5" y2="58.5"/>
+          <circle class="pt" cx="91.2" cy="64.0" r="3.2"/>
+          <line class="ci" x1="113.0" x2="113.0" y1="70.1" y2="33.3"/>
+          <circle class="pt" cx="113.0" cy="51.7" r="3.2"/>
+          <line class="ci" x1="134.8" x2="134.8" y1="67.7" y2="30.9"/>
+          <circle class="pt" cx="134.8" cy="49.3" r="3.2"/>
+          <line class="ci" x1="156.5" x2="156.5" y1="71.3" y2="34.5"/>
+          <circle class="pt" cx="156.5" cy="52.9" r="3.2"/>
+          <line class="ci" x1="178.2" x2="178.2" y1="68.9" y2="32.1"/>
+          <circle class="pt" cx="178.2" cy="50.5" r="3.2"/>
+          <line class="ci" x1="200.0" x2="200.0" y1="72.6" y2="35.8"/>
+          <circle class="pt" cx="200.0" cy="54.2" r="3.2"/>
+          <text class="t" x="113.0" y="118" text-anchor="middle">事件</text>
+        </svg>
+        <figcaption><b>事件後有跳，但區間蓋到 0</b><span>無法排除沒效果</span></figcaption>
+      </figure>
+      <figure class="pat mute">
+        <svg viewBox="0 0 210 126" role="img" aria-label="跳上去後慢慢回到 0">
+          <line class="z" x1="26" x2="200" y1="65.2" y2="65.2"/>
+          <text class="t" x="22" y="68.7" text-anchor="end">0</text>
+          <line class="ev" x1="113.0" x2="113.0" y1="10" y2="102"/>
+          <line class="ci" x1="26.0" x2="26.0" y1="71.3" y2="59.1"/>
+          <circle class="pt" cx="26.0" cy="65.2" r="3.2"/>
+          <line class="ci" x1="47.8" x2="47.8" y1="69.5" y2="57.2"/>
+          <circle class="pt" cx="47.8" cy="63.4" r="3.2"/>
+          <line class="ci" x1="69.5" x2="69.5" y1="73.2" y2="60.9"/>
+          <circle class="pt" cx="69.5" cy="67.0" r="3.2"/>
+          <line class="ci" x1="91.2" x2="91.2" y1="70.7" y2="58.5"/>
+          <circle class="pt" cx="91.2" cy="64.6" r="3.2"/>
+          <line class="ci" x1="113.0" x2="113.0" y1="28.4" y2="16.1"/>
+          <circle class="pt" cx="113.0" cy="22.3" r="3.2"/>
+          <line class="ci" x1="134.8" x2="134.8" y1="43.7" y2="31.5"/>
+          <circle class="pt" cx="134.8" cy="37.6" r="3.2"/>
+          <line class="ci" x1="156.5" x2="156.5" y1="57.8" y2="45.6"/>
+          <circle class="pt" cx="156.5" cy="51.7" r="3.2"/>
+          <line class="ci" x1="178.2" x2="178.2" y1="66.4" y2="54.2"/>
+          <circle class="pt" cx="178.2" cy="60.3" r="3.2"/>
+          <line class="ci" x1="200.0" x2="200.0" y1="70.1" y2="57.8"/>
+          <circle class="pt" cx="200.0" cy="64.0" r="3.2"/>
+          <text class="t" x="113.0" y="118" text-anchor="middle">事件</text>
+        </svg>
+        <figcaption><b>跳上去後慢慢回到 0</b><span>效果是短暫的</span></figcaption>
+      </figure>
+      <figure class="pat bad">
+        <svg viewBox="0 0 210 126" role="img" aria-label="事件後掉到 0 以下">
+          <line class="z" x1="26" x2="200" y1="65.2" y2="65.2"/>
+          <text class="t" x="22" y="68.7" text-anchor="end">0</text>
+          <line class="ev" x1="113.0" x2="113.0" y1="10" y2="102"/>
+          <line class="ci" x1="26.0" x2="26.0" y1="71.3" y2="59.1"/>
+          <circle class="pt" cx="26.0" cy="65.2" r="3.2"/>
+          <line class="ci" x1="47.8" x2="47.8" y1="70.1" y2="57.8"/>
+          <circle class="pt" cx="47.8" cy="64.0" r="3.2"/>
+          <line class="ci" x1="69.5" x2="69.5" y1="72.6" y2="60.3"/>
+          <circle class="pt" cx="69.5" cy="66.4" r="3.2"/>
+          <line class="ci" x1="91.2" x2="91.2" y1="69.5" y2="57.2"/>
+          <circle class="pt" cx="91.2" cy="63.4" r="3.2"/>
+          <line class="ci" x1="113.0" x2="113.0" y1="89.7" y2="77.5"/>
+          <circle class="pt" cx="113.0" cy="83.6" r="3.2"/>
+          <line class="ci" x1="134.8" x2="134.8" y1="97.1" y2="84.8"/>
+          <circle class="pt" cx="134.8" cy="91.0" r="3.2"/>
+          <line class="ci" x1="156.5" x2="156.5" y1="94.6" y2="82.4"/>
+          <circle class="pt" cx="156.5" cy="88.5" r="3.2"/>
+          <line class="ci" x1="178.2" x2="178.2" y1="89.7" y2="77.5"/>
+          <circle class="pt" cx="178.2" cy="83.6" r="3.2"/>
+          <line class="ci" x1="200.0" x2="200.0" y1="81.1" y2="68.9"/>
+          <circle class="pt" cx="200.0" cy="75.0" r="3.2"/>
+          <text class="t" x="113.0" y="118" text-anchor="middle">事件</text>
+        </svg>
+        <figcaption><b>事件後掉到 0 以下</b><span>事件讓結果減少（或有「後遺症」）</span></figcaption>
+      </figure>
+    </div>
+    <p class="note" style="margin-top:0">示意圖：直線是信賴區間，虛線是事件發生的那一期。</p>
+
+
+    <p><strong>颱風版的事件研究圖</strong>（第 −7 天當基準，就是上面的互動元件）：−7 到 −4 天貼著 0 → 平行趨勢 OK；−3 天開始往上 → 颱風前囤貨（預期效果）；颱風假當天還是多賣；+2、+3 天掉到 0 以下 → 家裡還有存貨，所以少買；+5 天回到 0。</p>
+
+    <h4>能說什麼、不能說什麼</h4>
+    <ul>
+      <li><strong>能說</strong>：颱風假讓泡麵銷量增加、從哪天開始、持續多久。三個颱風發生在不同日期，卻都在「各自的」颱風假前後出現同樣的形狀，就不太可能是巧合（像中秋節、發薪日這種固定日期的事，不會剛好每次都對上颱風）。這是事件時間錯開的一大優點。</li>
+      <li><strong>不能說</strong>：「為什麼」。是怕停電？懶得出門？還是店家促銷？事件研究法回答「有沒有、何時、多久」，原因要靠其他證據（例如問卷、促銷紀錄）。</li>
+    </ul>
+
+    <div class="key">先畫原始走勢看大概，再用事件研究圖下結論：事件前看對照組可不可信，事件後看效果有多明確。</div>
+
+    <div class="quiz">
+      <div class="q"><b>動動腦 16</b><p>事件研究圖上，事件前那幾期的點就一路往上爬，可能代表什麼？</p></div>
+      <details><summary>想好了，看答案</summary>
+        <div class="a"><p>兩種可能：一是兩組在事件前走勢就已經分開，平行趨勢有問題，後面的結果要小心；二是有預期效果，大家在事件前就先改變行為（像颱風前囤泡麵）。要分辨的話，先想「大家事前知不知道事件要來」，並把基準期挪到還正常的日子再看。</p></div>
+      </details>
+    </div>
+
+    <div class="quiz">
+      <div class="q"><b>動動腦 17</b><p>事件後的點往上跳了，但信賴區間有蓋到 0，可以說「事件有效果」嗎？</p></div>
+      <details><summary>想好了，看答案</summary>
+        <div class="a"><p>還不能。區間蓋到 0，代表「其實沒有效果」這個可能性還排除不了。用口訣：不要看數字大小，要看離 0 多遠、區間有沒有蓋到 0。</p></div>
+      </details>
+    </div>
+
+    <div class="quiz">
+      <div class="q"><b>動動腦 18</b><p>颱風假過後第 2、3 天，點跑到 0 以下，可能是為什麼？</p></div>
+      <details><summary>想好了，看答案</summary>
+        <div class="a"><p>家裡還有颱風前囤的泡麵，所以接下來幾天反而買得比平常少，算是囤貨的「後遺症」。這也是為什麼事件窗後面要留夠，才看得到效果怎麼結束。</p></div>
+      </details>
+    </div>
+
+    <div class="quiz">
+      <div class="q"><b>動動腦 19</b><p>研究發現颱風假讓泡麵多賣很多，可以下結論說「因為大家怕停電」嗎？</p></div>
+      <details><summary>想好了，看答案</summary>
+        <div class="a"><p>不行。事件研究法回答「有沒有、何時、多久」，不回答「為什麼」。怕停電、懶得出門、店家促銷都有可能，要靠其他證據才能說是哪一個。</p></div>
+      </details>
+    </div>
+  </section>
+
+
+    <h3 class="play-h">用同一份模擬資料，換兩種方式再看一次</h3>
+    <div class="play-grid">
+      <a class="playcard" href="did-story.html">
+        <span class="pc-tag">滑著看</span>
+        <span class="pc-title">一張圖滑到事件研究圖</span>
+        <span class="pc-desc">往下滑，圖就跟著變：原始資料 → 中元普渡 → 颱風假 → 只看前後（高估）→ 減掉對照組 → 對齊第 0 天 → 事件研究圖。</span>
+        <span class="pc-list">不用按任何按鈕，一路滑到底就看完整條推理。</span>
+        <span class="pc-go">開始滑 →</span>
+      </a>
+      <a class="playcard" href="did-sim.html">
+        <span class="pc-tag">動手玩</span>
+        <span class="pc-title">颱風假泡麵模擬</span>
+        <span class="pc-desc">20 個縣市、31 天，按播放一天一天往前走：看兩組的線怎麼分開、事件研究圖怎麼一格一格長出來。</span>
+        <span class="pc-list">可以切換「平行趨勢成立／處理組本來就在成長」，也可以切掉對照組，看「只看前後」會錯多少。</span>
+        <span class="pc-go">開始模擬 →</span>
+      </a>
+    </div>
+
+  <!-- ============ 總整理 ============ -->
+  <section class="stage" id="sum">
+    <span class="stage-tag">總整理</span>
+    <h2>一次看完</h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th>單純前後比較</th><th>DiD</th><th>事件研究法（計量版）</th></tr></thead>
+        <tbody>
+          <tr><td>要幾組</td><td>一組（只有自己）</td><td>處理組 + 對照組</td><td>處理組 + 對照組</td></tr>
+          <tr><td>看幾期</td><td>前、後各一次</td><td>前、後各一次</td><td>事件前後逐期</td></tr>
+          <tr><td>比什麼</td><td>自己前後的差</td><td>兩組「變化」的差</td><td>每一期跟基準期比的差距</td></tr>
+          <tr><td>能不能查平行趨勢</td><td>沒有對照組</td><td>只有前後兩點，看不太出來</td><td>可以：看事件前的點貼不貼著 0</td></tr>
+          <tr><td>能回答</td><td>幾乎什麼都不能</td><td>平均效果多大</td><td>有沒有、何時開始、持續多久</td></tr>
+          <tr><td>Stata</td><td>—</td><td>兩期兩組的 DiD 迴歸</td><td><code>csdid</code>、<code>eventstudyinteract</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="aside">
+      <strong>三句話收尾</strong>
+      <ol style="margin:0">
+        <li>只跟「還沒處理」的比，處理過的不能當對照組。</li>
+        <li>比的是「變化」，不是當下誰高誰低。</li>
+        <li>大家處理的時間不同沒關係，對齊成「第幾期」再看。</li>
+      </ol>
+    </div>
+
+    <div class="aside">
+      <strong>口訣</strong>
+      <ul style="margin:0">
+        <li>一組有遇到、一組沒遇到，前後都量，比變化。</li>
+        <li>對照組要沒吃到，其他條件越像越好。</li>
+        <li>絕不讓已處理的單位當別人的對照組（＝對照組要找沒打過疫苗的人）。</li>
+        <li>沒有開關的那一期，就是大家拿來比的那把尺。</li>
+        <li>不要看數字大小，要看離 0 多遠。</li>
+      </ul>
+      <p style="margin-top:8px">⚠️ 有預期效果（例如颱風前囤貨）時，第 −1 期已經不正常，不能當基準，要往前挪到還正常的那一期。</p>
+    </div>
+  </section>
+
+  <!-- ============ DiD vs staggered DiD ============ -->
+  <section class="stage" id="stag">
+    <span class="stage-tag">補充</span>
+    <h2>DiD 和 staggered DiD 差在哪</h2>
+    <p class="term"><b>staggered</b>（交錯）＝ 處理組不是同一時間被處理，而是一批一批陸續發生</p>
+
+    <style>
+      .tl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:16px 0 10px;}
+      .tl{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;}
+      .tl figcaption b{font-size:14px;}
+      .tl svg{display:block;width:100%;height:auto;margin-top:6px;}
+      .tl text.rl{font-family:inherit;font-size:9px;fill:var(--muted);}
+      .tl text.ax{fill:var(--faint);}
+      .tl .pre{fill:#eee9e0;}
+      .tl .post{fill:#e7b98f;}
+      .tl .mark{stroke:#c2702f;stroke-width:1.5;}
+    </style>
+    <div class="tl-grid">
+      <figure class="tl">
+        <figcaption><b>一般 DiD：大家同時被處理</b></figcaption>
+        <svg viewBox="0 0 250 78" role="img" aria-label="一般 DiD：大家同時被處理">
+<text class="rl ax" x="46" y="16">時間 →</text>
+          <text class="rl" x="40" y="37" text-anchor="end">處理組</text>
+          <rect x="46" y="26" width="196" height="14" rx="3" class="pre"/>
+          <rect x="144.0" y="26" width="98.0" height="14" rx="3" class="post"/>
+          <line class="mark" x1="144.0" x2="144.0" y1="22" y2="44"/>
+          <text class="rl" x="40" y="59" text-anchor="end">對照組</text>
+          <rect x="46" y="48" width="196" height="14" rx="3" class="pre"/>
+        </svg>
+      </figure>
+      <figure class="tl">
+        <figcaption><b>staggered DiD：處理時間錯開</b></figcaption>
+        <svg viewBox="0 0 250 122" role="img" aria-label="staggered DiD：處理時間錯開">
+<text class="rl ax" x="46" y="16">時間 →</text>
+          <text class="rl" x="40" y="37" text-anchor="end">A 縣</text>
+          <rect x="46" y="26" width="196" height="14" rx="3" class="pre"/>
+          <rect x="95.0" y="26" width="147.0" height="14" rx="3" class="post"/>
+          <line class="mark" x1="95.0" x2="95.0" y1="22" y2="44"/>
+          <text class="rl" x="40" y="59" text-anchor="end">B 縣</text>
+          <rect x="46" y="48" width="196" height="14" rx="3" class="pre"/>
+          <rect x="144.0" y="48" width="98.0" height="14" rx="3" class="post"/>
+          <line class="mark" x1="144.0" x2="144.0" y1="44" y2="66"/>
+          <text class="rl" x="40" y="81" text-anchor="end">C 縣</text>
+          <rect x="46" y="70" width="196" height="14" rx="3" class="pre"/>
+          <rect x="193.0" y="70" width="49.0" height="14" rx="3" class="post"/>
+          <line class="mark" x1="193.0" x2="193.0" y1="66" y2="88"/>
+          <text class="rl" x="40" y="103" text-anchor="end">D 縣</text>
+          <rect x="46" y="92" width="196" height="14" rx="3" class="pre"/>
+        </svg>
+      </figure>
+    </div>
+    <p class="note" style="margin-top:0">橘色是「已經被處理」的期間，直線是各自的處理時間點。</p>
+
+    <h3>一般 DiD：全部同時發生</h3>
+    <p>最單純的 DiD，是所有處理組在<strong>同一個時間點</strong>被處理：例如全部的實驗縣市都在 8/10 放颱風假，其他縣市都沒放。這時候時間軸只有「事件前」和「事件後」兩段，兩組兩期算一次減兩次就結束，用傳統的 TWFE 迴歸跑出來的係數，就等於手算的 DiD。</p>
+
+    <h3>staggered DiD：一批一批陸續發生</h3>
+    <p>現實中的政策、法規、颱風假很少同時發生：A 縣 7 月、B 縣 8 月、C 縣 9 月。這時候「事件前／事件後」對每個縣市的意思都不一樣，問題就跟著來：</p>
+    <ol>
+      <li><strong>對照組會被污染</strong>：TWFE 會偷偷拿「7 月就放過假的 A 縣」當 8 月 B 縣的對照組，但 A 縣自己還在囤貨後遺症裡（第三關的疫苗比喻）。</li>
+      <li><strong>效果異質會放大問題</strong>：如果早放假和晚放假的縣市效果不一樣，TWFE 給每個小比較的權重會亂掉，甚至出現負的權重，算出來的「平均效果」可能連正負都錯。</li>
+      <li><strong>時間軸要重新對齊</strong>：每個縣市的「第 0 天」不同，要先對齊成事件時間才畫得出事件研究圖。</li>
+    </ol>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th>一般 DiD</th><th>staggered DiD</th></tr></thead>
+        <tbody>
+          <tr><td>處理時間</td><td>所有處理組同一時間</td><td>一批一批錯開</td></tr>
+          <tr><td>時間軸</td><td>事件前／事件後兩段就夠</td><td>要對齊成「各自的第幾期」</td></tr>
+          <tr><td>對照組</td><td>整段期間都沒被處理的那組</td><td>從未處理，或<strong>當下還沒</strong>被處理的（<code>notyet</code>）</td></tr>
+          <tr><td>TWFE 能不能用</td><td>可以，係數就是 DiD</td><td>不建議：會混進「已處理當對照」的比較</td></tr>
+          <tr><td>怎麼算</td><td>兩組兩期手算或一條迴歸</td><td><code>csdid</code>（小 DiD 再拼）<br><code>eventstudyinteract</code>（各組做完再加權）</td></tr>
+          <tr><td>要準備的變數</td><td>處理組標記、事件前後標記</td><td>每個單位「第一次被處理的時間」</td></tr>
+          <tr><td>最容易踩的坑</td><td>平行趨勢不成立</td><td>平行趨勢之外，還有對照組被污染、權重亂掉</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>所以 staggered DiD 不是另一種模型，而是<strong>同一個 DiD 碰到「時間錯開」之後的修正版</strong>：精神一樣（比兩組的變化差多少），只是要小心挑對照組，並且換成 csdid、eventstudyinteract 這類算法。</p>
+
+    <div class="key">一般 DiD 是「同一天大家一起被處理」；staggered 是「陸續被處理」，差別不在公式，而在誰可以當對照組、以及要怎麼把一堆小 DiD 拼起來。</div>
+
+    <div class="quiz">
+      <div class="q"><b>動動腦 20</b><p>如果全台所有縣市都在 8/10 同一天放颱風假，這是一般 DiD 還是 staggered DiD？會遇到什麼問題？</p></div>
+      <details><summary>想好了，看答案</summary>
+        <div class="a"><p>兩個都不是。大家同時被處理，不算 staggered；但也沒有人可以當對照組，連一般 DiD 都做不成，只剩「單純前後比較」（第一關的拉肚子）。</p>
+        <p>這時候要另外找對照：例如拿沒受颱風影響的外縣市、或是去年同一週的自己（但那又回到「那段時間還發生了什麼」的老問題）。</p></div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ============ 參考資料 ============ -->
+  <section class="refs" id="refs">
+    <h2>參考資料</h2>
+    <p class="refs-note">文中的數字（生蠔、泡麵銷量、事件研究圖）都是教學用的假設例子。</p>
+    <ol>
+      <li>Snow, John (1855). <i>On the Mode of Communication of Cholera</i>, Second Edition. London: John Churchill.<span>霍亂與自來水公司的經典案例</span></li>
+      <li>Callaway, Brantly, and Pedro H. C. Sant'Anna (2021). Difference-in-differences with multiple time periods. <i>Journal of Econometrics</i>, Volume 225, Issue 2, pages 200–230.<span>csdid 的方法來源</span></li>
+      <li>Sun, Liyang, and Sarah Abraham (2021). Estimating dynamic treatment effects in event studies with heterogeneous treatment effects. <i>Journal of Econometrics</i>, Volume 225, Issue 2, pages 175–199.<span>eventstudyinteract 的方法來源</span></li>
+      <li>Goodman-Bacon, Andrew (2021). Difference-in-differences with variation in treatment timing. <i>Journal of Econometrics</i>, Volume 225, Issue 2, pages 254–277.<span>為什麼傳統 TWFE 在 staggered 會算歪</span></li>
+      <li>Angrist, Joshua D., and Jörn-Steffen Pischke (2009). <i>Mostly Harmless Econometrics: An Empiricist's Companion</i>. Princeton: Princeton University Press.<span>DiD 與平行趨勢的教科書說明</span></li>
+    </ol>
+  </section>
+
+  <footer><a href="index.html">← 回學習筆記</a> · © 2026 · Built with GitHub Pages</footer>
+
+</body>
+</html>

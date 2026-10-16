@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light only">
+<title>颱風假泡麵模擬</title>
+<meta name="description" content="31 天一天一天播放，看 DiD 怎麼把共同變化扣掉、事件研究圖怎麼長出來">
+<style>
+  :root{
+    color-scheme:light only;
+    --paper:#faf8f4; --panel:#fff; --line:#ece7de; --line-2:#ddd6ca;
+    --ink:#2d2a26; --muted:#6f685d; --faint:#9a9284;
+    --treat:#c2702f; --treat-soft:#fbeee1;
+    --ctrl:#4e7f8c; --ctrl-soft:#e4eef0;
+    --storm:#3d6b52; --storm-soft:#f0f5f2;
+    --cold:#eef1f6; --cold-ink:#5d6b86;
+    --pos:#3d6b52; --neg:#a8452f;
+    --mono:"Cascadia Mono",Consolas,ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;}
+  html{background:var(--paper);}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:"Microsoft JhengHei","微軟正黑體",system-ui,sans-serif;
+    line-height:1.7;font-size:15px;padding:28px 16px 140px;
+  }
+  .wrap{max-width:1040px;margin:0 auto;}
+  a{color:var(--storm);}
+  .back{display:inline-block;font-size:14px;color:var(--faint);text-decoration:none;margin-bottom:22px;}
+  .back:hover{color:var(--ink);}
+  .backs{display:flex;flex-wrap:wrap;gap:6px 18px;margin:0 0 22px;}
+  .backs .back{margin:0;}
+  h1{font-size:30px;line-height:1.3;margin:0 0 8px;}
+  .eyebrow{font-size:13px;color:var(--storm);letter-spacing:.04em;margin:0 0 6px;}
+  .sub{color:var(--muted);font-size:15px;margin:0 0 18px;}
+
+  /* ---- 日曆帶 ---- */
+  .ribbon{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px 10px;margin-bottom:18px;}
+  .ribbon .rtop{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:baseline;margin-bottom:10px;}
+  .ribbon .today{font-size:20px;font-weight:700;}
+  .ribbon .phase{font-size:14px;color:var(--muted);}
+  .days{display:flex;gap:2px;}
+  .d{flex:1 1 0;height:26px;border-radius:4px;background:#f1ede5;position:relative;}
+  .d.cold{background:var(--cold);}
+  .d.past{background:var(--ctrl-soft);}
+  .d.past.cold{background:#dde4ef;}
+  .d.typhoon::after{content:"";position:absolute;inset:auto 0 -1px 0;height:4px;border-radius:2px;background:var(--treat);}
+  .d.now{outline:2px solid var(--ink);outline-offset:1px;}
+  .dscale{display:flex;justify-content:space-between;font-size:11px;color:var(--faint);font-family:var(--mono);margin-top:4px;}
+  .rlegend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12.5px;color:var(--muted);margin-top:6px;}
+  .rlegend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px;}
+
+  /* ---- 版面 ---- */
+  .cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start;}
+  @media (max-width:820px){ .cols{grid-template-columns:1fr;} }
+  .box{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:18px;}
+  .box h2{font-size:17px;margin:0 0 4px;}
+  .box h2 small{font-weight:400;font-size:12.5px;color:var(--faint);margin-left:6px;}
+
+  /* ---- 縣市長條 ---- */
+  .ctys{margin-top:12px;}
+  .cgroup{font-size:12.5px;color:var(--muted);margin:10px 0 4px;}
+  .crow{display:grid;grid-template-columns:52px minmax(0,1fr) 46px;align-items:center;gap:8px;margin-bottom:3px;}
+  .crow .nm{font-size:12px;color:var(--faint);}
+  .crow .track{position:relative;height:14px;background:#f4f0e8;border-radius:3px;}
+  .crow .track .mid{position:absolute;top:-2px;bottom:-2px;left:50%;width:1px;background:var(--line-2);}
+  .crow .track .fill{position:absolute;top:0;bottom:0;border-radius:3px;}
+  .crow.t .fill{background:var(--treat);} .crow.c .fill{background:var(--ctrl);}
+  .crow .num{font-family:var(--mono);font-size:12.5px;text-align:right;}
+  .crow.on .nm{color:var(--treat);font-weight:700;}
+
+  /* ---- 數字 ---- */
+  .eq{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px;align-items:stretch;}
+  @media (max-width:480px){ .eq{grid-template-columns:1fr;} }
+  .cell{border:1px solid var(--line);border-radius:10px;padding:9px 11px;}
+  .cell .k{font-size:12px;color:var(--muted);line-height:1.45;}
+  .cell .v{font-family:var(--mono);font-size:19px;margin-top:2px;}
+  .cell.result{background:var(--storm-soft);border-color:#cfe0d6;}
+  .cell .v.pos{color:var(--pos);} .cell .v.neg{color:var(--neg);}
+  .note{font-size:12.5px;color:var(--faint);margin:8px 0 0;}
+  .say{border-left:3px solid var(--storm);background:#fbfaf7;border-radius:0 10px 10px 0;padding:8px 12px;margin-top:12px;font-size:14px;}
+  .say b{display:block;font-size:12.5px;color:var(--faint);}
+  .t-ink{color:var(--treat);font-weight:600;} .c-ink{color:var(--ctrl);font-weight:600;}
+
+  svg{display:block;width:100%;height:auto;}
+  svg text{font-family:var(--mono);font-size:10px;fill:var(--faint);}
+  .grid{stroke:var(--line);stroke-width:1;}
+  .zero{stroke:var(--line-2);stroke-width:1.2;}
+  .coldband{fill:var(--cold);}
+  .evline{stroke:var(--treat);stroke-width:1.2;stroke-dasharray:4 3;}
+  .ln-t{fill:none;stroke:var(--treat);stroke-width:2.4;stroke-linejoin:round;}
+  .ln-c{fill:none;stroke:var(--ctrl);stroke-width:2.4;stroke-linejoin:round;}
+  .ci{stroke:var(--storm);stroke-width:2;opacity:.35;}
+  .pt{fill:var(--storm);}
+  .pt.base{fill:#fff;stroke:var(--storm);stroke-width:2;}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12.5px;color:var(--muted);margin-top:8px;}
+  .legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px;}
+
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;}
+  .cards .box{margin:0;}
+  .cards p{font-size:14px;color:var(--muted);margin:8px 0 0;}
+  .cards p b{color:var(--ink);}
+
+  /* ---- 底部播放列 ---- */
+  .bar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(250,248,244,.93);
+    backdrop-filter:blur(8px);border-top:1px solid var(--line-2);padding:10px 16px;}
+  .bar-in{max-width:1040px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;}
+  button{font:inherit;font-size:14px;padding:7px 14px;border:1px solid var(--line-2);border-radius:999px;
+    background:#fff;color:var(--ink);cursor:pointer;}
+  button:hover{border-color:var(--storm);}
+  button.go{background:var(--ink);border-color:var(--ink);color:#fff;min-width:96px;}
+  .sw{display:inline-flex;gap:4px;background:#f1ede5;border-radius:999px;padding:3px;}
+  .sw button{border:0;background:transparent;color:var(--muted);padding:5px 12px;}
+  .sw button[aria-pressed="true"]{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.06);}
+  .spd{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted);}
+  .spd input{accent-color:var(--storm);width:90px;}
+  .bar .lbl{font-size:12.5px;color:var(--faint);margin-right:-4px;}
+  footer{margin-top:24px;color:var(--faint);font-size:12.5px;text-align:center;}
+  footer a{color:inherit;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="backs"><a class="back" href="index.html">← 回學習筆記</a><a class="back" href="did-event-study.html">← 回 DiD 與事件研究法</a></p>
+
+  <p class="eyebrow">模擬實驗 · DiD 與事件研究法</p>
+  <h1>颱風假泡麵模擬</h1>
+  <p class="sub">
+    20 個縣市、31 天。8 個縣市會放颱風假（<span class="t-ink">處理組</span>，分三批：8/10、8/17、8/24），
+    12 個整個月都沒放（<span class="c-ink">對照組</span>）。8/12–8/16 是中元普渡，<b>所有縣市</b>都在囤泡麵當供品。
+    按下面的播放鍵，一天一天看 DiD 怎麼把這波共同變化扣掉。
+  </p>
+
+  <div class="ribbon">
+    <div class="rtop">
+      <span class="today" id="today">8/01</span>
+      <span class="phase" id="phase">平常</span>
+    </div>
+    <div class="days" id="days"></div>
+    <div class="dscale"><span>8/01</span><span>8/10</span><span>8/17</span><span>8/24</span><span>8/31</span></div>
+    <div class="rlegend">
+      <span><i style="background:var(--treat)"></i>有縣市放颱風假</span>
+      <span><i style="background:var(--cold)"></i>中元普渡（全部縣市都多賣）</span>
+      <span><i style="background:var(--ctrl-soft)"></i>已經走過的日子</span>
+    </div>
+  </div>
+
+  <div class="cols">
+    <div>
+      <div class="box">
+        <h2>今天每個縣市<small>比平常多賣幾碗（中線＝0）</small></h2>
+        <div class="ctys" id="ctys"></div>
+      </div>
+
+      <div class="box">
+        <h2>原始走勢圖<small>兩組的每日平均，分析前就能畫</small></h2>
+        <svg id="raw" viewBox="0 0 520 230" role="img" aria-label="處理組與對照組的每日泡麵銷量走勢"></svg>
+        <div class="legend">
+          <span><i style="background:var(--treat)"></i>處理組平均</span>
+          <span><i style="background:var(--ctrl)"></i>對照組平均</span>
+          <span><i style="background:var(--cold)"></i>中元普渡期間</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="box">
+        <h2>今天算得出什麼<small>對齊後：事件前＝第 −7~−4 天，事件後＝第 0~+1 天</small></h2>
+        <div class="eq" id="eq"></div>
+        <p class="note" id="eqnote"></p>
+        <div class="say" id="say"></div>
+      </div>
+
+      <div class="box">
+        <h2>事件研究圖<small id="essub">每一期跟第 −7 天比，而且扣掉對照組</small></h2>
+        <svg id="es" viewBox="0 0 520 230" role="img" aria-label="事件研究圖，逐期的估計值與信賴區間"></svg>
+        <p class="note" id="esnote"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="box">
+      <h2>只看前後，錯在哪</h2>
+      <p>中元普渡讓<b>每個縣市</b>都多賣泡麵。只看處理組「颱風假前後」的差，這一段共同的變化會被算成颱風假的功勞。</p>
+      <p>對照組沒放颱風假，但一樣要拜普渡，所以它的變化就代表「<b>沒放假的話會怎樣</b>」。減掉它，剩下的才是颱風假自己的效果。切到「只跟自己比」就看得到差多少。</p>
+    </div>
+    <div class="box">
+      <h2>為什麼要對齊第 0 天</h2>
+      <p>三批縣市的颱風假分別在 8/10、8/17、8/24。照日期看，尖峰被攤平；<b>對齊成「放假前後第幾天」</b>之後，三批的同一個位置才疊得起來。</p>
+      <p>事件研究圖就是對齊後的結果：橫軸是事件時間，每個點都是「跟對照組比、再跟第 −7 天比」的差距。</p>
+    </div>
+    <div class="box">
+      <h2>平行趨勢破功時</h2>
+      <p>切到「處理組本來就在成長」，處理組就算沒放假也會一路往上。事件研究圖上，<b>事件前的點會一路爬升</b>，不再貼著 0。</p>
+      <p>這時候 DiD 會高估：往上的那一段，有一部分本來就會發生，不是颱風假造成的。</p>
+    </div>
+  </div>
+
+  <footer>
+    <a href="index.html">← 回學習筆記</a> · 本頁數字都是模擬出來的假資料，用來看機制，不是真實銷量
+  </footer>
+</div>
+
+<div class="bar">
+  <div class="bar-in">
+    <button class="go" id="play">▶ 播放</button>
+    <button id="step">下一天 ›</button>
+    <button id="reset">↺ 重設</button>
+    <div class="spd"><label for="spd">速度</label><input type="range" id="spd" min="1" max="12" value="6"></div>
+    <span class="lbl">情境</span>
+    <div class="sw" role="group" aria-label="情境">
+      <button type="button" id="sc-ok" aria-pressed="true">平行趨勢成立</button>
+      <button type="button" id="sc-tr" aria-pressed="false">處理組本來就在成長</button>
+    </div>
+    <span class="lbl">比較方式</span>
+    <div class="sw" role="group" aria-label="比較方式">
+      <button type="button" id="m-did" aria-pressed="true">跟對照組比</button>
+      <button type="button" id="m-self" aria-pressed="false">只跟自己比</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var D0 = 1, DN = 31, COLD = [12, 16];   // 中元普渡：全部縣市一起多賣
+  var TREAT_DAY = [10, 10, 10, 17, 17, 17, 24, 24];
+  var NT = TREAT_DAY.length, NC = 12;
+  var EFF = { '-3':20, '-2':50, '-1':100, '0':40, '1':10, '2':-20, '3':-25, '4':-10, '5':0 };
+  var KS = []; for (var k = -7; k <= 5; k++) KS.push(k);
+  var BASE_K = -7, CI = 15, SCALE = 130;   // 長條滿格 = 130 碗
+  var day = D0, timer = null, pretrend = false, selfOnly = false;
+
+  function hash(i, d){ var x = Math.sin(i * 12.9898 + d * 78.233) * 43758.5453; return x - Math.floor(x); }
+  function common(d){ return 22 * Math.sin(d / 5) + (d >= COLD[0] && d <= COLD[1] ? 60 : 0); }
+  function val(i, d){
+    var v = common(d) + (hash(i, d) - 0.5) * 22;
+    if (i < NT) {
+      v += EFF[String(d - TREAT_DAY[i])] || 0;
+      if (pretrend) v += 5 * (d - D0);
+    }
+    return v;
+  }
+  function avg(a){ return a.reduce(function(s, x){ return s + x; }, 0) / a.length; }
+  function groupAvg(d, treated){
+    var a = [], i;
+    if (treated) { for (i = 0; i < NT; i++) a.push(val(i, d)); }
+    else { for (i = 0; i < NC; i++) a.push(val(NT + i, d)); }
+    return avg(a);
+  }
+  function fmt(x){ var r = Math.round(x); return (r > 0 ? '+' : r < 0 ? '−' : '') + Math.abs(r); }
+  function lab(k){ return k > 0 ? '+' + k : (k < 0 ? '−' + (-k) : '0'); }
+  function dstr(d){ return '8/' + (d < 10 ? '0' + d : d); }
+  function isTyphoon(d){ return TREAT_DAY.indexOf(d) >= 0; }
+
+  function esPoint(k){
+    var vals = [];
+    for (var i = 0; i < NT; i++) {
+      var dk = TREAT_DAY[i] + k, db = TREAT_DAY[i] + BASE_K;
+      if (dk > day || db < D0) continue;
+      var own = val(i, dk) - val(i, db);
+      vals.push(selfOnly ? own : own - (groupAvg(dk, false) - groupAvg(db, false)));
+    }
+    return vals.length ? { v: avg(vals), n: vals.length } : null;
+  }
+  function stats(){
+    function win(ks, treated){
+      var a = [], i, m;
+      for (i = 0; i < NT; i++) for (m = 0; m < ks.length; m++) {
+        var d = TREAT_DAY[i] + ks[m];
+        if (d > day || d < D0) continue;
+        a.push(treated ? val(i, d) : groupAvg(d, false));
+      }
+      return a.length ? avg(a) : null;
+    }
+    var tPre = win([-7, -6, -5, -4], true), tPost = win([0, 1], true);
+    var cPre = win([-7, -6, -5, -4], false), cPost = win([0, 1], false);
+    if (tPre == null || tPost == null) return null;
+    return { dT: tPost - tPre, dC: cPost - cPre, did: (tPost - tPre) - (cPost - cPre) };
+  }
+
+  var NS = 'http://www.w3.org/2000/svg';
+  function el(tag, attrs, text){
+    var e = document.createElementNS(NS, tag);
+    for (var a in attrs) e.setAttribute(a, attrs[a]);
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function clear(s){ while (s.firstChild) s.removeChild(s.firstChild); }
+
+  function phaseOf(d){
+    if (isTyphoon(d)) return ['颱風假', '今天有縣市放颱風假（左邊名稱變色的那幾個）。當天還是多賣，但最瘋的其實是前一天。'];
+    var pre = TREAT_DAY.some(function(t){ return d < t && t - d <= 3; });
+    var post = TREAT_DAY.some(function(t){ return d > t && d - t <= 3; });
+    if (d >= COLD[0] && d <= COLD[1]) return ['中元普渡', '普渡要拜泡麵，<b>兩組都</b>多賣。這一段只看處理組前後會被誤算成颱風假的效果，DiD 會把它扣掉。'];
+    if (pre) return ['颱風來之前', '新聞開始報颱風，處理組已經在囤泡麵——這就是預期效果，所以基準期不能選第 −1 天。'];
+    if (post) return ['颱風假之後', '放過假的縣市家裡還有存貨，接下來幾天反而買得比平常少，點會掉到 0 以下。'];
+    return ['平常', '沒什麼事，兩組都在平常的水準上下晃動。'];
+  }
+
+  function renderRibbon(){
+    var box = document.getElementById('days');
+    if (!box.children.length) {
+      for (var d = D0; d <= DN; d++) {
+        var s = document.createElement('div');
+        s.title = dstr(d);
+        box.appendChild(s);
+      }
+    }
+    for (var i = 0; i < DN; i++) {
+      var dd = D0 + i, c = 'd';
+      if (dd >= COLD[0] && dd <= COLD[1]) c += ' cold';
+      if (dd <= day) c += ' past';
+      if (isTyphoon(dd)) c += ' typhoon';
+      if (dd === day) c += ' now';
+      box.children[i].className = c;
+    }
+    var p = phaseOf(day);
+    document.getElementById('today').textContent = dstr(day);
+    document.getElementById('phase').textContent = p[0];
+  }
+
+  function renderCounties(){
+    var host = document.getElementById('ctys');
+    host.innerHTML = '';
+    function group(title, from, to, cls){
+      var h = document.createElement('div');
+      h.className = 'cgroup'; h.innerHTML = title;
+      host.appendChild(h);
+      for (var i = from; i < to; i++) {
+        var v = val(i, day), w = Math.min(50, Math.abs(v) / SCALE * 50);
+        var on = i < NT && TREAT_DAY[i] === day;
+        var r = document.createElement('div');
+        r.className = 'crow ' + cls + (on ? ' on' : '');
+        r.innerHTML = '<div class="nm">' + (i < NT ? '放假 ' + (i + 1) : '沒放 ' + (i - NT + 1)) + '</div>' +
+          '<div class="track"><div class="mid"></div><div class="fill" style="' +
+          (v >= 0 ? 'left:50%;width:' + w + '%' : 'right:50%;width:' + w + '%') + '"></div></div>' +
+          '<div class="num">' + fmt(v) + '</div>';
+        host.appendChild(r);
+      }
+    }
+    group('<span class="t-ink">處理組</span>（會放颱風假 · 8 個）', 0, NT, 't');
+    group('<span class="c-ink">對照組</span>（整月沒放 · 12 個）', NT, NT + NC, 'c');
+  }
+
+  function renderNumbers(){
+    var s = stats(), host = document.getElementById('eq');
+    function cell(k, v, cls, res){
+      return '<div class="cell' + (res ? ' result' : '') + '"><div class="k">' + k + '</div><div class="v ' + (cls || '') + '">' + v + '</div></div>';
+    }
+    var html;
+    if (!s) {
+      html = cell('① 處理組的變化', '—') + cell('② 對照組的變化', '—') + cell(selfOnly ? '只看前後' : 'DiD ＝ ① − ②', '—', '', true);
+      document.getElementById('eqnote').textContent = '還要再幾天才有「事件後」的資料，先按播放。';
+    } else {
+      html = cell('① 處理組的變化<br>事件後 − 事件前', fmt(s.dT), s.dT >= 0 ? 'pos' : 'neg') +
+             cell('② 對照組的變化<br>大家共同的部分', fmt(s.dC), s.dC >= 0 ? 'pos' : 'neg') +
+             cell(selfOnly ? '只看前後 ＝ ①' : 'DiD ＝ ① − ②',
+                  fmt(selfOnly ? s.dT : s.did), (selfOnly ? s.dT : s.did) >= 0 ? 'pos' : 'neg', true);
+      document.getElementById('eqnote').innerHTML = selfOnly
+        ? '現在沒有扣掉 ②，颱風假的效果裡混了普渡那一段，數字被墊高。'
+        : '真正的颱風假效果（第 0、+1 天平均）是 <b>+25</b> 碗左右，看 DiD 離它多近。';
+    }
+    host.innerHTML = html;
+    var p = phaseOf(day);
+    document.getElementById('say').innerHTML = '<b>' + dstr(day) + ' · ' + p[0] + '</b>' + p[1];
+  }
+
+  function renderRaw(){
+    var svg = document.getElementById('raw'); clear(svg);
+    var W = 520, H = 230, L = 36, R = 10, T = 12, B = 26;
+    var pw = W - L - R, ph = H - T - B, YMIN = -60, YMAX = 180;
+    function X(d){ return L + (d - D0) / (DN - D0) * pw; }
+    function Y(v){ return T + (YMAX - v) / (YMAX - YMIN) * ph; }
+    svg.appendChild(el('rect', { 'class': 'coldband', x: X(COLD[0]), y: T, width: X(COLD[1]) - X(COLD[0]), height: ph }));
+    [-50, 0, 50, 100, 150].forEach(function(v){
+      svg.appendChild(el('line', { 'class': v === 0 ? 'zero' : 'grid', x1: L, x2: W - R, y1: Y(v), y2: Y(v) }));
+      svg.appendChild(el('text', { x: L - 5, y: Y(v) + 3.5, 'text-anchor': 'end' }, String(v)));
+    });
+    [1, 10, 17, 24, 31].forEach(function(d){
+      svg.appendChild(el('text', { x: X(d), y: H - 8, 'text-anchor': 'middle' }, dstr(d)));
+    });
+    TREAT_DAY.filter(function(v, i, a){ return a.indexOf(v) === i; }).forEach(function(d){
+      if (d <= day) svg.appendChild(el('line', { 'class': 'evline', x1: X(d), x2: X(d), y1: T, y2: H - B }));
+    });
+    var pt = [], pc = [];
+    for (var d = D0; d <= day; d++) {
+      pt.push(X(d).toFixed(1) + ',' + Y(groupAvg(d, true)).toFixed(1));
+      pc.push(X(d).toFixed(1) + ',' + Y(groupAvg(d, false)).toFixed(1));
+    }
+    svg.appendChild(el('polyline', { 'class': 'ln-c', points: pc.join(' ') }));
+    svg.appendChild(el('polyline', { 'class': 'ln-t', points: pt.join(' ') }));
+  }
+
+  function renderES(){
+    var svg = document.getElementById('es'); clear(svg);
+    var W = 520, H = 230, L = 36, R = 10, T = 12, B = 32;
+    var pw = W - L - R, ph = H - T - B, YMIN = -80, YMAX = 170;
+    function X(k){ return L + (k + 7) / 12 * pw; }
+    function Y(v){ return T + (YMAX - v) / (YMAX - YMIN) * ph; }
+    [-50, 0, 50, 100, 150].forEach(function(v){
+      svg.appendChild(el('line', { 'class': v === 0 ? 'zero' : 'grid', x1: L, x2: W - R, y1: Y(v), y2: Y(v) }));
+      svg.appendChild(el('text', { x: L - 5, y: Y(v) + 3.5, 'text-anchor': 'end' }, String(v)));
+    });
+    svg.appendChild(el('line', { 'class': 'evline', x1: X(0), x2: X(0), y1: T, y2: H - B }));
+    KS.forEach(function(k){ svg.appendChild(el('text', { x: X(k), y: H - 14, 'text-anchor': 'middle' }, lab(k))); });
+    svg.appendChild(el('text', { x: L + pw / 2, y: H - 2, 'text-anchor': 'middle' }, '事件時間（天）'));
+    var drawn = 0;
+    KS.forEach(function(k){
+      var p = k === BASE_K ? { v: 0, n: NT } : esPoint(k);
+      if (!p) return;
+      drawn++;
+      if (k !== BASE_K) svg.appendChild(el('line', { 'class': 'ci', x1: X(k), x2: X(k), y1: Y(p.v - CI), y2: Y(p.v + CI) }));
+      var c = el('circle', { 'class': 'pt' + (k === BASE_K ? ' base' : ''), cx: X(k), cy: Y(p.v), r: 4.5 });
+      c.appendChild(el('title', {}, '第 ' + lab(k) + ' 天：' + fmt(p.v) + ' 碗（' + p.n + ' 個縣市）'));
+      svg.appendChild(c);
+    });
+    var note = document.getElementById('esnote');
+    if (drawn <= 1) note.textContent = '還沒有資料，按播放讓日子往前走。';
+    else if (selfOnly) note.innerHTML = '<b>只跟自己比</b>：沒扣掉對照組，普渡的共同變化也被算進來，整條線被墊高。';
+    else if (pretrend) note.innerHTML = '處理組本來就在成長：<b>事件前的點一路往上爬</b>，不再貼著 0，平行趨勢有問題。';
+    else note.innerHTML = '事件前貼著 0 → 第 −3 天開始囤貨 → 颱風假當天 → 之後掉到 0 以下（存貨還沒吃完）。';
+    document.getElementById('essub').textContent = selfOnly
+      ? '每一期跟第 −7 天比，沒有扣掉對照組' : '每一期跟第 −7 天比，而且扣掉對照組';
+  }
+
+  function render(){ renderRibbon(); renderCounties(); renderNumbers(); renderRaw(); renderES(); }
+
+  function stop(){ if (timer) { clearInterval(timer); timer = null; } document.getElementById('play').textContent = '▶ 播放'; }
+  function start(){
+    stop();
+    timer = setInterval(function(){
+      if (day >= DN) { stop(); return; }
+      day++; render();
+    }, 1100 / Number(document.getElementById('spd').value));
+    document.getElementById('play').textContent = '❚❚ 暫停';
+  }
+  document.getElementById('play').addEventListener('click', function(){
+    if (timer) stop(); else { if (day >= DN) day = D0; start(); }
+  });
+  document.getElementById('step').addEventListener('click', function(){ stop(); if (day < DN) { day++; render(); } });
+  document.getElementById('reset').addEventListener('click', function(){ stop(); day = D0; render(); });
+  document.getElementById('spd').addEventListener('input', function(){ if (timer) start(); });
+  function pair(a, b, set){
+    var A = document.getElementById(a), B = document.getElementById(b);
+    A.addEventListener('click', function(){ set(false); A.setAttribute('aria-pressed', 'true'); B.setAttribute('aria-pressed', 'false'); render(); });
+    B.addEventListener('click', function(){ set(true); A.setAttribute('aria-pressed', 'false'); B.setAttribute('aria-pressed', 'true'); render(); });
+  }
+  pair('sc-ok', 'sc-tr', function(v){ pretrend = v; });
+  pair('m-did', 'm-self', function(v){ selfOnly = v; });
+
+  window.__jump = function(n, sf){ day = n; if (sf) selfOnly = true; render(); };
+  render();
+})();
+</script>
+</body>
+</html>
