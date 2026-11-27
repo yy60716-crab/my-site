@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>農業部門淨零排放</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: 單欄閱讀講義，桌機左側固定目錄；筆記、ISO 連結、重點用不同框區分 */
+:root{
+  --bg:#f4f6f1; --paper:#ffffff; --fg:#1c231f; --muted:#5b6660; --line:#d9ded6;
+  --accent:#2f6a4c; --accent-soft:#e3eee6;
+  --ink:#2a4a9a; --ink-soft:#e8edf8;
+  --hl:#f3e27a; --soil:#9a6a22; --soil-soft:#f5ecdc;
+  --font-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --font-head:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --font-num:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141a17; --paper:#1b2320; --fg:#e4ebe6; --muted:#9aa8a0; --line:#2e3a35;
+  --accent:#7cc39b; --accent-soft:#1f3329; --ink:#9db4f0; --ink-soft:#1f2740;
+  --hl:#6b5d14; --soil:#d9a85a; --soil-soft:#30281a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141a17; --paper:#1b2320; --fg:#e4ebe6; --muted:#9aa8a0; --line:#2e3a35;
+  --accent:#7cc39b; --accent-soft:#1f3329; --ink:#9db4f0; --ink-soft:#1f2740;
+  --hl:#6b5d14; --soil:#d9a85a; --soil-soft:#30281a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.8;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1480px;margin:0 auto;display:grid;grid-template-columns:190px minmax(0,1fr);gap:36px;padding-block:32px 80px}
+@media (max-width:860px){.wrap{grid-template-columns:minmax(0,1fr)} nav.toc{position:static!important;max-height:none!important}}
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);align-self:start;max-height:calc(100vh - 32px);overflow:auto;font-size:14px}
+nav.toc h2{font-size:13px;letter-spacing:.12em;color:var(--muted);margin:0 0 8px;font-family:var(--font-body)}
+nav.toc ol{margin:0;padding-left:32px;display:grid;gap:4px}
+nav.toc a{color:var(--fg);text-decoration:none}
+nav.toc a:hover,nav.toc a:focus-visible{color:var(--accent);text-decoration:underline}
+main{min-width:0}
+.toc-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px}
+.toc-head h2{margin:0!important}
+.toc-btn{font:inherit;font-size:13px;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:6px;padding:2px 8px;cursor:pointer;line-height:1.6}
+.toc-btn:hover,.toc-btn:focus-visible{color:var(--accent);border-color:var(--accent)}
+.toc-open{display:none;white-space:nowrap}
+body.toc-off .wrap{grid-template-columns:76px minmax(0,1fr)}
+body.toc-off nav.toc>*:not(.toc-open){display:none}
+body.toc-off .toc-open{display:inline-block}
+@media (max-width:860px){body.toc-off .wrap{grid-template-columns:minmax(0,1fr)}}
+header.hero{border-bottom:3px solid var(--accent);padding-bottom:20px;margin-bottom:28px}
+.eyebrow{font-size:13px;letter-spacing:.14em;color:var(--accent);font-weight:700}
+h1{font-family:var(--font-head);font-weight:900;font-size:clamp(28px,5vw,42px);line-height:1.3;margin:6px 0 10px;text-wrap:balance}
+.meta{color:var(--muted);font-size:14px}
+h2{font-family:var(--font-head);font-size:26px;line-height:1.35;margin:56px 0 14px;text-wrap:balance;scroll-margin-top:16px}
+h2 .no{font-family:var(--font-num);color:var(--accent);font-size:18px;margin-right:10px}
+h3{font-size:19px;margin:30px 0 8px;color:var(--accent)}
+p{margin:10px 0}
+ul,ol{padding-left:22px;margin:8px 0}
+li{margin:3px 0}
+mark{background:linear-gradient(transparent 55%,var(--hl) 55%);color:inherit;padding:0 1px}
+.num{font-family:var(--font-num);font-variant-numeric:tabular-nums}
+.box{border-radius:10px;padding:14px 18px;margin:16px 0}
+.box>.tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.08em;padding:1px 8px;border-radius:999px;margin-bottom:4px}
+.box p,.box ul{margin:6px 0}
+.guide{background:var(--paper);border:1px solid var(--line)}
+.guide .tag{background:var(--accent);color:var(--paper)}
+.note{background:var(--ink-soft);border-left:4px solid var(--ink)}
+.note .tag{background:var(--ink);color:var(--paper)}
+.note .hand{color:var(--ink);font-weight:500}
+.iso{background:var(--soil-soft);border-left:4px solid var(--soil)}
+.iso .tag{background:var(--soil);color:var(--paper)}
+.key{background:var(--accent-soft);border-left:4px solid var(--accent)}
+.key .tag{background:var(--accent);color:var(--paper)}
+.unclear{color:var(--muted);font-size:13px;border-bottom:1px dotted var(--muted)}
+.tbl{overflow-x:auto;width:fit-content;max-width:100%;margin:14px 0;border:1px solid var(--line);border-radius:8px;background:var(--paper)}
+table{border-collapse:collapse;width:auto;font-size:15px;min-width:480px}
+th,td{padding:8px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--accent-soft);font-weight:700;white-space:nowrap}
+td.r,th.r{text-align:right}
+td:first-child,th:first-child{white-space:nowrap}
+tr:last-child td{border-bottom:none}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:16px 0}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.stat b{display:block;font-family:var(--font-num);font-size:22px;color:var(--accent);line-height:1.3}
+.stat span{font-size:13px;color:var(--muted)}
+.axes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:16px 0}
+.axis{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:8px;padding:12px 14px}
+.axis h4{margin:0 0 4px;font-size:17px}
+.axis .goal{font-family:var(--font-num);color:var(--accent);font-weight:700}
+.pflow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;gap:8px;align-items:stretch;margin:14px 0}
+.pf-col{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.pf-col.review{background:var(--accent-soft);border-color:var(--accent)}
+.pf-phase{font-weight:700;color:var(--accent);font-size:15px}
+.pf-step{display:flex;gap:8px;align-items:flex-start;font-size:14.5px;line-height:1.6;padding:8px;border:1px solid var(--line);border-radius:6px;background:var(--bg)}
+.pf-col.review .pf-step{background:var(--paper)}
+.pf-step+.pf-step{position:relative}
+.pf-tag{flex:none;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--paper);font-size:12px;display:grid;place-items:center;font-family:var(--font-num);margin-top:1px}
+.pf-who{font-size:12.5px;color:var(--muted)}
+.pf-arrow{align-self:center;color:var(--muted);font-size:20px}
+.pf-loop{font-size:13px;color:var(--soil);border-top:1px dashed var(--line);padding-top:6px}
+.pf-legend{font-size:13px;color:var(--muted);margin-top:4px}
+@media (max-width:1100px){.pflow{grid-template-columns:minmax(0,1fr)} .pf-arrow{justify-self:center;transform:rotate(90deg)}}
+.loop{position:relative;margin-top:22px!important;margin-bottom:48px!important;padding-left:26px}
+.loop-svg{position:absolute;left:0;top:0;overflow:visible;pointer-events:none;color:var(--accent)}
+.loop-svg text{fill:var(--accent);font-size:13px;font-family:var(--font-body)}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0;font-size:14px}
+.flow span{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:4px 10px}
+.flow i{font-style:normal;color:var(--muted)}
+details.q{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0}
+details.q summary{cursor:pointer;font-weight:500}
+details.q summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+details.q[open] summary{color:var(--accent)}
+details.q .a{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+dl.gloss{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 18px;margin:12px 0}
+dl.gloss dt{font-weight:700;color:var(--accent)}
+dl.gloss dd{margin:0}
+@media (max-width:560px){dl.gloss{grid-template-columns:minmax(0,1fr)} dl.gloss dd{margin-bottom:8px}}
+footer{margin-top:60px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+a.xref{display:block;width:fit-content;margin-top:6px}
+.steps{width:fit-content;max-width:100%}
+.box{width:fit-content;max-width:100%}
+.flow span{display:inline-flex;align-items:center;gap:8px}
+.flow span .fi{width:22px;height:22px;flex:none;fill:none;stroke:var(--accent);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.flow span .tx{font-style:normal}
+</style>
+<!--gm-css--><style>
+/* 跳出式小遊戲 */
+.gm-fab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));z-index:60;display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:15px;font-weight:700;color:var(--paper);background:var(--accent);border:0;border-radius:999px;padding:10px 18px 10px 14px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.22)}
+.gm-fab svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.gm-fab:hover,.gm-fab:focus-visible{filter:brightness(1.08);outline:2px solid var(--fg);outline-offset:2px}
+.gm-fab.wig{animation:gmWig .9s ease-in-out 2}
+@keyframes gmWig{0%,100%{transform:rotate(0)}20%{transform:rotate(-8deg) scale(1.06)}40%{transform:rotate(7deg) scale(1.06)}60%{transform:rotate(-4deg)}80%{transform:rotate(3deg)}}
+.gm-tip{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(max(16px,env(safe-area-inset-bottom,0px)) + 58px);z-index:60;max-width:min(300px,calc(100vw - 32px));background:var(--paper);color:var(--fg);border:2px solid var(--accent);border-radius:14px;padding:10px 34px 10px 14px;font-size:15px;line-height:1.55;box-shadow:0 6px 20px rgba(0,0,0,.2);cursor:pointer;opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .3s,transform .3s}
+.gm-tip.on{opacity:1;transform:none;pointer-events:auto}
+.gm-tip::after{content:"";position:absolute;right:34px;bottom:-9px;width:14px;height:14px;background:var(--paper);border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(45deg)}
+.gm-tip b{display:block;font-size:12px;letter-spacing:.1em;color:var(--accent)}
+.gm-tipx{position:absolute;top:4px;right:6px;font:inherit;font-size:18px;line-height:1;color:var(--muted);background:none;border:0;cursor:pointer;padding:4px}
+html.gm-lock,html.gm-lock body{overflow:hidden}
+.gm-ov{position:fixed;inset:0;z-index:70;background:rgba(10,16,13,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.gm-ov[hidden]{display:none}
+.gm-dlg{background:var(--paper);color:var(--fg);border-radius:14px;width:100%;max-width:780px;max-height:calc(100vh - 32px);overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.gm-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px 10px 18px;border-bottom:1px solid var(--line)}
+.gm-hd b{font-family:var(--font-head);font-size:18px}
+.gm-x{font:inherit;font-size:22px;line-height:1;color:var(--muted);background:none;border:1px solid var(--line);border-radius:8px;width:36px;height:36px;cursor:pointer}
+.gm-x:hover,.gm-x:focus-visible{color:var(--accent);border-color:var(--accent)}
+.gm-stage{display:block;width:100%;height:auto;background:linear-gradient(var(--bg),var(--paper))}
+.gm-stage text{font-family:var(--font-body)}
+.gm-stage .lbl{fill:var(--fg);font-size:14px;font-weight:700;text-anchor:middle}
+.gm-stage .sub{fill:var(--muted);font-size:12px;text-anchor:middle}
+.gm-stage .pop{fill:var(--fg);font:900 19px var(--font-head);text-anchor:middle}
+.gm-stage .gas text{fill:var(--fg);font:700 13px var(--font-num);text-anchor:middle;dominant-baseline:middle}
+.gm-card{padding:14px 20px 20px}
+.gm-prog{font-size:13px;color:var(--muted);letter-spacing:.06em;min-height:1.4em}
+.gm-q{font-family:var(--font-head);font-size:21px;font-weight:700;margin:4px 0 12px;line-height:1.45}
+.gm-opts{display:flex;flex-wrap:wrap;gap:10px}
+.gm-opts button,.gm-next{font:inherit;font-size:16px;font-weight:700;color:var(--fg);background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:8px 18px;cursor:pointer;min-width:90px;text-align:left;line-height:1.5}
+.gm-opts button:hover:not(:disabled),.gm-opts button:focus-visible{border-color:var(--accent);color:var(--accent)}
+.gm-opts button:disabled{cursor:default}
+.gm-opts button.ok{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.gm-opts button.bad{background:var(--soil);border-color:var(--soil);color:var(--paper)}
+.gm-opts button.dim{opacity:.45}
+.gm-fb{margin-top:12px}
+.gm-fb .res{border-radius:10px;padding:12px 16px;margin:0 0 10px}
+.gm-fb .res.ok{background:var(--accent-soft);border-left:4px solid var(--accent)}
+.gm-fb .res.bad{background:var(--soil-soft);border-left:4px solid var(--soil)}
+.gm-fb .res b{display:block;font-size:17px;margin-bottom:2px}
+.gm-fb .res.ok b{color:var(--accent)}
+.gm-fb .res.bad b{color:var(--soil)}
+.gm-fb .res p{margin:4px 0}
+.gm-next{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.gm-next:hover,.gm-next:focus-visible{filter:brightness(1.08)}
+.gm-score{font-family:var(--font-num);font-size:28px;color:var(--accent);font-weight:700}
+@media (max-width:560px){.gm-q{font-size:18px}.gm-card{padding:12px 14px 16px}.gm-opts button{flex:1 1 100%}.gm-ov{padding:8px}.gm-dlg{max-height:calc(100vh - 16px)}}
+@media (prefers-reduced-motion:reduce){.gm-fab.wig{animation:none}.gm-tip{transition:none}}
+</style><!--/gm-css-->
+
+<style>
+.site-nav{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px;max-width:1480px;margin:0 auto;padding-top:20px}
+.site-nav+.wrap{padding-top:16px}
+.site-nav a{color:var(--muted);text-decoration:none}
+.site-nav a:hover,.site-nav a:focus-visible{color:var(--accent);text-decoration:underline}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:56px 0 0;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{display:block;padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--fg);text-decoration:none;font-size:15px}
+.pager a:hover,.pager a:focus-visible{border-color:var(--accent)}
+.pager small{display:block;color:var(--muted);font-size:12px}
+.pager .next{text-align:right;grid-column:2}
+@media (max-width:560px){.pager{grid-template-columns:1fr}.pager .next{grid-column:1}}
+</style>
+</head>
+<body>
+<nav class="site-nav" aria-label="網站導覽"><a href="index.html">← 回課程目錄</a><a href="../index.html">學習筆記首頁</a></nav>
+<div class="wrap">
+<nav class="toc" aria-label="目錄">
+  <button type="button" class="toc-btn toc-open" id="tocShow" aria-label="展開目錄">目錄 »</button>
+  <div class="toc-head"><h2>目錄</h2><button type="button" class="toc-btn" id="tocHide" aria-label="收起目錄">« 收起</button></div>
+  <p style="margin:0 0 6px"><a href="#guide">導讀</a></p>
+  <ol>
+    <li><a href="#impact">氣候變遷衝擊農業</a></li>
+    <li><a href="#policy">國家淨零政策架構</a></li>
+    <li><a href="#status">農業部門排放現況</a></li>
+    <li><a href="#axes">四大主軸總覽</a></li>
+    <li><a href="#reduce">主軸一 減量</a></li>
+    <li><a href="#sink">主軸二 增匯</a></li>
+    <li><a href="#circular">主軸三 循環</a></li>
+    <li><a href="#green">主軸四 綠趨勢</a></li>
+    <li><a href="#three">三種碳計算</a></li>
+    <li><a href="#cfp">農產品碳足跡</a></li>
+    <li><a href="#credit">碳定價與碳權</a></li>
+    <li><a href="#esg">企業 ESG 與農業</a></li>
+    <li><a href="#model">推動模式與結語</a></li>
+    <li><a href="#quiz">自我測驗</a></li>
+    <li><a href="#gloss">名詞表</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="hero">
+  <h1>農業部門淨零排放的實踐與挑戰</h1>
+</header>
+
+<section id="guide">
+  <div class="box guide">
+    <span class="tag">導讀</span>
+    <p>這堂課是整個課程的「地圖」：從氣候變遷怎麼衝擊農業講起，接著介紹農業部的四大淨零主軸（減量、增匯、循環、綠趨勢），最後談碳足跡、碳權和企業 ESG 怎麼跟農業接上。</p>
+    <p>讀的時候可以特別注意三件事：</p>
+    <ul>
+      <li>講者把「組織型（14064-1）、產品型（14067）、專案型（14064-2）」三種計算放在一起比較，見 <a href="#three">第 9 節</a>。</li>
+      <li>農業的排放來源跟一般工廠很不一樣：稻田甲烷、肥料氧化亞氮、畜禽腸胃發酵，見 <a href="#status">第 3 節</a>。</li>
+      <li>農產品做碳足跡時遇到的實務難題（多農戶、多集貨場、多通路），見 <a href="#cfp">第 10 節</a>。</li>
+    </ul>
+    <p style="font-size:14px;color:var(--muted)">框的顏色：<span style="color:var(--ink)">藍色＝上課手寫筆記</span>、<span style="color:var(--soil)">棕色＝跟 ISO 14064-1 / 14067 的連結</span>、綠色＝重點。</p>
+  </div>
+</section>
+
+<section id="impact">
+<h2><span class="no">01</span>氣候變遷已在衝擊農業</h2>
+<h3>溫室氣體濃度與升溫</h3>
+<div class="stats">
+  <div class="stat"><b>424.54 ppm</b><span>大氣 CO₂ 濃度（2025 年 10 月，NOAA）；2024 年 10 月為 422.35 ppm</span></div>
+  <div class="stat"><b>+1.48 °C</b><span>2023–2025 平均氣溫較工業化前（WMO）</span></div>
+  <div class="stat"><b>前 3 名</b><span>2023–2025 是有紀錄以來最熱的三年</span></div>
+  <div class="stat"><b>238 ZJ</b><span>海洋熱含量近 1 年增加量，約全球總發電量的 200 倍</span></div>
+</div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">CO₂ 濃度與氣溫「正相關」；海洋熱含量上升是「警訊」。</p></div>
+<p>講者用「溫水煮青蛙」比喻氣候變遷：變化慢，等察覺時已經來不及。2024 年 7 月 23 日是全球地表氣溫史上最熱的一天。</p>
+
+<h3>極端天氣頻率升高</h3>
+<ul>
+  <li>114 年丹娜絲颱風重創中南部（臺南市公告農業天然災害救助）。</li>
+  <li>馬太鞍堰塞湖災害，逾 600 公頃農田遭泥沙淹沒。農業部提出四大措施：專案處理淹沒農田、農地復原重建補助、專案休耕補貼、低利貸款協助。</li>
+  <li>115.3.18 節水抗旱計畫（頭前溪流域農業系統性節水推廣試辦）；115 年 4 月上旬清明豪雨。</li>
+  <li>歷年農業天然災害現金救助金額（民國 80–114 年）呈「趨勢上升且強度增強」：105 年接近 100 億元，113 年約 80 億元。</li>
+</ul>
+
+<h3>衝擊路徑：從氣候到糧食安全</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 14.8V4a2 2 0 0 0-4 0v10.8a4 4 0 1 0 4 0z"/><path d="M12 9v8"/></svg><em class="tx">氣溫上升・海平面上升・降雨型態改變・極端天氣</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21c0-9 6-16 16-17-1 10-8 16-16 17z"/><path d="M5 21 14 12"/></svg><em class="tx">生態系統：水資源、物種、土壤、病蟲害</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21c0-9 6-16 16-17-1 10-8 16-16 17z"/><path d="M5 21 14 12"/></svg><em class="tx">農業生產與設施</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v10h16V10"/><path d="M3 10 5 4h14l2 6z"/><path d="M10 20v-5h4v5"/></svg><em class="tx">市場：產量、品質、價格、農戶所得</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22V8"/><path d="M12 8c-2-1-3-3-3-5 2 1 3 3 3 5zm0 0c2-1 3-3 3-5-2 1-3 3-3 5zM12 13c-2-1-4-2-4-5 2 0 4 2 4 5zm0 0c2-1 4-2 4-5-2 0-4 2-4 5zM12 18c-2-1-4-2-4-5 2 0 4 2 4 5zm0 0c2-1 4-2 4-5-2 0-4 2-4 5z"/></svg><em class="tx"><b>糧食安全</b></em></span></div>
+<p>影響分成生態面（農業生產與環境資源）和社會面（產品品質、數量、供應穩定性，以及設施與農民資產損失）。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">災害「次數增加」、「病蟲害也變嚴重」→ 需要「氣候適應」。</p></div>
+
+<h3>高溫對農業生產的衝擊</h3>
+<div class="tbl"><table>
+<tr><th>對象</th><th>衝擊</th></tr>
+<tr><td>作物</td><td>適栽區移動、產量下降（例：高接梨適栽區、RCP8.5 情境下水稻與玉米產量改變）；生理障礙（梨蜜症、花芽分化不完整）；病蟲害增加（褐飛蝨、秋行軍蟲、荔枝椿象）</td></tr>
+<tr><td>畜牧</td><td>熱緊迫機率增加：乳牛產乳量下降；豬隻攝食量下降；雞隻攝食量下降、產蛋率下降。<b>THI（溫濕度指數）&gt; 72</b> 時乳牛開始出現熱緊迫</td></tr>
+<tr><td>水產養殖</td><td>藻類繁殖加速導致水質改變、寄生蟲增加。<b>連續 7 天 32 °C</b> 高溫，養殖水質開始惡化</td></tr>
+</table></div>
+
+<h3>因應框架：調適 vs. 減緩</h3>
+<p>農業永續發展的願景有三面：生產面（優質優產、農民賺錢）和環境面（低碳）。威脅分成「極端（Extreme）」：乾旱、極端高溫低溫、極端強降雨、病蟲害大爆發；以及「不正常（Abnormal）」：整體升溫、夜溫上升幅度大於日溫、濕度上升、水資源短缺、新興病蟲害。</p>
+<div class="tbl"><table>
+<tr><th>方案</th><th>時程</th><th>內容</th></tr>
+<tr><td rowspan="3"><b>調適 Adaptation</b><br><span class="hand" style="color:var(--ink)">筆記：治標</span></td><td>短期</td><td>災前：預警系統（農業氣象站、氣象預報、病蟲害預警）、資訊傳播、病蟲害防治<br>災中：強固型溫網室、節水灌溉、降溫設備、精準智慧系統<br>災後：天災救助、農業保險、融資、種子種苗供應</td></tr>
+<tr><td>中期</td><td>適產區移轉的區域作物轉型；農水路與水資源智慧調蓄；病蟲害邊境防堵</td></tr>
+<tr><td>長期</td><td>耐（抗）逆境育種、種原保存、成本最適考量、韌性產業轉型政策</td></tr>
+<tr><td><b>減緩 Mitigation</b><br><span class="hand" style="color:var(--ink)">筆記：治本</span></td><td>—</td><td>四大主軸：減量、增匯、循環、綠趨勢（見第 4 節）</td></tr>
+</table></div>
+</section>
+
+<section id="policy">
+<h2><span class="no">02</span>國家淨零政策架構</h2>
+<p>「國家希望工程：綠色成長與 2050 淨零轉型」包含五大策略、行動計畫（淨零 12 項關鍵戰略＋六大部門減碳旗艦計畫）與<b>六大制度創新</b>：科技創新、金融支持、碳排有價、法規調適、綠領人才、社區驅動。農業的目標是兼顧糧食安全、環境永續與農業發展。</p>
+<h3>第三期農業部門溫室氣體減量行動方案</h3>
+<div class="tbl"><table>
+<tr><th>推動策略</th><th>項目</th></tr>
+<tr><td>減碳</td><td>能效管理策略、能源取代策略、田間減量策略</td></tr>
+<tr><td>增匯</td><td>土壤碳匯、森林碳匯、海洋碳匯</td></tr>
+<tr><td>循環</td><td>農業低碳循環策略</td></tr>
+</table></div>
+<p>以「雙軌」推動：<b>科技創新</b>（決策支援、技術創新）和<b>產業落實</b>（政策工具、誘因機制）。</p>
+</section>
+
+<section id="status">
+<h2><span class="no">03</span>農業部門溫室氣體排放現況</h2>
+<div class="stats">
+  <div class="stat"><b>2 億 7,316.1 萬</b><span>2024 年全國排放量（公噸 CO₂e）</span></div>
+  <div class="stat"><b>651 萬（2.38%）</b><span>農業部門排放（含燃料與非燃料燃燒），公噸 CO₂e</span></div>
+  <div class="stat"><b>2,175.7 萬</b><span>林業部門碳匯量（公噸 CO₂e），可抵減全國排放 7.96%</span></div>
+</div>
+<h3>2024 年農業部門排放源占比</h3>
+<div class="tbl"><table>
+<tr><th>排放源</th><th class="r">占比</th><th>主要氣體</th></tr>
+<tr><td>用電</td><td class="r num">26.51%</td><td>CO₂（範疇二性質）</td></tr>
+<tr><td>用油</td><td class="r num">24.95%</td><td>CO₂</td></tr>
+<tr><td>農業土壤（施肥等）</td><td class="r num">17.32%</td><td>N₂O</td></tr>
+<tr><td>畜禽糞尿處理</td><td class="r num">14.60%</td><td>CH₄、N₂O</td></tr>
+<tr><td>水稻種植</td><td class="r num">9.80%</td><td>CH₄</td></tr>
+<tr><td>畜禽腸胃發酵</td><td class="r num">6.54%</td><td>CH₄</td></tr>
+<tr><td>尿素施用</td><td class="r num">0.28%</td><td>CO₂</td></tr>
+<tr><td>作物殘體燃燒</td><td class="r num">0.01%</td><td>CH₄、N₂O</td></tr>
+</table></div>
+<p class="unclear">圓餅圖的字很小，「用電」「水稻種植」「畜禽腸胃發酵」的小數是對照照片並以加總 100% 推算的，可能有 0.1% 左右誤差。</p>
+<p>1990–2024 年農業部門排放大致從每年約 900–1,000 萬公噸降到 650–700 萬公噸。</p>
+<div class="box note"><span class="tag">課堂筆記</span>
+<p class="hand">用油、用電 →「油電」；畜禽糞尿處理 → 甲烷；農業土壤 → 肥料（氮磷鉀）；溫室氣體排放：氧化亞氮、甲烷。<br>排放量 ＝ 活動數據 × 排放係數</p></div>
+<div class="box iso"><span class="tag">連結 ISO 14064-1</span>
+<p>「活動數據 × 排放係數」就是 14064-1 量化排放的基本公式。農業組織盤查時，範疇一除了燃料燃燒，還會有<b>水稻 CH₄、施肥 N₂O、腸胃發酵 CH₄、糞尿處理 CH₄/N₂O</b> 這些非燃料排放，係數多半引用 IPCC 指引或國家清冊的本土係數。這是農業盤查和工廠盤查最大的不同。</p></div>
+</section>
+
+<section id="axes">
+<h2><span class="no">04</span>農業部門淨零四大主軸</h2>
+<p>農業部的目標是 <mark>2040 年農業部門淨零排放</mark>（比國家 2050 年早 10 年）。資訊入口：農業淨零資訊網 agrinetzero.moa.gov.tw</p>
+<div class="axes">
+  <div class="axis"><h4>減量</h4><div class="goal">減少 GHGs 50%</div><p>基盤掌握、低碳生產模式、高效能與電動化</p></div>
+  <div class="axis"><h4>增匯</h4><div class="goal">增加 1,000 萬公噸碳儲量</div><p>森林、土壤、海洋</p></div>
+  <div class="axis"><h4>循環</h4><div class="goal">全循環零廢棄</div><p>循環技術研發、建置循環場域、法規調整、建立產業供應鏈</p></div>
+  <div class="axis"><h4>綠趨勢</h4><div class="goal">農產業 100% 綠電自給</div><p>農業綠能、能力建構、碳定價、農業 ESG</p></div>
+</div>
+</section>
+
+<section id="reduce">
+<h2><span class="no">05</span>主軸一：減量（減少排放 50%）</h2>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.4-4.4"/></svg><em class="tx"><b>基盤掌握</b>：本土排放係數、計量方法學、資訊平台</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21v-9"/><path d="M12 12C12 7 9 5 4 5c0 5 3 7 8 7z"/><path d="M12 14c0-4 2.5-6 7-6 0 4-2.5 6-7 6z"/><path d="M6 21h12"/></svg><em class="tx"><b>低碳生產模式</b>：化學肥料減量與精準用藥、推動有機友善農業、調整水田灌溉、調整畜禽飼料與飼養</em></span><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg><em class="tx"><b>高能效與電動化</b>：節能農業設施、農機具電動化</em></span></div>
+<p class="unclear">投影片中「水田灌溉」「畜禽飼料」兩格字很淡，內容依其他投影片推斷。</p>
+
+<h3>農業減碳科研成果</h3>
+<div class="tbl"><table>
+<tr><th>技術</th><th>做法</th><th class="r">減碳成效</th></tr>
+<tr><td>水稻間歇灌溉</td><td>節水、減少甲烷、強化根系</td><td class="r num">0.097–0.5795 公噸 CO₂e/公頃/期</td></tr>
+<tr><td>稻草移除</td><td>收穫時切碎的稻草移出田區（減少淹水分解產生的甲烷）</td><td class="r num">11.7 公噸 CO₂e/公頃/期</td></tr>
+<tr><td>滿江紅</td><td>二期作休耕綠肥以滿江紅取代田菁</td><td class="r num">8.5 公噸 CO₂e/公頃/期</td></tr>
+<tr><td>飼料配方</td><td>低蛋白、低纖維、高穀料配方</td><td class="r num">雞 0.3；豬 1–7.2；牛 11.8 公斤 CO₂e/隻（頭）/年</td></tr>
+<tr><td>飼料添加物</td><td>海門冬（<i>Asparagus cochinchinensis</i>）乾燥藻體，減少反芻動物甲烷</td><td class="r">—</td></tr>
+<tr><td>廢棄物管理</td><td>豬糞堆肥處理、豬場沼氣利用</td><td class="r">—</td></tr>
+<tr><td>油電混合動力漁船</td><td>一支釣作業時以電動馬達取代燃油引擎</td><td class="r num">21.2 公噸 CO₂e/年</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">電動漁船除了減碳，還提升作業安全。</p></div>
+
+<h3>電動農機</h3>
+<ul>
+  <li>專利累計 7 式（112–114 年），包括菜苗移植機、切根型電動蔬菜收穫機、農機動力改裝系統、牽引式電動農膜回收機等，預計取得 22 式。電動青梗白菜收穫機獲 2024 台灣創新技術博覽會金牌。</li>
+  <li>3 艘油電混合動力漁船（棒受網、延繩釣、拖網）；低轉速高扭力農用電動馬達應用於中耕機。</li>
+  <li>產業體系：一期先做機具研發，次期建充換電與維修體系，並規劃田間綠能充電示範站。</li>
+  <li>推廣：業界科專＋產學合作＋業界參與（成效回饋農糧署，評估納入農機補助）。</li>
+  <li>效益：減碳、節省成本、零廢氣、少震動、低噪音。</li>
+</ul>
+</section>
+
+<section id="sink">
+<h2><span class="no">06</span>主軸二：增匯（增加 1,000 萬公噸碳儲量）</h2>
+<div class="box key"><span class="tag">定義</span><p><b>碳匯</b>：將二氧化碳或其他溫室氣體自排放源或大氣中<mark>持續移除</mark>後，<mark>吸收或儲存</mark>之樹木、森林、土壤、海洋、地層、設施或場所。</p></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">蔬菜沒有碳匯：雖然行光合作用吸碳，但很短時間就回到大氣中。碳匯要有兩件事：1. 移除 2. 吸收或儲存 → 是一個「場所」。</p></div>
+
+<h3>森林碳匯</h3>
+<div class="stats">
+  <div class="stat"><b>60.71%</b><span>森林覆蓋率</span></div>
+  <div class="stat"><b>219.7 萬公頃</b><span>森林面積</span></div>
+  <div class="stat"><b>近 2,200 萬</b><span>每年森林碳匯量（公噸 CO₂e）</span></div>
+  <div class="stat"><b>7.5 億</b><span>總碳儲存量（公噸 CO₂e）；蓄積約 5 億立方公尺</span></div>
+</div>
+<div class="tbl"><table>
+<tr><th>策略</th><th>做法</th></tr>
+<tr><td>增加森林面積</td><td>國有林、海岸林、生態復育造林；排除超限利用造林；邊際農地造林；水利工程多元植樹</td></tr>
+<tr><td>加強森林經營</td><td>人工林及竹林經營；低蓄積及劣化林分撫育更新；活化老化竹林</td></tr>
+<tr><td>提高國產材利用</td><td>提高國產材自給率；推廣國產木竹材；剩餘木竹料再利用（台灣木材標章）</td></tr>
+</table></div>
+<p><b>新興竹產業計畫</b>：從生產端（降低竹林經營成本）、加工端（穩定料源、升級加工）、市場端（公共工程帶頭使用竹材、竹建築）三端推動，目標是提升效率、降低成本、增加產值、加強竹林碳匯。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">竹子生長快，一年可到 20 t CO₂ 當量。</p><p class="unclear">補充：這類數字通常是「每公頃、每年」的固碳量（t CO₂/ha/年）。林試所的數據：定期更新經營的桂竹林約 22.32、孟宗竹林約 47.36 t CO₂/ha/年；一般林木約 7.45–14.9 t CO₂/ha/年。竹林「現存量」換算的碳儲存是每公頃 128–183 t CO₂，那是累積的存量，不是每年的量。</p></div>
+<p><b>森林科研</b>：建立森林碳匯調查與監測手冊；結合光達、衛星影像與地面調查推估蓄積量；篩選 8 個高碳匯樹種品系（如香杉、臺灣杉、臺灣肖楠、樟木、相思樹，碳吸收 1.5–3 倍）；企業造林達 20 公頃；海岸沙地等劣化地復育示範場域 2 處。</p>
+
+<h3>土壤碳匯</h3>
+<div class="tbl"><table>
+<tr><th>策略</th><th>做法</th></tr>
+<tr><td>強化土壤管理方式</td><td>以增加土壤有機質為目標；建立碳儲量評估基準與碳儲潛力分區圖；建立土壤碳匯 <b>MRV</b>（監測、報告、驗證）機制</td></tr>
+<tr><td>建構負碳農法</td><td>推廣具負碳功能的作物或品種；作物負碳栽培技術；農業剩餘資源再利用、施用微生物增加有機質</td></tr>
+</table></div>
+<div class="stats">
+  <div class="stat"><b>524 百萬公噸</b><span>表層土壤（0–30 cm）有機碳儲量現況（CO₂e）</span></div>
+  <div class="stat"><b>436 百萬公噸</b><span>細顆粒土壤（0–30 cm）有機碳儲存潛力（CO₂e）</span></div>
+  <div class="stat"><b>4,424 km²</b><span>土壤增匯熱點面積</span></div>
+  <div class="stat"><b>200 公頃</b><span>草生、免耕、少耕等碳匯技術落地面積</span></div>
+</div>
+<ul>
+  <li>做法：田間施用生物炭、開發土壤微生物與添加物、草生栽培、保育式耕犁（少耕／免耕）。</li>
+  <li>量測：傳統乾燒法（挖土→乾燥→磨粉→過篩→燃燒）耗時耗人；改用<b>光譜量測（可見光-近紅外、中紅外、高光譜）×機器學習</b>，場域驗證準確度 80% 以上。</li>
+  <li>西南沿海保育耕犁（台南學甲、鹽水、北門、將軍、嘉義義竹）：劣化地區產量增加約 17.5%，少耕犁每公頃節省約 15,000 元 → <mark>碳匯 × 產量 × 收益</mark>。</li>
+  <li>建構國家清冊農地土壤次分類及排放係數。</li>
+</ul>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">草生栽培；碳源：枝條；減少土壤擾動 → 團粒結構更好；保育耕犁有多重效益。</p></div>
+
+<h3>海洋碳匯（藍碳）</h3>
+<div class="tbl"><table>
+<tr><th>策略</th><th>做法</th></tr>
+<tr><td>海洋與溼地碳匯量測方法學</td><td>建立海洋與濕地碳匯基線資料與碳匯係數；碳匯監測技術</td></tr>
+<tr><td>發展複合養殖經營模式</td><td>建立淡水複合式養殖增匯模式；建立碳匯效益評估指標</td></tr>
+<tr><td>增匯管理措施與水生植物復育</td><td>評估不同水生植物碳匯效益與復育技術（海草床、紅樹林）；建構增匯養護管理模式</td></tr>
+</table></div>
+<p>藍碳的碳庫與量測標的：水體（顆粒態碳、溶解態碳）、生物量（海草、海藻、其他水生植物）、沉積物（有機碳）。</p>
+<h3>海草復育技術</h3>
+<div class="tbl"><table>
+<tr><th>端</th><th>技術</th><th>解決的問題</th></tr>
+<tr><td rowspan="2">育苗端<br>（穩定種苗來源）</td><td>組織培養</td><td>種子少、枝條移植存活率低 → 以種子或根莖誘導培植體、量產瓶苗</td></tr>
+<tr><td>種子育苗</td><td>種苗不足 → 從天然海域採種子人工育苗，增加遺傳多樣性</td></tr>
+<tr><td rowspan="2">種植端<br>（快速大面積）</td><td>牡蠣殼植草栓</td><td>人工潛水單株種植效率低 → 串聯式牡蠣殼植草栓形成穩定結構體</td></tr>
+<tr><td>省工機械</td><td>廢棄漁港、魚塭水位變動大 → 電動機械搭配帶狀／棋盤式種植</td></tr>
+</table></div>
+<p>全臺海草潛在復育面積約 <b>300 公頃</b>：澎湖（卵葉鹽草、單脈二藥草等）、嘉南地區（貝克氏鹽草等）、屏東（泰來草）。</p>
+</section>
+
+<section id="circular">
+<h2><span class="no">07</span>主軸三：循環（全循環零廢棄）</h2>
+<div class="box key"><span class="tag">重點</span><p>淨零碳排的路徑中，<b>45% 靠循環經濟</b>，55% 靠其他減量措施（如能源轉型）。</p></div>
+<p>農業剩餘資源（果木竹枝、畜禽糞尿、廢棄菇包、牡蠣殼）的難處：產源分散、偏遠山區、產期不穩、體積龐大、複合材料、含水率高。</p>
+<div class="tbl"><table>
+<tr><th>去化方式</th><th>例子</th></tr>
+<tr><td>肥料化</td><td>畜牧糞尿、菇包</td></tr>
+<tr><td>飼料化</td><td>檸檬、鳳梨（格外品 → 青貯料 → 動物飼育）</td></tr>
+<tr><td>能源化</td><td>畜牧糞尿 → 沼氣、沼液；竹材、果木枝條 → 木顆粒 → 鍋爐發電</td></tr>
+<tr><td>材料化</td><td>菇包、鳳梨葉纖維 → 紡織；農膜 → 塑膠再利用；牡蠣殼 → 牡蠣殼粉 → 貓砂</td></tr>
+</table></div>
+<p><b>鳳梨全株再利用</b>：果皮 → 青貯料餵牛；葉 → 鳳梨葉纖維、紡織品；葉渣 → 植物皮革、環保餐具；莖 → 鳳梨酵素（Bromelain）；農膜 → 清洗循環中心。</p>
+<h3>休閒農場示範</h3>
+<div class="tbl"><table>
+<tr><th>農場</th><th>循環方式</th><th>成果</th></tr>
+<tr><td>飛牛牧場</td><td>乳牛糞尿 → 黑水虻生物處理 → 蟲糞造粒 → 堆肥</td><td>場內處理量提升 5 噸</td></tr>
+<tr><td>仙湖休閒農場</td><td>龍眼木枝條 → 木質顆粒 → 生質燃燒機 → 柴焙桂圓</td><td>果樹枝條處理量 1 公噸/公頃/年</td></tr>
+<tr><td>君達休閒農場</td><td>香草渣 → 飼料 → 土雞 → 雞糞堆肥</td><td>雞肉碳足跡減少 4.9%；雞糞堆肥取代 50% 外購肥料</td></tr>
+</table></div>
+</section>
+
+<section id="green">
+<h2><span class="no">08</span>主軸四：綠趨勢（農漁村用電 100% 自給）</h2>
+<p>清潔能源：農業設施屋頂型太陽光電、漁電共生、農業生質能、小水力發電。淨零友善環境：① 碳定價與碳權 ② 綠色金融 ③ 碳足跡與綠色消費 ④ 能力建構與人才培育。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">代理產業轉型</p></div>
+<div class="tbl"><table>
+<tr><th>類型</th><th>項目</th><th class="r">容量（GW）</th></tr>
+<tr><td rowspan="3">屋頂型 2.74 GW</td><td>畜禽舍</td><td class="r num">1.70</td></tr>
+<tr><td>農糧製儲銷設施</td><td class="r num">0.52</td></tr>
+<tr><td>漁業相關設施</td><td class="r num">0.52</td></tr>
+<tr><td rowspan="4">地面型 1.31 GW</td><td>漁電共生</td><td class="r num">0.55</td></tr>
+<tr><td>埤塘、圳路及水庫</td><td class="r num">0.18</td></tr>
+<tr><td>不利農業區</td><td class="r num">0.37</td></tr>
+<tr><td>低地力農地變更</td><td class="r num">0.21</td></tr>
+<tr><td colspan="2"><b>合計</b>（統計至 115 年 3 月底）</td><td class="r num"><b>4.05</b></td></tr>
+</table></div>
+<p>年發電量 44 億度，減少碳排 210 萬公噸（以 113 年電力排碳係數 <span class="num">0.474</span> 公斤 CO₂e/度計）。<mark>目前農業部門用電已超過 100% 來自農業綠能。</mark></p>
+<div class="box iso"><span class="tag">連結 ISO 14064-1</span><p>210 萬公噸 ＝ 44 億度 × 0.474 kg/度，正是用<b>電力排碳係數</b>把用電量換成範疇二排放的算法。盤查時電力係數每年由能源署公告，要注意用對年份。</p></div>
+</section>
+
+<section id="three">
+<h2><span class="no">09</span>碳排計算百百種：到底什麼是什麼？</h2>
+<p>講者把碳計算分成兩個方向：</p>
+<div class="tbl"><table>
+<tr><th>方向</th><th>尺度</th><th>怎麼算</th><th>特色</th></tr>
+<tr><td><b>由上而下 Top-down</b></td><td>全球、國家</td><td>衛星數據、全球能源消耗量與模型推估；國家清冊用「活動數據（公務統計）× 排放係數」</td><td>掌握全貌</td></tr>
+<tr><td><b>由下而上 Bottom-up</b></td><td>組織、產品、專案</td><td>實際盤查</td><td>有憑有據、精準</td></tr>
+</table></div>
+<div class="tbl"><table>
+<tr><th>類型</th><th>標準</th><th>聚焦</th><th>例子</th></tr>
+<tr><td><b>組織型</b></td><td>ISO 14064-1</td><td>營運主體的碳排健檢，據以優化組織減碳</td><td>農業部組織碳盤查</td></tr>
+<tr><td><b>產品型</b></td><td>ISO 14067</td><td>產品消費對環境產生的衝擊</td><td>一罐 600 ml 礦泉水產生 150 g 碳排</td></tr>
+<tr><td><b>專案型</b>（碳權）</td><td>ISO 14064-2</td><td>外加的減碳技術產生的成效</td><td>加強森林經營</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">國家尺度：掌握全貌。由下而上：精準。專案型：額外減量 → 碳權。</p></div>
+<div class="box iso"><span class="tag">連結 ISO 14064-1 / 14067</span>
+<p>14064-1 和 14067 都在回答「排了多少」；<b>14064-2 回答的是「比沒做這件事少排（或多吸）了多少」</b>，所以一定有「基線情境」和「外加性」。這是三者最根本的差別，講義 4 會再詳細比較：<a class="xref" href="04-iso-standards.html#map">講義 4〈三個問題、三套標準〉↗</a>。</p></div>
+
+<h3>組織型盤查：範疇與法規</h3>
+<div class="tbl"><table>
+<tr><th>範疇</th><th>內容</th></tr>
+<tr><td>範疇一 直接排放</td><td>固定燃料燃燒源、製程排放、移動源、逸散源</td></tr>
+<tr><td>範疇二 能源間接排放</td><td>外購電力、外購蒸汽</td></tr>
+<tr><td>範疇三 其他間接排放</td><td>上游：購買商品或服務、資本商品、燃料與能源相關活動、營運廢棄物、上游租賃資產、上游運輸配送、商務旅行、員工通勤<br>下游：下游運輸配送、銷售產品的加工、使用、廢棄處理、下游租賃資產、特許加盟、投資</td></tr>
+</table></div>
+<div class="tbl"><table>
+<tr><th>要求機關</th><th>盤查對象</th><th>列管單位</th></tr>
+<tr><td>環境部</td><td>特定行業製程（發電、鋼鐵、石油煉製、水泥、半導體、TFT-LCD）；各行業全廠化石燃料直接排放 ≥ 2.5 萬公噸 CO₂e；或直接＋用電間接合計 ≥ 2.5 萬公噸 CO₂e</td><td>單廠（場）</td></tr>
+<tr><td>金管會</td><td>2025 年：資本額 100 億元以上及鋼鐵、水泥業上市櫃公司<br>2026 年：資本額 50–100 億元<br>2027 年：資本額 50 億元以下</td><td>企業體（含子公司）合併報表</td></tr>
+</table></div>
+<p>參考文件：環境部《溫室氣體排放量盤查作業指引》113 年版。</p>
+
+<h3>案例：農業部自己的組織盤查（113 年）</h3>
+<div class="stats">
+  <div class="stat"><b>1,136.605 t</b><span>總排放 CO₂e</span></div>
+  <div class="stat"><b>325.970 t（28.68%）</b><span>範疇一</span></div>
+  <div class="stat"><b>810.635 t（71.32%）</b><span>範疇二（外購電力）</span></div>
+  <div class="stat"><b>44,280 kWh</b><span>2024 年屋頂光電發電，減少約 2.6% 外購電</span></div>
+</div>
+<p>組織邊界：部辦公大樓、職員宿舍、教保中心；盤查期間 113.1.1–113.12.31。目的是找出「總量、分布、熱點」，對熱點推動節能，並以身作則。報告書可在農業部官網「資訊與服務／資料下載」取得。</p>
+<div class="box iso"><span class="tag">連結 ISO 14064-1</span><p>這份就是標準的 14064-1 盤查：先定組織邊界（3 個場址），再列範疇一（固定、移動、逸散、製程）和範疇二。辦公型組織範疇二占七成很典型，所以減量重點放在用電。</p></div>
+</section>
+
+<section id="cfp">
+<h2><span class="no">10</span>產品碳足跡在農業</h2>
+<p>產品碳足跡是「以消費拉力驅動低碳生產」：</p>
+<div class="tbl"><table>
+<tr><th></th><th>生產端</th><th>消費端</th></tr>
+<tr><td>知</td><td>碳排資訊揭露</td><td>碳排資訊揭露</td></tr>
+<tr><td>識</td><td>找到排放熱點</td><td>綠生活教育推廣</td></tr>
+<tr><td>行</td><td>投入減碳作為</td><td>選購低碳產品</td></tr>
+</table></div>
+<p>生命週期：搖籃（原料取得）→ 製造 → 大門（配送銷售）→ 使用 → 墳墓（廢棄處理回收）。依<mark>產品類別規則（PCR）</mark>將各階段排放相加。</p>
+<h3>農產品各階段要蒐集的資料</h3>
+<div class="tbl"><table>
+<tr><th>階段</th><th>活動數據</th></tr>
+<tr><td>原料取得（田間）</td><td>種子（苗）、農藥、肥料、包裝材料、栽培介質、油電水、冷媒、廢棄物清理量</td></tr>
+<tr><td>製造</td><td>油電水、冷媒、廢棄物清理量、產品生產量</td></tr>
+<tr><td>配送銷售（大門）</td><td>配送數量、運輸方式、交通工具、運送距離</td></tr>
+<tr><td>使用</td><td>情境假設</td></tr>
+<tr><td>廢棄處理（餐桌）</td><td>情境假設</td></tr>
+</table></div>
+<p>取得標籤的流程：① 確認產品與對應 PCR → ② 盤查清冊與盤查報告書 → ③ 第三方查驗 → ④ 向環境部申請。</p>
+<h3>例子</h3>
+<div class="tbl"><table>
+<tr><th>類型</th><th>產品</th><th class="r">碳足跡</th></tr>
+<tr><td rowspan="3">商品型</td><td>動福蛋（6 粒 PLA 盒）</td><td class="r num">650 g</td></tr>
+<tr><td>動福蛋（10 粒 PLA 盒）</td><td class="r num">1.1 kg</td></tr>
+<tr><td>蛋（8 粒盒）</td><td class="r num">2.6 kg</td></tr>
+<tr><td rowspan="3">服務型</td><td>高鐵</td><td class="r num">32 g/人/公里</td></tr>
+<tr><td>太平山三日遊</td><td class="r num">55 kg/人次</td></tr>
+<tr><td>福山植物園一日遊</td><td class="r num">15 kg/人次</td></tr>
+</table></div>
+<p>目前碳足跡農產品有 <b>108 項</b>（如草莓、蜂蜜、肉鬆），但有區域性、季節性，多以農場、農會為單位，消費者能見度不高。</p>
+
+<h3>實務難題：一顆青江菜怎麼算？</h3>
+<p>以某集貨商的青江菜為例：A–F 多位農戶 → 北、中、南三個集貨場 → 甲零售商（北北基 50 家、桃竹苗 22 家、中彰投 29 家、雲嘉南 25 家、高屏 23 家、東部 3 家）與乙零售商中區統倉。</p>
+<ul>
+  <li>農戶端：肥料、農藥、防治資材、種子、油水電、耗材、廢棄。</li>
+  <li>前處理：預冷、分級選別（油水電、冷媒、耗材、廢棄）。</li>
+  <li>集貨商：包裝、冷藏暫存、貼標、撿配、出貨（延噸公里）。</li>
+</ul>
+<div class="box iso"><span class="tag">連結 ISO 14067</span><p>14067 要求界定功能單位與系統邊界。這個例子的難處是同一個產品來自多個農戶、經過不同集貨場和通路，要決定<b>用平均數據還是逐戶盤查</b>、運輸怎麼分配。下面「簡化盤查」的三個做法就是在處理這個問題。</p></div>
+
+<h3>農業部的三個作為</h3>
+<div class="tbl"><table>
+<tr><th>作為</th><th>內容</th></tr>
+<tr><td>一、建工具</td><td>15 項農產品 PCR；產銷履歷（TAP）對接碳足跡、農務 e 把抓 App 擴充碳足跡盤查功能；農業科技研究院提供第三方查證服務</td></tr>
+<tr><td>二、建立示範專案</td><td>農業部 × 環境部 × 農民 × 通路，打造消費者看得見的碳標籤（例：魔菇部落菇類產品）</td></tr>
+<tr><td>三、給資源、串通路</td><td>115 年輔導業者逾 10 家，對接上千家連鎖通路；米、牛番茄、文蛤、蛋、雞肉、茶葉、牛奶等逾 20 項產品</td></tr>
+</table></div>
+<p><b>簡化碳足跡盤查</b>（與環境部跨部合作）：① 正面表列盤查項目 ② 依契作戶數分級盤查 ③ 同規格、同包裝材質視為同產品。時程：114 年雜糧及蔬菜；115 年生鮮水果、畜禽肉、水產；116 年肉品加工、鮮乳、蛋品、萃取液。</p>
+<h3>市場誘因</h3>
+<ul>
+  <li><mark>115 年 1 月 5 日起碳足跡產品納入綠色採購</mark>。綠色採購金額（含機關及企業）107 年 395 億元 → 113 年 890 億元，119 年目標 1,280 億元。</li>
+  <li>環境部與金管會合作，在永續經濟活動認定指引中，零售通路業須納入採購碳足跡標籤產品。</li>
+  <li>通路趨勢：全聯嚴選 500 款永續標章商品（雨林聯盟、Clean Label、碳足跡、FSC、動物福利等標章）。</li>
+</ul>
+</section>
+
+<section id="credit">
+<h2><span class="no">11</span>碳定價、碳權與自願減量專案</h2>
+<div class="box key"><span class="tag">定義</span>
+<p><b>碳定價（Carbon Pricing）</b>：把「碳」具體價格化，以經濟手段促進減量與移除，讓排碳的外部成本（或減碳、碳匯的外部效益）內部化。常見方式：<mark>碳費、碳（關）稅、碳權</mark>。</p>
+<p><b>碳權</b>：把減碳或增匯成效量化並<mark>核發</mark>的額度，可交易或折抵排放，可以想像成股票。</p></div>
+<p>講者問：農機電動化、節能水車、造林、使用有機質肥料、畜禽糞堆肥化、沼氣發電、太陽能發電，<b>有淨零效益 ＝ 有碳權嗎？</b>答案是不一定，要能通過 <b>MRV</b>：M 可量測（Monitoring）、R 可報告（Reporting）、V 可驗證（Verification）。</p>
+
+<h3>溫室氣體自願減量專案申請流程</h3>
+<div class="pflow loop" data-loop-label="不通過：修正計畫書再送審（以 3 次為限）" aria-label="自願減量專案申請流程"><div class="pf-col" data-loop-to><div class="pf-phase">① 準備</div><div class="pf-step"><b class="pf-tag">M</b><div><div>找出合適方法學</div><div class="pf-who">輔導團隊、農民</div></div></div><div class="pf-step"><b class="pf-tag">R</b><div><div>撰寫計畫書</div><div class="pf-who">輔導團隊（農民提供資料）</div></div></div><div class="pf-step"><b class="pf-tag">V</b><div><div>查驗證機構進行計畫書<b>確證</b></div><div class="pf-who">輔導團隊、查驗證機構</div></div></div><div class="pf-step"><div><div>計畫書送環境部申請註冊</div><div class="pf-who">輔導團隊</div></div></div></div><div class="pf-arrow" aria-hidden="true">→</div><div class="pf-col review" data-loop-from><div class="pf-phase">② 審查</div><div class="pf-step"><div><div>專案小組會議</div><div class="pf-who">環境部</div></div></div><div class="pf-step"><div><div>審議會</div><div class="pf-who">環境部</div></div></div><div class="pf-step"><div><div><b>通過並註冊</b></div><div class="pf-who">環境部</div></div></div></div><div class="pf-arrow" aria-hidden="true">→</div><div class="pf-col"><div class="pf-phase">③ 執行</div><div class="pf-step"><b class="pf-tag">M</b><div><div>依計畫書操作並記錄</div><div class="pf-who">農民</div></div></div><div class="pf-step"><b class="pf-tag">R</b><div><div>撰寫監測報告</div><div class="pf-who">輔導團隊</div></div></div><div class="pf-step"><b class="pf-tag">V</b><div><div>查驗證機構進行<b>查證</b></div><div class="pf-who">查驗證機構</div></div></div><div class="pf-step"><div><div>送環境部申請額度核發</div><div class="pf-who">輔導團隊</div></div></div></div><div class="pf-arrow" aria-hidden="true">→</div><div class="pf-col review"><div class="pf-phase">④ 審查</div><div class="pf-step"><div><div>專案小組會議</div><div class="pf-who">環境部</div></div></div><div class="pf-step"><div><div>審議會</div><div class="pf-who">環境部</div></div></div><div class="pf-step"><div><div><b>核發額度</b></div><div class="pf-who">環境部</div></div></div></div></div>
+<p class="pf-legend">M＝監測（Measurement）、R＝報告（Reporting）、V＝查驗證（Verification）</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">方法學 ＝ 手段、技術</p></div>
+<div class="box iso"><span class="tag">連結 ISO 14064 系列</span><p>計畫書階段的「確證（validation）」和執行後的「查證（verification）」是兩件事：確證看計畫書的方法與基線合不合理（事前），查證看實際監測數據（事後）。這套對應 ISO 14064-2（專案）與 14064-3（確證與查證）。14064-1 盤查只會遇到查證。</p></div>
+
+<h3>農業可用的自然碳匯方法學</h3>
+<div class="tbl"><table>
+<tr><th>類別</th><th>編號</th><th>名稱</th></tr>
+<tr><td rowspan="4">森林碳匯</td><td class="num">AR-TMS0001</td><td>造林碳匯專案</td></tr>
+<tr><td class="num">AR-TMS0002</td><td>加強森林經營碳匯專案</td></tr>
+<tr><td class="num">AR-TMS0003</td><td>竹林經營碳匯專案</td></tr>
+<tr><td class="num">AR-TMS0004</td><td>低蓄積林增匯專案</td></tr>
+<tr><td>土壤碳匯</td><td class="num">AL-TMS0001</td><td>改進農業土壤管理（例：草生栽培提升有機友善茶園土壤碳匯）</td></tr>
+<tr><td rowspan="2">海洋碳匯</td><td class="num">AL-TMS0002</td><td>海草復育</td></tr>
+<tr><td class="num">AL-TMS0003</td><td>紅樹林植林</td></tr>
+</table></div>
+
+<h3>案例：東埔蚋溪造林專案（AR-TMS0001）</h3>
+<p>經濟部水利署第四河川分署在南投東埔蚋溪種樹，申請微型規模自願減量專案。</p>
+<div class="stats">
+  <div class="stat"><b>2.2482 公頃</b><span>樟樹、相思樹、光蠟樹、楓香</span></div>
+  <div class="stat"><b>30 年</b><span>計入期 111.3.1–141.2.29（固定型）</span></div>
+  <div class="stat"><b>605 tCO₂e</b><span>專案總減量（移除量）</span></div>
+  <div class="stat"><b>20 tCO₂e/年</b><span>年平均移除量</span></div>
+</div>
+<p>減量計算公式：</p>
+<p class="num" style="background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px;overflow-x:auto">ΔC<sub>FOREST,t</sub> = ΔC<sub>ACTUAL,t</sub> − ΔC<sub>BSL,t</sub> − LK<sub>t</sub></p>
+<p>意思是：專案的淨移除量 ＝ 實際碳儲存變化 − 基線情境下的碳儲存變化 − 洩漏。</p>
+<p><b>保守係數</b>：初始種 5,500 株，113 年 1 月調查未成活 1,947 株、林下種植 262 株，所以保守係數 ＝ (5,500 − 1,947 − 262) / 5,500 ≈ <b>0.6</b>，用來把估算打折。</p>
+<p><b>檢核重點</b>：適用條件、減量額度分配、外加性分析、計畫書具體說明、監測計畫檢視、減量計算。</p>
+<div class="tbl"><table>
+<tr><th>專案成本</th><th class="r">金額</th></tr>
+<tr><td>林木栽植</td><td class="r">26 萬元/公頃（以 175 元/株計）</td></tr>
+<tr><td>維護（澆水、除草）</td><td class="r">1 萬元/公頃</td></tr>
+<tr><td>專案文件撰寫及查驗證</td><td class="r">30 萬元/次</td></tr>
+<tr><td>監測計畫</td><td class="r">25 萬元/次</td></tr>
+</table></div>
+<p>講者提醒「業界報價已今非昔比」。對照：30 年只拿到 605 噸額度，文件和查驗證一次就要 30 萬元。</p>
+
+<h3>農業場域示範案例</h3>
+<div class="tbl"><table>
+<tr><th>類別</th><th>業者</th><th>專案</th><th>做法</th></tr>
+<tr><td rowspan="2">B-11 林業</td><td>龍崎區農會</td><td>竹林經營</td><td>竹林整理、輪伐和採收加工，竹炭等產品固定碳</td></tr>
+<tr><td>信義房屋</td><td>新植造林</td><td>整地、新（補）植、修枝、刈草和疏伐</td></tr>
+<tr><td rowspan="3">B-12 農業及土地利用<br>（改進農業土壤管理）</td><td>糧豐國際（台南安定）</td><td>雜糧輪作減耕減肥</td><td>化肥減量、降低耕犁次數、休耕轉作綠肥、殘體回田</td></tr>
+<tr><td>地天泰（桃園觀音）</td><td>有機質肥料快速處理</td><td>施有機質肥料減施化學氮肥 → SOC↑、N₂O↓</td></tr>
+<tr><td>正瀚生技（南投、雲林）</td><td>胜肽製劑提升稻田碳匯</td><td>有機肥＋胜肽製劑，減少化肥 5–10%</td></tr>
+</table></div>
+<div class="box key"><span class="tag">農業專案的特殊性</span><p>成本高、需長時間累積、量體少、具多元外部效益。所以要創造多元誘因，並把溫室氣體以外的效益（生物多樣性、景觀、國土保安）一起算進來。</p></div>
+</section>
+
+<section id="esg">
+<h2><span class="no">12</span>企業 ESG 與農業</h2>
+<p>農業的價值化路徑：<b>國內碳抵換機制（自願減量專案）＋綠色金融推動農業 ESG</b>（永續報告書、TNFD、TCFD）。多元效益包括自然碳匯、糧食供應、生物多樣性、國土保安、水源涵養、景觀風貌、棲地保育、農村文化、農業減碳。</p>
+<h3>金管會逐步強化 ESG 揭露</h3>
+<div class="tbl"><table>
+<tr><th>時間</th><th>政策</th><th>重點</th></tr>
+<tr><td>2017／2020／2022</td><td>綠色金融行動方案 1.0／2.0／3.0</td><td>強化 ESG 資訊揭露、推展永續經濟活動認定指引</td></tr>
+<tr><td>2023</td><td>上市櫃公司永續發展行動方案</td><td><mark>2025 年全體上市櫃公司編製及申報永續報告書</mark>（依 GRI，鼓勵參考 SASB）</td></tr>
+<tr><td>2024.10</td><td>綠色及轉型金融行動方案</td><td>簡化 ESG 報告編製；參考 TNFD 揭露自然相關資訊</td></tr>
+<tr><td>2024.12</td><td>第二版永續經濟活動認定參考指引</td><td>增訂農林業 3 項一般經濟活動（含有機農業）；增訂「自然碳匯」「生態保護系統」2 項支持型經濟活動</td></tr>
+</table></div>
+<p>結論：企業與投資人不只看 EPS，也看 ESG；<b>農業是企業執行 ESG 的最佳場域</b>。農業淨零資訊網設有「ESG Store」媒合企業與農業專案。</p>
+<h3>合作案例</h3>
+<div class="tbl"><table>
+<tr><th>合作</th><th>專案</th><th>做法</th></tr>
+<tr><td>家樂福 × 生物多樣性研究所</td><td>農田到超市：為石虎而生的永續行動</td><td>販售友善石虎農作標章農產品（南投中寮）、親子教育活動</td></tr>
+<tr><td>和泰汽車 × 生物多樣性研究所</td><td>用導航系統守護台灣石虎</td><td>導航加入路殺熱點警訊、吉祥物貼圖義賣、捐救援車、淨溪；寫進和泰永續報告書</td></tr>
+<tr><td>無印良品 × 大人物農業產銷合作社 × 農業部</td><td>從一罐豆奶到森林復育</td><td>節水栽培大豆做豆奶、豆渣米餅；提撥收益復育 112 年大雪山森林火災林地；生物炭除濕包</td></tr>
+</table></div>
+</section>
+
+<section id="model">
+<h2><span class="no">13</span>推動模式與結語</h2>
+<div class="box key"><span class="tag">講者的核心主張</span>
+<ul>
+  <li>淨零轉型要在<b>對農業經營有正面效益、至少無負面影響</b>的前提下進行。</li>
+  <li>農業減碳增匯成本高但效益多元，<b>不應以取得碳權為唯一目的</b>。</li>
+  <li>「三支箭」：以<b>碳權</b>為初始動能，配合<b>政策給付</b>（節水灌溉、草生栽培、有機友善、生態給付）與<b>企業 ESG 專案</b>，讓農民獲益。</li>
+</ul></div>
+<p>全產業原則：<mark>大排放源管制、小排放源輔導獎勵</mark>。農業排放占全國約 2.3%（森林碳匯約 −7.8%），且多是小農（耕地小、成本高），所以用輔導、鼓勵、誘因，而不是管制。</p>
+<p>《氣候變遷因應法》的多元減量工具：減量目標、部門方案、盤查查驗、徵收碳費、自願減量（核發額度）、增量抵換、效能標準、基金支用。</p>
+<h3>淨零轉型不能只靠硬實力</h3>
+<ul>
+  <li>農業排放占比低、多為微型排放源，不是管制對象。</li>
+  <li>生物性產業不確定性高，碳足跡、自願減量專案的操作成本高。</li>
+  <li>減碳增匯技術導入成本高，也可能影響產量與品質。</li>
+</ul>
+<p style="font-weight:700">無管制 ＋ 無誘因 ＋ 產量品質受影響 ＝ 產業為什麼要轉型？</p>
+<p><b>結語</b>：永續需要可行的模式。軟實力（降低成本、提高誘因）打造友善環境，硬實力（科學為本、技術創新）支撐減碳、循環、增匯。</p>
+</section>
+
+<section id="quiz">
+<h2><span class="no">14</span>自我測驗</h2>
+<p>先自己想答案，再點開看。</p>
+<details class="q"><summary>1. 2024 年農業部門排放占全國多少？最大的兩個排放源是什麼？</summary><div class="a">651 萬公噸 CO₂e，占 2.38%。最大的是用電（約 26.5%）和用油（約 25%），合計超過一半。</div></details>
+<details class="q"><summary>2. 農業部門淨零四大主軸和各自的目標？</summary><div class="a">減量（減少 50%）、增匯（增加 1,000 萬公噸碳儲量）、循環（全循環零廢棄）、綠趨勢（農產業 100% 綠電自給）。農業部門目標是 2040 年淨零。</div></details>
+<details class="q"><summary>3. 為什麼講者說「蔬菜沒有碳匯」？</summary><div class="a">碳匯要「持續移除」並「吸收或儲存」在某個場所。蔬菜雖然光合作用吸碳，但很快被吃掉或分解，碳在短時間內回到大氣，沒有長期儲存。</div></details>
+<details class="q"><summary>4. 組織型、產品型、專案型分別對應哪個標準？專案型最大的不同是什麼？</summary><div class="a">組織型 ISO 14064-1、產品型 ISO 14067、專案型 ISO 14064-2。專案型算的是相對「基線情境」的額外減量（外加性），而且可以核發碳權；前兩者算的是絕對排放量。</div></details>
+<details class="q"><summary>5. 「有淨零效益 ＝ 有碳權」對嗎？</summary><div class="a">不對。要有適用的方法學，並且能通過 MRV（可量測、可報告、可驗證），經環境部註冊和審議核發額度，才算碳權。</div></details>
+<details class="q"><summary>6. 東埔蚋溪造林專案的保守係數 0.6 是怎麼來的？</summary><div class="a">(初始植株 5,500 − 未成活 1,947 − 林下種植 262) / 5,500 ≈ 0.6。用實際存活比例把碳儲存估算打折，避免高估。</div></details>
+<details class="q"><summary>7. 自願減量專案的「確證」和「查證」差在哪？</summary><div class="a">確證在準備階段，查驗證機構審查計畫書（方法學、基線、監測計畫）是否合理；查證在執行階段，查核實際監測數據與減量。</div></details>
+<details class="q"><summary>8. 農產品碳足跡為什麼難算？農業部用哪三招簡化？</summary><div class="a">同一產品來自多農戶、多集貨場、多通路，生物性產業變異大。簡化：正面表列盤查項目、依契作戶數分級盤查、同規格同包材視為同產品。</div></details>
+<details class="q"><summary>9. 綠能減碳 210 萬公噸是怎麼算出來的？</summary><div class="a">年發電量 44 億度 × 113 年電力排碳係數 0.474 kg CO₂e/度 ≈ 208.6 萬公噸，約 210 萬公噸。</div></details>
+<details class="q"><summary>10. 為什麼農業採「輔導獎勵」而不是「管制」？</summary><div class="a">農業排放占比小（約 2.3%）、多為小農與微型排放源、生物性產業不確定性高、減碳技術成本高且可能影響產量。所以採「大排放源管制、小排放源輔導獎勵」原則。</div></details>
+</section>
+
+<section id="gloss">
+<h2><span class="no">15</span>名詞表</h2>
+<dl class="gloss">
+  <dt>CO₂e</dt><dd>二氧化碳當量，把各種溫室氣體依全球暖化潛勢（GWP）換算成 CO₂。</dd>
+  <dt>THI</dt><dd>溫濕度指數，衡量畜禽熱緊迫；乳牛 THI &gt; 72 開始熱緊迫。</dd>
+  <dt>調適／減緩</dt><dd>調適是適應已發生的氣候變化（治標）；減緩是減少排放、增加碳匯（治本）。</dd>
+  <dt>碳匯</dt><dd>持續移除溫室氣體並吸收或儲存的樹木、森林、土壤、海洋、地層、設施或場所。</dd>
+  <dt>藍碳</dt><dd>海洋與海岸生態系（海草床、紅樹林、鹽沼）儲存的碳。</dd>
+  <dt>SOC</dt><dd>土壤有機碳（Soil Organic Carbon）。</dd>
+  <dt>MRV</dt><dd>監測（Monitoring）、報告（Reporting）、驗證（Verification）。</dd>
+  <dt>PCR</dt><dd>產品類別規則，規定某類產品碳足跡要怎麼算。</dd>
+  <dt>TAP</dt><dd>產銷履歷農產品標章。</dd>
+  <dt>碳權</dt><dd>減碳或增匯成效經量化並核發的額度，可交易或抵換。</dd>
+  <dt>方法學</dt><dd>自願減量專案計算減量的規則，例如 AR-TMS0001 造林碳匯。</dd>
+  <dt>外加性</dt><dd>專案的減量必須是「沒有這個專案就不會發生」的。</dd>
+  <dt>洩漏（LK）</dt><dd>專案邊界外因專案而增加的排放。</dd>
+  <dt>TNFD／TCFD</dt><dd>自然相關／氣候相關財務揭露架構。</dd>
+</dl>
+</section>
+
+<nav class="pager" aria-label="上一講／下一講"><a class="next" href="02-emission-inventory.html"><small>下一講 →</small>2. 農業部門排放清冊</a></nav>
+</main>
+</div>
+<script>
+(function(){
+  var b=document.body,K='tocOff';
+  function set(off){b.classList.toggle('toc-off',off);try{localStorage.setItem(K,off?'1':'0')}catch(e){}}
+  try{if(localStorage.getItem(K)==='1')b.classList.add('toc-off')}catch(e){}
+  document.getElementById('tocHide').addEventListener('click',function(){set(true)});
+  document.getElementById('tocShow').addEventListener('click',function(){set(false)});
+})();
+</script>
+
+<script>
+(function(){
+  var NS='http://www.w3.org/2000/svg',n=0;
+  function rp(p,r){var d='M'+p[0][0]+','+p[0][1];for(var i=1;i<p.length-1;i++){var a=p[i-1],b=p[i],c=p[i+1];
+    var l1=Math.hypot(b[0]-a[0],b[1]-a[1]),l2=Math.hypot(c[0]-b[0],c[1]-b[1]),k=Math.min(r,l1/2,l2/2);
+    var x1=b[0]-(b[0]-a[0])/l1*k,y1=b[1]-(b[1]-a[1])/l1*k,x2=b[0]+(c[0]-b[0])/l2*k,y2=b[1]+(c[1]-b[1])/l2*k;
+    d+=' L'+x1+','+y1+' Q'+b[0]+','+b[1]+' '+x2+','+y2}
+    var e=p[p.length-1];return d+' L'+e[0]+','+e[1]}
+  function draw(c){
+    var old=c.querySelector(':scope>.loop-svg'); if(old) old.remove();
+    var spans=[].slice.call(c.querySelectorAll(':scope>span'));
+    var to=c.querySelector('[data-loop-to]')||spans[0], from=c.querySelector('[data-loop-from]')||spans[spans.length-1];
+    if(!to||!from) return;
+    var cr=c.getBoundingClientRect();
+    function R(el){var b=el.getBoundingClientRect();return{l:b.left-cr.left,r:b.right-cr.left,t:b.top-cr.top,b:b.bottom-cr.top,cx:(b.left+b.right)/2-cr.left,cy:(b.top+b.bottom)/2-cr.top}}
+    var a=R(to),z=R(from),maxB=0,minL=1e9,rowFirst=true;
+    spans.forEach(function(k){var r=R(k);if(r.l<minL)minL=r.l;if(k!==to&&Math.abs(r.t-a.t)<6&&r.l<a.l)rowFirst=false});
+    Array.prototype.forEach.call(c.children,function(k){if(k.classList.contains('loop-svg'))return;var b=k.getBoundingClientRect().bottom-cr.top;if(b>maxB)maxB=b});
+    var y=maxB+16,x=minL-18,d,lx;
+    if(Math.abs(a.t-z.t)<6){d=rp([[z.cx,z.b],[z.cx,y],[a.cx,y],[a.cx,a.b+4]],10);lx=(a.cx+z.cx)/2}
+    else if(rowFirst){d=rp([[z.cx,z.b],[z.cx,y],[x,y],[x,a.cy],[a.l-4,a.cy]],10);lx=(x+z.cx)/2}
+    else{var top=a.t-14;d=rp([[z.cx,z.b],[z.cx,y],[x,y],[x,top],[a.cx,top],[a.cx,a.t-4]],10);lx=(x+z.cx)/2}
+    var id='lh'+(++n),s=document.createElementNS(NS,'svg');
+    s.setAttribute('class','loop-svg');s.setAttribute('width',cr.width);s.setAttribute('height',y+24);s.setAttribute('aria-hidden','true');
+    s.innerHTML='<defs><marker id="'+id+'" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0L10,5L0,10z" fill="currentColor"/></marker></defs>'+
+      '<path d="'+d+'" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#'+id+')"/>'+
+      '<text x="'+Math.max(lx,60)+'" y="'+(y+18)+'" text-anchor="middle"></text>';
+    s.querySelector('text').textContent='↺ '+(c.getAttribute('data-loop-label')||'');
+    c.appendChild(s);
+  }
+  var els=document.querySelectorAll('.loop');
+  function all(){els.forEach(draw)}
+  all(); window.addEventListener('resize',all);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(all);
+  if(window.ResizeObserver){var w={};var ro=new ResizeObserver(function(es){es.forEach(function(e){var c=e.target,k=Math.round(e.contentRect.width);if(c._w!==k){c._w=k;draw(c)}})});els.forEach(function(c){ro.observe(c)})}
+})();
+</script>
+<!--gm-js--><script>
+/* 跳出式小遊戲引擎：右下角按鈕 → 對話框；題目、解釋、計分；場景由各頁提供 */
+window.GMRUN=function(C){
+  var NS='http://www.w3.org/2000/svg',D=document;
+  var reduce=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
+  function el(tag,a,html,par){var e=D.createElementNS(NS,tag);if(a)for(var k in a)e.setAttribute(k,a[k]);if(html)e.innerHTML=html;if(par)par.appendChild(e);return e}
+  function h(tag,cls,html,par){var e=D.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;if(par)par.appendChild(e);return e}
+
+  /* ---------- 介面 ---------- */
+  var ICON='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.2" r=".6" fill="currentColor"/><circle cx="17.6" cy="13.6" r=".6" fill="currentColor"/></svg>';
+  var fab=h('button','gm-fab',ICON+'<span>小遊戲</span>',D.body);fab.type='button';fab.setAttribute('aria-haspopup','dialog');
+  var tip=h('div','gm-tip','<button type="button" class="gm-tipx" aria-label="關閉提示">×</button><b>考考你</b><span></span>',D.body);
+  tip.querySelector('span').textContent=C.teaser;
+  var ov=h('div','gm-ov',null,D.body);ov.hidden=true;
+  var dlg=h('div','gm-dlg','<div class="gm-hd"><b id="gmTitle"></b><button type="button" class="gm-x" aria-label="關閉小遊戲">×</button></div>'+
+    '<svg class="gm-stage" viewBox="'+(C.vb||'0 0 880 260')+'" role="img"></svg>'+
+    '<div class="gm-card"><div class="gm-prog"></div><p class="gm-q"></p><div class="gm-opts"></div><div class="gm-fb" aria-live="polite"></div></div>',ov);
+  dlg.setAttribute('role','dialog');dlg.setAttribute('aria-modal','true');dlg.setAttribute('aria-labelledby','gmTitle');
+  dlg.querySelector('#gmTitle').textContent='小遊戲：'+C.title;
+  var st=dlg.querySelector('svg'),qEl=dlg.querySelector('.gm-q'),oEl=dlg.querySelector('.gm-opts'),fEl=dlg.querySelector('.gm-fb'),pEl=dlg.querySelector('.gm-prog');
+  st.setAttribute('aria-label',C.alt||C.title);
+
+  /* ---------- 動畫工具 ---------- */
+  var loops=[],touts=[],fx;
+  function stopAll(){loops.forEach(clearInterval);touts.forEach(clearTimeout);loops=[];touts=[]}
+  var api={svg:st,reduce:reduce,el:el,
+    C:{co2:'#86a8e6',ch4:'#c9a66b',n2o:'#d28bb4',gas:'#8fae9a',smoke:'#9aa0a6'},
+    loop:function(fn,ms){fn();loops.push(setInterval(fn,reduce?ms*1.6:ms))},
+    later:function(fn,ms){touts.push(setTimeout(fn,reduce?0:ms))},
+    A:function(e,fr,ms,o){o=o||{};if(!e||!e.animate)return null;if(reduce&&o.iter===Infinity)return null;
+      var an=e.animate(fr,{duration:reduce?1:ms,delay:reduce?0:(o.delay||0),easing:o.ease||'ease-out',fill:o.fill||'forwards',iterations:o.iter||1,direction:o.dir||'normal'});
+      if(o.done)an.onfinish=o.done;return an},
+    /* 放一個物件：外層定位，內層可動（原點在底部中央） */
+    put:function(par,x,y,s,html,origin){var g=el('g',{transform:'translate('+x+' '+y+')'+(s&&s!==1?' scale('+s+')':'')},null,par||st);
+      var i=el('g',{},html,g);i.style.transformBox='fill-box';i.style.transformOrigin=origin||'50% 100%';i.outer=g;i.x=x;i.y=y;i.s=s||1;return i},
+    top:function(){if(!fx)fx=el('g',{});st.appendChild(fx);return fx},
+    puff:function(x,y,o){o=o||{};var g=el('g',{class:'gas'},null,api.top()),n=o.n||3,r=o.r||11;
+      for(var i=0;i<n;i++)el('circle',{cx:x+(i-(n-1)/2)*r*.9,cy:y+(i%2?-r*.55:0),r:r+(i===1?3:0),fill:o.color||api.C.gas,opacity:.6},null,g);
+      if(o.label){var t=el('text',{x:x,y:y-1},null,g);t.textContent=o.label}
+      g.style.transformBox='fill-box';g.style.transformOrigin='50% 50%';
+      var dx=o.dx==null?0:o.dx,dy=o.dy==null?-60:o.dy;
+      api.A(g,[{transform:'translate(0,0) scale(.35)',opacity:0},{opacity:.95,offset:.15},{transform:'translate('+dx+'px,'+dy+'px) scale('+(o.grow||1.5)+')',opacity:0}],o.ms||2400,{done:function(){g.remove()},fill:'none'});
+      if(reduce)api.later(function(){g.remove()},1200);return g},
+    pop:function(x,y,txt,o){o=o||{};var t=el('text',{class:'pop',x:x,y:y},null,api.top());t.textContent=txt;if(o.color)t.style.fill=o.color;if(o.size)t.style.fontSize=o.size+'px';
+      t.style.transformBox='fill-box';t.style.transformOrigin='50% 100%';
+      api.A(t,[{opacity:0,transform:'scale(.4)'},{opacity:1,transform:'scale(1.15)',offset:.2},{opacity:1,transform:'scale(1)',offset:.7},{opacity:0,transform:'translateY(-10px)'}],o.ms||1300,{done:function(){t.remove()},fill:'none'});
+      if(reduce)api.later(function(){t.remove()},1200);return t},
+    pulse:function(e){return api.A(e,[{transform:'scale(1)'},{transform:'scale(1.12)'},{transform:'scale(1)'}],700,{fill:'none'})},
+    /* 背景：地面、草、圍籬、太陽 */
+    bg:function(o){o=o||{};var gy=o.ground==null?200:o.ground,W=880,s='';
+      if(o.sun)s+='<circle cx="'+(o.sun[0])+'" cy="'+(o.sun[1])+'" r="22" fill="#f2c94c" opacity=".85"/>';
+      if(o.hills)s+='<path d="M0 '+(gy-10)+' Q140 '+(gy-70)+' 300 '+(gy-24)+' T600 '+(gy-30)+' T880 '+(gy-40)+' V'+gy+' H0Z" fill="var(--accent-soft)" opacity=".7"/>';
+      if(o.fence){s+='<g stroke="var(--line)" stroke-width="4" stroke-linecap="round"><line x1="0" y1="'+(gy-48)+'" x2="'+W+'" y2="'+(gy-48)+'"/><line x1="0" y1="'+(gy-28)+'" x2="'+W+'" y2="'+(gy-28)+'"/>';
+        for(var x=60;x<W;x+=140)s+='<line x1="'+x+'" y1="'+(gy-62)+'" x2="'+x+'" y2="'+(gy+4)+'"/>';s+='</g>'}
+      s+='<rect x="0" y="'+gy+'" width="'+W+'" height="'+(400-gy)+'" fill="'+(o.color||'var(--accent-soft)')+'"/>';
+      (o.grass||[]).forEach(function(x,i){var y=gy+14+(i%3)*12;s+='<path d="M'+(x-5)+' '+y+' q0 -6 -4 -10 M'+x+' '+y+' q0 -8 2 -13 M'+(x+5)+' '+y+' q1 -6 5 -10" stroke="var(--accent)" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/>'});
+      return el('g',{},s,st)},
+    text:function(x,y,txt,cls,par){var t=el('text',{x:x,y:y,class:cls||'lbl'},null,par||st);t.textContent=txt;return t}
+  };
+
+  /* ---------- 共用圖形（原點在底部中央，面向右） ---------- */
+  var K='#2b2b2b';
+  api.SH={
+    conifer:function(c){c=c||'#3f7d58';return '<rect x="-5" y="-24" width="10" height="24" fill="#7a5a3a"/><path d="M0 -112 L-24 -66 L24 -66Z" fill="'+c+'"/><path d="M0 -92 L-31 -44 L31 -44Z" fill="'+c+'"/><path d="M0 -70 L-38 -20 L38 -20Z" fill="'+c+'"/>'},
+    broad:function(c){c=c||'#4f8f5f';return '<rect x="-6" y="-44" width="12" height="44" fill="#7a5a3a"/><circle cx="-20" cy="-56" r="22" fill="'+c+'"/><circle cx="20" cy="-56" r="22" fill="'+c+'"/><circle cx="0" cy="-74" r="30" fill="'+c+'"/>'},
+    cabbage:'<ellipse cx="0" cy="-13" rx="24" ry="14" fill="#6fae5c"/><ellipse cx="-10" cy="-16" rx="12" ry="10" fill="#86c46f"/><ellipse cx="10" cy="-16" rx="12" ry="10" fill="#86c46f"/><ellipse cx="0" cy="-19" rx="12" ry="10" fill="#b4e09a"/><path d="M-5 -22 q5 -5 10 0" stroke="#6fae5c" stroke-width="2" fill="none"/>',
+    bamboo:function(hh){var s='<rect x="-4" y="-'+hh+'" width="8" height="'+hh+'" rx="3" fill="#7fae4f"/>';for(var y=22;y<hh;y+=22)s+='<rect x="-5" y="-'+y+'" width="10" height="3" fill="#5f8f3a"/>';
+      s+='<path d="M0 -'+(hh-6)+' q16 -6 26 2 q-14 4 -26 -2z M0 -'+(hh-18)+' q-16 -6 -26 2 q14 4 26 -2z M0 -'+(hh-30)+' q16 -4 24 4 q-14 2 -24 -4z" fill="#5f9f4f"/>';return s},
+    rice:function(grain){return '<path d="M0 0 q-5 -28 -16 -44 M0 0 q0 -34 2 -56 M0 0 q5 -28 15 -42 M0 0 q-2 -20 -9 -30" stroke="#5f9f4f" stroke-width="3" fill="none" stroke-linecap="round"/>'+(grain?'<path d="M2 -56 q10 4 12 18" stroke="#d9b44a" stroke-width="4" fill="none" stroke-linecap="round" stroke-dasharray="3 2"/>':'')},
+    mangrove:'<path d="M-24 0 q4 -26 22 -34 M24 0 q-4 -26 -22 -34 M-10 0 q2 -18 8 -34 M10 0 q-2 -18 -8 -34" stroke="#6b4e34" stroke-width="3" fill="none"/><rect x="-3" y="-62" width="6" height="30" fill="#6b4e34"/><ellipse cx="-18" cy="-62" rx="20" ry="13" fill="#4f8f5f"/><ellipse cx="18" cy="-62" rx="20" ry="13" fill="#4f8f5f"/><ellipse cx="0" cy="-74" rx="32" ry="18" fill="#3f7d58"/>',
+    spoonbill:'<line x1="-4" y1="-20" x2="-6" y2="0" stroke="'+K+'" stroke-width="2"/><line x1="5" y1="-20" x2="7" y2="0" stroke="'+K+'" stroke-width="2"/><ellipse cx="2" cy="-28" rx="17" ry="10" fill="#fafafa" stroke="'+K+'" stroke-width="1.5"/><path d="M-11 -33 Q-18 -44 -14 -50" stroke="#fafafa" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M-11 -33 Q-18 -44 -14 -50" stroke="'+K+'" stroke-width="1" fill="none" opacity=".4"/><circle cx="-15" cy="-52" r="6" fill="#fafafa" stroke="'+K+'" stroke-width="1.5"/><path d="M-20 -52 L-36 -45" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/><ellipse cx="-37" cy="-44" rx="4.5" ry="3.2" fill="'+K+'"/><circle cx="-16" cy="-53" r="1.3" fill="'+K+'"/>',
+    pig:'<rect x="-30" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="-16" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="12" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="26" y="-24" width="9" height="24" rx="3" fill="#e993a6"/>'+
+      '<path d="M-44 -42 q-10 -2 -8 -10 q2 -6 8 -2" stroke="'+K+'" stroke-width="2" fill="none"/><ellipse cx="0" cy="-38" rx="46" ry="26" fill="#f4b6c2" stroke="'+K+'" stroke-width="2"/>'+
+      '<circle cx="40" cy="-46" r="19" fill="#f4b6c2" stroke="'+K+'" stroke-width="2"/><path d="M30 -62 l4 -12 l8 9z" fill="#e993a6" stroke="'+K+'" stroke-width="1.5"/><ellipse cx="57" cy="-42" rx="8" ry="7" fill="#e993a6" stroke="'+K+'" stroke-width="2"/><circle cx="55" cy="-42" r="1.5" fill="'+K+'"/><circle cx="60" cy="-42" r="1.5" fill="'+K+'"/><circle cx="44" cy="-52" r="2.4" fill="'+K+'"/>',
+    tractor:'<rect x="-40" y="-42" width="58" height="22" rx="4" fill="#c0503a"/><rect x="-36" y="-74" width="30" height="34" rx="3" fill="none" stroke="'+K+'" stroke-width="3"/><rect x="10" y="-32" width="32" height="15" rx="3" fill="#c0503a"/><rect x="24" y="-56" width="5" height="26" fill="#555"/>'+
+      '<circle cx="-24" cy="-19" r="19" fill="#333"/><circle cx="-24" cy="-19" r="7" fill="#bbb"/><circle cx="32" cy="-12" r="12" fill="#333"/><circle cx="32" cy="-12" r="4.5" fill="#bbb"/>',
+    plow:'<path d="M-44 -26 L-64 -8 L-58 4 L-52 -6 M-58 -18 L-76 -2 L-70 8" stroke="#666" stroke-width="3.5" fill="none" stroke-linecap="round"/>',
+    pole:'<rect x="-3" y="-124" width="6" height="124" fill="#7a5a3a"/><rect x="-24" y="-116" width="48" height="5" fill="#7a5a3a"/><circle cx="-18" cy="-118" r="3" fill="#ccc"/><circle cx="18" cy="-118" r="3" fill="#ccc"/><path d="M4 -86 l-8 14 h7 l-5 14 l12 -18 h-7 l5 -10z" fill="#f2c94c" stroke="'+K+'" stroke-width="1"/>',
+    pond:'<ellipse cx="0" cy="-8" rx="52" ry="13" fill="#6b4e34"/><ellipse cx="0" cy="-10" rx="45" ry="8" fill="#9b7650"/>',
+    factory:'<rect x="30" y="-122" width="16" height="70" fill="#6f777f"/><rect x="-56" y="-60" width="112" height="60" fill="#8a929a"/><path d="M-56 -60 l28 -18 v18 l28 -18 v18 l28 -18 v18" fill="#8a929a"/>'+
+      '<rect x="-44" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="-18" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="8" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="-10" y="-20" width="20" height="20" fill="#5b636b"/>',
+    coin:function(t){return '<circle cx="0" cy="-13" r="13" fill="#e2b84a" stroke="#a7822a" stroke-width="2"/><text x="0" y="-8.5" text-anchor="middle" style="font:700 13px var(--font-num);fill:#7a5a1a">'+(t||'$')+'</text>'},
+    jar:'<path d="M-30 0 h60 v-58 q0 -8 -8 -8 h-44 q-8 0 -8 8z" fill="var(--paper)" stroke="var(--muted)" stroke-width="2.5"/><rect x="-24" y="-74" width="48" height="8" rx="3" fill="var(--muted)"/>',
+    bento:'<rect x="-62" y="-50" width="124" height="50" rx="6" fill="#b5764a" stroke="'+K+'" stroke-width="2"/><rect x="-56" y="-44" width="62" height="38" rx="3" fill="#fbf8ef"/><rect x="10" y="-44" width="46" height="18" rx="3" fill="#7fbf6a"/><rect x="10" y="-24" width="46" height="18" rx="3" fill="#f2d16b"/>'+
+      '<ellipse cx="-24" cy="-30" rx="26" ry="11" fill="#a0612f" stroke="#7a4520" stroke-width="2"/><path d="M-40 -32 h30 M-38 -27 h26" stroke="#7a4520" stroke-width="1.5"/>',
+    train:'<rect x="-110" y="-62" width="220" height="50" rx="10" fill="#e1e5ea" stroke="'+K+'" stroke-width="2"/><rect x="-110" y="-30" width="220" height="8" fill="#d0602f"/>'+
+      '<rect x="-96" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="-52" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="-8" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="36" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="80" y="-54" width="22" height="18" rx="3" fill="#7ea6c9"/>'+
+      '<circle cx="-74" cy="-8" r="8" fill="#333"/><circle cx="-50" cy="-8" r="8" fill="#333"/><circle cx="50" cy="-8" r="8" fill="#333"/><circle cx="74" cy="-8" r="8" fill="#333"/>',
+    dome:'<path d="M-56 0 v-30 a56 44 0 0 1 112 0 v30z" fill="#a7adb3" stroke="'+K+'" stroke-width="2"/><path d="M-56 -30 h112" stroke="'+K+'" stroke-width="1.5" opacity=".5"/><rect x="-6" y="-84" width="12" height="12" fill="#6f777f"/>',
+    bee:'<g><ellipse cx="-2" cy="-10" rx="5" ry="4" fill="#fff" opacity=".85"/><ellipse cx="4" cy="-10" rx="5" ry="4" fill="#fff" opacity=".85"/><ellipse cx="0" cy="-3" rx="9" ry="6.5" fill="#f2c230" stroke="'+K+'" stroke-width="1.2"/><path d="M-2 -9 v12 M3 -8.5 v11" stroke="'+K+'" stroke-width="2"/><circle cx="8" cy="-4" r="1.3" fill="'+K+'"/></g>',
+    flower:function(c){return '<path d="M0 0 v-30" stroke="#5f9f4f" stroke-width="3"/><path d="M0 -14 q-10 -4 -12 -12 q8 0 12 8" fill="#5f9f4f"/><g fill="'+(c||'#e98fa3')+'"><circle cx="0" cy="-40" r="6"/><circle cx="-8" cy="-33" r="6"/><circle cx="8" cy="-33" r="6"/><circle cx="-5" cy="-25" r="6"/><circle cx="5" cy="-25" r="6"/></g><circle cx="0" cy="-32" r="4.5" fill="#f2c94c"/>'},
+    larva:'<ellipse cx="0" cy="-4" rx="11" ry="4.5" fill="#efe6c8" stroke="#8a7a50" stroke-width="1"/><path d="M-5 -8 v8 M0 -8.5 v9 M5 -8 v8" stroke="#8a7a50" stroke-width=".8"/>',
+    truck:'<rect x="-50" y="-48" width="64" height="36" rx="3" fill="#7fa7c9" stroke="'+K+'" stroke-width="2"/><path d="M14 -40 h20 l12 14 v14 h-32z" fill="#d0602f" stroke="'+K+'" stroke-width="2"/><rect x="20" y="-36" width="12" height="10" fill="#cfe3f2"/><circle cx="-30" cy="-10" r="9" fill="#333"/><circle cx="30" cy="-10" r="9" fill="#333"/>',
+    shop:'<rect x="-50" y="-70" width="100" height="70" fill="#e9e4d6" stroke="'+K+'" stroke-width="2"/><path d="M-56 -70 h112 l-8 -18 h-96z" fill="#d0602f" stroke="'+K+'" stroke-width="2"/><rect x="-36" y="-50" width="30" height="24" fill="#cfe3f2" stroke="'+K+'" stroke-width="1.5"/><rect x="10" y="-44" width="24" height="44" fill="#8a6a4a"/>',
+    log:'<rect x="-26" y="-14" width="52" height="14" rx="7" fill="#9b7650" stroke="#6b4e34" stroke-width="2"/><ellipse cx="26" cy="-7" rx="5" ry="7" fill="#d9b98a" stroke="#6b4e34" stroke-width="1.5"/>',
+    seagrass:'<path d="M-10 0 q-6 -20 2 -40 M-3 0 q4 -24 -2 -48 M4 0 q-4 -18 4 -38 M11 0 q6 -16 0 -32" stroke="#3f8f6a" stroke-width="3.5" fill="none" stroke-linecap="round"/>'
+  };
+  /* 牛、羊（左上原點畫，包一層移到底部中央） */
+  var COW='<path d="M14 30 q-14 12 -8 34" fill="none" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/>'+
+    [22,38,80,96].map(function(x,i){return '<g class="leg" data-b="'+(i==1||i==2?1:0)+'"><rect x="'+x+'" y="50" width="10" height="32" rx="3" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/><rect x="'+x+'" y="76" width="10" height="7" fill="'+K+'"/></g>'}).join('')+
+    '<rect x="12" y="20" width="100" height="42" rx="19" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/>'+
+    '<path d="M30 21 q10 12 26 6 q4 -4 2 -7z" fill="'+K+'"/><ellipse cx="82" cy="44" rx="12" ry="8" fill="'+K+'"/><ellipse cx="44" cy="50" rx="6" ry="4" fill="'+K+'"/>'+
+    '<path d="M108 10 q-6 -9 0 -12 M126 9 q6 -9 0 -12" fill="none" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/><ellipse cx="102" cy="16" rx="8" ry="4" fill="#fbfaf6" stroke="'+K+'" stroke-width="2" transform="rotate(-20 102 16)"/>'+
+    '<rect x="102" y="6" width="34" height="32" rx="13" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/><rect x="118" y="23" width="24" height="17" rx="8" fill="#f0b8ad" stroke="'+K+'" stroke-width="2"/>'+
+    '<circle cx="114" cy="17" r="2.6" fill="'+K+'"/><circle cx="129" cy="30" r="1.8" fill="'+K+'"/><circle cx="137" cy="30" r="1.8" fill="'+K+'"/>';
+  var SHEEP=[24,36,66,78].map(function(x,i){return '<g class="leg" data-b="'+(i==1||i==2?1:0)+'"><rect x="'+x+'" y="50" width="7" height="30" rx="2" fill="#3b3631"/></g>'}).join('')+
+    [[24,38,14],[40,27,14],[60,25,14],[78,32,14],[32,52,12],[52,54,12],[72,50,12],[84,44,10]].map(function(c){return '<circle cx="'+c[0]+'" cy="'+c[1]+'" r="'+c[2]+'" fill="#f4f1e8" stroke="'+K+'" stroke-width="2"/>'}).join('')+
+    '<rect x="22" y="28" width="62" height="28" rx="14" fill="#f4f1e8"/><ellipse cx="92" cy="22" rx="8" ry="4" fill="#3b3631" transform="rotate(-25 92 22)"/>'+
+    '<ellipse cx="100" cy="32" rx="12" ry="14" fill="#3b3631"/><circle cx="96" cy="20" r="7" fill="#f4f1e8" stroke="'+K+'" stroke-width="2"/><circle cx="104" cy="28" r="2.6" fill="#fff"/><circle cx="104.5" cy="28.5" r="1.3" fill="'+K+'"/>';
+  api.SH.cow='<g transform="translate(-70 -83)">'+COW+'</g>';
+  api.SH.sheep='<g transform="translate(-56 -80)">'+SHEEP+'</g>';
+  api.SH.cowPts={mouth:[72,-47],nose:[74,-53],rear:[-62,-45]};
+  api.SH.sheepPts={mouth:[54,-40],nose:[56,-44],rear:[-44,-38]};
+  /* 跑步：腳擺動，回傳停止函式 */
+  api.legs=function(g){var a=[];g.querySelectorAll('.leg').forEach(function(l){l.style.transformBox='fill-box';l.style.transformOrigin='50% 0';
+      var an=api.A(l,[{transform:'rotate(20deg)'},{transform:'rotate(-20deg)'}],260,{iter:Infinity,dir:'alternate',ease:'ease-in-out',delay:l.getAttribute('data-b')==='1'?0:0,fill:'none'});
+      if(an&&l.getAttribute('data-b')==='1')an.currentTime=260;if(an)a.push(an)});
+    return function(){a.forEach(function(x){x.cancel()})}};
+
+  /* ---------- 遊戲流程 ---------- */
+  var Q=C.questions,idx=0,score=0,phase='idle',S=C.scene(api);
+  function act(n){if(n&&S.acts&&S.acts[n])S.acts[n]()}
+  function btn(t,cls,fn){var b=D.createElement('button');b.type='button';b.textContent=t;if(cls)b.className=cls;b.addEventListener('click',fn);return b}
+  function show(){phase='q';var q=Q[idx];pEl.textContent='第 '+(idx+1)+' 題／共 '+Q.length+' 題';qEl.textContent=q.q;oEl.innerHTML='';fEl.innerHTML='';
+    q.opts.forEach(function(o,i){oEl.appendChild(btn(o,'',function(){answer(i)}))});stopAll();act(q.act)}
+  function answer(i){phase='a';var q=Q[idx],right=i===q.ans;
+    oEl.querySelectorAll('button').forEach(function(b,j){b.disabled=true;b.classList.add(j===q.ans?'ok':j===i?'bad':'dim')});
+    if(right)score++;
+    if(q.after){stopAll();act(q.after)}
+    var why=typeof q.why==='object'?(q.why[i]||q.why.d):q.why;
+    var box=h('div','res '+(right?'ok':'bad'),'<b>'+(right?'答對了！':'答錯了')+'</b><p></p>',fEl);box.querySelector('p').textContent=right?q.ok:why;
+    var last=idx===Q.length-1,nx=btn(last?'看結果':(right?'下一題 →':'懂了，下一題 →'),'gm-next',function(){if(last)end();else{idx++;show()}});
+    fEl.appendChild(nx);try{nx.focus({preventScroll:true})}catch(e){}}
+  function end(){phase='end';stopAll();act('end');pEl.textContent='完成';
+    qEl.innerHTML='答對 <span class="gm-score">'+score+'／'+Q.length+'</span> 題';oEl.innerHTML='';fEl.innerHTML='';
+    var box=h('div','res ok','<b>重點</b><p></p>',fEl);box.querySelector('p').textContent=C.summary;
+    fEl.appendChild(btn('再玩一次','gm-next',function(){start()}))}
+  function start(){stopAll();idx=0;score=0;phase='enter';oEl.innerHTML='';fEl.innerHTML='';pEl.textContent='　';qEl.textContent=C.intro||'準備開始…';
+    S.enter(function(){if(phase==='enter')show()})}
+  var lastF=null;
+  function open(){hideTip();lastF=D.activeElement;ov.hidden=false;D.documentElement.classList.add('gm-lock');dlg.querySelector('.gm-x').focus();
+    if(phase==='idle'||phase==='enter')start();else if(phase==='q'||phase==='a')act(Q[idx].act)}
+  function close(){stopAll();ov.hidden=true;D.documentElement.classList.remove('gm-lock');if(phase==='enter')phase='idle';try{(lastF||fab).focus()}catch(e){}}
+  fab.addEventListener('click',open);
+  dlg.querySelector('.gm-x').addEventListener('click',close);
+  ov.addEventListener('click',function(e){if(e.target===ov)close()});
+  D.addEventListener('keydown',function(e){if(ov.hidden)return;
+    if(e.key==='Escape'){close();return}
+    if(e.key==='Tab'){var f=[].slice.call(dlg.querySelectorAll('button:not(:disabled)'));if(!f.length)return;var a=f[0],z=f[f.length-1];
+      if(e.shiftKey&&D.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&D.activeElement===z){e.preventDefault();a.focus()}}});
+
+  /* ---------- 提示泡泡：往下讀一段或停留 15 秒後出現一次 ---------- */
+  var tipDone=false,tipT;
+  function hideTip(){tip.classList.remove('on');clearTimeout(tipT)}
+  function showTip(){if(tipDone||!ov.hidden)return;tipDone=true;tip.classList.add('on');fab.classList.add('wig');tipT=setTimeout(hideTip,12000)}
+  tip.addEventListener('click',function(e){if(e.target.classList.contains('gm-tipx')){hideTip();return}open()});
+  setTimeout(showTip,15000);
+  window.addEventListener('scroll',function(){var m=D.scrollingElement||D.documentElement,max=m.scrollHeight-window.innerHeight;if(max>0&&(window.scrollY||m.scrollTop)>max*.25)showTip()},{passive:true});
+  api.open=open;return api;
+};
+GMRUN({title:'蔬菜有沒有碳匯？',teaser:'菜長大會吸 CO₂，那菜園算碳匯嗎？點我玩玩看',alt:'菜園和竹林',intro:'菜苗發芽中…',vb:'0 30 880 230',
+summary:'碳匯要「移除」CO₂，還要「吸收或儲存」在某個場所。蔬菜吸的碳很快回到大氣，所以沒有碳匯；經營的竹林、森林才能長期存碳。',
+scene:function(G){
+  var SH=G.SH,GY=204;G.bg({ground:200,sun:[820,46],grass:[520,560,840]});
+  G.el('rect',{x:40,y:198,width:440,height:12,rx:4,fill:'#8a6a4a',opacity:.55},null,G.svg);
+  var cab=[80,150,220,290,360,430].map(function(x){var c=G.put(null,x,GY,1.3,SH.cabbage);c.sc=0;return c});
+  var bam=[[600,118],[640,150],[680,104],[722,138],[764,96]].map(function(b){var e=G.put(null,b[0],GY,1,SH.bamboo(b[1]));e.h=b[1];return e});
+  G.text(260,240,'菜園','sub');G.text(682,240,'竹林','sub');
+  function scale(c,to,ms){G.A(c,[{transform:'scale('+c.sc+')',opacity:1},{transform:'scale('+to+')',opacity:1}],ms||600);c.sc=to}
+  function bamboo(to,ms,stag){bam.forEach(function(b,i){G.A(b,[{transform:'scaleY('+(b.k||.15)+')'},{transform:'scaleY('+to+')'}],ms,{delay:(stag||0)*i,ease:'cubic-bezier(.3,1.4,.5,1)'});b.k=to})}
+  function down(x,top){G.puff(x,top,{dy:70,dx:0,color:G.C.co2,label:'CO₂',n:2,r:9,grow:1.1,ms:1600})}
+  function up(x){G.puff(x,GY-30,{dy:-120,dx:10,color:G.C.co2,label:'CO₂',n:2,r:9,ms:2600})}
+  return {
+    enter:function(done){cab.forEach(function(c,i){c.sc=0;G.A(c,[{transform:'scale(0)',opacity:1},{transform:'scale(.5)',opacity:1}],700,{delay:i*150,ease:'cubic-bezier(.3,1.5,.5,1)'});c.sc=.5});
+      bamboo(.15,400,0);G.later(done,1300)},
+    acts:{
+      grow:function(){G.loop(function(){var c=cab[Math.floor(Math.random()*cab.length)];down(c.x,90);
+        G.later(function(){if(c.sc<1.1){scale(c,Math.min(1.1,c.sc+.2))}},1100)},1100)},
+      harvest:function(){cab.forEach(function(c,i){G.A(c,[{transform:'scale('+c.sc+')',opacity:1},{transform:'translate(0,-50px) scale('+c.sc+')',opacity:1,offset:.35},{transform:'translate(260px,-160px) scale(.2)',opacity:0}],1100,{delay:i*120,ease:'ease-in'});c.sc=0;
+          G.later(function(){up(c.x)},700+i*120)});
+        G.later(function(){G.pop(260,120,'吃掉、分解 → 碳回到大氣',{size:17})},600);
+        G.later(function(){G.loop(function(){up(cab[Math.floor(Math.random()*cab.length)].x)},1300)},1600)},
+      gone:function(){G.loop(function(){up(cab[Math.floor(Math.random()*cab.length)].x)},1300)},
+      bamboo:function(){bamboo(1,2200,260);G.later(function(){G.pop(682,70,'咻～長好快',{size:17})},900);
+        G.loop(function(){var b=bam[Math.floor(Math.random()*bam.length)];down(b.x,40)},1200)},
+      regrow:function(){cab.forEach(function(c,i){G.A(c,[{transform:'scale(0)',opacity:1},{transform:'scale(.8)',opacity:1}],600,{delay:i*100});c.sc=.8});
+        G.loop(function(){var c=cab[Math.floor(Math.random()*cab.length)];down(c.x,90);G.later(function(){up(c.x)},1200)},1400)}
+    }}},
+questions:[
+  {act:'grow',after:'harvest',q:'菜長大的時候一直吸 CO₂，這片菜園算碳匯嗎？',opts:['算','不算'],ans:1,
+   ok:'蔬菜很快被吃掉或分解，碳短時間就回到大氣，沒有長期儲存。',
+   why:'不算。蔬菜雖然行光合作用吸碳，但收成後很快被吃掉或分解，碳在短時間內回到大氣，沒有長期儲存。講義 1 的課堂筆記就寫「蔬菜沒有碳匯」。'},
+  {act:'gone',q:'碳匯要同時做到哪兩件事？',opts:['移除 CO₂，並吸收或儲存在某個「場所」','有行光合作用，而且長得快','面積夠大，而且有人管理'],ans:0,
+   ok:'碳匯是一個「場所」：要把 CO₂ 移除，還要能把碳留住。',
+   why:'講義 1 寫：碳匯要有兩件事，1. 移除，2. 吸收或儲存，是一個「場所」。光合作用、長得快都不夠，碳要能留得住。'},
+  {act:'bamboo',q:'定期更新經營的孟宗竹林，每公頃每年大約固定多少 CO₂？',opts:['約 4.7 公噸','約 47 公噸','約 470 公噸'],ans:1,
+   ok:'林試所數據：孟宗竹林約 47.36、桂竹林約 22.32 t CO₂／公頃／年。',
+   why:'約 47 公噸。講義 1 引林試所數據：定期更新經營的孟宗竹林約 47.36、桂竹林約 22.32 t CO₂／公頃／年。竹子長得快，但講義 10 提醒還是要經營（砍伐），種太密要疏伐，不然生長會停滯。'},
+  {act:'regrow',q:'依 ISO 14064-1 Annex G，下面哪一種植物的 CO₂ 移除「不列入」？',opts:['一年生的水稻','多年生的果樹','人工林'],ans:0,
+   ok:'一年生、二年生和沒有木本莖的多年生草本，CO₂ 移除不列入。',
+   why:'是水稻。講義 4 提到 Annex G：一年生、二年生、沒有木本莖的多年生草本，其 CO₂ 移除不列入。水稻收穫後稻稈燃燒或分解，碳又回到大氣；「蔬菜沒有碳匯」也是同一條規則。'}
+]});
+</script><!--/gm-js-->
+
+</body>
+</html>

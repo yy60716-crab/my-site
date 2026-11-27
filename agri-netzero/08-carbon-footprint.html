@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>農畜產品碳足跡實務</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: 單欄閱讀講義，桌機左側固定目錄；筆記、ISO 連結、重點用不同框區分 */
+:root{
+  --bg:#f4f6f1; --paper:#ffffff; --fg:#1c231f; --muted:#5b6660; --line:#d9ded6;
+  --accent:#2f6a4c; --accent-soft:#e3eee6;
+  --ink:#2a4a9a; --ink-soft:#e8edf8;
+  --hl:#f3e27a; --soil:#9a6a22; --soil-soft:#f5ecdc;
+  --font-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --font-head:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --font-num:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141a17; --paper:#1b2320; --fg:#e4ebe6; --muted:#9aa8a0; --line:#2e3a35;
+  --accent:#7cc39b; --accent-soft:#1f3329; --ink:#9db4f0; --ink-soft:#1f2740;
+  --hl:#6b5d14; --soil:#d9a85a; --soil-soft:#30281a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141a17; --paper:#1b2320; --fg:#e4ebe6; --muted:#9aa8a0; --line:#2e3a35;
+  --accent:#7cc39b; --accent-soft:#1f3329; --ink:#9db4f0; --ink-soft:#1f2740;
+  --hl:#6b5d14; --soil:#d9a85a; --soil-soft:#30281a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.8;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1480px;margin:0 auto;display:grid;grid-template-columns:190px minmax(0,1fr);gap:36px;padding-block:32px 80px}
+@media (max-width:860px){.wrap{grid-template-columns:minmax(0,1fr)} nav.toc{position:static!important;max-height:none!important}}
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);align-self:start;max-height:calc(100vh - 32px);overflow:auto;font-size:14px}
+nav.toc h2{font-size:13px;letter-spacing:.12em;color:var(--muted);margin:0 0 8px;font-family:var(--font-body)}
+nav.toc ol{margin:0;padding-left:32px;display:grid;gap:4px}
+nav.toc a{color:var(--fg);text-decoration:none}
+nav.toc a:hover,nav.toc a:focus-visible{color:var(--accent);text-decoration:underline}
+main{min-width:0}
+.toc-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px}
+.toc-head h2{margin:0!important}
+.toc-btn{font:inherit;font-size:13px;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:6px;padding:2px 8px;cursor:pointer;line-height:1.6}
+.toc-btn:hover,.toc-btn:focus-visible{color:var(--accent);border-color:var(--accent)}
+.toc-open{display:none;white-space:nowrap}
+body.toc-off .wrap{grid-template-columns:76px minmax(0,1fr)}
+body.toc-off nav.toc>*:not(.toc-open){display:none}
+body.toc-off .toc-open{display:inline-block}
+@media (max-width:860px){body.toc-off .wrap{grid-template-columns:minmax(0,1fr)}}
+header.hero{border-bottom:3px solid var(--accent);padding-bottom:20px;margin-bottom:28px}
+.eyebrow{font-size:13px;letter-spacing:.14em;color:var(--accent);font-weight:700}
+h1{font-family:var(--font-head);font-weight:900;font-size:clamp(28px,5vw,42px);line-height:1.3;margin:6px 0 10px;text-wrap:balance}
+.meta{color:var(--muted);font-size:14px}
+h2{font-family:var(--font-head);font-size:26px;line-height:1.35;margin:56px 0 14px;text-wrap:balance;scroll-margin-top:16px}
+h2 .no{font-family:var(--font-num);color:var(--accent);font-size:18px;margin-right:10px}
+h3{font-size:19px;margin:30px 0 8px;color:var(--accent)}
+p{margin:10px 0}
+ul,ol{padding-left:22px;margin:8px 0}
+li{margin:3px 0}
+mark{background:linear-gradient(transparent 55%,var(--hl) 55%);color:inherit;padding:0 1px}
+.num{font-family:var(--font-num);font-variant-numeric:tabular-nums}
+.box{border-radius:10px;padding:14px 18px;margin:16px 0}
+.box>.tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.08em;padding:1px 8px;border-radius:999px;margin-bottom:4px}
+.box p,.box ul{margin:6px 0}
+.guide{background:var(--paper);border:1px solid var(--line)}
+.guide .tag{background:var(--accent);color:var(--paper)}
+.note{background:var(--ink-soft);border-left:4px solid var(--ink)}
+.note .tag{background:var(--ink);color:var(--paper)}
+.note .hand{color:var(--ink);font-weight:500}
+.iso{background:var(--soil-soft);border-left:4px solid var(--soil)}
+.iso .tag{background:var(--soil);color:var(--paper)}
+.key{background:var(--accent-soft);border-left:4px solid var(--accent)}
+.key .tag{background:var(--accent);color:var(--paper)}
+.unclear{color:var(--muted);font-size:13px;border-bottom:1px dotted var(--muted)}
+.tbl{overflow-x:auto;width:fit-content;max-width:100%;margin:14px 0;border:1px solid var(--line);border-radius:8px;background:var(--paper)}
+table{border-collapse:collapse;width:auto;font-size:15px;min-width:480px}
+th,td{padding:8px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--accent-soft);font-weight:700;white-space:nowrap}
+td.r,th.r{text-align:right}
+td:first-child,th:first-child{white-space:nowrap}
+tr:last-child td{border-bottom:none}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:16px 0}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.stat b{display:block;font-family:var(--font-num);font-size:22px;color:var(--accent);line-height:1.3}
+.stat span{font-size:13px;color:var(--muted)}
+.axes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:16px 0}
+.axis{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:8px;padding:12px 14px}
+.axis h4{margin:0 0 4px;font-size:17px}
+.axis .goal{font-family:var(--font-num);color:var(--accent);font-weight:700}
+.fig{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0;width:fit-content;max-width:100%}
+.fig svg{display:block;max-width:100%;height:auto}
+.fig figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.fig .t{fill:var(--fg);font-size:14px;font-family:var(--font-body)}
+.fig .tb{fill:var(--fg);font-size:14px;font-weight:700;font-family:var(--font-body)}
+.fig .m{fill:var(--muted);font-size:12.5px;font-family:var(--font-body)}
+.fig .n{fill:var(--fg);font-size:13px;font-family:var(--font-num)}
+.fig .ax{stroke:var(--line);stroke-width:1}
+.fig .g-acc{fill:var(--accent)} .fig .s-acc{stroke:var(--accent)}
+.fig .g-soil{fill:var(--soil)} .fig .s-soil{stroke:var(--soil)}
+.fig .g-ink{fill:var(--ink)} .fig .s-ink{stroke:var(--ink)}
+.fig .g-mut{fill:var(--muted)} .fig .s-mut{stroke:var(--muted)}
+.fig .g-accs{fill:var(--accent-soft)} .fig .g-soils{fill:var(--soil-soft)} .fig .g-inks{fill:var(--ink-soft)}
+.fig .hit:hover{opacity:.8}
+.calc{width:fit-content;max-width:100%}
+.loop{position:relative;margin-top:22px!important;margin-bottom:48px!important;padding-left:26px}
+.loop-svg{position:absolute;left:0;top:0;overflow:visible;pointer-events:none;color:var(--accent)}
+.loop-svg text{fill:var(--accent);font-size:13px;font-family:var(--font-body)}
+.flow span.ok{background:var(--accent-soft);border-color:var(--accent);font-weight:700}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0;font-size:14px}
+.flow span{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:4px 10px}
+.flow i{font-style:normal;color:var(--muted)}
+details.q{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0}
+details.q summary{cursor:pointer;font-weight:500}
+details.q summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+details.q[open] summary{color:var(--accent)}
+details.q .a{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+dl.gloss{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 18px;margin:12px 0}
+dl.gloss dt{font-weight:700;color:var(--accent)}
+dl.gloss dd{margin:0}
+@media (max-width:560px){dl.gloss{grid-template-columns:minmax(0,1fr)} dl.gloss dd{margin-bottom:8px}}
+footer{margin-top:60px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+a.xref{display:block;width:fit-content;margin-top:6px}
+.steps{width:fit-content;max-width:100%}
+.box{width:fit-content;max-width:100%}
+.flow span{display:inline-flex;align-items:center;gap:8px}
+.flow span .fi{width:22px;height:22px;flex:none;fill:none;stroke:var(--accent);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.flow span .tx{font-style:normal}
+</style>
+<style>
+.formula{font-family:var(--font-num);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px;overflow-x:auto;white-space:nowrap;font-size:15px;margin:8px 0}
+.calc{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:16px 0;display:grid;gap:12px}
+.calc .row{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:end}
+.calc label{display:grid;gap:4px;font-size:14px;color:var(--muted)}
+.calc input{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 10px;width:160px;max-width:100%}
+.calc input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.calc .out{font-family:var(--font-num);font-size:15px;line-height:1.9;border-top:1px dashed var(--line);padding-top:10px}
+.calc .out b{color:var(--accent);font-size:20px}
+.steps{counter-reset:s;list-style:none;padding:0;display:grid;gap:8px;margin:12px 0}
+.steps li{counter-increment:s;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px 12px 8px 44px;position:relative}
+.steps li::before{content:counter(s);position:absolute;left:12px;top:8px;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--paper);font-family:var(--font-num);font-size:13px;display:grid;place-items:center}
+</style>
+<!--gm-css--><style>
+/* 跳出式小遊戲 */
+.gm-fab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));z-index:60;display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:15px;font-weight:700;color:var(--paper);background:var(--accent);border:0;border-radius:999px;padding:10px 18px 10px 14px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.22)}
+.gm-fab svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.gm-fab:hover,.gm-fab:focus-visible{filter:brightness(1.08);outline:2px solid var(--fg);outline-offset:2px}
+.gm-fab.wig{animation:gmWig .9s ease-in-out 2}
+@keyframes gmWig{0%,100%{transform:rotate(0)}20%{transform:rotate(-8deg) scale(1.06)}40%{transform:rotate(7deg) scale(1.06)}60%{transform:rotate(-4deg)}80%{transform:rotate(3deg)}}
+.gm-tip{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(max(16px,env(safe-area-inset-bottom,0px)) + 58px);z-index:60;max-width:min(300px,calc(100vw - 32px));background:var(--paper);color:var(--fg);border:2px solid var(--accent);border-radius:14px;padding:10px 34px 10px 14px;font-size:15px;line-height:1.55;box-shadow:0 6px 20px rgba(0,0,0,.2);cursor:pointer;opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .3s,transform .3s}
+.gm-tip.on{opacity:1;transform:none;pointer-events:auto}
+.gm-tip::after{content:"";position:absolute;right:34px;bottom:-9px;width:14px;height:14px;background:var(--paper);border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(45deg)}
+.gm-tip b{display:block;font-size:12px;letter-spacing:.1em;color:var(--accent)}
+.gm-tipx{position:absolute;top:4px;right:6px;font:inherit;font-size:18px;line-height:1;color:var(--muted);background:none;border:0;cursor:pointer;padding:4px}
+html.gm-lock,html.gm-lock body{overflow:hidden}
+.gm-ov{position:fixed;inset:0;z-index:70;background:rgba(10,16,13,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.gm-ov[hidden]{display:none}
+.gm-dlg{background:var(--paper);color:var(--fg);border-radius:14px;width:100%;max-width:780px;max-height:calc(100vh - 32px);overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.gm-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px 10px 18px;border-bottom:1px solid var(--line)}
+.gm-hd b{font-family:var(--font-head);font-size:18px}
+.gm-x{font:inherit;font-size:22px;line-height:1;color:var(--muted);background:none;border:1px solid var(--line);border-radius:8px;width:36px;height:36px;cursor:pointer}
+.gm-x:hover,.gm-x:focus-visible{color:var(--accent);border-color:var(--accent)}
+.gm-stage{display:block;width:100%;height:auto;background:linear-gradient(var(--bg),var(--paper))}
+.gm-stage text{font-family:var(--font-body)}
+.gm-stage .lbl{fill:var(--fg);font-size:14px;font-weight:700;text-anchor:middle}
+.gm-stage .sub{fill:var(--muted);font-size:12px;text-anchor:middle}
+.gm-stage .pop{fill:var(--fg);font:900 19px var(--font-head);text-anchor:middle}
+.gm-stage .gas text{fill:var(--fg);font:700 13px var(--font-num);text-anchor:middle;dominant-baseline:middle}
+.gm-card{padding:14px 20px 20px}
+.gm-prog{font-size:13px;color:var(--muted);letter-spacing:.06em;min-height:1.4em}
+.gm-q{font-family:var(--font-head);font-size:21px;font-weight:700;margin:4px 0 12px;line-height:1.45}
+.gm-opts{display:flex;flex-wrap:wrap;gap:10px}
+.gm-opts button,.gm-next{font:inherit;font-size:16px;font-weight:700;color:var(--fg);background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:8px 18px;cursor:pointer;min-width:90px;text-align:left;line-height:1.5}
+.gm-opts button:hover:not(:disabled),.gm-opts button:focus-visible{border-color:var(--accent);color:var(--accent)}
+.gm-opts button:disabled{cursor:default}
+.gm-opts button.ok{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.gm-opts button.bad{background:var(--soil);border-color:var(--soil);color:var(--paper)}
+.gm-opts button.dim{opacity:.45}
+.gm-fb{margin-top:12px}
+.gm-fb .res{border-radius:10px;padding:12px 16px;margin:0 0 10px}
+.gm-fb .res.ok{background:var(--accent-soft);border-left:4px solid var(--accent)}
+.gm-fb .res.bad{background:var(--soil-soft);border-left:4px solid var(--soil)}
+.gm-fb .res b{display:block;font-size:17px;margin-bottom:2px}
+.gm-fb .res.ok b{color:var(--accent)}
+.gm-fb .res.bad b{color:var(--soil)}
+.gm-fb .res p{margin:4px 0}
+.gm-next{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.gm-next:hover,.gm-next:focus-visible{filter:brightness(1.08)}
+.gm-score{font-family:var(--font-num);font-size:28px;color:var(--accent);font-weight:700}
+@media (max-width:560px){.gm-q{font-size:18px}.gm-card{padding:12px 14px 16px}.gm-opts button{flex:1 1 100%}.gm-ov{padding:8px}.gm-dlg{max-height:calc(100vh - 16px)}}
+@media (prefers-reduced-motion:reduce){.gm-fab.wig{animation:none}.gm-tip{transition:none}}
+</style><!--/gm-css-->
+
+<style>
+.site-nav{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px;max-width:1480px;margin:0 auto;padding-top:20px}
+.site-nav+.wrap{padding-top:16px}
+.site-nav a{color:var(--muted);text-decoration:none}
+.site-nav a:hover,.site-nav a:focus-visible{color:var(--accent);text-decoration:underline}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:56px 0 0;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{display:block;padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--fg);text-decoration:none;font-size:15px}
+.pager a:hover,.pager a:focus-visible{border-color:var(--accent)}
+.pager small{display:block;color:var(--muted);font-size:12px}
+.pager .next{text-align:right;grid-column:2}
+@media (max-width:560px){.pager{grid-template-columns:1fr}.pager .next{grid-column:1}}
+</style>
+</head>
+<body>
+<nav class="site-nav" aria-label="網站導覽"><a href="index.html">← 回課程目錄</a><a href="../index.html">學習筆記首頁</a></nav>
+<div class="wrap">
+<nav class="toc" aria-label="目錄">
+  <button type="button" class="toc-btn toc-open" id="tocShow" aria-label="展開目錄">目錄 »</button>
+  <div class="toc-head"><h2>目錄</h2><button type="button" class="toc-btn" id="tocHide" aria-label="收起目錄">« 收起</button></div>
+  <p style="margin:0 0 6px"><a href="#guide">導讀</a></p>
+  <ol>
+    <li><a href="#lca">生命週期評估（LCA）</a></li>
+    <li><a href="#pig">養豬場碳足跡實例</a></li>
+    <li><a href="#compare">比較案例：豬肉 vs. 豆腐、台鐵便當</a></li>
+    <li><a href="#cfp">產品碳足跡與碳標籤</a></li>
+    <li><a href="#iso">碳足跡 vs. 碳盤查</a></li>
+    <li><a href="#circular">沼氣、循環經濟與日常減碳</a></li>
+    <li><a href="#quiz">自我測驗</a></li>
+    <li><a href="#gloss">名詞表</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="hero">
+  <h1>農畜產品碳足跡實務</h1>
+</header>
+
+<section id="guide">
+  <div class="box guide">
+    <span class="tag">導讀</span>
+    <p>這份講義用<b>生命週期評估（LCA）</b>的眼光看農畜產品：從飼料種植、養豬、屠宰、運輸、超市一直到消費者手上。<mark>產品碳足跡是 LCA 只看「氣候變遷」這一項指標的結果</mark>，要先畫流程地圖、定邊界，再收數據、計算。</p>
+    <p>三個閱讀重點：</p>
+    <ul>
+      <li>LCA 四階段與中點、終點指標，碳足跡、水足跡都是中點指標，見 <a href="#lca">第 1 節</a>。</li>
+      <li>四座養豬場的實際數字：每公斤豬肉 4.3–6.4 kg CO₂e，最大來源是糞尿廢水處理，見 <a href="#pig">第 2 節</a>。</li>
+      <li>碳足跡（ISO 14067，產品）和碳盤查（ISO 14064-1，工廠）的差別、範疇與類別怎麼對照，見 <a href="#iso">第 5 節</a>。</li>
+    </ul>
+    <p style="font-size:14px;color:var(--muted)">框的顏色：<span style="color:var(--ink)">藍色＝上課手寫筆記</span>、<span style="color:var(--soil)">棕色＝跟 ISO 或其他講義的連結</span>、綠色＝重點。</p>
+  </div>
+</section>
+
+<section id="lca">
+<h2><span class="no">01</span>生命週期評估（LCA）</h2>
+<div class="box key"><span class="tag">定義</span><p><b>LCA</b>：對產品系統<b>從原物料取得到最終處置</b>的生命週期中，投入、產出與潛在環境衝擊的彙整與評估（ISO 14040:2006）。產品系統包括實體產品，也包括服務。</p></div>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/></svg><em class="tx">原料階段</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21V10l5 3V10l5 3V5h4v16z"/><path d="M3 21h18"/><path d="M7 17h2M12 17h2"/></svg><em class="tx">製造階段</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 6h11v10H2zM13 10h4l4 3v3h-8"/><circle cx="6" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg><em class="tx">配送階段</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2 20a7 7 0 0 1 14 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 13.5a7 7 0 0 1 4 6.5"/></svg><em class="tx">使用階段</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 0 1-14 5.3M4 12A8 8 0 0 1 18 6.7"/><path d="M18 2v5h-5M6 22v-5h5"/></svg><em class="tx">廢棄回收階段</em></span></div>
+<h3>四個階段</h3>
+<div class="tbl"><table>
+<tr><th>階段</th><th>做什麼</th></tr>
+<tr><td>目的與範疇界定</td><td>決定系統邊界與詳細程度。LCA 的深度與廣度，視目的可以差很多</td></tr>
+<tr><td>盤查分析（LCI）</td><td>彙整並量化產品系統的投入與產出清單</td></tr>
+<tr><td>衝擊評估（LCIA）</td><td>把盤查結果轉成環境衝擊的規模與顯著性</td></tr>
+<tr><td>闡釋</td><td>把盤查或衝擊結果和目的、範疇整合，得出結論與建議</td></tr>
+</table></div>
+<p>前三個階段都和「闡釋」來回對照；結果直接用在產品研發與改善、策略規劃、公共政策制定。</p>
+<p style="font-size:14px;color:var(--muted)">歷史：1969 年可口可樂委託中西部研究所評估飲料容器的能源；1990 年 SETAC 提出 LCA 架構；1996 年起 ISO 公布 14040 系列；2002 年 UNEP 與 SETAC 推動「生命週期計畫」。</p>
+
+<h3>從盤查到單一分數</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.4-4.4"/></svg><em class="tx">盤查 LCI<br><small>CO₂、CH₄、N₂O、NOx、SO₂、PM10…</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 16v-4M12 16V8M17 16v-7"/></svg><em class="tx">中點指標 Mid-point<br><small>18 類：氣候變遷（碳足跡）、水資源耗竭（水足跡）、酸化、優養化、生態毒性、土地佔用…</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 16v-4M12 16V8M17 16v-7"/></svg><em class="tx">終點指標 End-point<br><small>人體健康（DALY）、生態系多樣性（species·yr）、資源（$）</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/></svg><em class="tx">單一分數<br><small>正規化、加權後的點數（Pt）</small></em></span></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">Climate change（kg CO₂-eq）＝ 碳足跡；Water depletion（m³）＝ 水足跡。GWP ＝ 全球暖化潛勢。</p></div>
+<p>常用軟體是 SimaPro；丹麥政府建了 LCA Food Database，提供從土壤到廚房的食品 LCA 數據。</p>
+<div class="box iso"><span class="tag">連結講義 4</span><p>ISO 14067 的碳足跡就是 LCA 只做「氣候變遷」一個衝擊類別。<a class="xref" href="04-iso-standards.html#c-core">講義 4〈生命週期與 LCA〉↗</a></p></div>
+
+<h3>邊界的三個層級</h3>
+<div class="tbl"><table>
+<tr><th>層級</th><th>範圍</th><th>例子</th></tr>
+<tr><td>Gate to Gate（Tier I）</td><td>只盤查單一產品或製程的直接排放</td><td>只算牧場內</td></tr>
+<tr><td>Cradle to Gate（Tier II）</td><td>從原料開採算到某個點，例如離開農場（farm gate），含直接與間接排放</td><td>飼料種植＋牧場</td></tr>
+<tr><td>Cradle to Grave（Tier III）</td><td>一路追到消費者使用與最終回收或處置</td><td>到牛奶喝完、包裝丟掉</td></tr>
+</table></div>
+<p>層級越高越完整，但越花時間與資源。國外畜產 LCA 文獻大多做 Cradle to farm gate，功能單位有 1 kg 活重、1 kg 屠體重、1 kg 肉等，<b>功能單位與邊界不同的結果不能直接比</b>。</p>
+</section>
+
+<section id="pig">
+<h2><span class="no">02</span>養豬場碳足跡實例</h2>
+<h3>流程地圖與邊界</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22V8"/><path d="M12 8c-2-1-3-3-3-5 2 1 3 3 3 5zm0 0c2-1 3-3 3-5-2 1-3 3-3 5zM12 13c-2-1-4-2-4-5 2 0 4 2 4 5zm0 0c2-1 4-2 4-5-2 0-4 2-4 5zM12 18c-2-1-4-2-4-5 2 0 4 2 4 5zm0 0c2-1 4-2 4-5-2 0-4 2-4 5z"/></svg><em class="tx">進口穀物<br><small>土地、化肥農藥 → 玉米、大豆</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15h18l-3 5H6z"/><path d="M6 15V9h12v6"/><path d="M12 9V4"/></svg><em class="tx">海運 → 飼料</em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21V10l9-7 9 7v11z"/><path d="M8 21v-7h8v7M8 14l8 7M16 14l-8 7"/></svg><em class="tx">養豬場<br><small>飼養一頭約 110 kg 豬</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21V10l9-7 9 7v11z"/><path d="M8 21v-7h8v7M8 14l8 7M16 14l-8 7"/></svg><em class="tx">屠宰場</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v10h16V10"/><path d="M3 10 5 4h14l2 6z"/><path d="M10 20v-5h4v5"/></svg><em class="tx">超市</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2 20a7 7 0 0 1 14 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 13.5a7 7 0 0 1 4 6.5"/></svg><em class="tx">消費者</em></span></div>
+<p>養豬場分支：糞尿 → 廢棄物處理 → 堆肥；廢水處理（產生溫室氣體）→ 放流。屠宰場分支：廢棄物 → 肉骨粉；廢水處理 → 放流。</p>
+
+<h3>四座一貫場</h3>
+<div class="tbl"><table>
+<tr><th>項目</th><th class="r">A 苗栗竹南</th><th class="r">B 台中外埔</th><th class="r">C 苗栗銅鑼</th><th class="r">D 苗栗造橋</th></tr>
+<tr><td>飼養規模（頭）</td><td class="r num">850</td><td class="r num">1,500</td><td class="r num">4,500</td><td class="r num">9,500</td></tr>
+<tr><td>出豬（頭／年）</td><td class="r num">1,200</td><td class="r num">1,800</td><td class="r num">6,240</td><td class="r num">15,600</td></tr>
+<tr><td>出豬重（kg／頭）</td><td class="r num">120</td><td class="r num">110</td><td class="r num">100</td><td class="r num">110</td></tr>
+<tr><td>出豬總重（t／年）</td><td class="r num">144</td><td class="r num">198</td><td class="r num">624</td><td class="r num">1,716</td></tr>
+<tr><td>飼料（t／年）</td><td class="r num">440</td><td class="r num">535.6</td><td class="r num">3,060</td><td class="r num">4,882</td></tr>
+<tr><td>地下水（t／年）</td><td class="r num">3,577</td><td class="r num">8,212</td><td class="r num">49,275</td><td class="r num">91,250</td></tr>
+<tr><td>用電（度／年）</td><td class="r num">71,688</td><td class="r num">62,172</td><td class="r num">43,600</td><td class="r num">851,040</td></tr>
+<tr><td>沼氣 CH₄（kg／年）</td><td class="r num">13,402.8</td><td class="r num">23,652</td><td class="r num">70,956</td><td class="r num">149,769</td></tr>
+<tr><td>沼氣 N₂O（kg／年）</td><td class="r num">18.99</td><td class="r num">34</td><td class="r num">100.5</td><td class="r num">212</td></tr>
+<tr><td><b>碳足跡（kg CO₂e／kg 豬肉）</b></td><td class="r num"><b>4.79</b></td><td class="r num"><b>5.07</b></td><td class="r num"><b>6.44</b></td><td class="r num"><b>4.32</b></td></tr>
+</table></div>
+<p style="font-size:14px;color:var(--muted)">沼氣以 CH₄ 60%、CO₂ 35%、N₂O 0.034% 推估。C 場的用水、用電在流程圖寫成 56,940 噸、436,800 度，和資料表不同。</p>
+<figure class="fig"><svg viewBox="0 0 1000 230" width="1000" role="img" aria-label="四座豬場每公斤豬肉碳足跡組成圓環圖"><path class="hit g-soil" d="M90.0,22.0A78,78 0 1 1 74.8,176.5L80.7,147.1A48,48 0 1 0 90.0,52.0Z" stroke="var(--paper)" stroke-width="1.5"><title>A 竹南 廢水處理（糞尿）：2.52 kg CO₂e（53%）</title></path><path class="hit g-acc" d="M74.8,176.5A78,78 0 0 1 46.7,35.1L63.4,60.1A48,48 0 0 0 80.7,147.1Z" stroke="var(--paper)" stroke-width="1.5"><title>A 竹南 飼料原料：1.78 kg CO₂e（38%）</title></path><path class="hit g-ink" d="M46.7,35.1A78,78 0 0 1 76.4,23.2L81.7,52.7A48,48 0 0 0 63.4,60.1Z" stroke="var(--paper)" stroke-width="1.5"><title>A 竹南 電力：0.312 kg CO₂e（7%）</title></path><path class="hit g-mut" d="M76.4,23.2A78,78 0 0 1 90.0,22.0L90.0,52.0A48,48 0 0 0 81.7,52.7Z" stroke="var(--paper)" stroke-width="1.5"><title>A 竹南 運輸：0.132 kg CO₂e（3%）</title></path><text x="90" y="102" text-anchor="middle" class="n" style="font-size:20px">4.79</text><text x="90" y="120" text-anchor="middle" class="m">kg CO₂e</text><text x="90" y="206" text-anchor="middle" class="t">A 竹南</text><path class="hit g-soil" d="M280.0,22.0A78,78 0 1 1 218.3,147.7L242.0,129.4A48,48 0 1 0 280.0,52.0Z" stroke="var(--paper)" stroke-width="1.5"><title>B 外埔 廢水處理（糞尿）：3.24 kg CO₂e（65%）</title></path><path class="hit g-acc" d="M218.3,147.7A78,78 0 0 1 255.9,25.8L265.2,54.3A48,48 0 0 0 242.0,129.4Z" stroke="var(--paper)" stroke-width="1.5"><title>B 外埔 飼料原料：1.53 kg CO₂e（30%）</title></path><path class="hit g-ink" d="M255.9,25.8A78,78 0 0 1 274.7,22.2L276.8,52.1A48,48 0 0 0 265.2,54.3Z" stroke="var(--paper)" stroke-width="1.5"><title>B 外埔 電力：0.197 kg CO₂e（4%）</title></path><path class="hit g-mut" d="M274.7,22.2A78,78 0 0 1 280.0,22.0L280.0,52.0A48,48 0 0 0 276.8,52.1Z" stroke="var(--paper)" stroke-width="1.5"><title>B 外埔 運輸：0.054 kg CO₂e（1%）</title></path><text x="280" y="102" text-anchor="middle" class="n" style="font-size:20px">5.07</text><text x="280" y="120" text-anchor="middle" class="m">kg CO₂e</text><text x="280" y="206" text-anchor="middle" class="t">B 外埔</text><path class="hit g-soil" d="M470.0,22.0A78,78 0 0 1 478.7,177.5L475.3,147.7A48,48 0 0 0 470.0,52.0Z" stroke="var(--paper)" stroke-width="1.5"><title>C 銅鑼 廢水處理（糞尿）：3.08 kg CO₂e（48%）</title></path><path class="hit g-acc" d="M478.7,177.5A78,78 0 0 1 424.3,36.8L441.9,61.1A48,48 0 0 0 475.3,147.7Z" stroke="var(--paper)" stroke-width="1.5"><title>C 銅鑼 飼料原料：2.67 kg CO₂e（42%）</title></path><path class="hit g-ink" d="M424.3,36.8A78,78 0 0 1 454.9,23.5L460.7,52.9A48,48 0 0 0 441.9,61.1Z" stroke="var(--paper)" stroke-width="1.5"><title>C 銅鑼 電力：0.438 kg CO₂e（7%）</title></path><path class="hit g-mut" d="M454.9,23.5A78,78 0 0 1 470.0,22.0L470.0,52.0A48,48 0 0 0 460.7,52.9Z" stroke="var(--paper)" stroke-width="1.5"><title>C 銅鑼 運輸：0.198 kg CO₂e（3%）</title></path><text x="470" y="102" text-anchor="middle" class="n" style="font-size:20px">6.44</text><text x="470" y="120" text-anchor="middle" class="m">kg CO₂e</text><text x="470" y="206" text-anchor="middle" class="t">C 銅鑼</text><path class="hit g-soil" d="M660.0,22.0A78,78 0 1 1 634.4,173.7L644.2,145.3A48,48 0 1 0 660.0,52.0Z" stroke="var(--paper)" stroke-width="1.5"><title>D 造橋 廢水處理（糞尿）：2.37 kg CO₂e（55%）</title></path><path class="hit g-acc" d="M634.4,173.7A78,78 0 0 1 619.3,33.4L635.0,59.0A48,48 0 0 0 644.2,145.3Z" stroke="var(--paper)" stroke-width="1.5"><title>D 造橋 飼料原料：1.54 kg CO₂e（36%）</title></path><path class="hit g-ink" d="M619.3,33.4A78,78 0 0 1 652.7,22.3L655.5,52.2A48,48 0 0 0 635.0,59.0Z" stroke="var(--paper)" stroke-width="1.5"><title>D 造橋 電力：0.31 kg CO₂e（7%）</title></path><path class="hit g-mut" d="M652.7,22.3A78,78 0 0 1 660.0,22.0L660.0,52.0A48,48 0 0 0 655.5,52.2Z" stroke="var(--paper)" stroke-width="1.5"><title>D 造橋 運輸：0.064 kg CO₂e（1%）</title></path><text x="660" y="102" text-anchor="middle" class="n" style="font-size:20px">4.32</text><text x="660" y="120" text-anchor="middle" class="m">kg CO₂e</text><text x="660" y="206" text-anchor="middle" class="t">D 造橋</text><rect x="790" y="39" width="12" height="12" rx="2" class="g-soil"/><text x="808" y="50" class="m">廢水處理（糞尿）</text><rect x="790" y="73" width="12" height="12" rx="2" class="g-acc"/><text x="808" y="84" class="m">飼料原料</text><rect x="790" y="107" width="12" height="12" rx="2" class="g-ink"/><text x="808" y="118" class="m">電力</text><rect x="790" y="141" width="12" height="12" rx="2" class="g-mut"/><text x="808" y="152" class="m">運輸</text><text x="152.7" y="110.2" text-anchor="middle" class="n" style="font-size:11px;fill:var(--bg);pointer-events:none">53%</text><text x="28.2" y="116.3" text-anchor="middle" class="n" style="font-size:11px;fill:var(--bg);pointer-events:none">38%</text><text x="336.6" y="131.8" text-anchor="middle" class="n" style="font-size:11px;fill:var(--bg);pointer-events:none">65%</text><text x="219.8" y="85.4" text-anchor="middle" class="n" style="font-size:11px;fill:var(--bg);pointer-events:none">30%</text><text x="532.9" y="100.5" text-anchor="middle" class="n" style="font-size:11px;fill:var(--bg);pointer-events:none">48%</text><text x="411.2" y="126.7" text-anchor="middle" class="n" style="font-size:11px;fill:var(--bg);pointer-events:none">42%</text><text x="722.1" y="114.5" text-anchor="middle" class="n" style="font-size:11px;fill:var(--bg);pointer-events:none">55%</text><text x="597.4" y="110.7" text-anchor="middle" class="n" style="font-size:11px;fill:var(--bg);pointer-events:none">36%</text><text x="790" y="196" class="m">中央：每公斤豬肉合計</text></svg>
+<figcaption>每 1 公斤豬肉（屠宰後，約對應 1.18 公斤活豬）的碳足跡組成，單位 kg CO₂e（SimaPro 樹狀圖數值）。四座場都是<b>糞尿廢水處理</b>最大、飼料第二；電力和運輸很小。屠宰場本身另外只多約 0.04–0.05 kg。</figcaption></figure>
+<div class="box key"><span class="tag">重點</span><p>每公斤豬肉約 4.3–6.4 kg CO₂e，其中約一半來自<b>糞尿廢水處理</b>（甲烷、氧化亞氮），三到四成來自<b>飼料</b>（尤其進口玉米）。所以養豬減碳的優先順序是：糞尿管理（沼氣捕集）、飼料效率，最後才是省電。</p></div>
+<div class="box iso"><span class="tag">連結講義 6</span><p>糞尿與沼氣的減排措施、甲烷洩漏的風險，見講義 6。<a class="xref" href="06-emission-reduction.html#livestock">講義 6〈畜牧減排〉↗</a></p></div>
+<p>同一研究也算了其他衝擊類別（酸化、優養化、生態毒性、人體毒性、土地使用）。<b>正規化</b>（除以每人每年的平均衝擊，例如氣候變遷 6,890 kg CO₂e／人／年）之後，豬場最突出的反而是陸域與淡水<b>生態毒性</b>和優養化，不是氣候變遷；加權成終點分數時以人體健康為主（Luo 2019，六座豬場）。</p>
+<div class="box note"><span class="tag">正規化與加權</span><p>ReCiPe 終點加權：生態系 400、人體健康 400、資源 200。DALY（失能調整人年）＝ 早死損失年數 ＋ 失能生活年數。</p></div>
+
+<h3>畜牧業占全球排放多少</h3>
+<div class="tbl"><table>
+<tr><th>範圍</th><th>畜牧排放</th><th>比例</th><th>對照</th></tr>
+<tr><td>全球（FAO 2006）</td><td class="r num">7,100 Tg CO₂e</td><td class="r num">18%</td><td>化石燃料燃燒 13%</td></tr>
+<tr><td>美國（Pitesky 2009）</td><td class="r num">198 Tg CO₂e</td><td class="r num">2.8%</td><td>運輸 26%</td></tr>
+<tr><td>美國加州</td><td class="r num">14 Tg CO₂e</td><td class="r num">2.8%</td><td>運輸 37%</td></tr>
+</table></div>
+<p>FAO 的 18% 來自《畜牧業的巨大陰影》，包含<b>土地使用變更</b>（2,400）、糞便（2,160）、腸內發酵（1,800）等；占全球人為排放的 CO₂ 9%、CH₄ 35–40%、N₂O 65%。美國的 2.8% 只算腸內發酵與糞便管理。<b>邊界不同，比例差了六倍。</b></p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">FAO 的大數字主要來自：1. 砍伐森林 2. 沙漠化。</p></div>
+</section>
+
+<section id="compare">
+<h2><span class="no">03</span>比較案例：豬肉 vs. 豆腐、台鐵便當</h2>
+<h3>豬肉 vs. 豆腐</h3>
+<p>瑞典的學生 LCA 專題：豬肉 100 g（瑞典南部養豬、屠宰）對比豆腐 143 g（阿根廷黃豆、丹麥製造），都送到斯德哥爾摩超市、消費者家中。豬肉的衝擊 92% 在養豬場；豆腐 84% 在丹麥製造（其中電力 47.5%、黃豆 33.7%）。</p>
+<figure class="fig"><svg viewBox="0 0 660 240" width="660" role="img" aria-label="豬肉與豆腐三項衝擊比較"><rect class="hit g-soil" x="60" y="203" width="56" height="7" rx="3"><title>氣候變遷 豬肉 100 g：1.4 mPt</title></rect><text x="88" y="197" text-anchor="middle" class="n">1.4</text><rect class="hit g-acc" x="122" y="201" width="56" height="9" rx="3"><title>氣候變遷 豆腐 143 g：1.78 mPt</title></rect><text x="150" y="195" text-anchor="middle" class="n">1.78</text><text x="119" y="230" text-anchor="middle" class="t">氣候變遷</text><rect class="hit g-soil" x="260" y="34" width="56" height="176" rx="3"><title>土地使用 豬肉 100 g：36.57 mPt</title></rect><text x="288" y="28" text-anchor="middle" class="n">36.57</text><rect class="hit g-acc" x="322" y="159" width="56" height="51" rx="3"><title>土地使用 豆腐 143 g：10.67 mPt</title></rect><text x="350" y="153" text-anchor="middle" class="n">10.67</text><text x="319" y="230" text-anchor="middle" class="t">土地使用</text><rect class="hit g-soil" x="460" y="199" width="56" height="11" rx="3"><title>化石燃料 豬肉 100 g：2.22 mPt</title></rect><text x="488" y="193" text-anchor="middle" class="n">2.22</text><rect class="hit g-acc" x="522" y="151" width="56" height="59" rx="3"><title>化石燃料 豆腐 143 g：12.37 mPt</title></rect><text x="550" y="145" text-anchor="middle" class="n">12.37</text><text x="519" y="230" text-anchor="middle" class="t">化石燃料</text><line x1="40" x2="640" y1="210" y2="210" class="ax"/><rect x="420" y="20" width="12" height="12" rx="2" class="g-soil"/><text x="438" y="30" class="m">豬肉 100 g</text><rect x="520" y="20" width="12" height="12" rx="2" class="g-acc"/><text x="538" y="30" class="m">豆腐 143 g</text></svg>
+<figcaption>單位 mPt（毫點，正規化加權後的分數）。兩者的「氣候變遷」差不多；豬肉的衝擊主要在<b>土地使用</b>，豆腐因為黃豆從阿根廷運到丹麥加工、用電，<b>化石燃料</b>反而較高。單一分數：豬肉約 40、豆腐約 23 mPt。</figcaption></figure>
+
+<h3>台鐵便當：國內首張便當碳標籤</h3>
+<p>2012 年 7 月，台鐵便當成為首家有碳足跡標籤的餐盒業者：傳統排骨便當 1.3、八角排骨便當 1.5、懷舊排骨菜飯 1.4 kg CO₂e／盒。依據「包裝盒餐」產品類別規則（PCR 12-001）。</p>
+<figure class="fig"><svg viewBox="0 0 740 250" width="740" role="img" aria-label="台鐵便當碳足跡各階段比例圓環圖，原料取得約 85%"><path class="hit g-acc" d="M120.0,24.0A88,88 0 1 1 50.2,58.4L75.6,77.9A56,56 0 1 0 120.0,56.0Z" stroke="var(--paper)" stroke-width="1.5"><title>傳統排骨便當 1.3 kg 原料取得：85.42%</title></path><path class="hit g-soil" d="M50.2,58.4A88,88 0 0 1 111.2,24.4L114.4,56.3A56,56 0 0 0 75.6,77.9Z" stroke="var(--paper)" stroke-width="1.5"><title>傳統排骨便當 1.3 kg 製造：12.99%</title></path><path class="hit g-ink" d="M111.2,24.4A88,88 0 0 1 118.9,24.0L119.3,56.0A56,56 0 0 0 114.4,56.3Z" stroke="var(--paper)" stroke-width="1.5"><title>傳統排骨便當 1.3 kg 配送銷售：1.39%</title></path><path class="hit g-mut" d="M118.9,24.0A88,88 0 0 1 120.0,24.0L120.0,56.0A56,56 0 0 0 119.3,56.0Z" stroke="var(--paper)" stroke-width="1.5"><title>傳統排骨便當 1.3 kg 廢棄回收：0.2%</title></path><text x="120" y="108" text-anchor="middle" class="n" style="font-size:22px">1.3</text><text x="120" y="130" text-anchor="middle" class="m">kg CO₂e／盒</text><text x="120" y="228" text-anchor="middle" class="t">傳統排骨便當</text><path class="hit g-acc" d="M370.0,24.0A88,88 0 1 1 304.1,53.7L328.1,74.9A56,56 0 1 0 370.0,56.0Z" stroke="var(--paper)" stroke-width="1.5"><title>八角排骨便當 1.5 kg 原料取得：86.53%</title></path><path class="hit g-soil" d="M304.1,53.7A88,88 0 0 1 360.3,24.5L363.8,56.3A56,56 0 0 0 328.1,74.9Z" stroke="var(--paper)" stroke-width="1.5"><title>八角排骨便當 1.5 kg 製造：11.71%</title></path><path class="hit g-ink" d="M360.3,24.5A88,88 0 0 1 369.0,24.0L369.4,56.0A56,56 0 0 0 363.8,56.3Z" stroke="var(--paper)" stroke-width="1.5"><title>八角排骨便當 1.5 kg 配送銷售：1.58%</title></path><path class="hit g-mut" d="M369.0,24.0A88,88 0 0 1 370.1,24.0L370.0,56.0A56,56 0 0 0 369.4,56.0Z" stroke="var(--paper)" stroke-width="1.5"><title>八角排骨便當 1.5 kg 廢棄回收：0.18%</title></path><text x="370" y="108" text-anchor="middle" class="n" style="font-size:22px">1.5</text><text x="370" y="130" text-anchor="middle" class="m">kg CO₂e／盒</text><text x="370" y="228" text-anchor="middle" class="t">八角排骨便當</text><text x="670" y="42" text-anchor="end" class="m">傳統</text><text x="730" y="42" text-anchor="end" class="m">八角</text><rect x="520" y="61" width="12" height="12" rx="2" class="g-acc"/><text x="538" y="72" class="m">原料取得</text><text x="670" y="72" text-anchor="end" class="n">85.42%</text><text x="730" y="72" text-anchor="end" class="n">86.53%</text><rect x="520" y="91" width="12" height="12" rx="2" class="g-soil"/><text x="538" y="102" class="m">製造</text><text x="670" y="102" text-anchor="end" class="n">12.99%</text><text x="730" y="102" text-anchor="end" class="n">11.71%</text><rect x="520" y="121" width="12" height="12" rx="2" class="g-ink"/><text x="538" y="132" class="m">配送銷售</text><text x="670" y="132" text-anchor="end" class="n">1.39%</text><text x="730" y="132" text-anchor="end" class="n">1.58%</text><rect x="520" y="151" width="12" height="12" rx="2" class="g-mut"/><text x="538" y="162" class="m">廢棄回收</text><text x="670" y="162" text-anchor="end" class="n">0.2%</text><text x="730" y="162" text-anchor="end" class="n">0.18%</text></svg>
+<figcaption>台鐵便當（2012 年國內首張便當碳標籤）各生命週期階段比例。原料（豬隻養殖、配菜與白米種植、餐盒）占八成五以上。</figcaption></figure>
+<p>減量承諾：使用更低碳的健康食材、減少包裝材料、改善廚房設備，預期最高減量 5%。</p>
+</section>
+
+<section id="cfp">
+<h2><span class="no">04</span>產品碳足跡與碳標籤</h2>
+<div class="box key"><span class="tag">定義</span><p><b>碳足跡</b>：一項活動或產品在整個生命週期直接與間接產生的溫室氣體排放量。和一般排放量的差別是<b>從消費者端出發</b>，破除「有煙囪才有污染」的觀念：除了製造，還包括原料開採、組裝、運輸、使用和廢棄。</p></div>
+<p><b>碳標籤</b>把整個生命週期的排放換算成 CO₂e 標示在產品上。全球最早是英國 Carbon Trust 2006 年的碳減量標籤；臺灣 2009 年開始研議，分兩階段：一、推動產品碳足跡揭露；二、發展減碳標籤。標籤上的數字是碳足跡與計量單位，心形腳印代表愛護地球，綠葉代表健康環保。</p>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.4-4.4"/></svg><em class="tx">1 盤查作業</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 22l-2.4-1.8-3 .2-.9-2.9L3.2 15.8l1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><em class="tx">2 查證作業</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h7M9 17h7"/></svg><em class="tx">3 碳標籤申請</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 22l-2.4-1.8-3 .2-.9-2.9L3.2 15.8l1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><em class="tx">4 碳標籤審查</em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 22l-2.4-1.8-3 .2-.9-2.9L3.2 15.8l1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><em class="tx">5 碳標籤核發</em></span></div>
+
+<h3>怎麼算</h3>
+<div class="flow loop" data-loop-label="邊界不對，回頭修流程地圖"><span data-loop-to><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3 3 6v15l6-3 6 3 6-3V3l-6 3z"/><path d="M9 3v15M15 6v15"/></svg><em class="tx">流程地圖<br><small>所有原料、能源、廢棄物的投入產出</small></em></span><i>→</i><span data-loop-from><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3 3 6v15l6-3 6 3 6-3V3l-6 3z"/><path d="M9 3v15M15 6v15"/></svg><em class="tx">邊界<br><small>界定系統界線</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 16v-4M12 16V8M17 16v-7"/></svg><em class="tx">數據收集<br><small>產量、活動數據，並做分配</small></em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 16v-4M12 16V8M17 16v-7"/></svg><em class="tx">計算</em></span></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">實際步驟：1. 找 CFP-PCR（產品類別規則）2. 碳足跡盤查清冊（Excel）3. 碳足跡排放係數（Excel）。<br>出口產品要做碳足跡。</p></div>
+
+<h3>產品類別規則（CFP-PCR）</h3>
+<p>同類產品要用同一套規則算，才能比較。畜產相關的 PCR：</p>
+<div class="tbl"><table>
+<tr><th>規則</th><th>編號</th><th>版次</th><th>核准日期</th></tr>
+<tr><td>家畜禽肉及食用雜碎 Meat and Offal</td><td class="num">22-010</td><td>第 3.0 版</td><td class="num">2022.04.26</td></tr>
+<tr><td>禽畜肉加工食品（產品環境足跡 PEF-CR）</td><td class="num">22-055</td><td>第 1.0 版</td><td class="num">2022.09.13</td></tr>
+<tr><td>鮮蛋 Shell Eggs</td><td class="num">20-061</td><td>第 5.0 版</td><td class="num">2020.12.23</td></tr>
+<tr><td>肉製丸類食品 Meatballs</td><td class="num">20-038</td><td>第 4.0 版</td><td class="num">2020.11.16</td></tr>
+<tr><td>鮮牛乳 Fresh Milk</td><td class="num">20-011</td><td>第 4.0 版</td><td class="num">2020.04.07</td></tr>
+</table></div>
+<p>查詢管道：環境部「產品碳足跡資訊網」（PCR 查詢、碳足跡排放係數資料庫、下載專區的計算手冊）；農業部「農業淨零資訊網」（農產品碳足跡排放係數，例如同一品牌香米慣行農法 5.525、有機農法 4.359 kg CO₂e／包）。</p>
+<div class="box note"><span class="tag">單位換算例</span><p>一瓶 500 mL 飲料碳足跡 350 g CO₂e，每毫升就是 0.7 g CO₂e。宣告單位要寫清楚是「每瓶」「每公斤」還是「每毫升」。</p></div>
+<div class="box iso"><span class="tag">連結講義 1</span><p>講義 1 也有農產品碳足跡標籤與 PCR 的介紹。<a class="xref" href="01-net-zero.html#cfp">講義 1〈產品碳足跡在農業〉↗</a></p></div>
+</section>
+
+<section id="iso">
+<h2><span class="no">05</span>碳足跡 vs. 碳盤查</h2>
+<div class="tbl"><table>
+<tr><th>比較</th><th>碳盤查（工廠）</th><th>碳足跡（產品）</th></tr>
+<tr><td>標準</td><td>ISO 14064-1:2018</td><td>ISO 14067:2018</td></tr>
+<tr><td>算什麼</td><td>一個工廠（組織）的總排碳量</td><td>一個產品的總排碳量</td></tr>
+<tr><td>例子</td><td>A 食品工廠全廠 12,000 公噸 CO₂e／年</td><td>A 工廠的芝麻油 1.90 公斤 CO₂e／每瓶（543 mL）</td></tr>
+<tr><td>單位</td><td><mark>公噸 CO₂e／年</mark></td><td><mark>公斤 CO₂e／每單位產品</mark></td></tr>
+<tr><td>依據</td><td>環境部公告「溫室氣體排放係數」、排放係數管理表 6.0.4 版</td><td>CFP-PCR、碳足跡盤查清冊、碳足跡排放係數</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">碳盤查是「排碳量」，也是減量的 baseline。<br>SimaPro 的排放係數：工業有，農牧沒有。</p></div>
+<h3>ISO 14060 家族的分工</h3>
+<div class="tbl"><table>
+<tr><th>標準</th><th>產出</th><th>第三方</th></tr>
+<tr><td>ISO 14064-1 組織盤查</td><td>GHG 盤查文件及報告 → GHG 聲明</td><td>查證</td></tr>
+<tr><td>ISO 14064-2 專案減量與移除</td><td>GHG 計畫文件及報告 → GHG 聲明</td><td>確證或查證</td></tr>
+<tr><td>ISO 14067 產品碳足跡</td><td>碳足跡研究報告 → GHG 聲明</td><td>查證</td></tr>
+</table></div>
+<p>ISO 14064-3 規範確證與查證的程序；ISO 14065 規範查驗機構的認證；ISO 14066 規範查驗人員的能力。臺灣的時間線：2006 年 ISO 14064-1:2006 → 2012 年《溫室氣體排放量申報管理辦法》→ 2015 年《溫室氣體減量及管理法》→ 2016 年《盤查登錄管理辦法》→ 2018 年 ISO 14064-1:2018。</p>
+
+<h3>範疇與類別對照</h3>
+<div class="tbl"><table>
+<tr><th>GHG Protocol</th><th>內容</th><th>ISO 14064-1:2018</th></tr>
+<tr><td>範疇一</td><td>固定燃燒、製程、移動源、逸散</td><td>類別 1 直接排放與移除</td></tr>
+<tr><td>範疇二</td><td>外購電力、蒸汽</td><td>類別 2 輸入能源的間接排放</td></tr>
+<tr><td>範疇三 4、6、7、9</td><td>上下游運輸配送、商務旅行、員工通勤</td><td>類別 3 運輸的間接排放</td></tr>
+<tr><td>範疇三 1、2、3、5、8</td><td>購買商品服務、資本物品、燃料能源相關、廢棄物處理、上游租賃</td><td>類別 4 組織使用的產品之間接排放</td></tr>
+<tr><td>範疇三 10–15</td><td>銷售產品的加工、使用、廢棄；下游租賃、特許、投資</td><td>類別 5 與組織產品使用相關之間接排放</td></tr>
+<tr><td>—</td><td>其他</td><td>類別 6 其他來源的間接排放</td></tr>
+</table></div>
+<p>環境部規範的盤查至少要涵蓋範疇一、二（類別 1、2）。ISO 14064-1 的直接排放還包含土地使用、土地使用變更與林業。</p>
+<div class="box iso"><span class="tag">連結講義 4</span><p>六大類別與重大間接排放的判斷，講義 4 有完整說明。<a class="xref" href="04-iso-standards.html#o-rep">講義 4〈第二個大關：報告邊界與六大類別〉↗</a></p></div>
+<div class="box key"><span class="tag">2025 年</span><p>畜牧產業首次取得「場域碳盤查」查證聲明（ISO 14064-1:2018，bsi）：一座養豬場與一座屠宰分切場，由臺大蘇忠楨教授團隊執行。</p></div>
+</section>
+
+<section id="circular">
+<h2><span class="no">06</span>沼氣、循環經濟與日常減碳</h2>
+<ul>
+  <li>歐洲沼氣協會呼籲修改歐盟肥料法規，承認<b>沼渣（消化液）是有機肥</b>，增加厭氧消化業者收入。</li>
+  <li>歐盟仍有 34% 都市垃圾掩埋，東南歐國家超過 70%；可分解垃圾在掩埋場產生甲烷。分開收集濕垃圾，就能產沼氣與高品質肥料。</li>
+  <li>德國 Melle 的沼氣廠用玉米青貯加禽畜糞尿，廢熱拿去乾燥木材；<b>70 噸有機廢棄物產的沼氣，約等於 1 公頃青貯玉米</b>。</li>
+</ul>
+<div class="tbl"><table>
+<tr><th>日常行動</th><th>國家地理頻道的估算（美國）</th></tr>
+<tr><td>少吃一個漢堡</td><td>每 1 磅牛肉約等於排放 19 磅溫室氣體</td></tr>
+<tr><td>把食物吃完</td><td>全球每年浪費的食物約等於 33 億噸 CO₂</td></tr>
+<tr><td>買在地商品</td><td>空運 5 磅包裹橫越美國產生 12 磅 CO₂</td></tr>
+<tr><td>電子帳單</td><td>兩成家庭改用，每年可省 39 億磅溫室氣體</td></tr>
+<tr><td>拔掉待機電器</td><td>待機耗電約等於一個月的電費</td></tr>
+<tr><td>換節能燈泡</td><td>換 10 顆可每年少 332 磅 CO₂</td></tr>
+</table></div>
+<div class="box iso"><span class="tag">連結講義 6</span><p>沼氣的減排效益與洩漏風險。<a class="xref" href="06-emission-reduction.html#livestock">講義 6〈畜牧減排〉↗</a></p></div>
+</section>
+
+<section id="quiz">
+<h2><span class="no">07</span>自我測驗</h2>
+<details class="q"><summary>1. 碳足跡和 LCA 是什麼關係？</summary><div class="a">碳足跡是 LCA 中點指標裡「氣候變遷」這一項的結果；LCA 還有水足跡、酸化、優養化、生態毒性等十幾項，最後可以合成終點指標與單一分數。</div></details>
+<details class="q"><summary>2. 四座養豬場的碳足跡，最大來源是什麼？</summary><div class="a">糞尿廢水處理（CH₄、N₂O），約占一半；其次是飼料原料。電力與運輸都很小。</div></details>
+<details class="q"><summary>3. 同一家工廠，碳盤查和碳足跡的單位差在哪？</summary><div class="a">碳盤查是整廠每年的總量（公噸 CO₂e／年，ISO 14064-1）；碳足跡是每單位產品（公斤 CO₂e／瓶，ISO 14067）。</div></details>
+<details class="q"><summary>4. 為什麼 FAO 說畜牧占 18%，美國的研究只算出 2.8%？</summary><div class="a">邊界不同。FAO 把畜牧相關的土地使用變更（砍林）、沙漠化、飼料生產都算進去；美國的數字只算腸內發酵與糞便管理。</div></details>
+<details class="q"><summary>5. 豬肉和豆腐比，豬肉在哪一項衝擊特別大？豆腐又在哪一項比較大？</summary><div class="a">豬肉的土地使用（36.57 vs 10.67 mPt）；豆腐的化石燃料（12.37 vs 2.22 mPt），因為黃豆長途運輸與丹麥製造用電。氣候變遷兩者接近。</div></details>
+<details class="q"><summary>6. 做一份產品碳足跡，第一步要找什麼？</summary><div class="a">找該產品類別的 CFP-PCR（產品類別規則），依規則畫流程地圖、定邊界，再用盤查清冊與排放係數計算。</div></details>
+<details class="q"><summary>7. 員工通勤屬於 ISO 14064-1 的哪一類？</summary><div class="a">類別 3（運輸的間接排放），對應 GHG Protocol 範疇三第 7 項。</div></details>
+</section>
+
+<section id="gloss">
+<h2><span class="no">08</span>名詞表</h2>
+<dl class="gloss">
+<dt>LCA</dt><dd>生命週期評估</dd>
+<dt>LCI／LCIA</dt><dd>生命週期盤查分析／衝擊評估</dd>
+<dt>Mid-point／End-point</dt><dd>中點指標（如碳足跡、水足跡）／終點指標（人體健康、生態系、資源）</dd>
+<dt>DALY</dt><dd>失能調整人年</dd>
+<dt>mPt</dt><dd>毫點，正規化加權後的單一分數單位</dd>
+<dt>Gate to Gate／Cradle to Gate／Cradle to Grave</dt><dd>邊界三層級（Tier I／II／III）</dd>
+<dt>Farm gate</dt><dd>農場大門，Cradle to Gate 常用的終點</dd>
+<dt>FU</dt><dd>功能單位，例如 1 kg 豬肉、每瓶</dd>
+<dt>CFP-PCR</dt><dd>碳足跡產品類別規則</dd>
+<dt>碳標籤</dt><dd>把產品碳足跡標示在包裝上</dd>
+<dt>SimaPro</dt><dd>常用的 LCA 軟體</dd>
+<dt>GWP</dt><dd>全球暖化潛勢</dd>
+<dt>範疇／類別</dt><dd>GHG Protocol 的範疇一二三／ISO 14064-1 的類別 1–6</dd>
+<dt>沼渣（digestate）</dt><dd>厭氧消化後剩下的消化液與固體，可做有機肥</dd>
+</dl>
+</section>
+
+<nav class="pager" aria-label="上一講／下一講"><a class="prev" href="07-soil-carbon.html"><small>← 上一講</small>7. 土壤碳匯策略</a><a class="next" href="09-circular-agriculture.html"><small>下一講 →</small>9. 循環農業策略</a></nav>
+</main>
+</div>
+<script>
+(function(){
+  var b=document.body,K='tocOff';
+  function set(off){b.classList.toggle('toc-off',off);try{localStorage.setItem(K,off?'1':'0')}catch(e){}}
+  try{if(localStorage.getItem(K)==='1')b.classList.add('toc-off')}catch(e){}
+  document.getElementById('tocHide').addEventListener('click',function(){set(true)});
+  document.getElementById('tocShow').addEventListener('click',function(){set(false)});
+})();
+</script>
+<script>
+(function(){
+  var NS='http://www.w3.org/2000/svg',n=0;
+  function rp(p,r){var d='M'+p[0][0]+','+p[0][1];for(var i=1;i<p.length-1;i++){var a=p[i-1],b=p[i],c=p[i+1];
+    var l1=Math.hypot(b[0]-a[0],b[1]-a[1]),l2=Math.hypot(c[0]-b[0],c[1]-b[1]),k=Math.min(r,l1/2,l2/2);
+    var x1=b[0]-(b[0]-a[0])/l1*k,y1=b[1]-(b[1]-a[1])/l1*k,x2=b[0]+(c[0]-b[0])/l2*k,y2=b[1]+(c[1]-b[1])/l2*k;
+    d+=' L'+x1+','+y1+' Q'+b[0]+','+b[1]+' '+x2+','+y2}
+    var e=p[p.length-1];return d+' L'+e[0]+','+e[1]}
+  function draw(c){
+    var old=c.querySelector(':scope>.loop-svg'); if(old) old.remove();
+    var spans=[].slice.call(c.querySelectorAll(':scope>span'));
+    var to=c.querySelector('[data-loop-to]')||spans[0], from=c.querySelector('[data-loop-from]')||spans[spans.length-1];
+    if(!to||!from) return;
+    var cr=c.getBoundingClientRect();
+    function R(el){var b=el.getBoundingClientRect();return{l:b.left-cr.left,r:b.right-cr.left,t:b.top-cr.top,b:b.bottom-cr.top,cx:(b.left+b.right)/2-cr.left,cy:(b.top+b.bottom)/2-cr.top}}
+    var a=R(to),z=R(from),maxB=0,minL=1e9,rowFirst=true;
+    spans.forEach(function(k){var r=R(k);if(r.l<minL)minL=r.l;if(k!==to&&Math.abs(r.t-a.t)<6&&r.l<a.l)rowFirst=false});
+    Array.prototype.forEach.call(c.children,function(k){if(k.classList.contains('loop-svg'))return;var b=k.getBoundingClientRect().bottom-cr.top;if(b>maxB)maxB=b});
+    var y=maxB+16,x=minL-18,d,lx;
+    if(Math.abs(a.t-z.t)<6){d=rp([[z.cx,z.b],[z.cx,y],[a.cx,y],[a.cx,a.b+4]],10);lx=(a.cx+z.cx)/2}
+    else if(rowFirst){d=rp([[z.cx,z.b],[z.cx,y],[x,y],[x,a.cy],[a.l-4,a.cy]],10);lx=(x+z.cx)/2}
+    else{var top=a.t-14;d=rp([[z.cx,z.b],[z.cx,y],[x,y],[x,top],[a.cx,top],[a.cx,a.t-4]],10);lx=(x+z.cx)/2}
+    var id='lh'+(++n),s=document.createElementNS(NS,'svg');
+    s.setAttribute('class','loop-svg');s.setAttribute('width',cr.width);s.setAttribute('height',y+24);s.setAttribute('aria-hidden','true');
+    s.innerHTML='<defs><marker id="'+id+'" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0L10,5L0,10z" fill="currentColor"/></marker></defs>'+
+      '<path d="'+d+'" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#'+id+')"/>'+
+      '<text x="'+Math.max(lx,60)+'" y="'+(y+18)+'" text-anchor="middle"></text>';
+    s.querySelector('text').textContent='↺ '+(c.getAttribute('data-loop-label')||'');
+    c.appendChild(s);
+  }
+  var els=document.querySelectorAll('.loop');
+  function all(){els.forEach(draw)}
+  all(); window.addEventListener('resize',all);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(all);
+  if(window.ResizeObserver){var w={};var ro=new ResizeObserver(function(es){es.forEach(function(e){var c=e.target,k=Math.round(e.contentRect.width);if(c._w!==k){c._w=k;draw(c)}})});els.forEach(function(c){ro.observe(c)})}
+})();
+</script>
+<!--gm-js--><script>
+/* 跳出式小遊戲引擎：右下角按鈕 → 對話框；題目、解釋、計分；場景由各頁提供 */
+window.GMRUN=function(C){
+  var NS='http://www.w3.org/2000/svg',D=document;
+  var reduce=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
+  function el(tag,a,html,par){var e=D.createElementNS(NS,tag);if(a)for(var k in a)e.setAttribute(k,a[k]);if(html)e.innerHTML=html;if(par)par.appendChild(e);return e}
+  function h(tag,cls,html,par){var e=D.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;if(par)par.appendChild(e);return e}
+
+  /* ---------- 介面 ---------- */
+  var ICON='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.2" r=".6" fill="currentColor"/><circle cx="17.6" cy="13.6" r=".6" fill="currentColor"/></svg>';
+  var fab=h('button','gm-fab',ICON+'<span>小遊戲</span>',D.body);fab.type='button';fab.setAttribute('aria-haspopup','dialog');
+  var tip=h('div','gm-tip','<button type="button" class="gm-tipx" aria-label="關閉提示">×</button><b>考考你</b><span></span>',D.body);
+  tip.querySelector('span').textContent=C.teaser;
+  var ov=h('div','gm-ov',null,D.body);ov.hidden=true;
+  var dlg=h('div','gm-dlg','<div class="gm-hd"><b id="gmTitle"></b><button type="button" class="gm-x" aria-label="關閉小遊戲">×</button></div>'+
+    '<svg class="gm-stage" viewBox="'+(C.vb||'0 0 880 260')+'" role="img"></svg>'+
+    '<div class="gm-card"><div class="gm-prog"></div><p class="gm-q"></p><div class="gm-opts"></div><div class="gm-fb" aria-live="polite"></div></div>',ov);
+  dlg.setAttribute('role','dialog');dlg.setAttribute('aria-modal','true');dlg.setAttribute('aria-labelledby','gmTitle');
+  dlg.querySelector('#gmTitle').textContent='小遊戲：'+C.title;
+  var st=dlg.querySelector('svg'),qEl=dlg.querySelector('.gm-q'),oEl=dlg.querySelector('.gm-opts'),fEl=dlg.querySelector('.gm-fb'),pEl=dlg.querySelector('.gm-prog');
+  st.setAttribute('aria-label',C.alt||C.title);
+
+  /* ---------- 動畫工具 ---------- */
+  var loops=[],touts=[],fx;
+  function stopAll(){loops.forEach(clearInterval);touts.forEach(clearTimeout);loops=[];touts=[]}
+  var api={svg:st,reduce:reduce,el:el,
+    C:{co2:'#86a8e6',ch4:'#c9a66b',n2o:'#d28bb4',gas:'#8fae9a',smoke:'#9aa0a6'},
+    loop:function(fn,ms){fn();loops.push(setInterval(fn,reduce?ms*1.6:ms))},
+    later:function(fn,ms){touts.push(setTimeout(fn,reduce?0:ms))},
+    A:function(e,fr,ms,o){o=o||{};if(!e||!e.animate)return null;if(reduce&&o.iter===Infinity)return null;
+      var an=e.animate(fr,{duration:reduce?1:ms,delay:reduce?0:(o.delay||0),easing:o.ease||'ease-out',fill:o.fill||'forwards',iterations:o.iter||1,direction:o.dir||'normal'});
+      if(o.done)an.onfinish=o.done;return an},
+    /* 放一個物件：外層定位，內層可動（原點在底部中央） */
+    put:function(par,x,y,s,html,origin){var g=el('g',{transform:'translate('+x+' '+y+')'+(s&&s!==1?' scale('+s+')':'')},null,par||st);
+      var i=el('g',{},html,g);i.style.transformBox='fill-box';i.style.transformOrigin=origin||'50% 100%';i.outer=g;i.x=x;i.y=y;i.s=s||1;return i},
+    top:function(){if(!fx)fx=el('g',{});st.appendChild(fx);return fx},
+    puff:function(x,y,o){o=o||{};var g=el('g',{class:'gas'},null,api.top()),n=o.n||3,r=o.r||11;
+      for(var i=0;i<n;i++)el('circle',{cx:x+(i-(n-1)/2)*r*.9,cy:y+(i%2?-r*.55:0),r:r+(i===1?3:0),fill:o.color||api.C.gas,opacity:.6},null,g);
+      if(o.label){var t=el('text',{x:x,y:y-1},null,g);t.textContent=o.label}
+      g.style.transformBox='fill-box';g.style.transformOrigin='50% 50%';
+      var dx=o.dx==null?0:o.dx,dy=o.dy==null?-60:o.dy;
+      api.A(g,[{transform:'translate(0,0) scale(.35)',opacity:0},{opacity:.95,offset:.15},{transform:'translate('+dx+'px,'+dy+'px) scale('+(o.grow||1.5)+')',opacity:0}],o.ms||2400,{done:function(){g.remove()},fill:'none'});
+      if(reduce)api.later(function(){g.remove()},1200);return g},
+    pop:function(x,y,txt,o){o=o||{};var t=el('text',{class:'pop',x:x,y:y},null,api.top());t.textContent=txt;if(o.color)t.style.fill=o.color;if(o.size)t.style.fontSize=o.size+'px';
+      t.style.transformBox='fill-box';t.style.transformOrigin='50% 100%';
+      api.A(t,[{opacity:0,transform:'scale(.4)'},{opacity:1,transform:'scale(1.15)',offset:.2},{opacity:1,transform:'scale(1)',offset:.7},{opacity:0,transform:'translateY(-10px)'}],o.ms||1300,{done:function(){t.remove()},fill:'none'});
+      if(reduce)api.later(function(){t.remove()},1200);return t},
+    pulse:function(e){return api.A(e,[{transform:'scale(1)'},{transform:'scale(1.12)'},{transform:'scale(1)'}],700,{fill:'none'})},
+    /* 背景：地面、草、圍籬、太陽 */
+    bg:function(o){o=o||{};var gy=o.ground==null?200:o.ground,W=880,s='';
+      if(o.sun)s+='<circle cx="'+(o.sun[0])+'" cy="'+(o.sun[1])+'" r="22" fill="#f2c94c" opacity=".85"/>';
+      if(o.hills)s+='<path d="M0 '+(gy-10)+' Q140 '+(gy-70)+' 300 '+(gy-24)+' T600 '+(gy-30)+' T880 '+(gy-40)+' V'+gy+' H0Z" fill="var(--accent-soft)" opacity=".7"/>';
+      if(o.fence){s+='<g stroke="var(--line)" stroke-width="4" stroke-linecap="round"><line x1="0" y1="'+(gy-48)+'" x2="'+W+'" y2="'+(gy-48)+'"/><line x1="0" y1="'+(gy-28)+'" x2="'+W+'" y2="'+(gy-28)+'"/>';
+        for(var x=60;x<W;x+=140)s+='<line x1="'+x+'" y1="'+(gy-62)+'" x2="'+x+'" y2="'+(gy+4)+'"/>';s+='</g>'}
+      s+='<rect x="0" y="'+gy+'" width="'+W+'" height="'+(400-gy)+'" fill="'+(o.color||'var(--accent-soft)')+'"/>';
+      (o.grass||[]).forEach(function(x,i){var y=gy+14+(i%3)*12;s+='<path d="M'+(x-5)+' '+y+' q0 -6 -4 -10 M'+x+' '+y+' q0 -8 2 -13 M'+(x+5)+' '+y+' q1 -6 5 -10" stroke="var(--accent)" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/>'});
+      return el('g',{},s,st)},
+    text:function(x,y,txt,cls,par){var t=el('text',{x:x,y:y,class:cls||'lbl'},null,par||st);t.textContent=txt;return t}
+  };
+
+  /* ---------- 共用圖形（原點在底部中央，面向右） ---------- */
+  var K='#2b2b2b';
+  api.SH={
+    conifer:function(c){c=c||'#3f7d58';return '<rect x="-5" y="-24" width="10" height="24" fill="#7a5a3a"/><path d="M0 -112 L-24 -66 L24 -66Z" fill="'+c+'"/><path d="M0 -92 L-31 -44 L31 -44Z" fill="'+c+'"/><path d="M0 -70 L-38 -20 L38 -20Z" fill="'+c+'"/>'},
+    broad:function(c){c=c||'#4f8f5f';return '<rect x="-6" y="-44" width="12" height="44" fill="#7a5a3a"/><circle cx="-20" cy="-56" r="22" fill="'+c+'"/><circle cx="20" cy="-56" r="22" fill="'+c+'"/><circle cx="0" cy="-74" r="30" fill="'+c+'"/>'},
+    cabbage:'<ellipse cx="0" cy="-13" rx="24" ry="14" fill="#6fae5c"/><ellipse cx="-10" cy="-16" rx="12" ry="10" fill="#86c46f"/><ellipse cx="10" cy="-16" rx="12" ry="10" fill="#86c46f"/><ellipse cx="0" cy="-19" rx="12" ry="10" fill="#b4e09a"/><path d="M-5 -22 q5 -5 10 0" stroke="#6fae5c" stroke-width="2" fill="none"/>',
+    bamboo:function(hh){var s='<rect x="-4" y="-'+hh+'" width="8" height="'+hh+'" rx="3" fill="#7fae4f"/>';for(var y=22;y<hh;y+=22)s+='<rect x="-5" y="-'+y+'" width="10" height="3" fill="#5f8f3a"/>';
+      s+='<path d="M0 -'+(hh-6)+' q16 -6 26 2 q-14 4 -26 -2z M0 -'+(hh-18)+' q-16 -6 -26 2 q14 4 26 -2z M0 -'+(hh-30)+' q16 -4 24 4 q-14 2 -24 -4z" fill="#5f9f4f"/>';return s},
+    rice:function(grain){return '<path d="M0 0 q-5 -28 -16 -44 M0 0 q0 -34 2 -56 M0 0 q5 -28 15 -42 M0 0 q-2 -20 -9 -30" stroke="#5f9f4f" stroke-width="3" fill="none" stroke-linecap="round"/>'+(grain?'<path d="M2 -56 q10 4 12 18" stroke="#d9b44a" stroke-width="4" fill="none" stroke-linecap="round" stroke-dasharray="3 2"/>':'')},
+    mangrove:'<path d="M-24 0 q4 -26 22 -34 M24 0 q-4 -26 -22 -34 M-10 0 q2 -18 8 -34 M10 0 q-2 -18 -8 -34" stroke="#6b4e34" stroke-width="3" fill="none"/><rect x="-3" y="-62" width="6" height="30" fill="#6b4e34"/><ellipse cx="-18" cy="-62" rx="20" ry="13" fill="#4f8f5f"/><ellipse cx="18" cy="-62" rx="20" ry="13" fill="#4f8f5f"/><ellipse cx="0" cy="-74" rx="32" ry="18" fill="#3f7d58"/>',
+    spoonbill:'<line x1="-4" y1="-20" x2="-6" y2="0" stroke="'+K+'" stroke-width="2"/><line x1="5" y1="-20" x2="7" y2="0" stroke="'+K+'" stroke-width="2"/><ellipse cx="2" cy="-28" rx="17" ry="10" fill="#fafafa" stroke="'+K+'" stroke-width="1.5"/><path d="M-11 -33 Q-18 -44 -14 -50" stroke="#fafafa" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M-11 -33 Q-18 -44 -14 -50" stroke="'+K+'" stroke-width="1" fill="none" opacity=".4"/><circle cx="-15" cy="-52" r="6" fill="#fafafa" stroke="'+K+'" stroke-width="1.5"/><path d="M-20 -52 L-36 -45" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/><ellipse cx="-37" cy="-44" rx="4.5" ry="3.2" fill="'+K+'"/><circle cx="-16" cy="-53" r="1.3" fill="'+K+'"/>',
+    pig:'<rect x="-30" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="-16" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="12" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="26" y="-24" width="9" height="24" rx="3" fill="#e993a6"/>'+
+      '<path d="M-44 -42 q-10 -2 -8 -10 q2 -6 8 -2" stroke="'+K+'" stroke-width="2" fill="none"/><ellipse cx="0" cy="-38" rx="46" ry="26" fill="#f4b6c2" stroke="'+K+'" stroke-width="2"/>'+
+      '<circle cx="40" cy="-46" r="19" fill="#f4b6c2" stroke="'+K+'" stroke-width="2"/><path d="M30 -62 l4 -12 l8 9z" fill="#e993a6" stroke="'+K+'" stroke-width="1.5"/><ellipse cx="57" cy="-42" rx="8" ry="7" fill="#e993a6" stroke="'+K+'" stroke-width="2"/><circle cx="55" cy="-42" r="1.5" fill="'+K+'"/><circle cx="60" cy="-42" r="1.5" fill="'+K+'"/><circle cx="44" cy="-52" r="2.4" fill="'+K+'"/>',
+    tractor:'<rect x="-40" y="-42" width="58" height="22" rx="4" fill="#c0503a"/><rect x="-36" y="-74" width="30" height="34" rx="3" fill="none" stroke="'+K+'" stroke-width="3"/><rect x="10" y="-32" width="32" height="15" rx="3" fill="#c0503a"/><rect x="24" y="-56" width="5" height="26" fill="#555"/>'+
+      '<circle cx="-24" cy="-19" r="19" fill="#333"/><circle cx="-24" cy="-19" r="7" fill="#bbb"/><circle cx="32" cy="-12" r="12" fill="#333"/><circle cx="32" cy="-12" r="4.5" fill="#bbb"/>',
+    plow:'<path d="M-44 -26 L-64 -8 L-58 4 L-52 -6 M-58 -18 L-76 -2 L-70 8" stroke="#666" stroke-width="3.5" fill="none" stroke-linecap="round"/>',
+    pole:'<rect x="-3" y="-124" width="6" height="124" fill="#7a5a3a"/><rect x="-24" y="-116" width="48" height="5" fill="#7a5a3a"/><circle cx="-18" cy="-118" r="3" fill="#ccc"/><circle cx="18" cy="-118" r="3" fill="#ccc"/><path d="M4 -86 l-8 14 h7 l-5 14 l12 -18 h-7 l5 -10z" fill="#f2c94c" stroke="'+K+'" stroke-width="1"/>',
+    pond:'<ellipse cx="0" cy="-8" rx="52" ry="13" fill="#6b4e34"/><ellipse cx="0" cy="-10" rx="45" ry="8" fill="#9b7650"/>',
+    factory:'<rect x="30" y="-122" width="16" height="70" fill="#6f777f"/><rect x="-56" y="-60" width="112" height="60" fill="#8a929a"/><path d="M-56 -60 l28 -18 v18 l28 -18 v18 l28 -18 v18" fill="#8a929a"/>'+
+      '<rect x="-44" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="-18" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="8" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="-10" y="-20" width="20" height="20" fill="#5b636b"/>',
+    coin:function(t){return '<circle cx="0" cy="-13" r="13" fill="#e2b84a" stroke="#a7822a" stroke-width="2"/><text x="0" y="-8.5" text-anchor="middle" style="font:700 13px var(--font-num);fill:#7a5a1a">'+(t||'$')+'</text>'},
+    jar:'<path d="M-30 0 h60 v-58 q0 -8 -8 -8 h-44 q-8 0 -8 8z" fill="var(--paper)" stroke="var(--muted)" stroke-width="2.5"/><rect x="-24" y="-74" width="48" height="8" rx="3" fill="var(--muted)"/>',
+    bento:'<rect x="-62" y="-50" width="124" height="50" rx="6" fill="#b5764a" stroke="'+K+'" stroke-width="2"/><rect x="-56" y="-44" width="62" height="38" rx="3" fill="#fbf8ef"/><rect x="10" y="-44" width="46" height="18" rx="3" fill="#7fbf6a"/><rect x="10" y="-24" width="46" height="18" rx="3" fill="#f2d16b"/>'+
+      '<ellipse cx="-24" cy="-30" rx="26" ry="11" fill="#a0612f" stroke="#7a4520" stroke-width="2"/><path d="M-40 -32 h30 M-38 -27 h26" stroke="#7a4520" stroke-width="1.5"/>',
+    train:'<rect x="-110" y="-62" width="220" height="50" rx="10" fill="#e1e5ea" stroke="'+K+'" stroke-width="2"/><rect x="-110" y="-30" width="220" height="8" fill="#d0602f"/>'+
+      '<rect x="-96" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="-52" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="-8" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="36" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="80" y="-54" width="22" height="18" rx="3" fill="#7ea6c9"/>'+
+      '<circle cx="-74" cy="-8" r="8" fill="#333"/><circle cx="-50" cy="-8" r="8" fill="#333"/><circle cx="50" cy="-8" r="8" fill="#333"/><circle cx="74" cy="-8" r="8" fill="#333"/>',
+    dome:'<path d="M-56 0 v-30 a56 44 0 0 1 112 0 v30z" fill="#a7adb3" stroke="'+K+'" stroke-width="2"/><path d="M-56 -30 h112" stroke="'+K+'" stroke-width="1.5" opacity=".5"/><rect x="-6" y="-84" width="12" height="12" fill="#6f777f"/>',
+    bee:'<g><ellipse cx="-2" cy="-10" rx="5" ry="4" fill="#fff" opacity=".85"/><ellipse cx="4" cy="-10" rx="5" ry="4" fill="#fff" opacity=".85"/><ellipse cx="0" cy="-3" rx="9" ry="6.5" fill="#f2c230" stroke="'+K+'" stroke-width="1.2"/><path d="M-2 -9 v12 M3 -8.5 v11" stroke="'+K+'" stroke-width="2"/><circle cx="8" cy="-4" r="1.3" fill="'+K+'"/></g>',
+    flower:function(c){return '<path d="M0 0 v-30" stroke="#5f9f4f" stroke-width="3"/><path d="M0 -14 q-10 -4 -12 -12 q8 0 12 8" fill="#5f9f4f"/><g fill="'+(c||'#e98fa3')+'"><circle cx="0" cy="-40" r="6"/><circle cx="-8" cy="-33" r="6"/><circle cx="8" cy="-33" r="6"/><circle cx="-5" cy="-25" r="6"/><circle cx="5" cy="-25" r="6"/></g><circle cx="0" cy="-32" r="4.5" fill="#f2c94c"/>'},
+    larva:'<ellipse cx="0" cy="-4" rx="11" ry="4.5" fill="#efe6c8" stroke="#8a7a50" stroke-width="1"/><path d="M-5 -8 v8 M0 -8.5 v9 M5 -8 v8" stroke="#8a7a50" stroke-width=".8"/>',
+    truck:'<rect x="-50" y="-48" width="64" height="36" rx="3" fill="#7fa7c9" stroke="'+K+'" stroke-width="2"/><path d="M14 -40 h20 l12 14 v14 h-32z" fill="#d0602f" stroke="'+K+'" stroke-width="2"/><rect x="20" y="-36" width="12" height="10" fill="#cfe3f2"/><circle cx="-30" cy="-10" r="9" fill="#333"/><circle cx="30" cy="-10" r="9" fill="#333"/>',
+    shop:'<rect x="-50" y="-70" width="100" height="70" fill="#e9e4d6" stroke="'+K+'" stroke-width="2"/><path d="M-56 -70 h112 l-8 -18 h-96z" fill="#d0602f" stroke="'+K+'" stroke-width="2"/><rect x="-36" y="-50" width="30" height="24" fill="#cfe3f2" stroke="'+K+'" stroke-width="1.5"/><rect x="10" y="-44" width="24" height="44" fill="#8a6a4a"/>',
+    log:'<rect x="-26" y="-14" width="52" height="14" rx="7" fill="#9b7650" stroke="#6b4e34" stroke-width="2"/><ellipse cx="26" cy="-7" rx="5" ry="7" fill="#d9b98a" stroke="#6b4e34" stroke-width="1.5"/>',
+    seagrass:'<path d="M-10 0 q-6 -20 2 -40 M-3 0 q4 -24 -2 -48 M4 0 q-4 -18 4 -38 M11 0 q6 -16 0 -32" stroke="#3f8f6a" stroke-width="3.5" fill="none" stroke-linecap="round"/>'
+  };
+  /* 牛、羊（左上原點畫，包一層移到底部中央） */
+  var COW='<path d="M14 30 q-14 12 -8 34" fill="none" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/>'+
+    [22,38,80,96].map(function(x,i){return '<g class="leg" data-b="'+(i==1||i==2?1:0)+'"><rect x="'+x+'" y="50" width="10" height="32" rx="3" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/><rect x="'+x+'" y="76" width="10" height="7" fill="'+K+'"/></g>'}).join('')+
+    '<rect x="12" y="20" width="100" height="42" rx="19" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/>'+
+    '<path d="M30 21 q10 12 26 6 q4 -4 2 -7z" fill="'+K+'"/><ellipse cx="82" cy="44" rx="12" ry="8" fill="'+K+'"/><ellipse cx="44" cy="50" rx="6" ry="4" fill="'+K+'"/>'+
+    '<path d="M108 10 q-6 -9 0 -12 M126 9 q6 -9 0 -12" fill="none" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/><ellipse cx="102" cy="16" rx="8" ry="4" fill="#fbfaf6" stroke="'+K+'" stroke-width="2" transform="rotate(-20 102 16)"/>'+
+    '<rect x="102" y="6" width="34" height="32" rx="13" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/><rect x="118" y="23" width="24" height="17" rx="8" fill="#f0b8ad" stroke="'+K+'" stroke-width="2"/>'+
+    '<circle cx="114" cy="17" r="2.6" fill="'+K+'"/><circle cx="129" cy="30" r="1.8" fill="'+K+'"/><circle cx="137" cy="30" r="1.8" fill="'+K+'"/>';
+  var SHEEP=[24,36,66,78].map(function(x,i){return '<g class="leg" data-b="'+(i==1||i==2?1:0)+'"><rect x="'+x+'" y="50" width="7" height="30" rx="2" fill="#3b3631"/></g>'}).join('')+
+    [[24,38,14],[40,27,14],[60,25,14],[78,32,14],[32,52,12],[52,54,12],[72,50,12],[84,44,10]].map(function(c){return '<circle cx="'+c[0]+'" cy="'+c[1]+'" r="'+c[2]+'" fill="#f4f1e8" stroke="'+K+'" stroke-width="2"/>'}).join('')+
+    '<rect x="22" y="28" width="62" height="28" rx="14" fill="#f4f1e8"/><ellipse cx="92" cy="22" rx="8" ry="4" fill="#3b3631" transform="rotate(-25 92 22)"/>'+
+    '<ellipse cx="100" cy="32" rx="12" ry="14" fill="#3b3631"/><circle cx="96" cy="20" r="7" fill="#f4f1e8" stroke="'+K+'" stroke-width="2"/><circle cx="104" cy="28" r="2.6" fill="#fff"/><circle cx="104.5" cy="28.5" r="1.3" fill="'+K+'"/>';
+  api.SH.cow='<g transform="translate(-70 -83)">'+COW+'</g>';
+  api.SH.sheep='<g transform="translate(-56 -80)">'+SHEEP+'</g>';
+  api.SH.cowPts={mouth:[72,-47],nose:[74,-53],rear:[-62,-45]};
+  api.SH.sheepPts={mouth:[54,-40],nose:[56,-44],rear:[-44,-38]};
+  /* 跑步：腳擺動，回傳停止函式 */
+  api.legs=function(g){var a=[];g.querySelectorAll('.leg').forEach(function(l){l.style.transformBox='fill-box';l.style.transformOrigin='50% 0';
+      var an=api.A(l,[{transform:'rotate(20deg)'},{transform:'rotate(-20deg)'}],260,{iter:Infinity,dir:'alternate',ease:'ease-in-out',delay:l.getAttribute('data-b')==='1'?0:0,fill:'none'});
+      if(an&&l.getAttribute('data-b')==='1')an.currentTime=260;if(an)a.push(an)});
+    return function(){a.forEach(function(x){x.cancel()})}};
+
+  /* ---------- 遊戲流程 ---------- */
+  var Q=C.questions,idx=0,score=0,phase='idle',S=C.scene(api);
+  function act(n){if(n&&S.acts&&S.acts[n])S.acts[n]()}
+  function btn(t,cls,fn){var b=D.createElement('button');b.type='button';b.textContent=t;if(cls)b.className=cls;b.addEventListener('click',fn);return b}
+  function show(){phase='q';var q=Q[idx];pEl.textContent='第 '+(idx+1)+' 題／共 '+Q.length+' 題';qEl.textContent=q.q;oEl.innerHTML='';fEl.innerHTML='';
+    q.opts.forEach(function(o,i){oEl.appendChild(btn(o,'',function(){answer(i)}))});stopAll();act(q.act)}
+  function answer(i){phase='a';var q=Q[idx],right=i===q.ans;
+    oEl.querySelectorAll('button').forEach(function(b,j){b.disabled=true;b.classList.add(j===q.ans?'ok':j===i?'bad':'dim')});
+    if(right)score++;
+    if(q.after){stopAll();act(q.after)}
+    var why=typeof q.why==='object'?(q.why[i]||q.why.d):q.why;
+    var box=h('div','res '+(right?'ok':'bad'),'<b>'+(right?'答對了！':'答錯了')+'</b><p></p>',fEl);box.querySelector('p').textContent=right?q.ok:why;
+    var last=idx===Q.length-1,nx=btn(last?'看結果':(right?'下一題 →':'懂了，下一題 →'),'gm-next',function(){if(last)end();else{idx++;show()}});
+    fEl.appendChild(nx);try{nx.focus({preventScroll:true})}catch(e){}}
+  function end(){phase='end';stopAll();act('end');pEl.textContent='完成';
+    qEl.innerHTML='答對 <span class="gm-score">'+score+'／'+Q.length+'</span> 題';oEl.innerHTML='';fEl.innerHTML='';
+    var box=h('div','res ok','<b>重點</b><p></p>',fEl);box.querySelector('p').textContent=C.summary;
+    fEl.appendChild(btn('再玩一次','gm-next',function(){start()}))}
+  function start(){stopAll();idx=0;score=0;phase='enter';oEl.innerHTML='';fEl.innerHTML='';pEl.textContent='　';qEl.textContent=C.intro||'準備開始…';
+    S.enter(function(){if(phase==='enter')show()})}
+  var lastF=null;
+  function open(){hideTip();lastF=D.activeElement;ov.hidden=false;D.documentElement.classList.add('gm-lock');dlg.querySelector('.gm-x').focus();
+    if(phase==='idle'||phase==='enter')start();else if(phase==='q'||phase==='a')act(Q[idx].act)}
+  function close(){stopAll();ov.hidden=true;D.documentElement.classList.remove('gm-lock');if(phase==='enter')phase='idle';try{(lastF||fab).focus()}catch(e){}}
+  fab.addEventListener('click',open);
+  dlg.querySelector('.gm-x').addEventListener('click',close);
+  ov.addEventListener('click',function(e){if(e.target===ov)close()});
+  D.addEventListener('keydown',function(e){if(ov.hidden)return;
+    if(e.key==='Escape'){close();return}
+    if(e.key==='Tab'){var f=[].slice.call(dlg.querySelectorAll('button:not(:disabled)'));if(!f.length)return;var a=f[0],z=f[f.length-1];
+      if(e.shiftKey&&D.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&D.activeElement===z){e.preventDefault();a.focus()}}});
+
+  /* ---------- 提示泡泡：往下讀一段或停留 15 秒後出現一次 ---------- */
+  var tipDone=false,tipT;
+  function hideTip(){tip.classList.remove('on');clearTimeout(tipT)}
+  function showTip(){if(tipDone||!ov.hidden)return;tipDone=true;tip.classList.add('on');fab.classList.add('wig');tipT=setTimeout(hideTip,12000)}
+  tip.addEventListener('click',function(e){if(e.target.classList.contains('gm-tipx')){hideTip();return}open()});
+  setTimeout(showTip,15000);
+  window.addEventListener('scroll',function(){var m=D.scrollingElement||D.documentElement,max=m.scrollHeight-window.innerHeight;if(max>0&&(window.scrollY||m.scrollTop)>max*.25)showTip()},{passive:true});
+  api.open=open;return api;
+};
+GMRUN({title:'便當的碳足跡',teaser:'台鐵排骨便當的碳足跡，哪個階段最大？點我玩玩看',alt:'火車、便當、養豬場和工廠',intro:'便當列車進站…',
+summary:'便當碳足跡八成五在原料取得；豬肉碳足跡最大的是糞尿廢水處理，其次飼料。碳盤查算整廠每年總量（ISO 14064-1），碳足跡算每單位產品（ISO 14067）；做碳足跡第一步先找 CFP-PCR。',
+scene:function(G){
+  var SH=G.SH,GY=212,svg=G.svg;
+  G.bg({ground:GY,grass:[30,300,560,860]});
+  G.el('path',{d:'M0 150 H880',stroke:'var(--muted)','stroke-width':3},null,svg);
+  for(var x=10;x<880;x+=28)G.el('rect',{x:x,y:150,width:14,height:4,fill:'var(--muted)'},null,svg);
+  var train=G.put(null,440,150,.85,SH.train);
+  var fac=G.put(null,90,GY+2,.8,SH.factory);G.text(90,GY+22,'工廠','sub');
+  var bento=G.put(null,440,GY+16,1.05,SH.bento);
+  var pig=G.put(null,700,GY+2,.62,SH.pig),pond=G.put(null,800,GY+4,.75,SH.pond),rice=G.put(null,620,GY+2,.8,SH.rice(true));
+  G.text(730,GY+22,'原料：養豬、種稻','sub');
+  var doc=G.put(null,440,96,1,'<rect x="-34" y="-50" width="68" height="50" rx="4" fill="var(--paper)" stroke="var(--fg)" stroke-width="2"/><path d="M-22 -36 h44 M-22 -26 h44 M-22 -16 h30" stroke="var(--muted)" stroke-width="2"/>','50% 50%');
+  G.A(doc,[{opacity:0}],1);
+  function rnd(a){return a[Math.floor(Math.random()*a.length)]}
+  function tok(x0,y0,x1,y1,html,d){var t=G.put(G.top(),x0,y0,1,html,'50% 50%');
+    G.A(t,[{transform:'translate(0,0)',opacity:1},{transform:'translate('+((x1-x0)/2)+'px,-70px)',opacity:1,offset:.5},{transform:'translate('+(x1-x0)+'px,'+(y1-y0)+'px) scale(.6)',opacity:0}],1400,{delay:d||0,ease:'ease-in-out',done:function(){t.outer.remove()}})}
+  return {
+    enter:function(done){G.A(doc,[{opacity:0}],1);G.A(bento,[{transform:'scale(0)'}],1);
+      G.A(train,[{transform:'translateX(-900px)'},{transform:'none'}],1800,{ease:'cubic-bezier(.2,.7,.3,1)'});
+      G.later(function(){G.A(bento,[{transform:'translateY(-70px) scale(.4)'},{transform:'none'}],600,{ease:'cubic-bezier(.3,1.4,.5,1)'})},1700);
+      G.later(function(){G.A(train,[{transform:'none'},{transform:'translateX(900px)'}],1600,{ease:'ease-in'})},2300);G.later(done,2400)},
+    acts:{
+      bento:function(){G.loop(function(){G.pulse(bento)},1400);G.later(function(){G.pop(440,120,'1.3 kg CO₂e／盒',{size:18,ms:2600})},200)},
+      trace:function(){tok(440,GY-20,700,GY-30,'<ellipse rx="16" ry="8" fill="#a0612f"/>',0);tok(440,GY-20,620,GY-40,'<ellipse rx="12" ry="7" fill="#fbf8ef" stroke="#999"/>',250);
+        G.later(function(){G.pop(680,110,'原料取得 85%',{size:20,ms:3500})},1300)},
+      pig:function(){G.loop(function(){G.puff(800+(Math.random()*40-20),GY-12,{dy:-60,n:2,r:8,color:rnd([G.C.ch4,G.C.n2o]),label:rnd(['CH₄','N₂O']),ms:2000});G.pulse(pig)},900)},
+      units:function(){var k=0;G.loop(function(){if(k++%2){G.pulse(fac);G.pop(110,GY-120,'整廠：t CO₂e／年',{size:15,ms:1800})}else{G.pulse(bento);G.pop(440,GY-70,'每盒：kg CO₂e',{size:15,ms:1800})}},1600)},
+      pcr:function(){G.A(doc,[{opacity:0,transform:'scale(.4)'},{opacity:1,transform:'scale(1)'}],500,{ease:'cubic-bezier(.3,1.4,.5,1)'});G.loop(function(){G.pulse(doc)},1500)},
+      end:function(){G.A(doc,[{opacity:0}],300)}
+    }}},
+questions:[
+  {act:'bento',after:'trace',q:'台鐵傳統排骨便當 1.3 kg CO₂e／盒。哪一個生命週期階段占最多？',opts:['原料取得','製造','配送銷售','廢棄回收'],ans:0,
+   ok:'原料取得 85.42%（豬隻養殖、配菜與白米種植、餐盒），製造 12.99%。',
+   why:'原料取得，占 85.42%（豬隻養殖、配菜與白米種植、餐盒）。製造 12.99%、配送銷售 1.39%、廢棄回收 0.2%。'},
+  {act:'pig',q:'養豬場每公斤豬肉的碳足跡，最大的來源是哪一項？',opts:['糞尿廢水處理','飼料原料','電力','運輸'],ans:0,
+   ok:'糞尿廢水處理（CH₄、N₂O）約占一半，其次是飼料。',
+   why:'糞尿廢水處理（CH₄、N₂O），四座豬場都約占一半；其次是飼料原料，電力和運輸都很小。'},
+  {act:'units',q:'同一家工廠，碳盤查和碳足跡的單位差在哪？',opts:['盤查是整廠每年總量；足跡是每單位產品','兩個單位一樣','盤查是每單位產品；足跡是整廠總量'],ans:0,
+   ok:'盤查：公噸 CO₂e／年（ISO 14064-1）；足跡：公斤 CO₂e／產品（ISO 14067）。',
+   why:'碳盤查是整廠每年的總量（公噸 CO₂e／年，ISO 14064-1）；碳足跡是每單位產品（公斤 CO₂e／瓶、／盒，ISO 14067）。'},
+  {act:'pcr',q:'要做一份產品碳足跡，第一步要先找什麼？',opts:['CFP-PCR 產品類別規則','排放係數','第三方查驗機構'],ans:0,
+   ok:'先找 CFP-PCR，再依規則畫流程、定邊界、計算。',
+   why:'先找該產品類別的 CFP-PCR（產品類別規則），依規則畫流程地圖、定邊界，再用盤查清冊與排放係數計算。台鐵便當用的就是「包裝盒餐」PCR 12-001。'}
+]});
+</script><!--/gm-js-->
+
+</body>
+</html>

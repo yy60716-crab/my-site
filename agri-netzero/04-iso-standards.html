@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ISO 14064 與 14067</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: 單欄閱讀講義，桌機左側固定目錄；筆記、ISO 連結、重點用不同框區分 */
+:root{
+  --bg:#f4f6f1; --paper:#ffffff; --fg:#1c231f; --muted:#5b6660; --line:#d9ded6;
+  --accent:#2f6a4c; --accent-soft:#e3eee6;
+  --ink:#2a4a9a; --ink-soft:#e8edf8;
+  --hl:#f3e27a; --soil:#9a6a22; --soil-soft:#f5ecdc;
+  --font-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --font-head:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --font-num:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141a17; --paper:#1b2320; --fg:#e4ebe6; --muted:#9aa8a0; --line:#2e3a35;
+  --accent:#7cc39b; --accent-soft:#1f3329; --ink:#9db4f0; --ink-soft:#1f2740;
+  --hl:#6b5d14; --soil:#d9a85a; --soil-soft:#30281a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141a17; --paper:#1b2320; --fg:#e4ebe6; --muted:#9aa8a0; --line:#2e3a35;
+  --accent:#7cc39b; --accent-soft:#1f3329; --ink:#9db4f0; --ink-soft:#1f2740;
+  --hl:#6b5d14; --soil:#d9a85a; --soil-soft:#30281a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.8;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1480px;margin:0 auto;display:grid;grid-template-columns:190px minmax(0,1fr);gap:36px;padding-block:32px 80px}
+@media (max-width:860px){.wrap{grid-template-columns:minmax(0,1fr)} nav.toc{position:static!important;max-height:none!important}}
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);align-self:start;max-height:calc(100vh - 32px);overflow:auto;font-size:14px}
+nav.toc h2{font-size:13px;letter-spacing:.12em;color:var(--muted);margin:0 0 8px;font-family:var(--font-body)}
+nav.toc ol{margin:0;padding-left:32px;display:grid;gap:4px}
+nav.toc a{color:var(--fg);text-decoration:none}
+nav.toc a:hover,nav.toc a:focus-visible{color:var(--accent);text-decoration:underline}
+main{min-width:0}
+.toc-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px}
+.toc-head h2{margin:0!important}
+.toc-btn{font:inherit;font-size:13px;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:6px;padding:2px 8px;cursor:pointer;line-height:1.6}
+.toc-btn:hover,.toc-btn:focus-visible{color:var(--accent);border-color:var(--accent)}
+.toc-open{display:none;white-space:nowrap}
+body.toc-off .wrap{grid-template-columns:76px minmax(0,1fr)}
+body.toc-off nav.toc>*:not(.toc-open){display:none}
+body.toc-off .toc-open{display:inline-block}
+@media (max-width:860px){body.toc-off .wrap{grid-template-columns:minmax(0,1fr)}}
+header.hero{border-bottom:3px solid var(--accent);padding-bottom:20px;margin-bottom:28px}
+.eyebrow{font-size:13px;letter-spacing:.14em;color:var(--accent);font-weight:700}
+h1{font-family:var(--font-head);font-weight:900;font-size:clamp(28px,5vw,42px);line-height:1.3;margin:6px 0 10px;text-wrap:balance}
+.meta{color:var(--muted);font-size:14px}
+h2{font-family:var(--font-head);font-size:26px;line-height:1.35;margin:56px 0 14px;text-wrap:balance;scroll-margin-top:16px}
+h2 .no{font-family:var(--font-num);color:var(--accent);font-size:18px;margin-right:10px}
+h3{font-size:19px;margin:30px 0 8px;color:var(--accent)}
+p{margin:10px 0}
+ul,ol{padding-left:22px;margin:8px 0}
+li{margin:3px 0}
+mark{background:linear-gradient(transparent 55%,var(--hl) 55%);color:inherit;padding:0 1px}
+.num{font-family:var(--font-num);font-variant-numeric:tabular-nums}
+.box{border-radius:10px;padding:14px 18px;margin:16px 0}
+.box>.tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.08em;padding:1px 8px;border-radius:999px;margin-bottom:4px}
+.box p,.box ul{margin:6px 0}
+.guide{background:var(--paper);border:1px solid var(--line)}
+.guide .tag{background:var(--accent);color:var(--paper)}
+.note{background:var(--ink-soft);border-left:4px solid var(--ink)}
+.note .tag{background:var(--ink);color:var(--paper)}
+.note .hand{color:var(--ink);font-weight:500}
+.iso{background:var(--soil-soft);border-left:4px solid var(--soil)}
+.iso .tag{background:var(--soil);color:var(--paper)}
+.key{background:var(--accent-soft);border-left:4px solid var(--accent)}
+.key .tag{background:var(--accent);color:var(--paper)}
+.unclear{color:var(--muted);font-size:13px;border-bottom:1px dotted var(--muted)}
+.tbl{overflow-x:auto;width:fit-content;max-width:100%;margin:14px 0;border:1px solid var(--line);border-radius:8px;background:var(--paper)}
+table{border-collapse:collapse;width:auto;font-size:15px;min-width:480px}
+th,td{padding:8px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--accent-soft);font-weight:700;white-space:nowrap}
+td.r,th.r{text-align:right}
+td:first-child,th:first-child{white-space:nowrap}
+tr:last-child td{border-bottom:none}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:16px 0}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.stat b{display:block;font-family:var(--font-num);font-size:22px;color:var(--accent);line-height:1.3}
+.stat span{font-size:13px;color:var(--muted)}
+.axes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:16px 0}
+.axis{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:8px;padding:12px 14px}
+.axis h4{margin:0 0 4px;font-size:17px}
+.axis .goal{font-family:var(--font-num);color:var(--accent);font-weight:700}
+.loop{position:relative;margin-top:22px!important;margin-bottom:48px!important;padding-left:26px}
+.loop-svg{position:absolute;left:0;top:0;overflow:visible;pointer-events:none;color:var(--accent)}
+.loop-svg text{fill:var(--accent);font-size:13px;font-family:var(--font-body)}
+.calc{width:fit-content;max-width:100%}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0;font-size:14px}
+.flow span{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:4px 10px}
+.flow i{font-style:normal;color:var(--muted)}
+details.q{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0}
+details.q summary{cursor:pointer;font-weight:500}
+details.q summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+details.q[open] summary{color:var(--accent)}
+details.q .a{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+dl.gloss{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 18px;margin:12px 0}
+dl.gloss dt{font-weight:700;color:var(--accent)}
+dl.gloss dd{margin:0}
+@media (max-width:560px){dl.gloss{grid-template-columns:minmax(0,1fr)} dl.gloss dd{margin-bottom:8px}}
+footer{margin-top:60px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+a.xref{display:block;width:fit-content;margin-top:6px}
+.steps{width:fit-content;max-width:100%}
+.box{width:fit-content;max-width:100%}
+.flow span{display:inline-flex;align-items:center;gap:8px}
+.flow span .fi{width:22px;height:22px;flex:none;fill:none;stroke:var(--accent);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.flow span .tx{font-style:normal}
+</style>
+<style>
+.formula{font-family:var(--font-num);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px;overflow-x:auto;white-space:nowrap;font-size:15px;margin:8px 0}
+.calc{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:16px 0;display:grid;gap:12px}
+.calc .row{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:end}
+.calc label{display:grid;gap:4px;font-size:14px;color:var(--muted)}
+.calc input,.calc select{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 10px;width:170px;max-width:100%}
+.calc input:focus-visible,.calc select:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.calc .out{font-family:var(--font-num);font-size:15px;line-height:1.9;border-top:1px dashed var(--line);padding-top:10px}
+.calc .out b{color:var(--accent);font-size:20px}
+.steps{counter-reset:s;list-style:none;padding:0;display:grid;gap:8px;margin:12px 0}
+.steps li{counter-increment:s;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px 12px 8px 44px;position:relative}
+.steps li::before{content:counter(s);position:absolute;left:12px;top:8px;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--paper);font-family:var(--font-num);font-size:13px;display:grid;place-items:center}
+.unit{font-size:13px;letter-spacing:.12em;color:var(--accent);font-weight:700;margin-top:64px;padding-top:14px;border-top:2px solid var(--line)}
+.bars{display:grid;gap:6px;margin:12px 0}
+.bar{display:grid;grid-template-columns:150px minmax(0,1fr) 48px;gap:10px;align-items:center;font-size:14px}
+.bar .track{background:var(--accent-soft);border-radius:4px;height:14px;overflow:hidden}
+.bar .fill{background:var(--accent);height:100%}
+.bar .v{font-family:var(--font-num);text-align:right}
+@media (max-width:560px){.bar{grid-template-columns:100px minmax(0,1fr) 40px}}
+
+.fig{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0;width:fit-content;max-width:100%}
+.fig svg{display:block;max-width:100%;height:auto}
+.fig figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.fig .t{fill:var(--fg);font-size:14px;font-family:var(--font-body)}
+.fig .tb{fill:var(--fg);font-size:14px;font-weight:700;font-family:var(--font-body)}
+.fig .m{fill:var(--muted);font-size:12.5px;font-family:var(--font-body)}
+.fig .n{fill:var(--fg);font-size:13px;font-family:var(--font-num)}
+.fig .ax{stroke:var(--line);stroke-width:1}
+.fig .g-acc{fill:var(--accent)}
+.fig .s-acc{stroke:var(--accent)}
+.fig .g-soil{fill:var(--soil)}
+.fig .s-soil{stroke:var(--soil)}
+.fig .g-ink{fill:var(--ink)}
+.fig .s-ink{stroke:var(--ink)}
+.fig .g-mut{fill:var(--muted)}
+.fig .s-mut{stroke:var(--muted)}
+.fig .g-accs{fill:var(--accent-soft)}
+.fig .g-soils{fill:var(--soil-soft)}
+.fig .g-inks{fill:var(--ink-soft)}
+.fig .hit:hover{opacity:.8}
+
+</style>
+<!--gm-css--><style>
+/* 跳出式小遊戲 */
+.gm-fab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));z-index:60;display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:15px;font-weight:700;color:var(--paper);background:var(--accent);border:0;border-radius:999px;padding:10px 18px 10px 14px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.22)}
+.gm-fab svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.gm-fab:hover,.gm-fab:focus-visible{filter:brightness(1.08);outline:2px solid var(--fg);outline-offset:2px}
+.gm-fab.wig{animation:gmWig .9s ease-in-out 2}
+@keyframes gmWig{0%,100%{transform:rotate(0)}20%{transform:rotate(-8deg) scale(1.06)}40%{transform:rotate(7deg) scale(1.06)}60%{transform:rotate(-4deg)}80%{transform:rotate(3deg)}}
+.gm-tip{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(max(16px,env(safe-area-inset-bottom,0px)) + 58px);z-index:60;max-width:min(300px,calc(100vw - 32px));background:var(--paper);color:var(--fg);border:2px solid var(--accent);border-radius:14px;padding:10px 34px 10px 14px;font-size:15px;line-height:1.55;box-shadow:0 6px 20px rgba(0,0,0,.2);cursor:pointer;opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .3s,transform .3s}
+.gm-tip.on{opacity:1;transform:none;pointer-events:auto}
+.gm-tip::after{content:"";position:absolute;right:34px;bottom:-9px;width:14px;height:14px;background:var(--paper);border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(45deg)}
+.gm-tip b{display:block;font-size:12px;letter-spacing:.1em;color:var(--accent)}
+.gm-tipx{position:absolute;top:4px;right:6px;font:inherit;font-size:18px;line-height:1;color:var(--muted);background:none;border:0;cursor:pointer;padding:4px}
+html.gm-lock,html.gm-lock body{overflow:hidden}
+.gm-ov{position:fixed;inset:0;z-index:70;background:rgba(10,16,13,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.gm-ov[hidden]{display:none}
+.gm-dlg{background:var(--paper);color:var(--fg);border-radius:14px;width:100%;max-width:780px;max-height:calc(100vh - 32px);overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.gm-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px 10px 18px;border-bottom:1px solid var(--line)}
+.gm-hd b{font-family:var(--font-head);font-size:18px}
+.gm-x{font:inherit;font-size:22px;line-height:1;color:var(--muted);background:none;border:1px solid var(--line);border-radius:8px;width:36px;height:36px;cursor:pointer}
+.gm-x:hover,.gm-x:focus-visible{color:var(--accent);border-color:var(--accent)}
+.gm-stage{display:block;width:100%;height:auto;background:linear-gradient(var(--bg),var(--paper))}
+.gm-stage text{font-family:var(--font-body)}
+.gm-stage .lbl{fill:var(--fg);font-size:14px;font-weight:700;text-anchor:middle}
+.gm-stage .sub{fill:var(--muted);font-size:12px;text-anchor:middle}
+.gm-stage .pop{fill:var(--fg);font:900 19px var(--font-head);text-anchor:middle}
+.gm-stage .gas text{fill:var(--fg);font:700 13px var(--font-num);text-anchor:middle;dominant-baseline:middle}
+.gm-card{padding:14px 20px 20px}
+.gm-prog{font-size:13px;color:var(--muted);letter-spacing:.06em;min-height:1.4em}
+.gm-q{font-family:var(--font-head);font-size:21px;font-weight:700;margin:4px 0 12px;line-height:1.45}
+.gm-opts{display:flex;flex-wrap:wrap;gap:10px}
+.gm-opts button,.gm-next{font:inherit;font-size:16px;font-weight:700;color:var(--fg);background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:8px 18px;cursor:pointer;min-width:90px;text-align:left;line-height:1.5}
+.gm-opts button:hover:not(:disabled),.gm-opts button:focus-visible{border-color:var(--accent);color:var(--accent)}
+.gm-opts button:disabled{cursor:default}
+.gm-opts button.ok{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.gm-opts button.bad{background:var(--soil);border-color:var(--soil);color:var(--paper)}
+.gm-opts button.dim{opacity:.45}
+.gm-fb{margin-top:12px}
+.gm-fb .res{border-radius:10px;padding:12px 16px;margin:0 0 10px}
+.gm-fb .res.ok{background:var(--accent-soft);border-left:4px solid var(--accent)}
+.gm-fb .res.bad{background:var(--soil-soft);border-left:4px solid var(--soil)}
+.gm-fb .res b{display:block;font-size:17px;margin-bottom:2px}
+.gm-fb .res.ok b{color:var(--accent)}
+.gm-fb .res.bad b{color:var(--soil)}
+.gm-fb .res p{margin:4px 0}
+.gm-next{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.gm-next:hover,.gm-next:focus-visible{filter:brightness(1.08)}
+.gm-score{font-family:var(--font-num);font-size:28px;color:var(--accent);font-weight:700}
+@media (max-width:560px){.gm-q{font-size:18px}.gm-card{padding:12px 14px 16px}.gm-opts button{flex:1 1 100%}.gm-ov{padding:8px}.gm-dlg{max-height:calc(100vh - 16px)}}
+@media (prefers-reduced-motion:reduce){.gm-fab.wig{animation:none}.gm-tip{transition:none}}
+</style><!--/gm-css-->
+
+<style>
+.site-nav{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px;max-width:1480px;margin:0 auto;padding-top:20px}
+.site-nav+.wrap{padding-top:16px}
+.site-nav a{color:var(--muted);text-decoration:none}
+.site-nav a:hover,.site-nav a:focus-visible{color:var(--accent);text-decoration:underline}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:56px 0 0;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{display:block;padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--fg);text-decoration:none;font-size:15px}
+.pager a:hover,.pager a:focus-visible{border-color:var(--accent)}
+.pager small{display:block;color:var(--muted);font-size:12px}
+.pager .next{text-align:right;grid-column:2}
+@media (max-width:560px){.pager{grid-template-columns:1fr}.pager .next{grid-column:1}}
+</style>
+</head>
+<body>
+<nav class="site-nav" aria-label="網站導覽"><a href="index.html">← 回課程目錄</a><a href="../index.html">學習筆記首頁</a></nav>
+<div class="wrap">
+<nav class="toc" aria-label="目錄">
+  <button type="button" class="toc-btn toc-open" id="tocShow" aria-label="展開目錄">目錄 »</button>
+  <div class="toc-head"><h2>目錄</h2><button type="button" class="toc-btn" id="tocHide" aria-label="收起目錄">« 收起</button></div>
+  <p style="margin:0 0 6px"><a href="#guide">導讀</a></p>
+  <ol>
+    <li><a href="#map">三個問題、三套標準</a></li>
+    <li><a href="#family">ISO 14060 家族</a></li>
+    <li><a href="#boundary">真正的差別是邊界</a></li>
+    <li><a href="#principles">共同語言與 MRV</a></li>
+    <li><a href="#o-why">14064-1：農業盤查的難處</a></li>
+    <li><a href="#o-org">組織邊界</a></li>
+    <li><a href="#o-rep">報告邊界與六大類別</a></li>
+    <li><a href="#o-sig">重大間接排放</a></li>
+    <li><a href="#o-quant">量化方法</a></li>
+    <li><a href="#o-bio">生物碳源與土地</a></li>
+    <li><a href="#o-elec">電力與再生能源</a></li>
+    <li><a href="#o-base">基準年與減碳管理</a></li>
+    <li><a href="#p-core">14064-2：基準情境</a></li>
+    <li><a href="#p-ssr">SSR 與量化</a></li>
+    <li><a href="#p-mrv">監測、查驗與碳權</a></li>
+    <li><a href="#c-core">14067：生命週期</a></li>
+    <li><a href="#c-scope">Goal &amp; Scope</a></li>
+    <li><a href="#c-lci">LCI 與分配</a></li>
+    <li><a href="#c-agri">農產品特殊議題</a></li>
+    <li><a href="#c-result">結果、比較與報告</a></li>
+    <li><a href="#summary">總整理</a></li>
+    <li><a href="#supp">補充：畜牧場域盤查實例</a></li>
+    <li><a href="#quiz">自我測驗</a></li>
+    <li><a href="#gloss">名詞表</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="hero">
+  <h1>ISO 14064-1、14064-2 與 14067</h1>
+</header>
+
+<section id="guide">
+  <div class="box guide">
+    <span class="tag">導讀</span>
+    <p>這份講義分成四個單元：先用一張地圖說明三套標準各算什麼，接著依序深入 ISO 14064-1（組織）、ISO 14064-2（專案）、ISO 14067（產品），全部用農業例子講。</p>
+    <p>三個閱讀重點：</p>
+    <ul>
+      <li>三套標準的差別不在公式，而在<b>邊界</b>，見 <a href="#boundary">第 3 節</a>的對照表。</li>
+      <li>農業盤查特有的題目：生物碳源、碳存量 vs. 碳通量、牲畜呼吸算不算、草本作物吸碳算不算，見 <a href="#o-bio">第 10 節</a>。</li>
+      <li>14064-2 的靈魂是<b>基準情境</b>，見 <a href="#p-core">第 13 節</a>；14067 最難的是<b>功能單位、系統邊界、分配</b>，見 <a href="#c-scope">第 17、18 節</a>。</li>
+    </ul>
+    <p style="font-size:14px;color:var(--muted)">框的顏色：<span style="color:var(--ink)">藍色＝上課手寫筆記</span>、<span style="color:var(--soil)">棕色＝跟前面講義的連結</span>、綠色＝重點。</p>
+  </div>
+</section>
+
+<div class="unit">第一單元｜建立完整概念地圖</div>
+
+<section id="map">
+<h2><span class="no">01</span>三個問題、三套標準</h2>
+<p>低碳轉型程序：<b>溫室氣體盤查</b>（組織 14064-1、專案 14064-2、產品 14067、GHG Protocol）→ <b>設定低碳目標</b>（淨零 SBTi、碳中和 ISO 14068）→ <b>低碳轉型措施</b>（減量效益、減量信用額度：VCS、Gold Standard、ACR、CAR、臺灣碳權交易所）。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">轉型風險。盤查後用 ISO 14064-3 檢驗。SBTi 用 GHG Protocol 做計算。</p></div>
+<p>同樣叫「碳排放」，可能在回答三個完全不同的問題：</p>
+<div class="tbl"><table>
+<tr><th>問題</th><th>對象</th><th>重點</th><th>標準</th><th>結果單位</th></tr>
+<tr><td>一家公司一年排多少？</td><td>組織</td><td>年度排放量、直接與間接排放、組織邊界</td><td><b>ISO 14064-1</b></td><td class="num">tCO₂e／組織</td></tr>
+<tr><td>一個減碳專案到底減多少？</td><td>專案</td><td>基線 vs. 專案情境、減量／移除增量、專案期間監測</td><td><b>ISO 14064-2</b></td><td class="num">tCO₂e 減少／移除</td></tr>
+<tr><td>一個產品到底排多少？</td><td>產品</td><td>原料、製造、運輸、使用、廢棄；功能單位</td><td><b>ISO 14067</b></td><td class="num">kgCO₂e／功能單位</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">產品碳足跡 → 競爭力。</p></div>
+<h3>案例：一家飲料公司，三個問題</h3>
+<div class="tbl"><table>
+<tr><th>層級</th><th>問題</th><th>計算內容</th></tr>
+<tr><td>組織 14064-1</td><td>公司一年排多少？</td><td>工廠燃料、購入電力、運輸車隊、原物料採購、員工通勤，建立年度清冊</td></tr>
+<tr><td>專案 14064-2</td><td>節能專案真正減多少？</td><td>燃油鍋爐換成高效率設備：基線（舊設備）vs. 專案（新設備），不能只看廠商規格</td></tr>
+<tr><td>產品 14067</td><td>每瓶飲料碳足跡多少？</td><td>原料 → 包材 → 製造 → 運輸 → 冷藏 → 廢棄，單位 kgCO₂e／瓶</td></tr>
+</table></div>
+<div class="box key"><span class="tag">關鍵</span><p>同一家企業可以同時用三套標準，三個結果回答不同問題，<b>不能互相取代，也不能相加混用</b>。14064-1 支援整體碳管理與報告；14064-2 支援減碳投資的效益驗證；14067 支援產品碳標籤與供應鏈溝通。</p></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">14064 先界定邊界，再看排放源。EPD 環境產品宣告 → 水足跡、碳足跡、生態足跡。</p></div>
+</section>
+
+<section id="family">
+<h2><span class="no">02</span>ISO 14060 家族</h2>
+<div class="tbl"><table>
+<tr><th>標準</th><th>角色</th><th>產出</th></tr>
+<tr><td>ISO 14064-1</td><td>組織量化</td><td>溫室氣體清冊 → 溫室氣體聲明</td></tr>
+<tr><td>ISO 14064-2</td><td>專案量化</td><td>溫室氣體專案報告 → 溫室氣體聲明</td></tr>
+<tr><td>ISO 14067</td><td>產品量化</td><td>碳足跡研究報告 → 溫室氣體聲明</td></tr>
+<tr><td>ISO 14064-3</td><td>查證與確證</td><td>檢驗上面三種聲明</td></tr>
+<tr><td>ISO 14065</td><td>查驗證<b>機構</b>的要求</td><td>—</td></tr>
+<tr><td>ISO 14066</td><td>查驗證<b>人員</b>的能力要求</td><td>—</td></tr>
+<tr><td>ISO 14068</td><td>碳中和</td><td>碳中和報告與聲明</td></tr>
+<tr><td>ISO 14021／14026</td><td>環境標籤與聲明</td><td>自我宣告、足跡資訊溝通</td></tr>
+</table></div>
+<p>14064-1、14064-2、14067 負責「<b>怎麼量化</b>」；14064-3 負責「<b>如何查驗證</b>」；14065／14066 規範查驗證機構與人員。碳中和路徑：14064-1 或 14067 算出排放 → 14064-2 專案取得碳信用額度 → 依 14068 做碳中和聲明。</p>
+</section>
+
+<section id="boundary">
+<h2><span class="no">03</span>真正的差別不是公式，是「邊界」</h2>
+<div class="tbl"><table>
+<tr><th>比較</th><th>ISO 14064-1</th><th>ISO 14064-2</th><th>ISO 14067</th></tr>
+<tr><td>量化對象</td><td>組織</td><td>減量／移除專案</td><td>產品／服務</td></tr>
+<tr><td>核心邊界</td><td>組織＋報告邊界</td><td>專案邊界（SSR）、基線與專案情境</td><td>產品系統邊界</td></tr>
+<tr><td>時間觀點</td><td>通常為年度</td><td>專案期間</td><td>生命週期</td></tr>
+<tr><td>比較基準</td><td>基準年</td><td>基線情境</td><td>功能／宣告單位</td></tr>
+<tr><td>主要結果</td><td class="num">tCO₂e／組織</td><td class="num">tCO₂e 減少／移除</td><td class="num">kgCO₂e／功能單位</td></tr>
+<tr><td>一句話</td><td>Who？這個組織是誰？</td><td>What changes？這個行動改變了什麼？</td><td>Per what function？每個功能單位產生多少？</td></tr>
+</table></div>
+<div class="box iso"><span class="tag">連結講義 2</span><p>講義 2 的國家清冊是第四種邊界：領土＋IPCC 部門。四者都用「活動數據 × 排放係數 × GWP」，差別都在邊界。<a class="xref" href="02-emission-inventory.html#compare">講義 2〈同樣叫盤查，邊界不能互換〉↗</a></p></div>
+</section>
+
+<section id="principles">
+<h2><span class="no">04</span>共同的碳會計語言與 MRV</h2>
+<p><b>共同概念</b>：排放源（Source）、移除過程（Sink）、儲存庫（Reservoir）、排放與移除、CO₂ 當量、數據品質、不確定性、透明性。</p>
+<div class="tbl"><table>
+<tr><th>原則</th><th>意思</th><th>適用</th></tr>
+<tr><td>相關性 Relevance</td><td>只納入與預期用途相關的資料與方法</td><td>三套都有</td></tr>
+<tr><td>完整性 Completeness</td><td>邊界內的排放與移除都要納入</td><td>三套都有</td></tr>
+<tr><td>一致性 Consistency</td><td>跨期使用一致的方法與邊界</td><td>三套都有</td></tr>
+<tr><td>準確性 Accuracy</td><td>降低系統性偏差與不確定性</td><td>三套都有</td></tr>
+<tr><td>透明度 Transparency</td><td>揭露假設、資料來源、方法</td><td>三套都有</td></tr>
+<tr><td><b>保守性 Conservativeness</b></td><td>不確定時不高估減量</td><td><b>14064-2 特別要求</b></td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">相關性 → 邊界。保守性 → 不要高估。</p></div>
+<h3>GHG 管理的核心是 MRV，不是算出一個數字</h3>
+<div class="flow loop" data-loop-label="回到量化，進入下一輪"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 16v-4M12 16V8M17 16v-7"/></svg><em class="tx">量化 Quantification</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 16v-4M12 16V8M17 16v-7"/></svg><em class="tx">監測 Monitoring</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h7M9 17h7"/></svg><em class="tx">報告 Reporting</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 22l-2.4-1.8-3 .2-.9-2.9L3.2 15.8l1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><em class="tx">查證 Verification</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17 9 11l4 4 8-8"/><path d="M15 7h6v6"/></svg><em class="tx">改善與決策</em></span></div>
+<p>可信的 GHG 資訊要能回答：數據從哪裡來？邊界如何決定？方法能否重現？假設是否透明？能否被查證？</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">電力排放係數 0.464 kg CO₂/kWh × 用電量 → 範疇二。產品碳足跡則要用「足跡係數」（含上游的係數）。</p></div>
+<h3>ISO 與 GHG Protocol</h3>
+<p>GHG Protocol 是全球最廣泛使用的企業 GHG 會計架構（核心文件 Corporate Standard），用 <b>Scope 1</b>（直接）、<b>Scope 2</b>（購入電力等間接）、<b>Scope 3</b>（其他間接，供應鏈等）分類。ISO 14064-1 則用<b>六大類別</b>。兩者概念重疊但分類邏輯不同，是<b>互補並用</b>，不是互相取代。</p>
+<div class="tbl"><table>
+<tr><th>GHG Protocol</th><th>ISO 14064-1</th></tr>
+<tr><td>Scope 1 直接排放</td><td>類別 1 直接排放與移除</td></tr>
+<tr><td>Scope 2 能源間接排放</td><td>類別 2 輸入能源</td></tr>
+<tr><td>Scope 3 其他間接排放</td><td>類別 3 運輸、類別 4 組織使用的產品、類別 5 組織產品的使用、類別 6 其他</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">GHG Protocol 用「範疇」，ISO 用「類別」。</p></div>
+<h3>組織盤查 vs. 產品碳足跡</h3>
+<p>ISO 14067:2018 定義：產品碳足跡是<b>產品系統中溫室氣體排放與移除的總和</b>，以 CO₂e 表示，基於 LCA 計算，只考慮氣候變遷這一個影響類別。生命週期：原料 → 製造 → 配送銷售 → 使用 → 廢棄回收；<b>搖籃到大門</b>（B2B）、<b>搖籃到墳墓</b>（B2C）。</p>
+</section>
+
+<div class="unit">第二單元｜ISO 14064-1 組織型溫室氣體盤查（農業版）</div>
+
+<section id="o-why">
+<h2><span class="no">05</span>農業盤查為什麼特別複雜</h2>
+<p>本單元以 ISO 14064-1:2018 為核心，結合 <b>Annex G 農業與林業專項指引</b>。故事線：為什麼盤查 → 誰要算（組織邊界）→ 算到哪裡（報告邊界與六大類別）→ 哪些排放（農業特殊排放源）→ 怎麼算 → 確保可信 → 怎麼報告 → 管理減碳。<mark>這是「管理系統」的思維，而不只是「乘法計算」的練習。</mark></p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">台積電 RE100 → 再生能源（解方）。燃料電池 SOFC → 低碳；氫可來自燃氣或生質甲醇（農業剩餘物）。另列（個別列入組織）。0.63 kgCO₂/kWh。</p></div>
+<p>ISO 14064-1 架構（Clause 4–10）：原則 → 庫存邊界 → 量化 → 基準年 → 減緩活動 → 資訊品質 → GHG 報告與查證。</p>
+<div class="tbl"><table>
+<tr><th>一般辦公企業</th><th>農業組織</th></tr>
+<tr><td>燃料燃燒（CO₂）、購買電力（間接 CO₂）、有限範圍的供應鏈；排放集中、方法成熟</td><td>燃料＋電力（CO₂）、生物性排放（biogenic CO₂）、土壤碳儲量變化（CO₂ flux）、牲畜腸內發酵（CH₄）、氮肥（N₂O）、土地利用與碳移除</td></tr>
+</table></div>
+<div class="box key"><span class="tag">重點</span><p>農業碳管理最大的挑戰往往不是 CO₂，而是 <b>CH₄、N₂O 與生物碳（biogenic carbon）</b>。</p></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">土壤碳要看「變化量」。有機 ≠ 再生；再生有機農業。</p></div>
+<h3>農業組織的 GHG 流動全圖</h3>
+<div class="tbl"><table>
+<tr><th>來源</th><th>氣體</th><th>來源</th><th>氣體</th></tr>
+<tr><td>柴油農機</td><td>CO₂</td><td>外購電力／能源</td><td>間接 CO₂</td></tr>
+<tr><td>土地與土壤碳匯</td><td>CO₂ 移除／排放</td><td>肥料施用</td><td>N₂O</td></tr>
+<tr><td>運輸與投入品</td><td>間接 CO₂</td><td>反芻牲畜</td><td>CH₄</td></tr>
+<tr><td>糞尿管理</td><td>CH₄＋N₂O</td><td>冷藏／冷媒設備</td><td>HFCs</td></tr>
+</table></div>
+<h3>五大原則在農業的意思</h3>
+<ul>
+  <li><b>相關性：不是資料越多越好。</b>試驗農場盤查：農機柴油、肥料 N₂O、冷媒 HFCs、灌溉用電要納入；員工家中用電超出邊界；訪客差旅看預期用途；週邊農地看控制關係。</li>
+  <li><b>完整性：不能只算容易算的。</b>只算柴油和電、忽略肥料 N₂O、水稻 CH₄、冷媒洩漏，就不完整。<mark>容易計算的排放往往不是最重要的</mark>，不得因「難以量化」排除重大排放源。</li>
+  <li><b>一致性：今年與明年要能比較。</b>2025 年用 IPCC 預設係數算 12,000 t，2026 年改用本土係數算 10,200 t，「減少 15%」可能只是方法改變；沒做重新計算，這個數字毫無管理意義。</li>
+  <li><b>準確性：</b>同樣是肥料用量，採購紀錄（高）＞施肥紀錄（中）＞農民估算（較高不確定性）。</li>
+  <li><b>透明度：</b>揭露資料來源、排放係數、方法理由、不確定性評估，查證才可能進行。</li>
+</ul>
+</section>
+
+<section id="o-org">
+<h2><span class="no">06</span>第一個大關：組織邊界</h2>
+<p>先決定「<b>誰是我</b>」，才能決定「哪些排放是我的」。農業組織常由分散的設施組成：總公司（辦公用電、商務車）、稻作農場（農機、灌溉、肥料）、育苗場（溫室環控）、加工廠（烘乾、碾米、包裝）、冷藏中心（冷媒、冷藏電力）、海外子公司（依整合方法判斷）。</p>
+<div class="tbl"><table>
+<tr><th>方法</th><th>規則</th><th>農業例子</th></tr>
+<tr><td><b>營運控制法</b></td><td>控制日常營運決策 → 100% 納入</td><td>租用溫室：土地和設備是租的，但公司決定灌溉、肥培、能源與生產 → 100% 納入。控制的是「能源與排放相關的營運決策」，不是所有權；租約責任條款是重要依據</td></tr>
+<tr><td><b>財務控制法</b></td><td>能制定財務與營運政策 → 100% 納入</td><td>母公司決定子公司重大投資、環境能源政策，財報合併 → 子公司 100% 納入；子公司獨立決策或母公司只是被動投資人 → 考慮改用股權法</td></tr>
+<tr><td><b>股權比例法</b></td><td>依持股比例納入</td><td>持有飼料廠 30% 股份、無控制權 → 納入飼料廠排放的 30%；飼料廠減碳，公司盤查也跟著改善</td></tr>
+</table></div>
+<p>農業組織最常用控制法。<mark>整個盤查期間要始終採用同一種方法，不得混用</mark>，並在報告中揭露。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">公司管理使用、有決定權就要算。</p></div>
+<h3>邊界案例題：契作農場算不算？</h3>
+<p>品牌公司向 200 戶契作農民收購。先問有沒有營運或財務控制：農民自行決定耕作 → 通常不屬組織邊界；公司提供技術規範與投入材料 → 需進一步判斷。</p>
+<div class="box key"><span class="tag">轉折</span><p>即使契作農田不在組織邊界內，它的排放可能是公司<b>最重大的間接排放</b>（類別 4 上游）。<b>邊界外 ≠ 可以忽略</b>，下一步是重大性判斷。</p></div>
+</section>
+
+<section id="o-rep">
+<h2><span class="no">07</span>第二個大關：報告邊界與六大類別</h2>
+<p><b>組織邊界</b>決定哪些設施屬於組織（主體範疇）；<b>報告邊界</b>決定在組織範疇內，哪些排放與移除要量化報告（排放源層面）。設施納入組織邊界後，排放活動還要通過報告邊界篩選。</p>
+<p><b>直接排放</b>：排放源由組織擁有或控制（農機柴油、稻田 CH₄、氮肥 N₂O、冷媒 HFCs）。<b>間接排放</b>：由組織活動造成、但發生在別人的邊界（購電、採購肥料、委外運輸）。</p>
+<div class="tbl"><table>
+<tr><th>類別</th><th>內容</th><th>農業例子</th></tr>
+<tr><td>1 直接排放與移除</td><td>擁有或控制的排放源</td><td>農機燃料、烘乾機鍋爐、冷媒、氮肥 N₂O、牲畜 CH₄、水稻 CH₄、糞尿 CH₄＋N₂O、土地碳存量變化</td></tr>
+<tr><td>2 輸入能源</td><td>購買電力、熱能、蒸汽</td><td>灌溉抽水、溫室環控、冷藏、烘乾、包裝用電；外購蒸氣。kWh × 電網排放係數</td></tr>
+<tr><td>3 運輸</td><td>非自有但為組織服務的運輸</td><td>委外物流（距離 × 貨重 × 係數）、員工通勤、差旅</td></tr>
+<tr><td>4 組織使用的產品</td><td>投入品的上游排放</td><td>肥料製造（每噸尿素約 2.5 tCO₂e）、飼料、農藥、種苗、包材、燃料上游（well-to-tank）</td></tr>
+<tr><td>5 組織產品的使用</td><td>產品下游使用</td><td>賣出的化肥被施用後的 N₂O、零售端冷藏用電、白米烹煮、包材廢棄</td></tr>
+<tr><td>6 其他</td><td>不屬上述</td><td>設備租賃、其他供應鏈活動</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">類別 3：通勤、差旅。類別 4：包材製造排放。類別 5：例如白米烹煮的能源使用、包材最終廢棄處理。場內搬運車輛若是租的但自己用，算類別 1。</p></div>
+<h3>類別 1 的重點</h3>
+<ul>
+  <li><b>固定燃燒</b>：烘乾機（稻穀、茶葉）、蒸汽鍋爐、緊急發電機、柴油灌溉抽水設備；資料來源為燃料採購紀錄、油表。</li>
+  <li><b>移動燃燒</b>：拖拉機、聯合收割機、場內搬運車、自有運輸車隊；資料來源為加油紀錄、里程 × 油耗。</li>
+  <li><b>四大非能源排放</b>（Annex G）：氮肥 → N₂O（GWP 273）；反芻動物 → CH₄（GWP 27.9）；水稻 → CH₄；糞尿 → CH₄（厭氧）＋N₂O（好氧／兼氧）。這是農業盤查和一般企業最大的差別。</li>
+  <li><b>冷媒</b>：冷藏庫、冷凍展示櫃、冷鏈車、空調，是農業食品企業<b>最容易漏掉</b>的排放。依充填量、使用年限、維修紀錄估算，建議建立冷媒管理台帳。</li>
+</ul>
+</section>
+
+<section id="o-sig">
+<h2><span class="no">08</span>重大間接排放：不是全部算，也不能想刪就刪</h2>
+<p>一包米背後有肥料、農藥、農機、200 戶契作農戶、加工廠、物流、包材……不需要全部精算，但不能隨意排除。做法：<b>先建立篩選框架 → 重大者才精算 → 排除者必須說明</b>。</p>
+<p>重大性不只看排放量（Annex H）：<b>Magnitude</b> 排放量、<b>Influence</b> 組織能否影響、<b>Risk/Opportunity</b> 氣候風險或機會、<b>Sector Relevance</b> 行業重要性、<b>Stakeholder Need</b> 利害關係人關注。</p>
+<div class="tbl"><table>
+<tr><th>排放來源</th><th>潛在排放量</th><th>可影響性</th><th>資料可及性</th><th>決策</th></tr>
+<tr><td>肥料製造（上游）</td><td>高</td><td>高</td><td>中</td><td>優先量化</td></tr>
+<tr><td>契作農場耕作</td><td>高</td><td>高</td><td>中</td><td>優先量化</td></tr>
+<tr><td>包材製造</td><td>中</td><td>高</td><td>高</td><td>次優先量化</td></tr>
+<tr><td>員工通勤</td><td>低</td><td>中</td><td>中</td><td>需進一步評估</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">講義原本寫員工通勤「可先排除」，老師改成「需進一步評估」；包材改成「次優先量化」。</p></div>
+<p>流程：識別 → 篩選 → 評估 → 選出重大排放 → 量化。Screening 不是偷懶不算，是資源有限時最有效率的做法。</p>
+<div class="box key"><span class="tag">最重要的原則</span><p><b>資料難取得 ≠ 可以排除。</b>要說明為何難取得、提供定性重大性評估、記錄取得資料的努力、在報告中揭露限制。查證人員會特別檢視被排除的排放源，這是農業盤查最常被挑戰的環節。</p></div>
+</section>
+
+<section id="o-quant">
+<h2><span class="no">09</span>量化：活動數據 × 排放係數</h2>
+<div class="formula">Activity Data（活動數據）× Emission Factor（排放係數）＝ GHG Emissions</div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">Data → 資訊 → 知識 → 智慧／決策。</p></div>
+<p>第一步是用農場平面圖或設施清單「找碳源」：牛舍豬舍、稻田、冷藏設備、污水糞尿處理、肥料倉庫、農機、鍋爐烘乾機、樹木與土壤（碳移除需分別報告）。</p>
+<div class="tbl"><table>
+<tr><th>排放源</th><th>活動數據單位</th><th>資料來源</th><th>品質</th></tr>
+<tr><td>柴油</td><td>公升</td><td>採購發票、加油紀錄</td><td>高</td></tr>
+<tr><td>電力</td><td>kWh</td><td>電費單、電表</td><td>高</td></tr>
+<tr><td>氮肥</td><td>kg N</td><td>採購紀錄 × 含氮率</td><td>中～高</td></tr>
+<tr><td>牛隻</td><td>頭數 × 天數</td><td>畜舍管理紀錄</td><td>中</td></tr>
+<tr><td>水稻</td><td>公頃 × 栽培天數</td><td>耕作紀錄</td><td>中</td></tr>
+<tr><td>冷媒</td><td>kg 充填／補充量</td><td>充填維修紀錄</td><td>中</td></tr>
+</table></div>
+<p><b>排放係數</b>：Tier 1 IPCC 預設值；Tier 2 國家係數；Tier 3 現場特定係數（精確度最高，但要透明說明方法）。越在地不一定越好，要有可查證研究支持。</p>
+<p>有些排放不能用簡單乘法：稻田 CH₄ ＝ 面積 × 栽培天數 × 水分管理修正 × 有機質投入修正，多重因子、不確定性高，要說明模型的代表性、限制、不確定性與來源。</p>
+<h3>GWP：不同氣體怎麼加總</h3>
+<div class="tbl"><table>
+<tr><th>氣體</th><th class="r">GWP₁₀₀（AR6）</th><th>主要來源</th></tr>
+<tr><td>CO₂</td><td class="r num">1</td><td>燃料燃燒、土地利用</td></tr>
+<tr><td>CH₄</td><td class="r num">27.9</td><td>稻田、牲畜、糞尿</td></tr>
+<tr><td>N₂O</td><td class="r num">273</td><td>氮肥、糞尿、土壤</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">政府要求企業用 AR5；國外申報要用 AR6。</p></div>
+<p>GWP 選擇不能偷偷換：先以各自單位（tCH₄、tN₂O）量化並保留明細，說明採用哪一版 IPCC 報告，整份盤查一致；GWP 更新時評估是否要重算基準年。</p>
+<h3>案例：農機柴油</h3>
+<div class="formula">5,000 L × 2.63 kgCO₂e/L ＝ 13,150 kg ＝ 13.15 tCO₂e　（類別 1，移動燃燒）</div>
+<h3>案例：氮肥 N₂O</h3>
+<p>關鍵：<b>肥料重量 ≠ 氮的重量</b>。100 kg 尿素 × 46% ＝ 46 kg N，再算 N₂O（直接＋間接），再乘 GWP。含氮率：尿素 46%、硫酸銨 21%、複合肥依標示。直接排放（施用地點）和間接排放（揮發、淋洗後再沉降）都要算。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">氮先變成別的形態流到別處，再轉成氧化亞氮排放，就是間接排放。</p></div>
+<h3>練習：排放計算器</h3>
+<div class="calc">
+  <div class="row">
+    <label for="diesel">柴油（公升）<input id="diesel" type="number" min="0" value="5000"></label>
+    <label for="kwh">購電（kWh）<input id="kwh" type="number" min="0" value="20000"></label>
+    <label for="ef">電力係數（kg/kWh）<input id="ef" type="number" step="0.001" value="0.474"></label>
+  </div>
+  <div class="row">
+    <label for="fert">肥料用量（kg）<input id="fert" type="number" min="0" value="1000"></label>
+    <label for="ftype">肥料種類
+      <select id="ftype"><option value="0.46">尿素 46%</option><option value="0.21">硫酸銨 21%</option></select></label>
+  </div>
+  <div class="out" id="out4" aria-live="polite"></div>
+</div>
+<p style="font-size:14px;color:var(--muted)">柴油係數用講義例子的 2.63 kgCO₂e/L；電力係數 0.474 是 113 年值（講義 1），請依盤查年份替換。N₂O 只算到「含氮量」為止，因為後續的 N₂O 排放係數講義沒有給。</p>
+</section>
+
+<section id="o-bio">
+<h2><span class="no">10</span>農業特殊議題：生物碳源與土地</h2>
+<p>農業生態系同時是排放源也是碳匯：作物生長移除 CO₂（sink），開墾或燃燒釋放 CO₂（source），牲畜和稻田排 CH₄（source）。<mark>兩者必須分開量化，不得相互抵消。</mark></p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">數量才是盤查目的。</p></div>
+<div class="tbl"><table>
+<tr><th>Biogenic CO₂</th><th>Biogenic CH₄／N₂O</th></tr>
+<tr><td>例：木材燃燒的 CO₂、土壤有機碳分解的 CO₂ → <b>與其他排放分開報告</b>（Annex D）</td><td>例：稻田 CH₄、糞尿 N₂O、腸內發酵 CH₄ → 即使來源是生物，<b>仍算人為排放</b>，必須計入</td></tr>
+</table></div>
+<div class="box key"><span class="tag">常見錯誤</span><p>把稻田 CH₄ 當成「自然排放」不納入盤查。</p></div>
+<h3>Carbon Stock vs. Carbon Flux</h3>
+<div class="tbl"><table>
+<tr><th>碳存量 Stock</th><th>碳通量 Flux</th></tr>
+<tr><td>現在存多少碳。例：土壤有機碳 60 tC/ha</td><td>期間增減多少。例：期末 62 − 期初 60 ＝ +2 tC/ha 移除。<b>這才是盤查要算的</b></td></tr>
+</table></div>
+<p>不能因為土壤存有 62 tC/ha 就說「今年移除了 62 tC」。</p>
+<p><b>農業碳庫</b>：土壤有機碳（最重要，受耕作、有機肥、殘株管理影響）、地上部生物量（果園、農林複合）、地下部生物量、死有機物；另有採伐木材產品（HWP）。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">地上部生物量大部分沒儲存（會被收走）。</p></div>
+<div class="formula">ΔCO₂（tCO₂/ha）＝ ΔC（tC/ha）× 44/12；ΔC 為正 → 移除，為負 → 排放</div>
+<h3>三個常考的判斷</h3>
+<div class="tbl"><table>
+<tr><th>問題</th><th>答案</th><th>理由</th></tr>
+<tr><td>草本作物吸碳算移除嗎？</td><td><b>不一定，通常不算</b></td><td>Annex G：一年生、二年生、沒有木本莖的多年生草本，其 CO₂ 移除不列入。水稻收穫後稻稈燃燒或分解，碳又回大氣，反而稻田 CH₄ 是要計入的重大排放</td></tr>
+<tr><td>牛呼吸的 CO₂ 要算嗎？</td><td><b>不算</b></td><td>來自短期生物碳循環；Annex G 排除牲畜組織與呼吸 CO₂</td></tr>
+<tr><td>牛腸內發酵的 CH₄ 要算嗎？</td><td><b>要算</b></td><td>屬人為排放，是畜牧業最重要的直接排放，依頭數與飼養天數計算</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">呼吸是自然的，不算。再生有機農業要提升碳匯，就不能翻土。</p></div>
+<div class="box iso"><span class="tag">連結講義 1</span><p>講義 1 說「蔬菜沒有碳匯」，就是這條 Annex G 規則：短期作物的碳很快回到大氣，不形成長期儲存。<a class="xref" href="01-net-zero.html#sink">講義 1〈主軸二 增匯〉↗</a></p></div>
+<p><b>土地管理改變不能只看一年</b>：推廣免耕，土壤碳逐年緩慢增加，效果可能持續 20 年以上。Annex G 討論 20 年等期間的處理；實務上建立多年期土壤碳監測基線、用模型估長期 flux、在報告中說明管理改變的時間與方法。</p>
+</section>
+
+<section id="o-elec">
+<h2><span class="no">11</span>電力與再生能源</h2>
+<p>農業用電：灌溉抽水（隨季節波動）、烘乾（採收季集中）、冷藏（全年 24 小時，倉儲最大耗電）、溫室環控（設施農業最大耗電）、加工包裝。</p>
+<div class="tbl"><table>
+<tr><th>方法</th><th>計算</th><th>說明</th></tr>
+<tr><td><b>Location-based</b>（基本）</td><td>kWh × 電網平均排放係數</td><td>Annex E 的基本方法；台灣用能源署公告的電力排放係數（每年更新）。多個電表帳號要匯總，分租設施的分攤要有文件</td></tr>
+<tr><td><b>Market-based</b>（進階）</td><td>kWh × 合約工具的排放係數</td><td>PPA（購電協議）、REC（再生能源憑證）、綠電憑證；要符合品質條件，例如 REC 不得雙重計算</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">Location-based：看你在哪個國家。Market-based：看你買了什麼電。</p></div>
+<p>建議先用 location-based 完成基礎盤查，再評估 market-based。</p>
+<h3>自建太陽能 ≠ 可以直接扣排放</h3>
+<p>屋頂 500 kW 太陽能：自用 300 kWh 替代購電、賣回電網 200 kWh。</p>
+<ul>
+  <li>自用部分 → 減少類別 2 的購電。</li>
+  <li>躉售部分 → <b>不得</b>從組織排放直接扣除，可另行揭露。</li>
+</ul>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">自用可降低 Scope 2。</p></div>
+</section>
+
+<section id="o-base">
+<h2><span class="no">12</span>基準年與減碳管理</h2>
+<p>2025 年 10,000 t、2026 年 8,500 t，表面減少 15%。要先問：邊界相同嗎？係數有更新嗎？方法一致嗎？設施有增減嗎？生產規模有變嗎？邊界與方法一致，這 15% 才是真的減碳。</p>
+<p><b>農業不一定適合單一年基準</b>（Annex G 建議至少三年平均）：旱年與豐水年的稻田 CH₄ 可差 20–30%；颱風寒害影響施肥與農機；畜群規模、種植面積、收購量波動。可用 3 年平均當 base period，或用<b>單位產量的排放強度</b>當補充指標。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">單位產量、使用總量。</p></div>
+<div class="tbl"><table>
+<tr><th>要重算基準年</th><th>不是重算的理由</th></tr>
+<tr><td>邊界改變（新增農場、合併子公司、出售加工廠）<br>方法或係數更新且影響重大<br>發現重大誤差（如漏掉重大排放源）</td><td>市場疲軟、產量下降 20% 所以排放下降，主管想「把基準年改成今年比較好看」。生產量變化是真實的營運變化，正是績效要反映的；這樣改會失去客觀性，也過不了查證</td></tr>
+</table></div>
+<div class="box iso"><span class="tag">連結講義 2</span><p>國家清冊的「回溯重算」（有機肥乾物率 0.78 → 0.60）和這裡的基準年重算是同一個邏輯：只有方法或邊界的結構性改變才重算。<a class="xref" href="02-emission-inventory.html#qaqc">講義 2〈QA/QC 與改善閉環〉↗</a></p></div>
+<h3>盤查之後：減碳管理</h3>
+<p>盤點不是終點，而是變革的開端。用盤查找機會：<b>排放熱點分析</b>（如溫室用電、畜牧腸道 CH₄）、<b>營運效率優化</b>、<b>技術導入</b>（再生能源、節能設備）、<b>供應鏈協作</b>（類別 3–6）。</p>
+<p>設定目標用 SMART 原則：科學基礎目標（SBTi，1.5 °C）、絕對目標 vs. 強度目標、短期與長期結合。規劃路徑：行動優先排序（潛力大、成本效益高、技術成熟）、資源配置、監測審查與溝通。<mark>減碳目標不應只是數字遊戲。</mark></p>
+</section>
+
+<div class="unit">第三單元｜ISO 14064-2 GHG 專案量化與監測</div>
+
+<section id="p-core">
+<h2><span class="no">13</span>核心觀念：基準情境</h2>
+<p>14064-2 不問「現在排多少」，而問「<b>因為做了這件事，究竟改變多少？</b>」例：水稻間歇灌溉少排多少 CH₄？精準施肥少排多少 N₂O？糞尿厭氧消化少排多少 CH₄？</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">① 基準多少 ② 做了之後排多少 ③ 差多少（② − ①）。14064-1 對象是農場或企業；14064-2 對象是一項措施（專案範圍）。</p></div>
+<p><b>Inventory ≠ Reduction</b>：14064-1 量化實際排放的絕對值（「今年這座農場排多少？」）；14064-2 量化兩個情境的差異（「改採間歇灌溉後少排多少？」）。</p>
+<p>流程：專案說明 → 辨識 SSR → 建立基準情境 → 量化專案排放／移除 → 量化基準排放／移除。</p>
+<h3>Baseline ≠ Before</h3>
+<p>Baseline 回答的是：<b>如果這個專案沒有發生，在相同的服務與產出條件下，合理預期會發生什麼？</b>它不是專案前一年，而是需要論證的假設情境。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">不是跟之前比，是相同情境（條件要一樣）。產量要一樣，不能因為產量減少就說有減量。</p></div>
+<div class="tbl"><table>
+<tr><th>水稻間歇灌溉</th><th>CH₄</th></tr>
+<tr><td>基準：慣行持續淹水（厭氧，大量甲烷）</td><td class="num">100 tCO₂e/期</td></tr>
+<tr><td>專案：間歇灌溉 AWD（乾濕交替打斷厭氧）</td><td class="num">60 tCO₂e/期</td></tr>
+<tr><td><b>減量</b></td><td class="num"><b>40 tCO₂e</b></td></tr>
+</table></div>
+<p>追問：如果農民本來就普遍改採間歇灌溉，基準就不能設成「傳統淹水」，否則高估減量。</p>
+<h3>建立基準的四種方法</h3>
+<div class="tbl"><table>
+<tr><th>方法</th><th>適用</th></tr>
+<tr><td>Historical Practice 歷史作法</td><td>農民長期維持相同管理</td></tr>
+<tr><td>Current Practice 現行慣行</td><td>以業界普遍做法為準</td></tr>
+<tr><td>Alternative Technology 替代技術</td><td>市場已有合理替代方案</td></tr>
+<tr><td>Performance Benchmark 績效基準</td><td>由 GHG Programme 指定，適用制度化碳權</td></tr>
+</table></div>
+<p><b>靜態基準</b>：100 → 100 → 100（技術改進極慢、政策無介入）。<b>動態基準</b>：100 → 95 → 90 → 85（政策推動節肥、慣行施肥量本來就在降）。動態基準避免高估減量。</p>
+<h3>功能等效：兩個情境要公平比較</h3>
+<p>✗ 基準 100 公頃、專案 80 公頃，排放少 20% 可能只是面積縮小。✓ 兩邊都是 100 公頃、產量都約 6 t/ha，才是比較 GHG 表現。精準施肥例：基準 180 kg N/ha、專案 140 kg N/ha、產量都約 6 t/ha → 比較有意義。產量同步下降時，要看排放密度而不是絕對量。</p>
+<div class="box iso"><span class="tag">連結講義 3</span><p>講義 3 的海草例子（第 0 年 100 t C、基線 120、專案 180 → 額外 60 t C）就是這套邏輯的碳匯版。<a class="xref" href="03-blue-carbon.html#principles">講義 3〈碳匯專案六大原則〉↗</a></p></div>
+<h3>外加性</h3>
+<p>法規已強制、市場已促成、技術普及率已高 → 本來就會發生，<b>不算</b>。農民原本沒動機，是專案的技術、補貼或碳收益促成改變 → <b>算</b>。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">普遍在做就不算。碳權一定要有外加性。</p></div>
+<p>ISO 14064-2 是<b>計畫中立</b>的，沒有規定特定的財務外加性測試；它的邏輯是「合理的基準設定＋超越基準的實際減量」。法規外加性、投資障礙、普遍性分析、技術障礙是各碳權制度（GHG Programme）的額外要求。</p>
+</section>
+
+<section id="p-ssr">
+<h2><span class="no">14</span>SSR 與量化</h2>
+<p>14064-2 不用「組織邊界」，而是辨識所有相關的 <b>SSR</b>：Source（排放源）、Sink（匯）、Reservoir（儲存庫）。</p>
+<div class="tbl"><table>
+<tr><th>關係</th><th>意思</th><th>厭氧消化例子</th></tr>
+<tr><td>Controlled</td><td>專案直接控制</td><td>厭氧消化槽本身的 CH₄</td></tr>
+<tr><td>Related</td><td>與專案活動直接相關</td><td>沼氣燃燒的 CO₂</td></tr>
+<tr><td>Affected</td><td>受專案影響的間接</td><td>替代外購電力的排放變化</td></tr>
+</table></div>
+<p>畜牧糞尿厭氧消化的完整 SSR：① 基線：糞尿露天儲存 CH₄ 逸散 ② 專案：厭氧槽 CH₄ 洩漏 ③ 專案：沼氣燃燒 CO₂ ④ 受影響：消化液施用 N₂O ⑤ 受影響：替代外購電力。</p>
+<p><b>不要只看專案設備本身</b>：換電動農機，柴油減少容易看到；充電用電增加容易忽略；電池製造排放要評估。程序是 <b>Identify → Assess → Select → Justify</b>，排除要說明理由。</p>
+<div class="tbl"><table>
+<tr><th>Baseline SSR</th><th>Project SSR</th></tr>
+<tr><td>持續淹水稻田 CH₄</td><td>間歇灌溉稻田 CH₄（較低）</td></tr>
+<tr><td>柴油泵浦 CO₂</td><td>電動泵浦電力排放</td></tr>
+<tr><td>糞尿露天儲存 CH₄</td><td>厭氧消化殘餘 CH₄＋逸散</td></tr>
+<tr><td>傳統施肥 N₂O（直接＋間接）</td><td>精準施肥 N₂O（直接＋間接）</td></tr>
+</table></div>
+<h3>兩條公式</h3>
+<div class="formula">排放減量 ER ＝ Emissions<sub>Baseline</sub> − Emissions<sub>Project</sub></div>
+<div class="formula">移除增量 RE ＝ Removals<sub>Project</sub> − Removals<sub>Baseline</sub></div>
+<div class="formula">碳匯專案：RE ＝ ΔC<sub>Project</sub> − ΔC<sub>Baseline</sub> − E<sub>Project</sub>（扣掉整地、施肥等新增排放）</div>
+<h3>案例：糞尿厭氧消化的淨減量</h3>
+<div class="bars" role="img" aria-label="基線 1000，扣掉殘餘甲烷 200、設備用電 50、沼氣逸散 80，淨減量 670">
+  <div class="bar"><span>基線：糞尿 CH₄</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="v">1,000</span></div>
+  <div class="bar"><span>專案：殘餘 CH₄</span><div class="track"><div class="fill" style="width:20%;background:var(--soil)"></div></div><span class="v">−200</span></div>
+  <div class="bar"><span>專案：設備用電</span><div class="track"><div class="fill" style="width:5%;background:var(--soil)"></div></div><span class="v">−50</span></div>
+  <div class="bar"><span>專案：沼氣逸散</span><div class="track"><div class="fill" style="width:8%;background:var(--soil)"></div></div><span class="v">−80</span></div>
+  <div class="bar"><span><b>淨減量</b></span><div class="track"><div class="fill" style="width:67%"></div></div><span class="v"><b>670</b></span></div>
+</div>
+<p>不能只算「捕獲多少甲烷」，要扣掉專案本身新增的所有排放（合計 330 tCO₂e）。水稻例：基線 1,000、專案 650、減量 350 tCO₂e（教學示意數字）。精準施肥：減少 40 kg N/ha 不等於 N₂O 等比例減少，要分別算直接與間接。</p>
+<h3>為什麼保守性這麼重要</h3>
+<ul>
+  <li>風險 ①：基線設得太高（假設過於樂觀，忽略既有技術改善趨勢）。</li>
+  <li>風險 ②：專案排放估得太低（漏掉 SSR、用偏低係數）。</li>
+  <li>風險 ③：土壤碳增加估得太大（樂觀的模型參數）。</li>
+</ul>
+<p>保守性不是「永遠選最小值」，而是<b>不讓高度不確定的假設系統性高估減量</b>，要和準確性平衡。</p>
+</section>
+
+<section id="p-mrv">
+<h2><span class="no">15</span>監測、查驗與碳權</h2>
+<p>減量不是算一次就結束：專案設計 → 執行 → 監測與資料蒐集 → 量化、報告與查驗 → 再循環。</p>
+<div class="tbl"><table>
+<tr><th>水稻間歇灌溉</th><th>畜牧厭氧消化</th><th>精準施肥</th></tr>
+<tr><td>種植面積、水位與灌溉紀錄、栽培天數與乾濕週期、有機質投入、產量（確保功能等效）</td><td>動物頭數與體重、糞尿量、沼氣產量與流量、CH₄ 濃度、設備洩漏</td><td>肥料用量、含氮量、施用面積與時間、產量、土壤氮素</td></tr>
+</table></div>
+<p>監測計畫涵蓋：參數、資料來源、量測方法、頻率、責任分工、查核程序、資訊系統。</p>
+<p><b>直接量測</b>（水表、電表、沼氣流量計、CH₄ 感測器、土壤碳分析）和<b>推估</b>（面積、頭數、施肥量、IPCC 係數、碳存量模型）兩條路並用，都要可靠、可重現、說明理由。</p>
+<p><b>變異性</b>是農業專案最大問題之一：環境（降雨、溫度、土壤、水文）、農藝（品種、種植期、水分、施肥時機）、生產規模（頭數、飼養方式）。基準期和報告期要夠長。</p>
+<div class="box key"><span class="tag">常見缺口</span><p>只管專案的資料品質。專案精確量測、基準粗略推估，比較仍會失真。<b>強化基準的資料品質，往往比優化專案量測更能提升可信度。</b></p></div>
+<p><b>永久性</b>：2025 種樹累積碳權 → 2035 野火或砍伐 → 碳回釋、信用遭質疑。農林碳匯要說明如何管理反轉風險（緩衝池、保險、長期監測承諾）。</p>
+<h3>可信專案要留下的文件</h3>
+<p>專案說明、基準 SSR 與方法、活動數據原始紀錄、排放係數來源與版本、不確定性與保守性說明、完整計算邏輯與結果。<mark>別人要能依你的文件完全重建計算。</mark></p>
+<h3>確證 vs. 查證</h3>
+<div class="tbl"><table>
+<tr><th></th><th>Validation 確證</th><th>Verification 查證</th></tr>
+<tr><td>時間</td><td>事前（Ex ante），專案執行前</td><td>事後（Ex post），監測期結束後</td></tr>
+<tr><td>問題</td><td>專案設計與假設合理嗎？</td><td>宣稱的減量結果可信嗎？</td></tr>
+<tr><td>檢查</td><td>基準方法、SSR 完整性、計畫可執行性、預期減量</td><td>監測數據、是否依計畫計算、GHG 聲明是否無誤、有無重大遺漏</td></tr>
+</table></div>
+<p>都要符合 ISO 14064-3，由具能力的第三方執行。</p>
+<h3>ISO 14064-2 ≠ 碳權標準</h3>
+<p>14064-2 涵蓋量化、監測、報告、文件、確證查證架構，<b>不自動等於碳權</b>。碳權還需要：計畫規則、核可方法學、資格審查、外加性測試、洩漏評估、永久性規則、登記系統、核發、防止重複計算。ISO 是基礎架構，碳權制度是在其上的額外要求。</p>
+<div class="box iso"><span class="tag">連結講義 3</span><p>臺灣的 AL-TMS0002／0003、管理辦法第 8 條外加性簡化、環境部核發額度，就是「在 14064-2 之上的碳權制度」。<a class="xref" href="03-blue-carbon.html#tw">講義 3〈臺灣法規與兩項藍碳方法學〉↗</a></p></div>
+<p>三層架構：<b>骨架</b>（Baseline vs. Project）→ <b>第一層</b>（SSR＋功能等效＋外加性，決定比較是否成立）→ <b>第二層</b>（量化＋監測＋保守性，決定結果是否可信）→ <b>第三層</b>（確證／查證／碳權）。</p>
+</section>
+
+<div class="unit">第四單元｜ISO 14067 產品碳足跡</div>
+
+<section id="c-core">
+<h2><span class="no">16</span>生命週期與 LCA</h2>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">PCF：碳足跡標章。PEF：碳、水、生態足跡。EPD：環境產品宣告（ISO 14025）。</p></div>
+<p>產品生命週期從取得原料開始，經過製造、使用，到不再使用時的處理。</p>
+<div class="tbl"><table>
+<tr><th>觀點</th><th>範圍</th></tr>
+<tr><td>搖籃到大門 Cradle to Gate</td><td>到離開工廠為止</td></tr>
+<tr><td>搖籃到墳墓 Cradle to Grave</td><td>從誕生到丟棄</td></tr>
+<tr><td>搖籃到搖籃 Cradle to Cradle</td><td>完全回收再利用</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">搖籃到大門：例如賣給公司。搖籃到搖籃：再生利用、循環經濟。</p></div>
+<p>一公斤白米、一公升鮮乳、一盒冷藏蔬菜，結果不再是 tCO₂e／組織，而是 <b>kgCO₂e／功能單位</b>。</p>
+<h3>LCA 框架（ISO 14040、14044）</h3>
+<div class="tbl"><table>
+<tr><th>階段</th><th>內容</th></tr>
+<tr><td>① 目標與範疇界定</td><td>產品、要回答的問題、應用、系統邊界、影響類型</td></tr>
+<tr><td>② 清單分析 LCI</td><td>量化每個 unit process 的投入與產出（模型、數據、計算）</td></tr>
+<tr><td>③ 衝擊評估 LCIA</td><td>碳足跡、優養化、臭氧層消耗、酸化、初級能源消耗……</td></tr>
+<tr><td>④ 闡釋 Interpretation</td><td>熱點與敏感度、方案比對、時間趨勢、數據品質</td></tr>
+</table></div>
+<p>應用：產品發展與改善、策略、公共政策、市場行銷。</p>
+<div class="box key"><span class="tag">重點</span><p><b>ISO 14067 本質上就是「氣候變遷版 LCA」</b>：沿用 14040／14044 四階段，衝擊類別只看氣候變遷（GWP 換算 kgCO₂e），對象聚焦產品，同樣是迭代改善。</p></div>
+<p>產品碳足跡不是只算工廠：種苗肥料 → 農場生產 → 集貨 → 加工 → 包裝，每個階段都可能是排放與減碳著力點。</p>
+<div class="tbl"><table>
+<tr><th>完整 CFP（B2C）</th><th>部分 CFP（B2B）</th></tr>
+<tr><td>搖籃到墳墓；稻米從農場投入到消費端烹煮、包裝廢棄</td><td>搖籃到大門；稻米生產到包裝出廠，常用於中間產品或供應鏈揭露。不代表方法比較簡單</td></tr>
+</table></div>
+</section>
+
+<section id="c-scope">
+<h2><span class="no">17</span>Goal &amp; Scope：真正決定 CFP 的地方</h2>
+<p>算之前先回答六個問題：① 為什麼算 ② 算什麼產品 ③ 功能單位是什麼 ④ 邊界到哪裡 ⑤ 用哪些資料 ⑥ 結果拿來做什麼。</p>
+<p>同樣算一包米，目的可能是：找減碳熱點、產品設計改善、供應鏈管理、碳標籤對外溝通、產品比較。目的不同，功能單位、邊界、資料品質都不同。</p>
+<h3>功能單位：不是「多重」，而是「提供多少功能」</h3>
+<p>功能單位是所有投入與產出的共同分母。「一公斤白米」還要考慮食用品質、含水率、營養、保存條件、使用方式。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">以產品的生命週期為基礎，計算與氣候變遷相關的排放總額。</p></div>
+<div class="tbl"><table>
+<tr><th>「一公斤米」</th><th>實際上是</th></tr>
+<tr><td>1 kg 稻穀</td><td>含殼、含水率約 25%，邊界止於農場收割</td></tr>
+<tr><td>1 kg 糙米</td><td>去殼、含水率約 14%，要納入碾米初步加工</td></tr>
+<tr><td>1 kg 白米</td><td>去米糠，同時產生米糠和稻殼，涉及分配</td></tr>
+<tr><td>1 kg 包裝白米（零售）</td><td>含包材、物流，邊界延伸到通路，CFP 最高</td></tr>
+</table></div>
+<p>看似都叫一公斤米，其實是四個產品系統，數值不能直接比。</p>
+<div class="tbl"><table>
+<tr><th>Functional Unit 功能單位</th><th>Declared Unit 宣告單位</th></tr>
+<tr><td>描述產品功能；用於完整 CFP。例：1 kg 煮熟白米，供四人食用</td><td>中間產品的量化基準（用重量），不必描述功能；<b>只能用於部分 CFP</b>，兩者不得互換</td></tr>
+</table></div>
+<h3>系統邊界</h3>
+<div class="tbl"><table>
+<tr><th>名稱</th><th>範圍</th></tr>
+<tr><td>Cradle-to-Gate</td><td>原料 → 農場生產 → 加工 → 工廠大門</td></tr>
+<tr><td>Gate-to-Gate</td><td>單一製程或廠區，不代表完整足跡</td></tr>
+<tr><td>Cradle-to-Grave</td><td>原料 → 生產 → 使用 → 廢棄或回收，完整 CFP 標準邊界</td></tr>
+</table></div>
+<p>這些只是慣例名稱，ISO 14067 要求<b>明確列出實際納入的 unit processes</b>。一公斤包裝白米：種子與肥料 → 水稻栽培 → 乾燥／碾米 → 包裝 → 物流與零售，每階段的排放加總後除以功能單位。</p>
+<h3>Cut-off：難取得 ≠ 可以刪掉</h3>
+<p>流程：資料收集 → 初始邊界 → 敏感度與顯著性評估 → 調整並記錄。排除要有量化依據，並在報告揭露。</p>
+<div class="tbl"><table>
+<tr><th>原則</th><th>內容</th></tr>
+<tr><td>C1</td><td>機器、廠房、設備、人員相關消耗，一般一開始就排除</td></tr>
+<tr><td>C2</td><td>廢棄物或價值很低的物料當原料，可忽略其上游（例：發電煤渣做水泥輔助原料）</td></tr>
+<tr><td>C3</td><td>原料 &lt; 1% 產出重量；稀貴或高純度原料 &lt; 0.1%；總忽略 &lt; 5%</td></tr>
+</table></div>
+</section>
+
+<section id="c-lci">
+<h2><span class="no">18</span>LCI 與分配</h2>
+<p>LCI 把產品拆成很多 unit processes（農田栽培、乾燥、碾米、包裝），每個方框對應一個作業程序和一份要收的資料。例：肉羊系統分為飼料種植（耕地、播種、施肥、農藥）、飼料加工（運輸、清理、粉碎、配料）、肉品養殖（哺育、飼養、出場）。</p>
+<div class="tbl"><table>
+<tr><th>農場</th><th>加工</th><th>物流</th></tr>
+<tr><td>面積與產量、化肥（氮磷鉀）、農藥、柴油、灌溉用電與方式、水稻 CH₄</td><td>碾米廠電力、乾燥燃料、稻穀投入量、白米米糠稻殼產出、包材用量與材質</td><td>運輸重量與距離、車種與載重率、冷藏電力、冷媒種類與洩漏</td></tr>
+</table></div>
+<div class="tbl"><table>
+<tr><th>Primary Data 初級資料</th><th>Secondary Data 次級資料</th></tr>
+<tr><td>實際量測：電表、燃油單據、肥料購買紀錄、產量、冷媒紀錄</td><td>資料庫或文獻：肥料製造係數（ecoinvent）、台灣電力係數、包材係數、運輸係數（噸公里）</td></tr>
+</table></div>
+<p>不是初級一定好、次級一定差，重點是<b>代表性</b>：時間（哪一年）、地理（用歐洲小麥資料代表臺灣水稻就不行）、技術（有機、慣行、精準農業差很多）、完整性與不確定性。</p>
+<h3>資料驗證：不能只相信 Excel</h3>
+<div class="formula">碾米廠：投入 1,000 kg 稻穀 ＝ 700 白米 ＋ 200 米糠 ＋ 100 稻殼 ✓ 質量平衡</div>
+<p>常見問題：t 和 kg 搞混、漏掉副產品、邊界內外資料混淆、含水率基準不一致。發現異常要回溯來源，不能直接改數字。</p>
+<h3>分配 Allocation</h3>
+<p>一個程序同時產出多種產品時，共用排放怎麼分？乳牛同時產奶和肉；碾米廠同時產白米、米糠（飼料與化妝品市場）、稻殼（燃料）。</p>
+<ol class="steps">
+  <li><b>優先避免分配</b>：程序細分或系統擴充</li>
+  <li><b>物理關係</b>：質量、能量、蛋白質</li>
+  <li><b>其他關係</b>：經濟價值（市場價格）</li>
+</ol>
+<p>這個順序是規範，不能跳過前面直接選「最方便」的。</p>
+<p>例：碾米廠總排放 100 kgCO₂e，產出 70 kg 白米、20 kg 米糠、10 kg 稻殼。</p>
+<div class="calc">
+  <div class="row">
+    <label for="method">分配方式
+      <select id="method"><option value="mass">按質量</option><option value="all">全部給白米</option><option value="econ">按市場價值</option></select></label>
+    <label for="pr">白米單價（元/kg）<input id="pr" type="number" min="0" value="40"></label>
+    <label for="pb">米糠單價（元/kg）<input id="pb" type="number" min="0" value="60"></label>
+    <label for="ph">稻殼單價（元/kg）<input id="ph" type="number" min="0" value="2"></label>
+  </div>
+  <div class="out" id="outA" aria-live="polite"></div>
+</div>
+<p style="font-size:14px;color:var(--muted)">單價是假設值，講義只說明「米糠價格高時，比例會截然不同」。全部給白米不合理；多種合理方法並存時，要用敏感度分析比較並在報告說明。</p>
+</section>
+
+<section id="c-agri">
+<h2><span class="no">19</span>農產品的特殊碳議題（Annex E）</h2>
+<div class="tbl"><table>
+<tr><th>議題</th><th>內容</th></tr>
+<tr><td>CH₄</td><td>水稻厭氧分解、反芻腸道發酵；GWP 約 27–30</td></tr>
+<tr><td>N₂O</td><td>肥料與土壤微生物；GWP 273</td></tr>
+<tr><td>Biogenic Carbon</td><td>光合吸碳與分解排碳，必須與化石 GHG 分別表達</td></tr>
+<tr><td>Land Use &amp; LUC</td><td>土地利用及其改變對土壤碳庫的影響，依國際方法評估</td></tr>
+</table></div>
+<h3>生物碳：植物吸的 CO₂ 怎麼辦</h3>
+<p>大氣 CO₂ → 作物／樹木光合作用 → 產品中的生物碳 → 使用末端分解或燃燒回到大氣。<b>化石 GHG</b>（燃料、化肥製造）是淨增加，完整計入；<b>生物性 GHG</b>是自然碳循環的一部分，分別揭露並說明假設。</p>
+<div class="box key"><span class="tag">重點</span><p>產品裡「存著碳」（木材、棉花、竹材、生質塑料、紙包裝）≠ CFP 可以直接減掉。生物碳含量要另行揭露，不能拿來抵消排放或宣稱碳中和；固定在產品中的碳在生命終期釋放時仍要計入。</p></div>
+<div class="box iso"><span class="tag">連結第 10 節</span><p>這跟 14064-1 的「碳存量 vs. 碳通量」是同一件事：存著的碳不是移除，期間的淨變化才是。</p></div>
+<h3>土地利用改變（dLUC）</h3>
+<p>直接土地利用改變可能是農產品 CFP <b>最被低估</b>的排放：熱帶雨林轉農地每公頃可釋出數百噸 CO₂e；大豆、棕櫚油、牛肉的 LUC 排放往往遠大於農場生產排放。要依 IPCC 等方法評估、攤提到分析期間，並在報告中<b>單獨揭露</b>，不得合併。</p>
+<div class="tbl"><table>
+<tr><th>Land Use 土地利用</th><th>Land Use Change 土地利用改變</th></tr>
+<tr><td>土地類別不變，管理方式影響土壤碳：保護性耕作 → 碳增加；過度翻耕 → 碳釋放。涉及作物或樹木生長時，分析期間至少涵蓋一個完整輪作期</td><td>土地類別改變，一次性大量碳變化：森林 → 農田、草地 → 果園、濕地 → 水稻田</td></tr>
+</table></div>
+<h3>冷藏蔬果：熱點不一定在農場</h3>
+<p>農場預冷（電力、冷媒）、冷鏈運輸（燃油＋HFCs，GWP 極高）、超市冷藏陳列（24 小時用電，可能是最大的單一非農場排放）、食物損失與廢棄（未售出或未食用部分的上游排放都要分攤）。</p>
+</section>
+
+<section id="c-result">
+<h2><span class="no">20</span>結果、比較與報告</h2>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18a4 4 0 0 1-.6-8A5.5 5.5 0 0 1 17 9a4.5 4.5 0 0 1 .5 9z"/></svg><em class="tx">蒐集各階段 GHG</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 16v-4M12 16V8M17 16v-7"/></svg><em class="tx">× GWP</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 16v-4M12 16V8M17 16v-7"/></svg><em class="tx">加總 kgCO₂e</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 16v-4M12 16V8M17 16v-7"/></svg><em class="tx">÷ 功能單位 ＝ CFP</em></span></div>
+<p>GWP₁₀₀（AR6）：CO₂ 1、CH₄（化石）27、N₂O 273。</p>
+<h3>CFP 不只是總數，還要找熱點</h3>
+<div class="bars" role="img" aria-label="稻米碳足跡貢獻：水稻栽培 55%、肥料製造 15%、乾燥碾米 10%、烹煮其他 10%、包裝 5%、運輸 5%">
+  <div class="bar"><span>水稻栽培（CH₄、N₂O）</span><div class="track"><div class="fill" style="width:55%"></div></div><span class="v">55%</span></div>
+  <div class="bar"><span>肥料製造</span><div class="track"><div class="fill" style="width:15%"></div></div><span class="v">15%</span></div>
+  <div class="bar"><span>乾燥／碾米</span><div class="track"><div class="fill" style="width:10%"></div></div><span class="v">10%</span></div>
+  <div class="bar"><span>烹煮／其他</span><div class="track"><div class="fill" style="width:10%"></div></div><span class="v">10%</span></div>
+  <div class="bar"><span>包裝</span><div class="track"><div class="fill" style="width:5%"></div></div><span class="v">5%</span></div>
+  <div class="bar"><span>運輸</span><div class="track"><div class="fill" style="width:5%"></div></div><span class="v">5%</span></div>
+</div>
+<p>闡釋三步驟：辨識重大議題（稻米通常是水稻栽培的 CH₄ 與 N₂O）→ 評估完整性與一致性 → 針對熱點提出改善與限制。</p>
+<h3>兩個產品的 CFP 可以直接比較嗎？</h3>
+<p>米 A ＝ 1.2、米 B ＝ 1.0 kgCO₂e/kg，<b>不能</b>直接說米 B 比較環保。要先確認：功能單位（含水率、品質）、系統邊界、PCR、分配方法、資料品質、GWP 版本、生物碳與 dLUC 處理方式都一致。</p>
+<h3>CFP 研究報告不只一個數字</h3>
+<p>例：1.35 kgCO₂e／kg 米，還要揭露功能單位、系統邊界（列出 unit processes）、分配方法與理由、生物碳與 dLUC（分別揭露）、主要假設與不確定性。</p>
+<h3>最後帶走的七個問題</h3>
+<ol class="steps">
+  <li>Goal：研究目的清楚嗎？</li>
+  <li>Functional Unit：分母可量測、與目的一致嗎？</li>
+  <li>System Boundary：算到哪裡、哪些排除？</li>
+  <li>LCI：各階段資料品質符合要求嗎？</li>
+  <li>Allocation：依層級選擇並說明了嗎？</li>
+  <li>Agricultural Carbon：生物碳與土地有分開揭露嗎？</li>
+  <li>Interpretation：熱點在哪、意涵與限制是什麼？</li>
+</ol>
+<p><mark>ISO 14067 最難的往往不是乘法，而是功能單位、系統邊界與分配方法是否合理。</mark></p>
+<h3>延伸：建築與 CBAM</h3>
+<p>低碳建築用 A1–D 模組：A1–A3 建材生產（搖籃到大門）、A4–A5 營建、B1–B7 使用與維護（B6 能源、B7 水為營運碳）、C1–C4 拆除廢棄、D 回收再利用。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">水泥磚 → 搖籃到大門。</p></div>
+<div class="tbl"><table>
+<tr><th>制度</th><th>生命週期範圍</th></tr>
+<tr><td>CBAM</td><td>依產品類別定義範圍；出口歐盟非 CBAM 列管產品（例：遊艇）不用申報，即使含有列管的鋼材</td></tr>
+<tr><td>ISO 14067</td><td>搖籃到大門（B2B）或搖籃到墳墓（B2C），依 PCR 定義</td></tr>
+<tr><td>碳足跡標籤</td><td>僅搖籃到墳墓（B2C），目的是對消費者宣傳</td></tr>
+</table></div>
+<p>第三類產品環境宣告 <b>EPD</b>：PCR（產品類別規則）→ LCA → EPD，可同時揭露碳足跡、生態足跡、水足跡，連結環境影響評估、永續發展目標、永續經濟活動、碳標籤與碳中和（PAS 2060）。</p>
+</section>
+
+<section id="summary">
+<h2><span class="no">21</span>總整理</h2>
+<div class="tbl"><table>
+<tr><th></th><th>ISO 14064-1</th><th>ISO 14064-2</th><th>ISO 14067</th></tr>
+<tr><td>問題</td><td>這個組織排多少？</td><td>這個行動減多少？</td><td>這個產品排多少？</td></tr>
+<tr><td>最難的地方</td><td>組織邊界、重大間接排放、生物碳</td><td>基準情境、功能等效、外加性</td><td>功能單位、系統邊界、分配</td></tr>
+<tr><td>農業特有</td><td>稻田 CH₄、施肥 N₂O、腸內發酵、冷媒、土壤碳 flux</td><td>間歇灌溉、精準施肥、厭氧消化、土壤碳／造林</td><td>一公斤米的定義、米糠稻殼分配、生物碳、dLUC、冷鏈</td></tr>
+<tr><td>品質原則</td><td>相關、完整、一致、準確、透明</td><td>＋保守性</td><td>同 LCA 原則</td></tr>
+<tr><td>查驗</td><td>查證</td><td>確證＋查證</td><td>查證（標籤需第三方）</td></tr>
+</table></div>
+<p>共同流程：<b>對象 → 邊界 → 量化 → 報告 → 查證</b>。先選對問題，再選標準。</p>
+</section>
+
+<section id="supp">
+<h2><span class="no">22</span>補充：畜牧場域盤查實例</h2>
+
+<p>2025 年畜牧產業首次取得「場域碳盤查」證書的兩個場域：一座屠宰分切場、一座養豬場，可以看到 ISO 14064-1 實際做起來的樣子。</p>
+<h3>排放源鑑別要細到每一台設備</h3>
+<ul>
+<li><b>類別一</b>：柴油（發電機、鍋爐、堆高機）、液化石油氣、公務車汽柴油、乙炔切割、CO₂ 滅火器，以及<b>每一台</b>冷凍庫、空調、冷藏車的冷媒逸散（逐台列出填充量）。化糞池列出但不計算；R-22 等非盤查氣體的設備也列出。</li>
+<li><b>類別二</b>：外購電力（屠宰分切場一年約 1,019 萬度，佐證是電費單）。</li>
+<li><b>類別三</b>：員工通勤（機車、汽車，以延人公里計）。</li>
+<li><b>類別四</b>：廢棄物焚化與清運（以公噸、公噸公里計）。</li>
+<li>養豬場另有：保溫燈煤油、高壓清洗機、<b>豬隻腸胃道發酵與糞尿水</b>（依飼養頭數換算），以及購買燃料和電力的上游排放（類別 4.1）。</li>
+</ul>
+<h3>重大性評估：用分數決定哪些間接排放要算</h3>
+<div class="tbl"><table><tr><th>分數</th><th>A 發生頻率</th><th>B 減碳機會</th><th>C 活動數據</th><th>D 排放係數</th><th>E 特定要求</th></tr><tr><td>5</td><td>每月 ≥ 2 次</td><td>百分之百控制權</td><td>會計、ERP、有單據</td><td>自訂或供應商係數</td><td>主管機關或客戶要求</td></tr><tr><td>3</td><td>每季 ≥ 2 次</td><td>部分控制權</td><td>財務推估</td><td>國內公告或國際係數</td><td>2 年內可能要求</td></tr><tr><td>1</td><td>每年 < 2 次</td><td>完全沒機會</td><td>無法取得</td><td>係數取得困難</td><td>未要求</td></tr></table></div>
+<div class="tbl"><table><tr><th>項目</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>總分</th><th>結果</th></tr><tr><td>2.1 外購電力</td><td class="r num">5</td><td class="r num">1</td><td class="r num">5</td><td class="r num">3</td><td class="r num">3</td><td class="r num">17</td><td>重大</td></tr><tr><td>3.3 員工通勤</td><td class="r num">5</td><td class="r num">3</td><td class="r num">3</td><td class="r num">3</td><td class="r num">1</td><td class="r num">15</td><td>重大</td></tr><tr><td>4.3 廢棄物處置</td><td class="r num">5</td><td class="r num">1</td><td class="r num">5</td><td class="r num">3</td><td class="r num">1</td><td class="r num">15</td><td>重大</td></tr><tr><td>3.5 業務旅運</td><td class="r num">3</td><td class="r num">3</td><td class="r num">3</td><td class="r num">3</td><td class="r num">1</td><td class="r num">13</td><td>非重大</td></tr><tr><td>4.1 採購的貨物</td><td class="r num">5</td><td class="r num">1</td><td class="r num">1</td><td class="r num">3</td><td class="r num">1</td><td class="r num">11</td><td>非重大（無控制權、數據難取得）</td></tr></table></div>
+<p>屠宰分切場的例子中，總分 15 以上判為重大；不納入的項目都要寫理由。</p>
+<h3>結果：電力和直接排放是大宗</h3>
+<figure class="fig"><svg viewBox="0 0 730 250" width="730" role="img" aria-label="屠宰分切場與養豬場各類別排放比例"><path class="hit g-acc" d="M115.0,22.0A90,90 0 0 1 161.3,189.2L143.8,160.0A56,56 0 0 0 115.0,56.0Z" stroke="var(--paper)" stroke-width="1.5"><title>屠宰分切場 類別一 直接：41.4%</title></path><path class="hit g-soil" d="M161.3,189.2A90,90 0 1 1 96.5,23.9L103.5,57.2A56,56 0 1 0 143.8,160.0Z" stroke="var(--paper)" stroke-width="1.5"><title>屠宰分切場 類別二 電力：55.3%</title></path><path class="hit g-ink" d="M96.5,23.9A90,90 0 0 1 111.6,22.1L112.9,56.0A56,56 0 0 0 103.5,57.2Z" stroke="var(--paper)" stroke-width="1.5"><title>屠宰分切場 類別三 運輸：2.7%</title></path><path class="hit g-mut" d="M111.6,22.1A90,90 0 0 1 115.0,22.0L115.0,56.0A56,56 0 0 0 112.9,56.0Z" stroke="var(--paper)" stroke-width="1.5"><title>屠宰分切場 類別四 產品：0.6%</title></path><text x="115" y="240" text-anchor="middle" class="t">屠宰分切場</text><path class="hit g-acc" d="M365.0,22.0A90,90 0 0 1 384.6,199.8L377.2,166.7A56,56 0 0 0 365.0,56.0Z" stroke="var(--paper)" stroke-width="1.5"><title>養豬場 類別一 直接：46.5%</title></path><path class="hit g-soil" d="M384.6,199.8A90,90 0 0 1 312.6,38.9L332.4,66.5A56,56 0 0 0 377.2,166.7Z" stroke="var(--paper)" stroke-width="1.5"><title>養豬場 類別二 電力：43.6%</title></path><path class="hit g-mut" d="M312.6,38.9A90,90 0 0 1 365.0,22.0L365.0,56.0A56,56 0 0 0 332.4,66.5Z" stroke="var(--paper)" stroke-width="1.5"><title>養豬場 類別四 產品：9.9%</title></path><text x="365" y="240" text-anchor="middle" class="t">養豬場</text><text x="660" y="34" text-anchor="end" class="m">屠宰</text><text x="722" y="34" text-anchor="end" class="m">養豬</text><rect x="510" y="53" width="12" height="12" rx="2" class="g-acc"/><text x="528" y="64" class="m">類別一 直接</text><text x="660" y="64" text-anchor="end" class="n">41.4%</text><text x="722" y="64" text-anchor="end" class="n">46.5%</text><rect x="510" y="83" width="12" height="12" rx="2" class="g-soil"/><text x="528" y="94" class="m">類別二 電力</text><text x="660" y="94" text-anchor="end" class="n">55.3%</text><text x="722" y="94" text-anchor="end" class="n">43.6%</text><rect x="510" y="113" width="12" height="12" rx="2" class="g-ink"/><text x="528" y="124" class="m">類別三 運輸</text><text x="660" y="124" text-anchor="end" class="n">2.7%</text><text x="722" y="124" text-anchor="end" class="n">—</text><rect x="510" y="143" width="12" height="12" rx="2" class="g-mut"/><text x="528" y="154" class="m">類別四 產品</text><text x="660" y="154" text-anchor="end" class="n">0.6%</text><text x="722" y="154" text-anchor="end" class="n">9.9%</text></svg><figcaption>屠宰分切場以外購電力（冷凍、冷藏）最多；養豬場的直接排放（腸胃道發酵、糞尿）和電力各占四成多。</figcaption></figure>
+<h3>範疇三 15 類對應 ISO 類別</h3>
+<div class="tbl"><table><tr><th>GHG Protocol 範疇三</th><th>ISO 14064-1</th></tr><tr><td>1 購買的商品與服務、2 資本財、5 產生的廢棄物、8 上游租賃資產</td><td>類別 4</td></tr><tr><td>3 燃料與能源相關活動</td><td>類別 2</td></tr><tr><td>4 上游運輸、6 商務旅行、7 員工通勤</td><td>類別 3</td></tr><tr><td>9 下游運輸、10 售出產品加工、11 使用、12 廢棄、13 下游租賃、14 特許經營</td><td>類別 5</td></tr><tr><td>15 投資</td><td>類別 6</td></tr></table></div>
+<p>IFRS S2 要求企業考量全部 15 類範疇三，再依價值鏈的相關性與重大性決定納入哪些，並揭露納入了哪些。</p>
+<h3>基準年什麼時候要重算</h3>
+<div class="tbl"><table><tr><th>要重算</th><th>不重算</th></tr><tr><td>組織邊界結構改變（合併、收購、撤資）；計算方法或排放係數改變；發現累積起來具實質性的錯誤</td><td>設施產量改變，包括設施關閉或新開</td></tr></table></div>
+<h3>查驗的幾個數字</h3>
+<ul>
+<li>合理保證等級，<b>實質性門檻</b>為總排放量的 5%。</li>
+<li>取樣：高風險設施 100%；中、低風險至少取設施數的平方根；總體要涵蓋 95% 的排放量。</li>
+<li>發現事項分為澄清要求（CL）、矯正措施要求（NC）、後續行動要求（FAR）。</li>
+<li>紀錄保存：組織盤查 6 年；減量專案至少到計入期結束後 6 年。</li>
+</ul>
+
+</section>
+
+<section id="quiz">
+<h2><span class="no">23</span>自我測驗</h2>
+<details class="q"><summary>1. 公司買了碳權，可以從 14064-1 盤查的排放總量中扣掉嗎？</summary><div class="a">不行。組織盤查報的是實際排放；碳權是 14064-2 專案的減量成果，只能在碳中和聲明（ISO 14068）等場合另外使用。三個結果不能相加混用。</div></details>
+<details class="q"><summary>2. 公司租用溫室，土地和設備都不是自己的，但灌溉、施肥、用電都由公司決定。要納入嗎？</summary><div class="a">要，100% 納入。營運控制法看的是誰控制能源與排放相關的營運決策，不是所有權。</div></details>
+<details class="q"><summary>3. 持有飼料廠 30% 股份、沒有控制權，怎麼算？</summary><div class="a">股權比例法，納入飼料廠年度排放的 30%。</div></details>
+<details class="q"><summary>4. 契作農田不在組織邊界內，就可以不管嗎？</summary><div class="a">不行。它可能是最重大的間接排放（類別 4 上游），要做重大性評估。</div></details>
+<details class="q"><summary>5. 員工通勤一定可以排除嗎？</summary><div class="a">不一定，要依重大性準則評估，排除要有文件依據。課堂上老師把「可先排除」改成「需進一步評估」。</div></details>
+<details class="q"><summary>6. 牛呼吸的 CO₂ 和腸內發酵的 CH₄ 哪個要算？</summary><div class="a">腸內發酵 CH₄ 要算（人為排放）；呼吸 CO₂ 不算（短期生物碳循環，Annex G 排除）。</div></details>
+<details class="q"><summary>7. 稻田一年吸很多 CO₂，可以算碳匯嗎？</summary><div class="a">不行。一年生作物的碳在收穫後很快回到大氣，Annex G 不列入移除。稻田 CH₄ 反而是必須計入的重大排放。</div></details>
+<details class="q"><summary>8. 土壤碳存量 62 tC/ha，期初是 60，今年移除多少 CO₂？</summary><div class="a">只有變化量 2 tC/ha 算移除，換算 2 × 44/12 ≈ 7.33 tCO₂/ha。不是 62。</div></details>
+<details class="q"><summary>9. 屋頂太陽能賣回台電的 200 kWh，可以從排放扣掉嗎？</summary><div class="a">不行。自用部分可減少類別 2 購電；躉售部分不能直接扣除，可另行揭露。</div></details>
+<details class="q"><summary>10. 今年產量少 20%、排放下降，可以把基準年改成今年嗎？</summary><div class="a">不行。基準年重算只適用於邊界改變、方法或係數重大更新、重大誤差等結構性改變；正常營運波動正是績效要反映的。</div></details>
+<details class="q"><summary>11. 100 kg 尿素含多少氮？</summary><div class="a">100 × 46% ＝ 46 kg N。肥料重量不等於氮重量；硫酸銨只有 21%。</div></details>
+<details class="q"><summary>12. 14064-2 的基準情境就是專案前一年嗎？</summary><div class="a">不是。基準是「沒有專案時，在相同服務與產出條件下合理預期會發生的情況」，可能是靜態或動態的。</div></details>
+<details class="q"><summary>13. 厭氧消化捕獲了 1,000 tCO₂e 的甲烷，減量就是 1,000 嗎？</summary><div class="a">不是。要扣掉殘餘 CH₄、設備用電、沼氣逸散等專案新增排放，講義例子淨減量是 670 tCO₂e。</div></details>
+<details class="q"><summary>14. 確證和查證的差別？</summary><div class="a">確證是事前看專案設計與假設是否合理；查證是事後看宣稱的減量是否真的發生。都依 ISO 14064-3。</div></details>
+<details class="q"><summary>15. Declared unit 可以用在完整的搖籃到墳墓 CFP 嗎？</summary><div class="a">不行。Declared unit 只能用於部分 CFP（如搖籃到大門），不得與 functional unit 互換。</div></details>
+<details class="q"><summary>16. 碾米廠排放怎麼分給白米、米糠、稻殼？</summary><div class="a">依分配層級：先嘗試避免分配（程序細分、系統擴充）→ 物理關係（如質量：70/20/10）→ 經濟價值。不能全給白米，多種方法並存要做敏感度分析。</div></details>
+<details class="q"><summary>17. 米 A 1.2、米 B 1.0 kgCO₂e/kg，米 B 比較環保嗎？</summary><div class="a">不能直接下結論。要確認功能單位、邊界、PCR、分配、資料品質、GWP 版本、生物碳與 dLUC 處理都一致。</div></details>
+<details class="q"><summary>18. 木製產品存著碳，可以從 CFP 扣掉嗎？</summary><div class="a">不行。生物碳含量要另行揭露，不能抵消排放或宣稱碳中和；生命終期釋放時仍要計入。</div></details>
+</section>
+
+<section id="gloss">
+<h2><span class="no">24</span>名詞表</h2>
+<dl class="gloss">
+  <dt>ISO 14064-1／-2／-3</dt><dd>組織盤查／專案量化／查證與確證。</dd>
+  <dt>ISO 14065／14066</dt><dd>查驗證機構要求／人員能力要求。</dd>
+  <dt>ISO 14067</dt><dd>產品碳足跡（CFP）。</dd>
+  <dt>ISO 14068</dt><dd>碳中和。</dd>
+  <dt>ISO 14040／14044</dt><dd>生命週期評估（LCA）原則與要求。</dd>
+  <dt>GHG Protocol</dt><dd>企業溫室氣體會計架構，Scope 1／2／3。</dd>
+  <dt>SBTi</dt><dd>科學基礎減碳目標倡議。</dd>
+  <dt>Annex G／E／H／D</dt><dd>14064-1 附錄：農林業指引／電力／重大間接排放／生物碳；14067 Annex E 為農林產品指引。</dd>
+  <dt>營運控制／財務控制／股權比例</dt><dd>組織邊界的三種整合方法。</dd>
+  <dt>報告邊界</dt><dd>組織範疇內哪些排放要量化報告。</dd>
+  <dt>Biogenic carbon</dt><dd>生物來源的碳，需與化石碳分開。</dd>
+  <dt>Carbon stock／flux</dt><dd>碳存量／期間碳通量（變化量）。</dd>
+  <dt>Location-based／Market-based</dt><dd>電網平均係數法／合約工具係數法。</dd>
+  <dt>PPA／REC</dt><dd>購電協議／再生能源憑證。</dd>
+  <dt>Base-year recalculation</dt><dd>結構性改變時重算基準年。</dd>
+  <dt>Baseline scenario</dt><dd>沒有專案時合理預期的情境。</dd>
+  <dt>Functional equivalence</dt><dd>專案與基準提供相同的產品或服務。</dd>
+  <dt>SSR</dt><dd>Sources、Sinks、Reservoirs。</dd>
+  <dt>ER／RE</dt><dd>排放減量／移除增量。</dd>
+  <dt>AWD</dt><dd>間歇灌溉（乾濕交替）。</dd>
+  <dt>Programme-neutral</dt><dd>14064-2 不綁定特定碳權制度。</dd>
+  <dt>CFP／Partial CFP</dt><dd>完整產品碳足跡／部分產品碳足跡。</dd>
+  <dt>Functional／Declared unit</dt><dd>功能單位／宣告單位（只用於部分 CFP）。</dd>
+  <dt>LCI／LCIA</dt><dd>清單分析／衝擊評估。</dd>
+  <dt>Primary／Secondary data</dt><dd>實際量測資料／資料庫或文獻。</dd>
+  <dt>Allocation</dt><dd>多產品共用排放的分配。</dd>
+  <dt>dLUC</dt><dd>直接土地利用改變。</dd>
+  <dt>Hotspot</dt><dd>排放貢獻最高的階段。</dd>
+  <dt>PCR</dt><dd>產品類別規則。</dd>
+  <dt>EPD／PEF</dt><dd>環境產品宣告／產品環境足跡。</dd>
+  <dt>CBAM</dt><dd>歐盟碳邊境調整機制。</dd>
+</dl>
+</section>
+<nav class="pager" aria-label="上一講／下一講"><a class="prev" href="03-blue-carbon.html"><small>← 上一講</small>3. 海洋碳匯策略</a><a class="next" href="05-carbon-pricing.html"><small>下一講 →</small>5. 碳定價與財務策略</a></nav>
+</main>
+</div>
+<script>
+(function(){
+  var b=document.body,K='tocOff';
+  function set(off){b.classList.toggle('toc-off',off);try{localStorage.setItem(K,off?'1':'0')}catch(e){}}
+  try{if(localStorage.getItem(K)==='1')b.classList.add('toc-off')}catch(e){}
+  document.getElementById('tocHide').addEventListener('click',function(){set(true)});
+  document.getElementById('tocShow').addEventListener('click',function(){set(false)});
+})();
+</script>
+
+
+<script>
+(function(){
+  function $(i){return document.getElementById(i)}
+  function v(i){return parseFloat($(i).value)||0}
+  function f(n,d){return n.toLocaleString('zh-TW',{maximumFractionDigits:d===undefined?2:d})}
+  function run(){
+    var d=v('diesel')*2.63/1000, e=v('kwh')*v('ef')/1000, n=v('fert')*parseFloat($('ftype').value);
+    $('out4').innerHTML='柴油（類別 1）＝ '+f(v('diesel'),0)+' L × 2.63 ÷ 1,000 ＝ <b>'+f(d)+' tCO₂e</b><br>'+
+      '購電（類別 2）＝ '+f(v('kwh'),0)+' kWh × '+v('ef')+' ÷ 1,000 ＝ <b>'+f(e)+' tCO₂e</b><br>'+
+      '肥料含氮量 ＝ '+f(v('fert'),0)+' kg × '+(parseFloat($('ftype').value)*100)+'% ＝ '+f(n,1)+' kg N（接著再算 N₂O）';
+  }
+  function alloc(){
+    var m=$('method').value, q=[70,20,10], w;
+    if(m==='all') w=[1,0,0];
+    else if(m==='mass') w=q.map(function(x){return x/100});
+    else { var val=[q[0]*v('pr'),q[1]*v('pb'),q[2]*v('ph')], s=val[0]+val[1]+val[2]||1; w=val.map(function(x){return x/s}); }
+    var names=['白米 70 kg','米糠 20 kg','稻殼 10 kg'];
+    $('outA').innerHTML=names.map(function(nm,i){
+      var t=100*w[i]; return nm+'：'+f(t,1)+' kgCO₂e（每公斤 '+(q[i]?f(t/q[i],3):'0')+'）';
+    }).join('<br>');
+  }
+  ['diesel','kwh','ef','fert','ftype'].forEach(function(i){$(i).addEventListener('input',run);$(i).addEventListener('change',run)});
+  ['method','pr','pb','ph'].forEach(function(i){$(i).addEventListener('input',alloc);$(i).addEventListener('change',alloc)});
+  run();alloc();
+})();
+</script>
+
+<script>
+(function(){
+  var NS='http://www.w3.org/2000/svg',n=0;
+  function rp(p,r){var d='M'+p[0][0]+','+p[0][1];for(var i=1;i<p.length-1;i++){var a=p[i-1],b=p[i],c=p[i+1];
+    var l1=Math.hypot(b[0]-a[0],b[1]-a[1]),l2=Math.hypot(c[0]-b[0],c[1]-b[1]),k=Math.min(r,l1/2,l2/2);
+    var x1=b[0]-(b[0]-a[0])/l1*k,y1=b[1]-(b[1]-a[1])/l1*k,x2=b[0]+(c[0]-b[0])/l2*k,y2=b[1]+(c[1]-b[1])/l2*k;
+    d+=' L'+x1+','+y1+' Q'+b[0]+','+b[1]+' '+x2+','+y2}
+    var e=p[p.length-1];return d+' L'+e[0]+','+e[1]}
+  function draw(c){
+    var old=c.querySelector(':scope>.loop-svg'); if(old) old.remove();
+    var spans=[].slice.call(c.querySelectorAll(':scope>span'));
+    var to=c.querySelector('[data-loop-to]')||spans[0], from=c.querySelector('[data-loop-from]')||spans[spans.length-1];
+    if(!to||!from) return;
+    var cr=c.getBoundingClientRect();
+    function R(el){var b=el.getBoundingClientRect();return{l:b.left-cr.left,r:b.right-cr.left,t:b.top-cr.top,b:b.bottom-cr.top,cx:(b.left+b.right)/2-cr.left,cy:(b.top+b.bottom)/2-cr.top}}
+    var a=R(to),z=R(from),maxB=0,minL=1e9,rowFirst=true;
+    spans.forEach(function(k){var r=R(k);if(r.l<minL)minL=r.l;if(k!==to&&Math.abs(r.t-a.t)<6&&r.l<a.l)rowFirst=false});
+    Array.prototype.forEach.call(c.children,function(k){if(k.classList.contains('loop-svg'))return;var b=k.getBoundingClientRect().bottom-cr.top;if(b>maxB)maxB=b});
+    var y=maxB+16,x=minL-18,d,lx;
+    if(Math.abs(a.t-z.t)<6){d=rp([[z.cx,z.b],[z.cx,y],[a.cx,y],[a.cx,a.b+4]],10);lx=(a.cx+z.cx)/2}
+    else if(rowFirst){d=rp([[z.cx,z.b],[z.cx,y],[x,y],[x,a.cy],[a.l-4,a.cy]],10);lx=(x+z.cx)/2}
+    else{var top=a.t-14;d=rp([[z.cx,z.b],[z.cx,y],[x,y],[x,top],[a.cx,top],[a.cx,a.t-4]],10);lx=(x+z.cx)/2}
+    var id='lh'+(++n),s=document.createElementNS(NS,'svg');
+    s.setAttribute('class','loop-svg');s.setAttribute('width',cr.width);s.setAttribute('height',y+24);s.setAttribute('aria-hidden','true');
+    s.innerHTML='<defs><marker id="'+id+'" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0L10,5L0,10z" fill="currentColor"/></marker></defs>'+
+      '<path d="'+d+'" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#'+id+')"/>'+
+      '<text x="'+Math.max(lx,60)+'" y="'+(y+18)+'" text-anchor="middle"></text>';
+    s.querySelector('text').textContent='↺ '+(c.getAttribute('data-loop-label')||'');
+    c.appendChild(s);
+  }
+  var els=document.querySelectorAll('.loop');
+  function all(){els.forEach(draw)}
+  all(); window.addEventListener('resize',all);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(all);
+  if(window.ResizeObserver){var w={};var ro=new ResizeObserver(function(es){es.forEach(function(e){var c=e.target,k=Math.round(e.contentRect.width);if(c._w!==k){c._w=k;draw(c)}})});els.forEach(function(c){ro.observe(c)})}
+})();
+</script>
+<!--gm-js--><script>
+/* 跳出式小遊戲引擎：右下角按鈕 → 對話框；題目、解釋、計分；場景由各頁提供 */
+window.GMRUN=function(C){
+  var NS='http://www.w3.org/2000/svg',D=document;
+  var reduce=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
+  function el(tag,a,html,par){var e=D.createElementNS(NS,tag);if(a)for(var k in a)e.setAttribute(k,a[k]);if(html)e.innerHTML=html;if(par)par.appendChild(e);return e}
+  function h(tag,cls,html,par){var e=D.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;if(par)par.appendChild(e);return e}
+
+  /* ---------- 介面 ---------- */
+  var ICON='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.2" r=".6" fill="currentColor"/><circle cx="17.6" cy="13.6" r=".6" fill="currentColor"/></svg>';
+  var fab=h('button','gm-fab',ICON+'<span>小遊戲</span>',D.body);fab.type='button';fab.setAttribute('aria-haspopup','dialog');
+  var tip=h('div','gm-tip','<button type="button" class="gm-tipx" aria-label="關閉提示">×</button><b>考考你</b><span></span>',D.body);
+  tip.querySelector('span').textContent=C.teaser;
+  var ov=h('div','gm-ov',null,D.body);ov.hidden=true;
+  var dlg=h('div','gm-dlg','<div class="gm-hd"><b id="gmTitle"></b><button type="button" class="gm-x" aria-label="關閉小遊戲">×</button></div>'+
+    '<svg class="gm-stage" viewBox="'+(C.vb||'0 0 880 260')+'" role="img"></svg>'+
+    '<div class="gm-card"><div class="gm-prog"></div><p class="gm-q"></p><div class="gm-opts"></div><div class="gm-fb" aria-live="polite"></div></div>',ov);
+  dlg.setAttribute('role','dialog');dlg.setAttribute('aria-modal','true');dlg.setAttribute('aria-labelledby','gmTitle');
+  dlg.querySelector('#gmTitle').textContent='小遊戲：'+C.title;
+  var st=dlg.querySelector('svg'),qEl=dlg.querySelector('.gm-q'),oEl=dlg.querySelector('.gm-opts'),fEl=dlg.querySelector('.gm-fb'),pEl=dlg.querySelector('.gm-prog');
+  st.setAttribute('aria-label',C.alt||C.title);
+
+  /* ---------- 動畫工具 ---------- */
+  var loops=[],touts=[],fx;
+  function stopAll(){loops.forEach(clearInterval);touts.forEach(clearTimeout);loops=[];touts=[]}
+  var api={svg:st,reduce:reduce,el:el,
+    C:{co2:'#86a8e6',ch4:'#c9a66b',n2o:'#d28bb4',gas:'#8fae9a',smoke:'#9aa0a6'},
+    loop:function(fn,ms){fn();loops.push(setInterval(fn,reduce?ms*1.6:ms))},
+    later:function(fn,ms){touts.push(setTimeout(fn,reduce?0:ms))},
+    A:function(e,fr,ms,o){o=o||{};if(!e||!e.animate)return null;if(reduce&&o.iter===Infinity)return null;
+      var an=e.animate(fr,{duration:reduce?1:ms,delay:reduce?0:(o.delay||0),easing:o.ease||'ease-out',fill:o.fill||'forwards',iterations:o.iter||1,direction:o.dir||'normal'});
+      if(o.done)an.onfinish=o.done;return an},
+    /* 放一個物件：外層定位，內層可動（原點在底部中央） */
+    put:function(par,x,y,s,html,origin){var g=el('g',{transform:'translate('+x+' '+y+')'+(s&&s!==1?' scale('+s+')':'')},null,par||st);
+      var i=el('g',{},html,g);i.style.transformBox='fill-box';i.style.transformOrigin=origin||'50% 100%';i.outer=g;i.x=x;i.y=y;i.s=s||1;return i},
+    top:function(){if(!fx)fx=el('g',{});st.appendChild(fx);return fx},
+    puff:function(x,y,o){o=o||{};var g=el('g',{class:'gas'},null,api.top()),n=o.n||3,r=o.r||11;
+      for(var i=0;i<n;i++)el('circle',{cx:x+(i-(n-1)/2)*r*.9,cy:y+(i%2?-r*.55:0),r:r+(i===1?3:0),fill:o.color||api.C.gas,opacity:.6},null,g);
+      if(o.label){var t=el('text',{x:x,y:y-1},null,g);t.textContent=o.label}
+      g.style.transformBox='fill-box';g.style.transformOrigin='50% 50%';
+      var dx=o.dx==null?0:o.dx,dy=o.dy==null?-60:o.dy;
+      api.A(g,[{transform:'translate(0,0) scale(.35)',opacity:0},{opacity:.95,offset:.15},{transform:'translate('+dx+'px,'+dy+'px) scale('+(o.grow||1.5)+')',opacity:0}],o.ms||2400,{done:function(){g.remove()},fill:'none'});
+      if(reduce)api.later(function(){g.remove()},1200);return g},
+    pop:function(x,y,txt,o){o=o||{};var t=el('text',{class:'pop',x:x,y:y},null,api.top());t.textContent=txt;if(o.color)t.style.fill=o.color;if(o.size)t.style.fontSize=o.size+'px';
+      t.style.transformBox='fill-box';t.style.transformOrigin='50% 100%';
+      api.A(t,[{opacity:0,transform:'scale(.4)'},{opacity:1,transform:'scale(1.15)',offset:.2},{opacity:1,transform:'scale(1)',offset:.7},{opacity:0,transform:'translateY(-10px)'}],o.ms||1300,{done:function(){t.remove()},fill:'none'});
+      if(reduce)api.later(function(){t.remove()},1200);return t},
+    pulse:function(e){return api.A(e,[{transform:'scale(1)'},{transform:'scale(1.12)'},{transform:'scale(1)'}],700,{fill:'none'})},
+    /* 背景：地面、草、圍籬、太陽 */
+    bg:function(o){o=o||{};var gy=o.ground==null?200:o.ground,W=880,s='';
+      if(o.sun)s+='<circle cx="'+(o.sun[0])+'" cy="'+(o.sun[1])+'" r="22" fill="#f2c94c" opacity=".85"/>';
+      if(o.hills)s+='<path d="M0 '+(gy-10)+' Q140 '+(gy-70)+' 300 '+(gy-24)+' T600 '+(gy-30)+' T880 '+(gy-40)+' V'+gy+' H0Z" fill="var(--accent-soft)" opacity=".7"/>';
+      if(o.fence){s+='<g stroke="var(--line)" stroke-width="4" stroke-linecap="round"><line x1="0" y1="'+(gy-48)+'" x2="'+W+'" y2="'+(gy-48)+'"/><line x1="0" y1="'+(gy-28)+'" x2="'+W+'" y2="'+(gy-28)+'"/>';
+        for(var x=60;x<W;x+=140)s+='<line x1="'+x+'" y1="'+(gy-62)+'" x2="'+x+'" y2="'+(gy+4)+'"/>';s+='</g>'}
+      s+='<rect x="0" y="'+gy+'" width="'+W+'" height="'+(400-gy)+'" fill="'+(o.color||'var(--accent-soft)')+'"/>';
+      (o.grass||[]).forEach(function(x,i){var y=gy+14+(i%3)*12;s+='<path d="M'+(x-5)+' '+y+' q0 -6 -4 -10 M'+x+' '+y+' q0 -8 2 -13 M'+(x+5)+' '+y+' q1 -6 5 -10" stroke="var(--accent)" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/>'});
+      return el('g',{},s,st)},
+    text:function(x,y,txt,cls,par){var t=el('text',{x:x,y:y,class:cls||'lbl'},null,par||st);t.textContent=txt;return t}
+  };
+
+  /* ---------- 共用圖形（原點在底部中央，面向右） ---------- */
+  var K='#2b2b2b';
+  api.SH={
+    conifer:function(c){c=c||'#3f7d58';return '<rect x="-5" y="-24" width="10" height="24" fill="#7a5a3a"/><path d="M0 -112 L-24 -66 L24 -66Z" fill="'+c+'"/><path d="M0 -92 L-31 -44 L31 -44Z" fill="'+c+'"/><path d="M0 -70 L-38 -20 L38 -20Z" fill="'+c+'"/>'},
+    broad:function(c){c=c||'#4f8f5f';return '<rect x="-6" y="-44" width="12" height="44" fill="#7a5a3a"/><circle cx="-20" cy="-56" r="22" fill="'+c+'"/><circle cx="20" cy="-56" r="22" fill="'+c+'"/><circle cx="0" cy="-74" r="30" fill="'+c+'"/>'},
+    cabbage:'<ellipse cx="0" cy="-13" rx="24" ry="14" fill="#6fae5c"/><ellipse cx="-10" cy="-16" rx="12" ry="10" fill="#86c46f"/><ellipse cx="10" cy="-16" rx="12" ry="10" fill="#86c46f"/><ellipse cx="0" cy="-19" rx="12" ry="10" fill="#b4e09a"/><path d="M-5 -22 q5 -5 10 0" stroke="#6fae5c" stroke-width="2" fill="none"/>',
+    bamboo:function(hh){var s='<rect x="-4" y="-'+hh+'" width="8" height="'+hh+'" rx="3" fill="#7fae4f"/>';for(var y=22;y<hh;y+=22)s+='<rect x="-5" y="-'+y+'" width="10" height="3" fill="#5f8f3a"/>';
+      s+='<path d="M0 -'+(hh-6)+' q16 -6 26 2 q-14 4 -26 -2z M0 -'+(hh-18)+' q-16 -6 -26 2 q14 4 26 -2z M0 -'+(hh-30)+' q16 -4 24 4 q-14 2 -24 -4z" fill="#5f9f4f"/>';return s},
+    rice:function(grain){return '<path d="M0 0 q-5 -28 -16 -44 M0 0 q0 -34 2 -56 M0 0 q5 -28 15 -42 M0 0 q-2 -20 -9 -30" stroke="#5f9f4f" stroke-width="3" fill="none" stroke-linecap="round"/>'+(grain?'<path d="M2 -56 q10 4 12 18" stroke="#d9b44a" stroke-width="4" fill="none" stroke-linecap="round" stroke-dasharray="3 2"/>':'')},
+    mangrove:'<path d="M-24 0 q4 -26 22 -34 M24 0 q-4 -26 -22 -34 M-10 0 q2 -18 8 -34 M10 0 q-2 -18 -8 -34" stroke="#6b4e34" stroke-width="3" fill="none"/><rect x="-3" y="-62" width="6" height="30" fill="#6b4e34"/><ellipse cx="-18" cy="-62" rx="20" ry="13" fill="#4f8f5f"/><ellipse cx="18" cy="-62" rx="20" ry="13" fill="#4f8f5f"/><ellipse cx="0" cy="-74" rx="32" ry="18" fill="#3f7d58"/>',
+    spoonbill:'<line x1="-4" y1="-20" x2="-6" y2="0" stroke="'+K+'" stroke-width="2"/><line x1="5" y1="-20" x2="7" y2="0" stroke="'+K+'" stroke-width="2"/><ellipse cx="2" cy="-28" rx="17" ry="10" fill="#fafafa" stroke="'+K+'" stroke-width="1.5"/><path d="M-11 -33 Q-18 -44 -14 -50" stroke="#fafafa" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M-11 -33 Q-18 -44 -14 -50" stroke="'+K+'" stroke-width="1" fill="none" opacity=".4"/><circle cx="-15" cy="-52" r="6" fill="#fafafa" stroke="'+K+'" stroke-width="1.5"/><path d="M-20 -52 L-36 -45" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/><ellipse cx="-37" cy="-44" rx="4.5" ry="3.2" fill="'+K+'"/><circle cx="-16" cy="-53" r="1.3" fill="'+K+'"/>',
+    pig:'<rect x="-30" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="-16" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="12" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="26" y="-24" width="9" height="24" rx="3" fill="#e993a6"/>'+
+      '<path d="M-44 -42 q-10 -2 -8 -10 q2 -6 8 -2" stroke="'+K+'" stroke-width="2" fill="none"/><ellipse cx="0" cy="-38" rx="46" ry="26" fill="#f4b6c2" stroke="'+K+'" stroke-width="2"/>'+
+      '<circle cx="40" cy="-46" r="19" fill="#f4b6c2" stroke="'+K+'" stroke-width="2"/><path d="M30 -62 l4 -12 l8 9z" fill="#e993a6" stroke="'+K+'" stroke-width="1.5"/><ellipse cx="57" cy="-42" rx="8" ry="7" fill="#e993a6" stroke="'+K+'" stroke-width="2"/><circle cx="55" cy="-42" r="1.5" fill="'+K+'"/><circle cx="60" cy="-42" r="1.5" fill="'+K+'"/><circle cx="44" cy="-52" r="2.4" fill="'+K+'"/>',
+    tractor:'<rect x="-40" y="-42" width="58" height="22" rx="4" fill="#c0503a"/><rect x="-36" y="-74" width="30" height="34" rx="3" fill="none" stroke="'+K+'" stroke-width="3"/><rect x="10" y="-32" width="32" height="15" rx="3" fill="#c0503a"/><rect x="24" y="-56" width="5" height="26" fill="#555"/>'+
+      '<circle cx="-24" cy="-19" r="19" fill="#333"/><circle cx="-24" cy="-19" r="7" fill="#bbb"/><circle cx="32" cy="-12" r="12" fill="#333"/><circle cx="32" cy="-12" r="4.5" fill="#bbb"/>',
+    plow:'<path d="M-44 -26 L-64 -8 L-58 4 L-52 -6 M-58 -18 L-76 -2 L-70 8" stroke="#666" stroke-width="3.5" fill="none" stroke-linecap="round"/>',
+    pole:'<rect x="-3" y="-124" width="6" height="124" fill="#7a5a3a"/><rect x="-24" y="-116" width="48" height="5" fill="#7a5a3a"/><circle cx="-18" cy="-118" r="3" fill="#ccc"/><circle cx="18" cy="-118" r="3" fill="#ccc"/><path d="M4 -86 l-8 14 h7 l-5 14 l12 -18 h-7 l5 -10z" fill="#f2c94c" stroke="'+K+'" stroke-width="1"/>',
+    pond:'<ellipse cx="0" cy="-8" rx="52" ry="13" fill="#6b4e34"/><ellipse cx="0" cy="-10" rx="45" ry="8" fill="#9b7650"/>',
+    factory:'<rect x="30" y="-122" width="16" height="70" fill="#6f777f"/><rect x="-56" y="-60" width="112" height="60" fill="#8a929a"/><path d="M-56 -60 l28 -18 v18 l28 -18 v18 l28 -18 v18" fill="#8a929a"/>'+
+      '<rect x="-44" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="-18" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="8" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="-10" y="-20" width="20" height="20" fill="#5b636b"/>',
+    coin:function(t){return '<circle cx="0" cy="-13" r="13" fill="#e2b84a" stroke="#a7822a" stroke-width="2"/><text x="0" y="-8.5" text-anchor="middle" style="font:700 13px var(--font-num);fill:#7a5a1a">'+(t||'$')+'</text>'},
+    jar:'<path d="M-30 0 h60 v-58 q0 -8 -8 -8 h-44 q-8 0 -8 8z" fill="var(--paper)" stroke="var(--muted)" stroke-width="2.5"/><rect x="-24" y="-74" width="48" height="8" rx="3" fill="var(--muted)"/>',
+    bento:'<rect x="-62" y="-50" width="124" height="50" rx="6" fill="#b5764a" stroke="'+K+'" stroke-width="2"/><rect x="-56" y="-44" width="62" height="38" rx="3" fill="#fbf8ef"/><rect x="10" y="-44" width="46" height="18" rx="3" fill="#7fbf6a"/><rect x="10" y="-24" width="46" height="18" rx="3" fill="#f2d16b"/>'+
+      '<ellipse cx="-24" cy="-30" rx="26" ry="11" fill="#a0612f" stroke="#7a4520" stroke-width="2"/><path d="M-40 -32 h30 M-38 -27 h26" stroke="#7a4520" stroke-width="1.5"/>',
+    train:'<rect x="-110" y="-62" width="220" height="50" rx="10" fill="#e1e5ea" stroke="'+K+'" stroke-width="2"/><rect x="-110" y="-30" width="220" height="8" fill="#d0602f"/>'+
+      '<rect x="-96" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="-52" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="-8" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="36" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="80" y="-54" width="22" height="18" rx="3" fill="#7ea6c9"/>'+
+      '<circle cx="-74" cy="-8" r="8" fill="#333"/><circle cx="-50" cy="-8" r="8" fill="#333"/><circle cx="50" cy="-8" r="8" fill="#333"/><circle cx="74" cy="-8" r="8" fill="#333"/>',
+    dome:'<path d="M-56 0 v-30 a56 44 0 0 1 112 0 v30z" fill="#a7adb3" stroke="'+K+'" stroke-width="2"/><path d="M-56 -30 h112" stroke="'+K+'" stroke-width="1.5" opacity=".5"/><rect x="-6" y="-84" width="12" height="12" fill="#6f777f"/>',
+    bee:'<g><ellipse cx="-2" cy="-10" rx="5" ry="4" fill="#fff" opacity=".85"/><ellipse cx="4" cy="-10" rx="5" ry="4" fill="#fff" opacity=".85"/><ellipse cx="0" cy="-3" rx="9" ry="6.5" fill="#f2c230" stroke="'+K+'" stroke-width="1.2"/><path d="M-2 -9 v12 M3 -8.5 v11" stroke="'+K+'" stroke-width="2"/><circle cx="8" cy="-4" r="1.3" fill="'+K+'"/></g>',
+    flower:function(c){return '<path d="M0 0 v-30" stroke="#5f9f4f" stroke-width="3"/><path d="M0 -14 q-10 -4 -12 -12 q8 0 12 8" fill="#5f9f4f"/><g fill="'+(c||'#e98fa3')+'"><circle cx="0" cy="-40" r="6"/><circle cx="-8" cy="-33" r="6"/><circle cx="8" cy="-33" r="6"/><circle cx="-5" cy="-25" r="6"/><circle cx="5" cy="-25" r="6"/></g><circle cx="0" cy="-32" r="4.5" fill="#f2c94c"/>'},
+    larva:'<ellipse cx="0" cy="-4" rx="11" ry="4.5" fill="#efe6c8" stroke="#8a7a50" stroke-width="1"/><path d="M-5 -8 v8 M0 -8.5 v9 M5 -8 v8" stroke="#8a7a50" stroke-width=".8"/>',
+    truck:'<rect x="-50" y="-48" width="64" height="36" rx="3" fill="#7fa7c9" stroke="'+K+'" stroke-width="2"/><path d="M14 -40 h20 l12 14 v14 h-32z" fill="#d0602f" stroke="'+K+'" stroke-width="2"/><rect x="20" y="-36" width="12" height="10" fill="#cfe3f2"/><circle cx="-30" cy="-10" r="9" fill="#333"/><circle cx="30" cy="-10" r="9" fill="#333"/>',
+    shop:'<rect x="-50" y="-70" width="100" height="70" fill="#e9e4d6" stroke="'+K+'" stroke-width="2"/><path d="M-56 -70 h112 l-8 -18 h-96z" fill="#d0602f" stroke="'+K+'" stroke-width="2"/><rect x="-36" y="-50" width="30" height="24" fill="#cfe3f2" stroke="'+K+'" stroke-width="1.5"/><rect x="10" y="-44" width="24" height="44" fill="#8a6a4a"/>',
+    log:'<rect x="-26" y="-14" width="52" height="14" rx="7" fill="#9b7650" stroke="#6b4e34" stroke-width="2"/><ellipse cx="26" cy="-7" rx="5" ry="7" fill="#d9b98a" stroke="#6b4e34" stroke-width="1.5"/>',
+    seagrass:'<path d="M-10 0 q-6 -20 2 -40 M-3 0 q4 -24 -2 -48 M4 0 q-4 -18 4 -38 M11 0 q6 -16 0 -32" stroke="#3f8f6a" stroke-width="3.5" fill="none" stroke-linecap="round"/>'
+  };
+  /* 牛、羊（左上原點畫，包一層移到底部中央） */
+  var COW='<path d="M14 30 q-14 12 -8 34" fill="none" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/>'+
+    [22,38,80,96].map(function(x,i){return '<g class="leg" data-b="'+(i==1||i==2?1:0)+'"><rect x="'+x+'" y="50" width="10" height="32" rx="3" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/><rect x="'+x+'" y="76" width="10" height="7" fill="'+K+'"/></g>'}).join('')+
+    '<rect x="12" y="20" width="100" height="42" rx="19" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/>'+
+    '<path d="M30 21 q10 12 26 6 q4 -4 2 -7z" fill="'+K+'"/><ellipse cx="82" cy="44" rx="12" ry="8" fill="'+K+'"/><ellipse cx="44" cy="50" rx="6" ry="4" fill="'+K+'"/>'+
+    '<path d="M108 10 q-6 -9 0 -12 M126 9 q6 -9 0 -12" fill="none" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/><ellipse cx="102" cy="16" rx="8" ry="4" fill="#fbfaf6" stroke="'+K+'" stroke-width="2" transform="rotate(-20 102 16)"/>'+
+    '<rect x="102" y="6" width="34" height="32" rx="13" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/><rect x="118" y="23" width="24" height="17" rx="8" fill="#f0b8ad" stroke="'+K+'" stroke-width="2"/>'+
+    '<circle cx="114" cy="17" r="2.6" fill="'+K+'"/><circle cx="129" cy="30" r="1.8" fill="'+K+'"/><circle cx="137" cy="30" r="1.8" fill="'+K+'"/>';
+  var SHEEP=[24,36,66,78].map(function(x,i){return '<g class="leg" data-b="'+(i==1||i==2?1:0)+'"><rect x="'+x+'" y="50" width="7" height="30" rx="2" fill="#3b3631"/></g>'}).join('')+
+    [[24,38,14],[40,27,14],[60,25,14],[78,32,14],[32,52,12],[52,54,12],[72,50,12],[84,44,10]].map(function(c){return '<circle cx="'+c[0]+'" cy="'+c[1]+'" r="'+c[2]+'" fill="#f4f1e8" stroke="'+K+'" stroke-width="2"/>'}).join('')+
+    '<rect x="22" y="28" width="62" height="28" rx="14" fill="#f4f1e8"/><ellipse cx="92" cy="22" rx="8" ry="4" fill="#3b3631" transform="rotate(-25 92 22)"/>'+
+    '<ellipse cx="100" cy="32" rx="12" ry="14" fill="#3b3631"/><circle cx="96" cy="20" r="7" fill="#f4f1e8" stroke="'+K+'" stroke-width="2"/><circle cx="104" cy="28" r="2.6" fill="#fff"/><circle cx="104.5" cy="28.5" r="1.3" fill="'+K+'"/>';
+  api.SH.cow='<g transform="translate(-70 -83)">'+COW+'</g>';
+  api.SH.sheep='<g transform="translate(-56 -80)">'+SHEEP+'</g>';
+  api.SH.cowPts={mouth:[72,-47],nose:[74,-53],rear:[-62,-45]};
+  api.SH.sheepPts={mouth:[54,-40],nose:[56,-44],rear:[-44,-38]};
+  /* 跑步：腳擺動，回傳停止函式 */
+  api.legs=function(g){var a=[];g.querySelectorAll('.leg').forEach(function(l){l.style.transformBox='fill-box';l.style.transformOrigin='50% 0';
+      var an=api.A(l,[{transform:'rotate(20deg)'},{transform:'rotate(-20deg)'}],260,{iter:Infinity,dir:'alternate',ease:'ease-in-out',delay:l.getAttribute('data-b')==='1'?0:0,fill:'none'});
+      if(an&&l.getAttribute('data-b')==='1')an.currentTime=260;if(an)a.push(an)});
+    return function(){a.forEach(function(x){x.cancel()})}};
+
+  /* ---------- 遊戲流程 ---------- */
+  var Q=C.questions,idx=0,score=0,phase='idle',S=C.scene(api);
+  function act(n){if(n&&S.acts&&S.acts[n])S.acts[n]()}
+  function btn(t,cls,fn){var b=D.createElement('button');b.type='button';b.textContent=t;if(cls)b.className=cls;b.addEventListener('click',fn);return b}
+  function show(){phase='q';var q=Q[idx];pEl.textContent='第 '+(idx+1)+' 題／共 '+Q.length+' 題';qEl.textContent=q.q;oEl.innerHTML='';fEl.innerHTML='';
+    q.opts.forEach(function(o,i){oEl.appendChild(btn(o,'',function(){answer(i)}))});stopAll();act(q.act)}
+  function answer(i){phase='a';var q=Q[idx],right=i===q.ans;
+    oEl.querySelectorAll('button').forEach(function(b,j){b.disabled=true;b.classList.add(j===q.ans?'ok':j===i?'bad':'dim')});
+    if(right)score++;
+    if(q.after){stopAll();act(q.after)}
+    var why=typeof q.why==='object'?(q.why[i]||q.why.d):q.why;
+    var box=h('div','res '+(right?'ok':'bad'),'<b>'+(right?'答對了！':'答錯了')+'</b><p></p>',fEl);box.querySelector('p').textContent=right?q.ok:why;
+    var last=idx===Q.length-1,nx=btn(last?'看結果':(right?'下一題 →':'懂了，下一題 →'),'gm-next',function(){if(last)end();else{idx++;show()}});
+    fEl.appendChild(nx);try{nx.focus({preventScroll:true})}catch(e){}}
+  function end(){phase='end';stopAll();act('end');pEl.textContent='完成';
+    qEl.innerHTML='答對 <span class="gm-score">'+score+'／'+Q.length+'</span> 題';oEl.innerHTML='';fEl.innerHTML='';
+    var box=h('div','res ok','<b>重點</b><p></p>',fEl);box.querySelector('p').textContent=C.summary;
+    fEl.appendChild(btn('再玩一次','gm-next',function(){start()}))}
+  function start(){stopAll();idx=0;score=0;phase='enter';oEl.innerHTML='';fEl.innerHTML='';pEl.textContent='　';qEl.textContent=C.intro||'準備開始…';
+    S.enter(function(){if(phase==='enter')show()})}
+  var lastF=null;
+  function open(){hideTip();lastF=D.activeElement;ov.hidden=false;D.documentElement.classList.add('gm-lock');dlg.querySelector('.gm-x').focus();
+    if(phase==='idle'||phase==='enter')start();else if(phase==='q'||phase==='a')act(Q[idx].act)}
+  function close(){stopAll();ov.hidden=true;D.documentElement.classList.remove('gm-lock');if(phase==='enter')phase='idle';try{(lastF||fab).focus()}catch(e){}}
+  fab.addEventListener('click',open);
+  dlg.querySelector('.gm-x').addEventListener('click',close);
+  ov.addEventListener('click',function(e){if(e.target===ov)close()});
+  D.addEventListener('keydown',function(e){if(ov.hidden)return;
+    if(e.key==='Escape'){close();return}
+    if(e.key==='Tab'){var f=[].slice.call(dlg.querySelectorAll('button:not(:disabled)'));if(!f.length)return;var a=f[0],z=f[f.length-1];
+      if(e.shiftKey&&D.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&D.activeElement===z){e.preventDefault();a.focus()}}});
+
+  /* ---------- 提示泡泡：往下讀一段或停留 15 秒後出現一次 ---------- */
+  var tipDone=false,tipT;
+  function hideTip(){tip.classList.remove('on');clearTimeout(tipT)}
+  function showTip(){if(tipDone||!ov.hidden)return;tipDone=true;tip.classList.add('on');fab.classList.add('wig');tipT=setTimeout(hideTip,12000)}
+  tip.addEventListener('click',function(e){if(e.target.classList.contains('gm-tipx')){hideTip();return}open()});
+  setTimeout(showTip,15000);
+  window.addEventListener('scroll',function(){var m=D.scrollingElement||D.documentElement,max=m.scrollHeight-window.innerHeight;if(max>0&&(window.scrollY||m.scrollTop)>max*.25)showTip()},{passive:true});
+  api.open=open;return api;
+};
+GMRUN({title:'這算碳排嗎？',teaser:'牛羊打嗝，算碳排嗎？點我玩玩看',alt:'牧場上的牛和羊',intro:'牛羊準備出場…',vb:'0 70 880 180',
+summary:'打嗝、放屁 → 腸胃發酵的 CH₄，要算。呼吸 → 短期生物碳循環的 CO₂，不算。',
+scene:function(G){
+  var SH=G.SH;G.bg({ground:186,fence:true,grass:[30,150,260,410,470,590,720,840]});
+  var HERD=[{k:'cow',x:110,y:205,s:1},{k:'sheep',x:265,y:222,s:.95},{k:'cow',x:413,y:189,s:.9},{k:'sheep',x:589,y:224,s:1.05},{k:'cow',x:739,y:213,s:1.05}];
+  var an=HERD.slice().sort(function(a,b){return a.y-b.y}).map(function(h){return {g:G.put(null,h.x,h.y,h.s,SH[h.k]),h:h,p:SH[h.k+'Pts']}});
+  var ch4=false;
+  function at(a,k){return [a.h.x+a.p[k][0]*a.h.s,a.h.y+a.p[k][1]*a.h.s]}
+  function puff(a,t){var p;
+    if(t==='burp'){p=at(a,'mouth');G.puff(p[0],p[1],{dx:30,dy:-60,color:'#8fae9a',label:ch4?'CH₄':''});G.pop(p[0]+22,p[1]-18,'嗝！')}
+    else if(t==='fart'){p=at(a,'rear');G.puff(p[0],p[1],{dx:-36,dy:-28,color:'#b8a27a',label:ch4?'CH₄':''});G.pop(p[0]-24,p[1]-18,'噗～')}
+    else{p=at(a,'nose');G.puff(p[0],p[1],{dx:34,dy:-22,color:G.C.co2,n:2,r:8,label:'CO₂'})}
+    G.A(a.g,[{transform:'translateY(0)'},{transform:'translateY(-6px)'},{transform:'none'}],350,{fill:'none'})}
+  function tick(kind){an.slice().sort(function(){return Math.random()-.5}).slice(0,2).forEach(function(a,i){
+    G.later(function(){puff(a,kind==='both'?(Math.random()<.5?'burp':'fart'):kind)},i*500)})}
+  function loop(k){return function(){G.loop(function(){tick(k)},2000)}}
+  return {
+    enter:function(done){var longest=0;an.forEach(function(a,i){var d=i*220,t=2000+Math.random()*500,stop=G.legs(a.g);
+        G.A(a.g,[{transform:'translateX(-1000px)'},{transform:'none'}],t,{delay:d,ease:'cubic-bezier(.25,.75,.35,1)'});
+        setTimeout(stop,G.reduce?0:d+t-150);longest=Math.max(longest,d+t)});
+      ch4=false;G.later(done,longest)},
+    acts:{burp:loop('burp'),fart:loop('fart'),both:loop('both'),breath:loop('breath'),
+      reveal:function(){ch4=true;G.loop(function(){tick('both')},2000)}}
+  }},
+questions:[
+  {act:'burp',q:'牛羊打嗝，這算碳排嗎？',opts:['算','不算'],ans:0,
+   ok:'打嗝排出的是腸胃發酵產生的甲烷，是畜牧業最重要的直接排放。',
+   why:'要算。牛羊是反芻動物，瘤胃裡的微生物在缺氧下分解飼料，產生的氣體大部分靠打嗝排出來，講義 2 把它寫成「腸胃發酵（噯氣）」。講義 4 也說：腸內發酵屬人為排放，是畜牧業最重要的直接排放，依頭數與飼養天數計算。'},
+  {act:'fart',q:'那牛羊放屁呢？算碳排嗎？',opts:['算','不算'],ans:0,
+   ok:'放屁的氣體一樣來自腸胃發酵，只是量比打嗝少很多。',
+   why:'也要算。放屁和打嗝的氣體都來自腸胃發酵，只是從後面出來，量比打嗝少很多。盤查時不分嘴巴還是屁股，而是用「頭數 × 排放係數」整體算成「腸胃發酵」這一項。'},
+  {act:'both',after:'reveal',q:'打嗝和放屁排出的，主要是哪一種溫室氣體？',opts:['CO₂ 二氧化碳','CH₄ 甲烷','N₂O 氧化亞氮'],ans:1,
+   ok:'是甲烷 CH₄。GWP 約 27–30，同樣重量的暖化效果是 CO₂ 的二十幾倍。',
+   why:{0:'不是 CO₂。牛羊吐出的 CO₂ 來自呼吸，下一題會講。腸胃發酵在缺氧環境下進行，產生的是甲烷 CH₄，GWP 約 27–30。',
+        2:'不是 N₂O。N₂O 主要來自施肥和糞尿處理過程中的氮。腸胃發酵在缺氧環境下進行，產生的是甲烷 CH₄，GWP 約 27–30。'}},
+  {act:'breath',q:'牛羊呼吸吐出的 CO₂，算碳排嗎？',opts:['算','不算'],ans:1,
+   ok:'呼吸的 CO₂ 屬短期生物碳循環，不算。',
+   why:'不算。牛羊吃的草是從大氣吸收 CO₂ 長出來的，呼吸只是把這些碳還回大氣，屬短期生物碳循環。ISO 14064-1 Annex G 排除牲畜組織與呼吸的 CO₂。同樣來自草裡的碳，經腸胃發酵變成甲烷才要算。'}
+]});
+</script><!--/gm-js-->
+
+</body>
+</html>

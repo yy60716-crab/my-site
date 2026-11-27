@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>農林漁畜牧減排策略概論</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: 單欄閱讀講義，桌機左側固定目錄；筆記、ISO 連結、重點用不同框區分 */
+:root{
+  --bg:#f4f6f1; --paper:#ffffff; --fg:#1c231f; --muted:#5b6660; --line:#d9ded6;
+  --accent:#2f6a4c; --accent-soft:#e3eee6;
+  --ink:#2a4a9a; --ink-soft:#e8edf8;
+  --hl:#f3e27a; --soil:#9a6a22; --soil-soft:#f5ecdc;
+  --font-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --font-head:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --font-num:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141a17; --paper:#1b2320; --fg:#e4ebe6; --muted:#9aa8a0; --line:#2e3a35;
+  --accent:#7cc39b; --accent-soft:#1f3329; --ink:#9db4f0; --ink-soft:#1f2740;
+  --hl:#6b5d14; --soil:#d9a85a; --soil-soft:#30281a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141a17; --paper:#1b2320; --fg:#e4ebe6; --muted:#9aa8a0; --line:#2e3a35;
+  --accent:#7cc39b; --accent-soft:#1f3329; --ink:#9db4f0; --ink-soft:#1f2740;
+  --hl:#6b5d14; --soil:#d9a85a; --soil-soft:#30281a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.8;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1480px;margin:0 auto;display:grid;grid-template-columns:190px minmax(0,1fr);gap:36px;padding-block:32px 80px}
+@media (max-width:860px){.wrap{grid-template-columns:minmax(0,1fr)} nav.toc{position:static!important;max-height:none!important}}
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);align-self:start;max-height:calc(100vh - 32px);overflow:auto;font-size:14px}
+nav.toc h2{font-size:13px;letter-spacing:.12em;color:var(--muted);margin:0 0 8px;font-family:var(--font-body)}
+nav.toc ol{margin:0;padding-left:32px;display:grid;gap:4px}
+nav.toc a{color:var(--fg);text-decoration:none}
+nav.toc a:hover,nav.toc a:focus-visible{color:var(--accent);text-decoration:underline}
+main{min-width:0}
+.toc-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px}
+.toc-head h2{margin:0!important}
+.toc-btn{font:inherit;font-size:13px;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:6px;padding:2px 8px;cursor:pointer;line-height:1.6}
+.toc-btn:hover,.toc-btn:focus-visible{color:var(--accent);border-color:var(--accent)}
+.toc-open{display:none;white-space:nowrap}
+body.toc-off .wrap{grid-template-columns:76px minmax(0,1fr)}
+body.toc-off nav.toc>*:not(.toc-open){display:none}
+body.toc-off .toc-open{display:inline-block}
+@media (max-width:860px){body.toc-off .wrap{grid-template-columns:minmax(0,1fr)}}
+header.hero{border-bottom:3px solid var(--accent);padding-bottom:20px;margin-bottom:28px}
+.eyebrow{font-size:13px;letter-spacing:.14em;color:var(--accent);font-weight:700}
+h1{font-family:var(--font-head);font-weight:900;font-size:clamp(28px,5vw,42px);line-height:1.3;margin:6px 0 10px;text-wrap:balance}
+.meta{color:var(--muted);font-size:14px}
+h2{font-family:var(--font-head);font-size:26px;line-height:1.35;margin:56px 0 14px;text-wrap:balance;scroll-margin-top:16px}
+h2 .no{font-family:var(--font-num);color:var(--accent);font-size:18px;margin-right:10px}
+h3{font-size:19px;margin:30px 0 8px;color:var(--accent)}
+p{margin:10px 0}
+ul,ol{padding-left:22px;margin:8px 0}
+li{margin:3px 0}
+mark{background:linear-gradient(transparent 55%,var(--hl) 55%);color:inherit;padding:0 1px}
+.num{font-family:var(--font-num);font-variant-numeric:tabular-nums}
+.box{border-radius:10px;padding:14px 18px;margin:16px 0}
+.box>.tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.08em;padding:1px 8px;border-radius:999px;margin-bottom:4px}
+.box p,.box ul{margin:6px 0}
+.guide{background:var(--paper);border:1px solid var(--line)}
+.guide .tag{background:var(--accent);color:var(--paper)}
+.note{background:var(--ink-soft);border-left:4px solid var(--ink)}
+.note .tag{background:var(--ink);color:var(--paper)}
+.note .hand{color:var(--ink);font-weight:500}
+.iso{background:var(--soil-soft);border-left:4px solid var(--soil)}
+.iso .tag{background:var(--soil);color:var(--paper)}
+.key{background:var(--accent-soft);border-left:4px solid var(--accent)}
+.key .tag{background:var(--accent);color:var(--paper)}
+.unclear{color:var(--muted);font-size:13px;border-bottom:1px dotted var(--muted)}
+.tbl{overflow-x:auto;width:fit-content;max-width:100%;margin:14px 0;border:1px solid var(--line);border-radius:8px;background:var(--paper)}
+table{border-collapse:collapse;width:auto;font-size:15px;min-width:480px}
+th,td{padding:8px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--accent-soft);font-weight:700;white-space:nowrap}
+td.r,th.r{text-align:right}
+td:first-child,th:first-child{white-space:nowrap}
+tr:last-child td{border-bottom:none}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:16px 0}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.stat b{display:block;font-family:var(--font-num);font-size:22px;color:var(--accent);line-height:1.3}
+.stat span{font-size:13px;color:var(--muted)}
+.axes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:16px 0}
+.axis{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:8px;padding:12px 14px}
+.axis h4{margin:0 0 4px;font-size:17px}
+.axis .goal{font-family:var(--font-num);color:var(--accent);font-weight:700}
+.fig{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0;width:fit-content;max-width:100%}
+.fig svg{display:block;max-width:100%;height:auto}
+.fig figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.fig .t{fill:var(--fg);font-size:14px;font-family:var(--font-body)}
+.fig .tb{fill:var(--fg);font-size:14px;font-weight:700;font-family:var(--font-body)}
+.fig .m{fill:var(--muted);font-size:12.5px;font-family:var(--font-body)}
+.fig .n{fill:var(--fg);font-size:13px;font-family:var(--font-num)}
+.fig .ax{stroke:var(--line);stroke-width:1}
+.fig .g-acc{fill:var(--accent)} .fig .s-acc{stroke:var(--accent)}
+.fig .g-soil{fill:var(--soil)} .fig .s-soil{stroke:var(--soil)}
+.fig .g-ink{fill:var(--ink)} .fig .s-ink{stroke:var(--ink)}
+.fig .g-mut{fill:var(--muted)} .fig .s-mut{stroke:var(--muted)}
+.fig .g-accs{fill:var(--accent-soft)} .fig .g-soils{fill:var(--soil-soft)} .fig .g-inks{fill:var(--ink-soft)}
+.fig .hit:hover{opacity:.8}
+.calc{width:fit-content;max-width:100%}
+.loop{position:relative;margin-top:22px!important;margin-bottom:48px!important;padding-left:26px}
+.loop-svg{position:absolute;left:0;top:0;overflow:visible;pointer-events:none;color:var(--accent)}
+.loop-svg text{fill:var(--accent);font-size:13px;font-family:var(--font-body)}
+.flow span.ok{background:var(--accent-soft);border-color:var(--accent);font-weight:700}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0;font-size:14px}
+.flow span{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:4px 10px}
+.flow i{font-style:normal;color:var(--muted)}
+details.q{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0}
+details.q summary{cursor:pointer;font-weight:500}
+details.q summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+details.q[open] summary{color:var(--accent)}
+details.q .a{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+dl.gloss{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 18px;margin:12px 0}
+dl.gloss dt{font-weight:700;color:var(--accent)}
+dl.gloss dd{margin:0}
+@media (max-width:560px){dl.gloss{grid-template-columns:minmax(0,1fr)} dl.gloss dd{margin-bottom:8px}}
+footer{margin-top:60px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+a.xref{display:block;width:fit-content;margin-top:6px}
+.steps{width:fit-content;max-width:100%}
+.box{width:fit-content;max-width:100%}
+.flow span{display:inline-flex;align-items:center;gap:8px}
+.flow span .fi{width:22px;height:22px;flex:none;fill:none;stroke:var(--accent);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.flow span .tx{font-style:normal}
+</style>
+<style>
+.formula{font-family:var(--font-num);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px;overflow-x:auto;white-space:nowrap;font-size:15px;margin:8px 0}
+.calc{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:16px 0;display:grid;gap:12px}
+.calc .row{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:end}
+.calc label{display:grid;gap:4px;font-size:14px;color:var(--muted)}
+.calc input{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 10px;width:160px;max-width:100%}
+.calc input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.calc .out{font-family:var(--font-num);font-size:15px;line-height:1.9;border-top:1px dashed var(--line);padding-top:10px}
+.calc .out b{color:var(--accent);font-size:20px}
+.steps{counter-reset:s;list-style:none;padding:0;display:grid;gap:8px;margin:12px 0}
+.steps li{counter-increment:s;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px 12px 8px 44px;position:relative}
+.steps li::before{content:counter(s);position:absolute;left:12px;top:8px;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--paper);font-family:var(--font-num);font-size:13px;display:grid;place-items:center}
+</style>
+<!--gm-css--><style>
+/* 跳出式小遊戲 */
+.gm-fab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));z-index:60;display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:15px;font-weight:700;color:var(--paper);background:var(--accent);border:0;border-radius:999px;padding:10px 18px 10px 14px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.22)}
+.gm-fab svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.gm-fab:hover,.gm-fab:focus-visible{filter:brightness(1.08);outline:2px solid var(--fg);outline-offset:2px}
+.gm-fab.wig{animation:gmWig .9s ease-in-out 2}
+@keyframes gmWig{0%,100%{transform:rotate(0)}20%{transform:rotate(-8deg) scale(1.06)}40%{transform:rotate(7deg) scale(1.06)}60%{transform:rotate(-4deg)}80%{transform:rotate(3deg)}}
+.gm-tip{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(max(16px,env(safe-area-inset-bottom,0px)) + 58px);z-index:60;max-width:min(300px,calc(100vw - 32px));background:var(--paper);color:var(--fg);border:2px solid var(--accent);border-radius:14px;padding:10px 34px 10px 14px;font-size:15px;line-height:1.55;box-shadow:0 6px 20px rgba(0,0,0,.2);cursor:pointer;opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .3s,transform .3s}
+.gm-tip.on{opacity:1;transform:none;pointer-events:auto}
+.gm-tip::after{content:"";position:absolute;right:34px;bottom:-9px;width:14px;height:14px;background:var(--paper);border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(45deg)}
+.gm-tip b{display:block;font-size:12px;letter-spacing:.1em;color:var(--accent)}
+.gm-tipx{position:absolute;top:4px;right:6px;font:inherit;font-size:18px;line-height:1;color:var(--muted);background:none;border:0;cursor:pointer;padding:4px}
+html.gm-lock,html.gm-lock body{overflow:hidden}
+.gm-ov{position:fixed;inset:0;z-index:70;background:rgba(10,16,13,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.gm-ov[hidden]{display:none}
+.gm-dlg{background:var(--paper);color:var(--fg);border-radius:14px;width:100%;max-width:780px;max-height:calc(100vh - 32px);overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.gm-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px 10px 18px;border-bottom:1px solid var(--line)}
+.gm-hd b{font-family:var(--font-head);font-size:18px}
+.gm-x{font:inherit;font-size:22px;line-height:1;color:var(--muted);background:none;border:1px solid var(--line);border-radius:8px;width:36px;height:36px;cursor:pointer}
+.gm-x:hover,.gm-x:focus-visible{color:var(--accent);border-color:var(--accent)}
+.gm-stage{display:block;width:100%;height:auto;background:linear-gradient(var(--bg),var(--paper))}
+.gm-stage text{font-family:var(--font-body)}
+.gm-stage .lbl{fill:var(--fg);font-size:14px;font-weight:700;text-anchor:middle}
+.gm-stage .sub{fill:var(--muted);font-size:12px;text-anchor:middle}
+.gm-stage .pop{fill:var(--fg);font:900 19px var(--font-head);text-anchor:middle}
+.gm-stage .gas text{fill:var(--fg);font:700 13px var(--font-num);text-anchor:middle;dominant-baseline:middle}
+.gm-card{padding:14px 20px 20px}
+.gm-prog{font-size:13px;color:var(--muted);letter-spacing:.06em;min-height:1.4em}
+.gm-q{font-family:var(--font-head);font-size:21px;font-weight:700;margin:4px 0 12px;line-height:1.45}
+.gm-opts{display:flex;flex-wrap:wrap;gap:10px}
+.gm-opts button,.gm-next{font:inherit;font-size:16px;font-weight:700;color:var(--fg);background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:8px 18px;cursor:pointer;min-width:90px;text-align:left;line-height:1.5}
+.gm-opts button:hover:not(:disabled),.gm-opts button:focus-visible{border-color:var(--accent);color:var(--accent)}
+.gm-opts button:disabled{cursor:default}
+.gm-opts button.ok{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.gm-opts button.bad{background:var(--soil);border-color:var(--soil);color:var(--paper)}
+.gm-opts button.dim{opacity:.45}
+.gm-fb{margin-top:12px}
+.gm-fb .res{border-radius:10px;padding:12px 16px;margin:0 0 10px}
+.gm-fb .res.ok{background:var(--accent-soft);border-left:4px solid var(--accent)}
+.gm-fb .res.bad{background:var(--soil-soft);border-left:4px solid var(--soil)}
+.gm-fb .res b{display:block;font-size:17px;margin-bottom:2px}
+.gm-fb .res.ok b{color:var(--accent)}
+.gm-fb .res.bad b{color:var(--soil)}
+.gm-fb .res p{margin:4px 0}
+.gm-next{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.gm-next:hover,.gm-next:focus-visible{filter:brightness(1.08)}
+.gm-score{font-family:var(--font-num);font-size:28px;color:var(--accent);font-weight:700}
+@media (max-width:560px){.gm-q{font-size:18px}.gm-card{padding:12px 14px 16px}.gm-opts button{flex:1 1 100%}.gm-ov{padding:8px}.gm-dlg{max-height:calc(100vh - 16px)}}
+@media (prefers-reduced-motion:reduce){.gm-fab.wig{animation:none}.gm-tip{transition:none}}
+</style><!--/gm-css-->
+
+<style>
+.site-nav{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px;max-width:1480px;margin:0 auto;padding-top:20px}
+.site-nav+.wrap{padding-top:16px}
+.site-nav a{color:var(--muted);text-decoration:none}
+.site-nav a:hover,.site-nav a:focus-visible{color:var(--accent);text-decoration:underline}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:56px 0 0;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{display:block;padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--fg);text-decoration:none;font-size:15px}
+.pager a:hover,.pager a:focus-visible{border-color:var(--accent)}
+.pager small{display:block;color:var(--muted);font-size:12px}
+.pager .next{text-align:right;grid-column:2}
+@media (max-width:560px){.pager{grid-template-columns:1fr}.pager .next{grid-column:1}}
+</style>
+</head>
+<body>
+<nav class="site-nav" aria-label="網站導覽"><a href="index.html">← 回課程目錄</a><a href="../index.html">學習筆記首頁</a></nav>
+<div class="wrap">
+<nav class="toc" aria-label="目錄">
+  <button type="button" class="toc-btn toc-open" id="tocShow" aria-label="展開目錄">目錄 »</button>
+  <div class="toc-head"><h2>目錄</h2><button type="button" class="toc-btn" id="tocHide" aria-label="收起目錄">« 收起</button></div>
+  <p style="margin:0 0 6px"><a href="#guide">導讀</a></p>
+  <ol>
+    <li><a href="#frame">排放在哪裡：來源與邊界</a></li>
+    <li><a href="#logic">減排措施怎麼改變排放</a></li>
+    <li><a href="#crop">農作減排</a></li>
+    <li><a href="#forest">林業減排</a></li>
+    <li><a href="#livestock">畜牧減排</a></li>
+    <li><a href="#fishery">漁業與養殖減排</a></li>
+    <li><a href="#plan">措施排序與場域提案</a></li>
+    <li><a href="#supp">補充：水稻甲烷減排計算</a></li>
+    <li><a href="#quiz">自我測驗</a></li>
+    <li><a href="#gloss">名詞表</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="hero">
+  <h1>農林漁畜牧減排策略概論</h1>
+</header>
+
+<section id="guide">
+  <div class="box guide">
+    <span class="tag">導讀</span>
+    <p>這份講義用同一套思路走過農、林、畜牧、漁業四個場域：<mark>辨識來源 → 理解機制 → 選擇措施 → 確認成效</mark>。重點不是背措施清單，而是每個措施都要說得出「跟什麼基線比」「排放怎麼變」「用什麼證據確認」。</p>
+    <p>三個閱讀重點：</p>
+    <ul>
+      <li>能源排放和非能源排放（CH₄、N₂O）要分開算；減排和增匯也分開算，見 <a href="#frame">第 1 節</a>。</li>
+      <li>稻田乾濕交替（AWD）是最具代表性的例子：CH₄ 降 35%，但 N₂O 增 20%，要合起來看，見 <a href="#crop">第 3 節</a>。</li>
+      <li>「單位產品排放下降」不等於「總排放下降」，畜牧和漁業都有演算例，見 <a href="#livestock">第 5 節</a>、<a href="#fishery">第 6 節</a>。</li>
+    </ul>
+    <p style="font-size:14px;color:var(--muted)">框的顏色：<span style="color:var(--ink)">藍色＝上課手寫筆記</span>、<span style="color:var(--soil)">棕色＝跟 ISO 或其他講義的連結</span>、綠色＝重點。</p>
+  </div>
+</section>
+
+<section id="frame">
+<h2><span class="no">01</span>排放在哪裡：來源與邊界</h2>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">排跟匯是兩回事。減排看的是「不確定性」。<br>碳庫、碳源、碳匯；減排增匯；淨捕捉：自然碳匯。</p></div>
+<h3>全球碳循環</h3>
+<div class="stats">
+  <div class="stat"><b>9.4</b><span>化石燃料排放（Gt C／年）</span></div>
+  <div class="stat"><b>1.6</b><span>土地利用變化排放（Gt C／年）</span></div>
+  <div class="stat"><b>3.4</b><span>陸地吸收（Gt C／年）</span></div>
+  <div class="stat"><b>2.5</b><span>海洋吸收（Gt C／年）</span></div>
+  <div class="stat"><b>+5.1</b><span>留在大氣、每年增加（Gt C／年）</span></div>
+</div>
+<p>碳庫存量：大氣 860、植被 550、土壤 2,400、化石燃料 1,500、海洋 38,000 Gt C（Friedlingstein 等 2019，歷史資料）。排放 11.0 減掉陸海吸收 5.9，剩下 5.1 留在大氣。</p>
+<p>全球食物系統排放約占總排放 52.3 億噸 CO₂e 的 26%：畜牧與漁業 31%、作物生產 27%、土地利用 24%、供應鏈 18%（Our World in Data，Poore &amp; Nemecek 2018）。這是含土地利用與供應鏈的全球估計，不是臺灣清冊農業部門的占比。</p>
+
+<h3>國家清冊分類 vs. 專案邊界</h3>
+<p>國家清冊依<b>來源</b>分部門；專案評估則納入<b>受措施影響</b>的所有排放。清冊裡分屬不同部門的排放，可能同時落在同一個農場的專案邊界內。</p>
+<div class="tbl"><table>
+<tr><th>清冊部門</th><th>清冊中的來源</th><th>專案評估要考量的排放</th></tr>
+<tr><td>農業</td><td>腸內發酵、糞尿、稻田與土壤</td><td>受措施影響的 CH₄、N₂O 及邊界內其他相關排放</td></tr>
+<tr><td>能源</td><td>燃料燃燒、用電對應的發電排放</td><td>燃油、用電及新增設備耗能，外購電力也要納入</td></tr>
+<tr><td>LULUCF</td><td>土地利用與碳庫變化</td><td>避免碳損失算減排；增加的碳移除另外列計</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">稻田：溫室氣體排放最多。LULUCF ＝ 土地利用變遷。</p></div>
+<div class="box iso"><span class="tag">連結講義 2</span><p>同一座農場的柴油和電歸能源部門，腸胃發酵和糞尿歸農業部門，這就是講義 2 講的清冊邊界。專案評估則把它們都拉回同一個邊界裡。<a class="xref" href="02-emission-inventory.html#compare">講義 2〈同樣叫盤查，邊界不能互換〉↗</a></p></div>
+
+<h3>排放來源與碳移除：分開核算</h3>
+<div class="tbl"><table>
+<tr><th>類型</th><th>農業活動</th><th>核算時注意</th></tr>
+<tr><td>能源使用排放</td><td>農機、抽水、乾燥與冷藏的燃料及外購電力</td><td>用量 × 適用排放係數；外購電力對應發電端排放</td></tr>
+<tr><td>非能源過程排放</td><td>腸內發酵、糞尿與稻田 CH₄；土壤 N₂O；石灰、尿素的 CO₂</td><td>依活動與環境條件估算，<mark>同時考量 CH₄、N₂O 與 CO₂</mark>。CH₄（GWP 28）與 N₂O（GWP 265–273）是核心</td></tr>
+<tr><td>碳庫損失造成的排放</td><td>森林轉用、土壤有機碳分解、其他土地利用變化</td><td>追蹤碳庫變化與評估期間；避免既有碳損失屬於減排</td></tr>
+<tr><td>碳移除（增匯）</td><td>把大氣 CO₂ 移入植被或土壤</td><td>要有量測與持續性證據，不能只憑農法名稱認定（另課說明）</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">國家政策目前是「減係數」。<br>有機：最好的方法之一。減排：合理化施肥。</p></div>
+</section>
+
+<section id="logic">
+<h2><span class="no">02</span>減排措施怎麼改變排放</h2>
+<h3>兩種排放、兩種紀錄</h3>
+<div class="tbl"><table>
+<tr><th>類型</th><th>例子</th><th>紀錄重點</th><th>估算依據</th></tr>
+<tr><td>能源使用排放</td><td>抽水馬達、農機、燃油</td><td>燃料種類、用量、用電量</td><td>活動數據 × 適用排放係數</td></tr>
+<tr><td>非能源過程排放</td><td>牛隻、糞尿、稻田</td><td>水分、施氮、畜群與殘體管理</td><td>適用係數、模型或現地量測</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">用一致方法：係數最快（本土或 IPCC）；直接量測最貴。</p></div>
+<p>常見估算法：逐項計算「活動數據 AD × 排放係數 EF」再加總。措施改變排放的方式有四種：</p>
+<div class="tbl"><table>
+<tr><th>措施方向</th><th>改變了什麼</th><th>比較時要確認</th></tr>
+<tr><td>減少不必要活動</td><td>減少空轉、浪費與無效作業</td><td>活動量真的減少？生產功能與安全有維持？</td></tr>
+<tr><td>提高使用效率</td><td>同樣產出用更少能源或資材</td><td>每單位產品投入減少？全場總排放也降？</td></tr>
+<tr><td>降低單位活動排放</td><td>調整水分、日糧或能源來源</td><td>係數或模型適用新條件？其他氣體有沒有增加？</td></tr>
+<tr><td>捕集、替代與回收</td><td>捕集逸散氣體，或替代既有能源、材料</td><td>基線排放、實際替代量與洩漏；新增耗能與後續處理</td></tr>
+</table></div>
+
+<h3>淨減排量與 MRV</h3>
+<div class="formula">淨減排量 ＝ 基線排放 − 專案排放 − 邊界外洩漏排放</div>
+<p>專案排放包含新增耗能與後續處理；同一排放項目只算一次。</p>
+<div class="tbl"><table>
+<tr><th>M 監測</th><th>R 報告</th><th>V 查證</th></tr>
+<tr><td>記錄活動量與管理方式；保存量測結果與估算依據；記錄能源、資材用量與產量</td><td>說明基線、邊界與期間；列明計算方法、版本與假設；報告結果與不確定性</td><td>核對原始紀錄與計算；檢查缺漏與重複計算；依制度安排獨立查證</td></tr>
+</table></div>
+<div class="box key"><span class="tag">重要檢核</span><p><b>活動位移型洩漏（Activity-shift Leakage）</b>：減排措施如果讓場內產量變少，市場缺口可能被場外擴大開墾或增產補上，排放只是搬家。</p></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">增匯也一樣，要跟基線比較。歐盟碳邊境（CBAM）就是在避免洩漏。查證由查驗機構做。</p></div>
+<div class="box iso"><span class="tag">連結 ISO 14064-2</span><p>這條公式和講義 3、4 的 ER ＝ BE − PE − LE 完全相同。<a class="xref" href="04-iso-standards.html#p-core">講義 4〈核心觀念：基準情境〉↗</a></p></div>
+
+<h3>四個共用的決策問題</h3>
+<div class="tbl"><table>
+<tr><th>問題</th><th>要回答的內容</th></tr>
+<tr><td>來源</td><td>排放來自哪個環節、哪種氣體？</td></tr>
+<tr><td>措施</td><td>要調整哪些水分、施肥、飼料、能源或作業方式？</td></tr>
+<tr><td>條件</td><td>場域的土壤、供水、作物或畜種、設備符合措施需求嗎？</td></tr>
+<tr><td>證據</td><td>基線、投入量、排放量與產量怎麼記錄並保留證據？</td></tr>
+</table></div>
+<p>總量與每單位產品排放分開記錄；每項措施都要說明適用條件與確認方式。</p>
+</section>
+
+<section id="crop">
+<h2><span class="no">03</span>農作減排</h2>
+<div class="tbl"><table>
+<tr><th>來源</th><th>主要機制</th><th>管理措施</th></tr>
+<tr><td>水田 CH₄</td><td>淹水缺氧，有機碳分解產生 CH₄</td><td>水分與施肥管理、殘體投入</td></tr>
+<tr><td>氮肥 N₂O</td><td>可利用氮與乾濕變化影響 N₂O 生成</td><td>施肥量、時間、位置與肥料種類</td></tr>
+<tr><td>作業能源 CO₂</td><td>抽水、農機、乾燥與冷藏</td><td>改善設備效率、操作與能源選擇</td></tr>
+<tr><td>其他（依場域）</td><td>施用石灰、尿素產生的 CO₂</td><td>—</td></tr>
+</table></div>
+
+<h3>土壤 CH₄ 與 N₂O：產生 ≠ 排放</h3>
+<p>水分與氧氣調節碳氮轉化，<b>土壤裡產生多少氣體，不等於排到大氣多少</b>。</p>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21c0-9 6-16 16-17-1 10-8 16-16 17z"/><path d="M5 21 14 12"/></svg><em class="tx">可分解的有機碳<br><small>稻草、根分泌物</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18a4 4 0 0 1-.6-8A5.5 5.5 0 0 1 17 9a4.5 4.5 0 0 1 .5 9z"/></svg><em class="tx">缺氧下產生 CH₄<br><small>產甲烷作用</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="7" r="2.5"/><circle cx="18" cy="7" r="2.5"/><circle cx="12" cy="17" r="2.5"/><path d="M8.5 7h7M7.3 9.2l3.5 5.6M16.7 9.2l-3.5 5.6"/></svg><em class="tx">部分被氧化消耗<br><small>含氧表土與根際</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18a4 4 0 0 1-.6-8A5.5 5.5 0 0 1 17 9a4.5 4.5 0 0 1 .5 9z"/></svg><em class="tx">排到大氣<br><small>植株通氣組織、氣泡、擴散</small></em></span></div>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="7" r="2.5"/><circle cx="18" cy="7" r="2.5"/><circle cx="12" cy="17" r="2.5"/><path d="M8.5 7h7M7.3 9.2l3.5 5.6M16.7 9.2l-3.5 5.6"/></svg><em class="tx">NH₄⁺ 與 NO₃⁻<br><small>氮肥與有機氮</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5"/><circle cx="10.5" cy="11" r=".8"/><circle cx="13.5" cy="13.5" r=".8"/><path d="M12 7V3M12 21v-4M7 12H3M21 12h-4M8.5 8.5 6 6M18 18l-2.5-2.5M8.5 15.5 6 18M18 6l-2.5 2.5"/></svg><em class="tx">硝化／反硝化<br><small>兩者都會產生 N₂O</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="7" r="2.5"/><circle cx="18" cy="7" r="2.5"/><circle cx="12" cy="17" r="2.5"/><path d="M8.5 7h7M7.3 9.2l3.5 5.6M16.7 9.2l-3.5 5.6"/></svg><em class="tx">部分還原為 N₂<br><small>N₂ 不是溫室氣體</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18a4 4 0 0 1-.6-8A5.5 5.5 0 0 1 17 9a4.5 4.5 0 0 1 .5 9z"/></svg><em class="tx">N₂O 排到大氣</em></span></div>
+<p>持續淹水通常有利 CH₄ 產生；排水、再濕潤可能改變 N₂O。所以要<b>同時追蹤 CH₄、N₂O 與產量</b>，不能只看單一氣體。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">反硝化 ＝ 脫氮作用。<br>避免 N₂O：① 減少來源，提高施肥效率 ② 減少微生物作用。<br>化肥即溶（像西藥）；有機肥對土壤健康很有幫助（像中藥）。</p></div>
+
+<h3>稻田水分管理</h3>
+<div class="tbl"><table>
+<tr><th>管理型態</th><th>操作</th><th>比較時要確認</th></tr>
+<tr><td>持續淹水 CF</td><td>大部分生育期維持淹水</td><td>對照組有沒有短期排水；淹水深度與供水紀錄</td></tr>
+<tr><td>單次排水 SD</td><td>安排一段排水曬田</td><td>排水時點、持續時間、乾燥程度、再灌時機</td></tr>
+<tr><td>多次排水 MD／乾濕交替 AWD</td><td>多次排水與再灌；AWD 依觀測水分決定再灌時機</td><td>各研究的操作定義是否一致；供排水能力與實際乾燥程度</td></tr>
+</table></div>
+<ul>
+  <li>「落乾天數」不能單獨代表乾燥程度；水位、水勢、含水量是不同指標。</li>
+  <li>國際 Safe AWD 標準：用開孔水深管（Field Water Tube）觀測，水面自然降到土表下 10–15 cm（或土壤水勢 ≥ −15 至 −20 kPa）就立刻復水，兼顧產量。</li>
+</ul>
+<figure class="fig">
+<svg viewBox="0 0 760 330" width="760" role="img" aria-label="概念圖：乾濕交替灌溉在分蘗期多次落乾，甲烷排放通量一直低於持續淹水">
+<text x="90" y="24" text-anchor="middle" class="m">移植返青</text><text x="210" y="24" text-anchor="middle" class="m">分蘗期</text><text x="330" y="24" text-anchor="middle" class="m">幼穗形成</text><text x="450" y="24" text-anchor="middle" class="m">抽穗開花</text><text x="570" y="24" text-anchor="middle" class="m">灌漿成熟</text><text x="690" y="24" text-anchor="middle" class="m">收穫</text>
+<text x="10" y="80" class="tb">水位</text>
+<line x1="90" x2="690" y1="110" y2="110" class="s-soil" stroke-width="1.5"/>
+<text x="696" y="114" class="m">田面</text>
+<rect x="330" y="40" width="180" height="12" rx="3" class="g-soils"/>
+<text x="420" y="50" text-anchor="middle" class="m" style="font-size:11px">敏感期：避免缺水</text>
+<path d="M90,70 C200,68 400,66 560,68 S640,80 690,130" fill="none" class="s-ink" stroke-width="2.2"/>
+<path d="M90,72 C120,72 130,128 150,128 C170,128 175,72 195,72 C215,72 220,128 240,128 C260,128 265,74 290,74 C320,74 330,100 350,100 C370,100 380,74 400,74 L520,74 C560,74 580,100 600,100 C620,100 640,90 690,140" fill="none" class="s-acc" stroke-width="2.2" stroke-dasharray="6 4"/>
+<text x="10" y="200" class="tb">CH₄</text><text x="10" y="218" class="m">排放通量</text>
+<line x1="90" x2="690" y1="290" y2="290" class="ax"/>
+<path d="M90,270 C200,255 300,240 400,215 C480,195 560,200 690,235" fill="none" class="s-ink" stroke-width="2.2"/>
+<path d="M90,272 C130,270 145,282 155,278 C170,270 190,282 205,278 C230,270 250,268 300,262 C400,250 480,250 560,252 C620,255 650,262 690,270" fill="none" class="s-acc" stroke-width="2.2" stroke-dasharray="6 4"/>
+<text x="200" y="300" class="m" style="font-size:11px">↑ 落乾曝氣，抑制產甲烷</text>
+<line x1="470" x2="500" y1="316" y2="316" class="s-ink" stroke-width="2.2"/><text x="506" y="320" class="m">CF 持續淹水</text>
+<line x1="600" x2="630" y1="316" y2="316" class="s-acc" stroke-width="2.2" stroke-dasharray="6 4"/><text x="636" y="320" class="m">AWD 乾濕交替</text>
+</svg>
+<figcaption>概念示意，不是實測數據。分蘗期多次落乾讓土壤曝氣，甲烷通量下降；幼穗形成到抽穗開花是敏感期，要避免缺水。落乾初期可能短暫釋放土中既存的 CH₄。</figcaption>
+</figure>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">AWD ＝ 乾濕交替灌溉法。分蘗期的落乾就是「曬田」。<br>二期作的甲烷約是一期作的 10 倍。農法操作不能影響產量。</p></div>
+<div class="box iso"><span class="tag">連結講義 2</span><p>講義 2 的稻田甲烷計算器用的就是臺灣一期、二期作的本土排放係數。<a class="xref" href="02-emission-inventory.html#sources">講義 2〈五大農業排放源與 IPCC 公式〉↗</a></p></div>
+
+<h3>AWD 的適用條件</h3>
+<p>國外的再灌門檻要經本土驗證。<b>先確保能觀測、能排水、能及時再供水</b>，再評估減排成效。</p>
+<div class="tbl"><table>
+<tr><th>條件</th><th>場域必須確認</th><th>基本紀錄</th></tr>
+<tr><td>供排水能力</td><td>能控制灌排並及時重新供水；田面高差與鄰田水位影響</td><td>入排水時間、水位與降雨；抽水量與用能</td></tr>
+<tr><td>土壤與作物</td><td>土壤滲漏、保水與根系；避開品種敏感期</td><td>土壤性質、期作與生育期；實際水位／水勢／含水量</td></tr>
+<tr><td>生產與氣候成效</td><td>產量、米質與用水同步評估；CH₄ 與 N₂O 合併判讀；追肥錯峰避險</td><td>全季 CH₄、N₂O、收穫量與品質；施氮、殘體管理與灌排事件</td></tr>
+</table></div>
+
+<h3>研究結果：CH₄ 降 35%，合計暖化降 29%</h3>
+<figure class="fig">
+<svg viewBox="0 0 720 240" width="720" role="img" aria-label="排水管理的反應比：甲烷 0.65、氧化亞氮 1.20、合計暖化 0.71、產量 0.99"><line x1="200" x2="200" y1="20" y2="190" class="ax"/><text x="200" y="208" text-anchor="middle" class="m">0.5</text><line x1="311" x2="311" y1="20" y2="190" class="ax"/><text x="311" y="208" text-anchor="middle" class="m">0.75</text><line x1="422" x2="422" y1="20" y2="190" class="ax"/><text x="422" y="208" text-anchor="middle" class="m">1.0</text><line x1="533" x2="533" y1="20" y2="190" class="ax"/><text x="533" y="208" text-anchor="middle" class="m">1.25</text><line x1="422" x2="422" y1="20" y2="190" class="s-mut" stroke-width="1.5"/><text x="190" y="45" text-anchor="end" class="t">CH₄</text><line x1="240" x2="293" y1="40" y2="40" class="s-acc" stroke-width="2.5"/><circle class="hit g-acc" cx="267" cy="40" r="7" stroke="var(--paper)" stroke-width="2"><title>CH₄：RR 0.65（95% CI 0.59–0.71）</title></circle><text x="305" y="45" class="n">0.65 降 35%</text><text x="190" y="87" text-anchor="end" class="t">N₂O</text><line x1="453" x2="573" y1="82" y2="82" class="s-soil" stroke-width="2.5"/><circle class="hit g-soil" cx="511" cy="82" r="7" stroke="var(--paper)" stroke-width="2"><title>N₂O：RR 1.2（95% CI 1.07–1.34）</title></circle><text x="585" y="87" class="n">1.20 增 20%</text><text x="190" y="129" text-anchor="end" class="t">CH₄＋N₂O 合計暖化</text><line x1="262" x2="320" y1="124" y2="124" class="s-acc" stroke-width="2.5"/><circle class="hit g-acc" cx="293" cy="124" r="7" stroke="var(--paper)" stroke-width="2"><title>CH₄＋N₂O 合計暖化：RR 0.71（95% CI 0.64–0.77）</title></circle><text x="332" y="129" class="n">0.71 降 29%</text><text x="190" y="171" text-anchor="end" class="t">產量</text><line x1="409" x2="427" y1="166" y2="166" class="s-mut" stroke-width="2.5"/><circle class="hit g-mut" cx="418" cy="166" r="7" stroke="var(--paper)" stroke-width="2"><title>產量：RR 0.99（95% CI 0.97–1.01）</title></circle><text x="439" y="171" class="n">0.99 持平</text><text x="244" y="228" text-anchor="middle" class="m">← 比對照少</text><text x="511" y="228" text-anchor="middle" class="m">比對照多 →</text></svg>
+<figcaption>反應比 RR ＝ 措施值 ÷ 對照值，線段是 95% 信賴區間。CH₄ 大降、N₂O 小增，合計仍降 29%，產量幾乎不變。資料：Yagi 等（2020），原研究用 GWP100 CH₄ 34、N₂O 298。</figcaption>
+</figure>
+<p>研究平均減幅不代表每個場址的效果。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">穩產減排效應。</p></div>
+
+<h3>氮肥：4R 管理</h3>
+<p>施入的氮只有一部分被作物吸收，其餘可能留在土壤或流失：</p>
+<div class="tbl"><table>
+<tr><th>去向</th><th>說明</th></tr>
+<tr><td>作物吸收</td><td>NH₄⁺ 與 NO₃⁻ 都可被利用，支持生長與產量</td></tr>
+<tr><td>土壤保留</td><td>轉入微生物體與有機氮庫，之後可再礦化</td></tr>
+<tr><td>氣體途徑</td><td>硝化與反硝化產生 N₂O 或還原成 N₂，受水分、碳與氧氣影響</td></tr>
+<tr><td>其他流失</td><td>NH₃ 揮發、NO₃⁻ 淋洗與逕流；NH₃ 沉降後可能造成<b>間接 N₂O</b></td></tr>
+</table></div>
+<div class="tbl"><table>
+<tr><th>原則</th><th>作法</th><th>判讀與紀錄</th></tr>
+<tr><td>適量 Right rate</td><td>計入土壤及有機資材的供氮量</td><td>氮投入、作物吸氮與產量</td></tr>
+<tr><td>適時 Right time</td><td>依作物吸氮時期分次施肥</td><td>施肥、降雨與灌排時點</td></tr>
+<tr><td>適位 Right place</td><td>依根系分布與肥料性質選位置</td><td>土壤水分與氮流失</td></tr>
+<tr><td>適當肥源 Right source</td><td>依土壤條件選肥料或抑制劑</td><td>N₂O、NH₃、淋洗與成本</td></tr>
+</table></div>
+<p>氮利用效率（NUE）提高，不保證 N₂O 等比例下降，要確認氮收支、產量與排放。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">磷要釋放出來，效率低。</p></div>
+
+<h3>輪作、覆蓋與殘體管理</h3>
+<div class="tbl"><table>
+<tr><th>減排路徑</th><th>作法與可能效益</th><th>判讀條件與風險</th></tr>
+<tr><td>減少外加氮肥</td><td>豆科輪作或覆蓋作物供氮，依供氮量減少化肥</td><td>計入固氮與殘體分解供氮；殘體分解也會產生 N₂O</td></tr>
+<tr><td>改變作業</td><td>減耕、免耕與作業整合，減少機械與燃料</td><td>省了油，仍要檢查土壤排放；水分與供氮變化可能改變 N₂O</td></tr>
+<tr><td>調整殘體分解</td><td>調整還田時機與方式，管理殘體 C/N、含水率、埋深</td><td>淹水加上易分解碳會增加 CH₄；乾濕轉換可能改變 N₂O</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">減少土壤裸露。</p></div>
+<div class="tbl"><table>
+<tr><th>稻稈去向</th><th>田內可能變化</th><th>完整比較需要</th></tr>
+<tr><td>直接還田</td><td>碳氮在不同水分下分解，可能改變 CH₄、N₂O</td><td>投入量、C/N、還田時機、土壤水分、全期氣體排放</td></tr>
+<tr><td>移出再利用</td><td>田內可分解碳減少，可能降低 CH₄</td><td>收集、運輸、加工耗能；原處理方式與實際替代效益</td></tr>
+<tr><td>休耕期管理</td><td>改變下一期可分解碳氮量</td><td>休耕期與後作完整觀測；時間、資材與能源</td></tr>
+</table></div>
+<p><b>有機物投入不會自動帶來淨減排；移出田區也不能忽略場外排放。</b>土壤有機碳增加的增匯效益另外計算。</p>
+
+<h3>農業能源：三層策略</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.4-4.4"/></svg><em class="tx">01 減少需求<br><small>水分感測配合灌溉；整合作業、減少空轉待機</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><em class="tx">02 提高效率<br><small>高效泵浦與變頻；冷鏈保溫、冷媒與設備維護</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg><em class="tx">03 能源替代<br><small>電動化與再生能源，配合負載與運轉時段</small></em></span></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">第 1、2 層是減「數據」（活動量），第 3 層是減「係數」。</p></div>
+<div class="tbl"><table>
+<tr><th>作業環節</th><th>改善措施</th><th>比較基準與紀錄</th></tr>
+<tr><td>田間與水管理</td><td>減少怠速與重複作業；降低不必要揚程與輸水漏損</td><td>相同作業量或抽水任務的耗能；面積、水量、揚程、工時</td></tr>
+<tr><td>採後、乾燥與保存</td><td>控制進出料含水率；保溫、設備與餘熱利用</td><td>每單位合格產品的乾燥保存耗能；含水率、品質、損耗</td></tr>
+<tr><td>設施環控</td><td>配合溫濕度與作物需求；通風、隔熱與設備控制</td><td>相同環控需求下的耗能；油電、設定值、氣候、產量</td></tr>
+</table></div>
+<p>節能量與減排量分開算；換新設備或換能源，不代表自動達成淨減排。</p>
+
+<h3>低碳水稻：五項措施協同</h3>
+<div class="tbl"><table>
+<tr><th>措施</th><th>作用與協同重點</th><th>必要紀錄與指標</th></tr>
+<tr><td>01 水分管理</td><td>AWD 抑制產甲烷，避開敏感期並確保及時再灌</td><td>水位、排水與再灌時點；CH₄、N₂O、產量</td></tr>
+<tr><td>02 合理施肥</td><td>配合需氮與土壤供氮，減少乾濕轉換時多餘的無機氮</td><td>氮量、型態、時機；產量與 N₂O</td></tr>
+<tr><td>03 稻稈管理</td><td>調整投入量、時機與處理，評估易分解碳對 CH₄ 的影響</td><td>殘體量、C/N、還田時機；水分與 CH₄／N₂O</td></tr>
+<tr><td>04 高效灌溉</td><td>降低抽水與輸配水能耗，兼顧水分管理的供水能力</td><td>總抽水量、揚程、用電；kWh／m³</td></tr>
+<tr><td>05 農機節能</td><td>減少空轉與重複作業，改善負載與效率</td><td>燃油 L／ha、作業次數</td></tr>
+</table></div>
+<div class="box key"><span class="tag">成效指標</span><p>全場總排放量與每公斤稻穀排放量（kg CO₂e／kg）。<b>各措施的減幅不能直接加總</b>，要在同期間、同邊界下，連同產量、品質與新增排放一起看。</p></div>
+</section>
+
+<section id="forest">
+<h2><span class="no">04</span>林業減排</h2>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">林業的方法學最多。<br>已經長好的樹不是碳權，是基線；要有利用、經營，才有（人為的）增匯效益。</p></div>
+<h3>生產鏈的排放熱點</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22v-6"/><path d="M12 2 6 10h3l-4 6h14l-4-6h3z"/></svg><em class="tx">育苗與撫育<br><small>燃油、用水、資材</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22v-6"/><path d="M12 2 6 10h3l-4 6h14l-4-6h3z"/></svg><em class="tx">疏伐與採運<br><small>油耗、林道施工、保留木損傷</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 6h11v10H2zM13 10h4l4 3v3h-8"/><circle cx="6" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg><em class="tx">運輸與製材<br><small>載重、距離、製材合格率</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-4-3-6-4-10-2 2-3 4-3 6-1-1-2-2-2-4-2 2-5 5-5 8a7 7 0 0 0 7 7z"/></svg><em class="tx">乾燥與加工<br><small>熱源、設備效率、含水率</small></em></span></div>
+<h3>兩條減排路徑</h3>
+<div class="tbl"><table>
+<tr><th>路徑</th><th>管理重點</th><th>判定成效所需證據</th></tr>
+<tr><td>避免碳損失</td><td>避免森林轉用或<mark>退化</mark>；減少保留林木損傷與<mark>土壤擾動</mark></td><td>合理基線並監測碳庫變化；確認排放沒有轉移到場外</td></tr>
+<tr><td>作業與利用減排</td><td>降低採運、製材與乾燥耗能；評估能源替代</td><td>以相同產品功能與規格比較；耗油、用電與合格產品量</td></tr>
+</table></div>
+<p>造林與森林生長增加的移除量（增匯）、木製品碳儲存，另課處理。<b>既有碳存量不能直接當作減排量。</b></p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">避免退化：最高可達 20–30%。</p></div>
+
+<h3>避免碳損失：需要基線</h3>
+<div class="tbl"><table>
+<tr><th>情境</th><th>意思</th><th>怎麼估</th></tr>
+<tr><td>基線情境</td><td>沒有新措施時，可能發生的轉用或退化（要有資料支持）</td><td>土地利用變化、林木損傷、土壤擾動</td></tr>
+<tr><td>專案情境</td><td>實施管理後，實際仍發生的碳損失</td><td>現地調查與遙測，並追蹤場外影響</td></tr>
+</table></div>
+<div class="formula">避免排放量 ＝ 基線碳損失排放 − 專案碳損失排放 − 邊界外洩漏排放</div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">農業（改善土壤的方法學）：基線是過去慣行，沒有同時間進行。<br>栽培試驗是「對照組」概念，有同時間進行。</p></div>
+
+<h3>採運、加工與生質能源</h3>
+<div class="tbl"><table>
+<tr><th>環節</th><th>管理措施</th><th>追蹤指標</th></tr>
+<tr><td>採伐與集材</td><td>定向伐倒、集材路線規劃；機具維護、減少怠速</td><td>每單位作業量燃油；保留林木損傷與土壤擾動面積</td></tr>
+<tr><td>運輸與製材</td><td>適當裝載、減少空車；優化裁切、提高合格率</td><td>燃油／噸公里；合格材積／原木材積</td></tr>
+<tr><td>乾燥與加工</td><td>含水率控制、設備維護；餘熱回收與適當熱源</td><td>相同含水率合格品的單位耗能</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">土壤擾動：碳庫 → 碳源。</p></div>
+<p><b>生質能源</b>要比較完整供應鏈：</p>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/></svg><em class="tx">原料來源<br><small>原有處理方式、可供應量、含水率</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 6h11v10H2zM13 10h4l4 3v3h-8"/><circle cx="6" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg><em class="tx">收集與前處理<br><small>破碎、乾燥、堆存耗能與損失</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 6h11v10H2zM13 10h4l4 3v3h-8"/><circle cx="6" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg><em class="tx">運輸<br><small>距離、裝載率、回程空車</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg><em class="tx">能源轉換<br><small>設備效率、有效供熱／發電</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/></svg><em class="tx">實際替代<br><small>替代哪種燃料、多少能量</small></em></span></div>
+<p>以相同實際供電或供熱量比較。基線＝原料原有處理方式＋既有能源；專案＝原料收集到利用的排放＋其他受影響排放。<b>生質燃燒仍釋放 CO₂</b>，清冊把它分項列計，不代表整條供應鏈零排放。</p>
+<div class="box iso"><span class="tag">連結講義 4</span><p>生物碳（生質燃燒的 CO₂）在 ISO 14064-1 要和化石排放分開報告。<a class="xref" href="04-iso-standards.html#o-bio">講義 4〈農業特殊議題：生物碳源與土地〉↗</a></p></div>
+<div class="tbl"><table>
+<tr><th>候選措施</th><th>可改善的環節</th><th>採用前要確認</th></tr>
+<tr><td>動力工具電動化</td><td>替代現場燃油，提高能源效率</td><td>工作負荷、續航與充電；每單位作業用電與電力排放</td></tr>
+<tr><td>就近加工與供應</td><td>縮短運輸、減少重複搬運</td><td>完整物流、乾燥效率；同規格產品的合格率與損耗</td></tr>
+<tr><td>殘餘資材利用</td><td>再利用材料或替代既有能源</td><td>原有處理方式；替代效益與土壤、生態對資材的需求</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">生物碳：利用廢枝條、稻稈、農業剩餘物。</p></div>
+
+<h3>三個常見說法，都「不一定」</h3>
+<div class="tbl"><table>
+<tr><th>常見宣稱</th><th>還缺哪些證據</th></tr>
+<tr><td>「有保育，就有減排量」</td><td>沒有措施時會發生的轉用或<mark>退化</mark>；避免的碳損失、場外影響與監測結果</td></tr>
+<tr><td>「在地木材一定比較低碳」</td><td>相同功能產品的採運與加工排放；運輸、乾燥、合格率與損耗</td></tr>
+<tr><td>「生質能源就是零排放」</td><td>原料原有處理、供應鏈排放與碳庫影響；實際替代量、轉換效率、評估期間</td></tr>
+</table></div>
+<p>林業 MRV：監測碳庫（面積、存量、擾動）、作業（油電、木材含水率）、產品（合格材積、損耗、用途）；報告交代基線、邊界、係數與假設，區分總排放與排放強度；查證核對原始單據、檢查重複與場外排放風險。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">監測要看「庫、源、匯」。</p></div>
+</section>
+
+<section id="livestock">
+<h2><span class="no">05</span>畜牧減排</h2>
+<div class="tbl"><table>
+<tr><th>來源</th><th>重點</th></tr>
+<tr><td>動物與腸內發酵</td><td>牛羊瘤胃產生 CH₄；健康與繁殖影響生產效率</td></tr>
+<tr><td>飼料生產與利用</td><td>原料來源、飼料用量與轉換效率</td></tr>
+<tr><td>糞尿收集與處理</td><td>CH₄、N₂O 與施用後排放</td></tr>
+<tr><td>畜舍與作業能源</td><td>通風、降溫、加熱與用電</td></tr>
+</table></div>
+<p>牛羊要關注腸內 CH₄；豬禽則依飼養系統盤點飼料、糞尿與能源。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">問：哪一項最多？答：糞尿最多。</p></div>
+
+<h3>腸內發酵</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22V8"/><path d="M12 8c-2-1-3-3-3-5 2 1 3 3 3 5zm0 0c2-1 3-3 3-5-2 1-3 3-3 5zM12 13c-2-1-4-2-4-5 2 0 4 2 4 5zm0 0c2-1 4-2 4-5-2 0-4 2-4 5zM12 18c-2-1-4-2-4-5 2 0 4 2 4 5zm0 0c2-1 4-2 4-5-2 0-4 2-4 5z"/></svg><em class="tx">飼料有機物<br><small>纖維與可利用養分</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5"/><circle cx="10.5" cy="11" r=".8"/><circle cx="13.5" cy="13.5" r=".8"/><path d="M12 7V3M12 21v-4M7 12H3M21 12h-4M8.5 8.5 6 6M18 18l-2.5-2.5M8.5 15.5 6 18M18 6l-2.5 2.5"/></svg><em class="tx">瘤胃微生物發酵<br><small>提供養分，產生 H₂、CO₂</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5"/><circle cx="10.5" cy="11" r=".8"/><circle cx="13.5" cy="13.5" r=".8"/><path d="M12 7V3M12 21v-4M7 12H3M21 12h-4M8.5 8.5 6 6M18 18l-2.5-2.5M8.5 15.5 6 18M18 6l-2.5 2.5"/></svg><em class="tx">產甲烷古菌<br><small>MCR 酵素催化最後一步</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18a4 4 0 0 1-.6-8A5.5 5.5 0 0 1 17 9a4.5 4.5 0 0 1 .5 9z"/></svg><em class="tx">CH₄ 排放<br><small>每頭、每公斤產品分別記錄</small></em></span></div>
+<p>兩條路徑：<b>提高生產效率</b>（健康、繁殖、飼料利用，降低每單位產品的投入）和<b>直接抑制</b>（阻斷甲烷生成）。降低每公斤產品排放與降低單頭 CH₄ 是不同路徑，要分別量測。</p>
+<div class="tbl"><table>
+<tr><th>策略</th><th>作用</th><th>採用前要確認</th></tr>
+<tr><td>3-NOP</td><td>結合甲基輔酶 M 還原酶（MCR）活性位點，<mark>減少瘤胃甲烷生成</mark></td><td>持續投餵方式、日糧與長期效果；法規、動物健康與成本</td></tr>
+<tr><td>海門冬屬紅藻 Asparagopsis</td><td>三溴甲烷等成分阻斷古菌代謝，<mark>抑制產甲烷</mark></td><td>活性成分含量與儲存穩定性；採食量、殘留、動物健康</td></tr>
+<tr><td>日糧與營養調整</td><td>提高優質精料與中鏈脂肪酸，讓瘤胃發酵轉向「吸氫型丙酸途徑」，消耗合成甲烷所需的氫</td><td>維持纖維、營養與消化；追蹤採食量、產量、瘤胃健康</td></tr>
+</table></div>
+<p>試驗的最高減幅不能直接當作牧場減排率。</p>
+<p><b>豬禽精準營養</b>：依生長階段與可消化胺基酸需求調整日糧，減少過量供氮（飼料氮 → 動物吸收 → 產品中的氮與排泄氮）。追蹤飼料蛋白、採食量、飼料轉換率、增重或產蛋、健康與死亡率。<b>氮排泄下降不代表 N₂O 等比例下降</b>，還取決於後續糞尿管理。</p>
+
+<h3>糞尿管理：從收集到施用</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 6h11v10H2zM13 10h4l4 3v3h-8"/><circle cx="6" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg><em class="tx">收集與分流<br><small>減少不必要貯存；記錄糞尿量、固形物</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9h14v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"/><path d="M5 9c0-3 3-5 7-5s7 2 7 5"/><path d="M9 14h6M12 4V2"/></svg><em class="tx">液態／漿態<br><small>密閉厭氧消化</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9h14v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"/><path d="M5 9c0-3 3-5 7-5s7 2 7 5"/><path d="M9 14h6M12 4V2"/></svg><em class="tx">消化液貯存</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21v-9"/><path d="M12 12C12 7 9 5 4 5c0 5 3 7 8 7z"/><path d="M12 14c0-4 2.5-6 7-6 0 4-2.5 6-7 6z"/><path d="M6 21h12"/></svg><em class="tx">適量施用</em></span></div>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><em class="tx">分離固體</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9h14v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"/><path d="M5 9c0-3 3-5 7-5s7 2 7 5"/><path d="M9 14h6M12 4V2"/></svg><em class="tx">好氧堆肥<br><small>控制通氣與水分</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/></svg><em class="tx">成品貯存</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21v-9"/><path d="M12 12C12 7 9 5 4 5c0 5 3 7 8 7z"/><path d="M12 14c0-4 2.5-6 7-6 0 4-2.5 6-7 6z"/><path d="M6 21h12"/></svg><em class="tx">依作物需肥量施用</em></span></div>
+<p>液態路線的重點是 CH₄：密閉捕集、利用或燃燒，並控制後段逸散。固體路線的重點是 CH₄／N₂O：調整通氣、水分與氮供應，避免局部缺氧。<b>固液分離本身不保證減排</b>，固體與液體後續都要評估，避免只降低一段排放卻轉移到下一段。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">硫化物、氨是臭味主要來源。</p></div>
+
+<h3>沼氣：兩種效益、一個風險</h3>
+<div class="tbl"><table>
+<tr><th>效益</th><th>怎麼算</th></tr>
+<tr><td><mark>避免甲烷排放</mark></td><td>基線是原本會逸散的 CH₄，經捕集後實際燃燒或利用的量</td></tr>
+<tr><td>替代外購能源</td><td>依實際替代的供電或供熱量，計算被替代能源的減排</td></tr>
+</table></div>
+<p>專案排放要納入：設備耗能、甲烷洩漏、燃燒不完全與停機期間的排放、消化液貯存與田間施用。沼氣產量、設備容量、發電量都不能單獨代表淨減排量。</p>
+<div class="box key"><span class="tag">風險</span><p>嚴格監控密閉槽體與管閥：甲烷 GWP 為 28，講義指出若未燃燒的逸散洩漏率（Fugitive Leakage）超過 3%，增溫效應會抵銷發電的減量效益。</p></div>
+<div class="tbl"><table>
+<tr><th>環節</th><th>控制重點</th><th>必要紀錄</th></tr>
+<tr><td>收集與消化</td><td>依固形物含量調整進料；維持溫度與停留時間</td><td>進料量、固形物、溫度；沼氣量與 CH₄ 濃度</td></tr>
+<tr><td>捕氣與能源利用</td><td>槽體與管線檢漏；停機時備援燃燒</td><td>洩漏檢測與修復、火炬狀態；淨供電／供熱、停機時間</td></tr>
+<tr><td>堆肥與消化液</td><td>好氧堆肥通氣與水分；消化液貯存與施用</td><td>含水率、溫度、翻堆／曝氣；氮量、貯存時間、施用</td></tr>
+</table></div>
+
+<h3>排放強度下降，總排放仍可能增加</h3>
+<figure class="fig">
+<svg viewBox="0 0 660 280" width="660" role="img" aria-label="假設例：總排放增加 10%，產量增加 25%，單位產品排放降 12%"><line x1="20" x2="640" y1="200" y2="200" class="ax"/><rect class="hit g-mut" x="40" y="60" width="56" height="140" rx="4"><title>全場排放量 基線：100</title></rect><text x="68" y="54" text-anchor="middle" class="n">100</text><rect class="hit g-soil" x="102" y="46" width="56" height="154" rx="4"><title>全場排放量 改善後：110</title></rect><text x="130" y="40" text-anchor="middle" class="n">110</text><text x="99" y="222" text-anchor="middle" class="t">全場排放量</text><text x="99" y="240" text-anchor="middle" class="m">+10%</text><rect class="hit g-mut" x="250" y="60" width="56" height="140" rx="4"><title>產品產出量 基線：100</title></rect><text x="278" y="54" text-anchor="middle" class="n">100</text><rect class="hit g-soil" x="312" y="25" width="56" height="175" rx="4"><title>產品產出量 改善後：125</title></rect><text x="340" y="19" text-anchor="middle" class="n">125</text><text x="309" y="222" text-anchor="middle" class="t">產品產出量</text><text x="309" y="240" text-anchor="middle" class="m">+25%</text><rect class="hit g-mut" x="460" y="60" width="56" height="140" rx="4"><title>單位產品排放 基線：1.00</title></rect><text x="488" y="54" text-anchor="middle" class="n">1.00</text><rect class="hit g-acc" x="522" y="77" width="56" height="123" rx="4"><title>單位產品排放 改善後：0.88</title></rect><text x="550" y="71" text-anchor="middle" class="n">0.88</text><text x="519" y="222" text-anchor="middle" class="t">單位產品排放</text><text x="519" y="240" text-anchor="middle" class="m">−12%</text><rect x="440" y="258" width="12" height="12" rx="2" class="g-mut"/><text x="458" y="268" class="m">基線</text><rect x="510" y="258" width="12" height="12" rx="2" class="g-soil"/><text x="528" y="268" class="m">改善後</text></svg>
+<figcaption>假設數據。每單位產品排放降了 12%，但因為產量增加 25%，全場總排放反而多 10%。所以總量和強度要一起報告。</figcaption>
+</figure>
+<div class="box iso"><span class="tag">連結 ISO 14067</span><p>每單位產品排放就是碳足跡的「功能單位」概念；組織盤查（14064-1）看的是總量。兩者都要報告，才能分辨「做得更有效率」和「真的少排」。<a class="xref" href="04-iso-standards.html#c-scope">講義 4〈Goal &amp; Scope〉↗</a></p></div>
+<p>畜牧 MRV：動物與飼料（頭數、採食量、實際日糧、產量、健康）、糞尿與沼氣（原料、固形物、沼氣量與濃度、洩漏與停機）、能源與產品（油電、淨供電、產品量、飼料轉換率）。減排依據要適用於該畜種與日糧，總量與強度分開呈現。</p>
+</section>
+
+<section id="fishery">
+<h2><span class="no">06</span>漁業與養殖減排</h2>
+<div class="tbl"><table>
+<tr><th>生產系統</th><th>排放熱點</th></tr>
+<tr><td>捕撈漁業</td><td>船舶燃油、漁具、冷凍與航次</td></tr>
+<tr><td>投餵型養殖</td><td>飼料、用電、水體排放與損耗</td></tr>
+<tr><td>不投餵的養殖</td><td>作業與設施用能、系統的直接排放</td></tr>
+<tr><td>下游環節</td><td>製冰、冷媒、加工與配送</td></tr>
+</table></div>
+<p>先區分生產系統；生產減排與藍碳移除分開核算。</p>
+
+<h3>捕撈燃油</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15h18l-3 5H6z"/><path d="M6 15V9h12v6"/><path d="M12 9V4"/></svg><em class="tx">航行<br><small>船體螺槳維護；航速、距離、載重</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12c3-5 9-7 14-3l4-3v12l-4-3c-5 4-11 2-14-3z"/><circle cx="7" cy="11" r=".8"/></svg><em class="tx">搜尋魚群<br><small>航線與資源資訊，減少無效巡弋</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12c3-5 9-7 14-3l4-3v12l-4-3c-5 4-11 2-14-3z"/><circle cx="7" cy="11" r=".8"/></svg><em class="tx">漁具作業<br><small>漁具阻力與機具負荷</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M3.3 7l17.4 10M3.3 17 20.7 7"/><path d="m9 4 3 2 3-2M9 20l3-2 3 2"/></svg><em class="tx">冷凍與返港<br><small>保溫與冷凍設備，減少耗損</small></em></span></div>
+<p>兩個指標：<b>每航次總用油量</b>＋<b>每公斤可售漁獲用油量</b>。後者也受魚群資源量與搜尋難度影響，不能只用來判斷船機效率。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">活動數據要查驗。</p></div>
+<div class="tbl"><table>
+<tr><th>候選措施</th><th>可改善的環節</th><th>必要驗證與取捨</th></tr>
+<tr><td>船體與推進系統</td><td>清除附著物、維護螺槳；依條件調整航速與負荷</td><td>控制或校正海況；維護成本、航安、總油耗</td></tr>
+<tr><td>低阻力與輕量漁具</td><td>適當網目、線徑與材料；減少拖曳阻力</td><td>漁具強度、選擇性、漁獲品質；材料壽命與環境影響</td></tr>
+<tr><td>油電混合與作業規劃</td><td>依航程安排動力；改善輔機、減少無效巡弋</td><td>電池重量、充電來源、續航；燃油、用電、維護一起算</td></tr>
+</table></div>
+<div class="box iso"><span class="tag">連結講義 5</span><p>魷釣船換 LED 集魚燈的減量效益計算，見講義 5。<a class="xref" href="05-carbon-pricing.html#offset">講義 5〈碳權與減量效益：增量抵換〉↗</a></p></div>
+
+<h3>養殖：飼料、池塘氣體、增氧</h3>
+<div class="tbl"><table>
+<tr><th>管理方向</th><th>作用</th><th>紀錄與比較</th></tr>
+<tr><td>按需求投餵</td><td>依體型、攝食與水質投餵，減少殘餌與底泥有機物</td><td>飼料量、體重、水質、生物量增長、殘餌</td></tr>
+<tr><td>健康與存活</td><td>降低死亡與無效投入，提高合規格收穫量</td><td>疾病、死亡、存活率；收穫量、規格、品質</td></tr>
+<tr><td>配方與原料替代</td><td>配合可消化養分需求，檢視飼料上游排放</td><td>原料來源與加工能源；飼料轉換率（FCR）與成本</td></tr>
+</table></div>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21V10l9-7 9 7v11z"/><path d="M8 21v-7h8v7M8 14l8 7M16 14l-8 7"/></svg><em class="tx">殘餌與糞便</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h18M3 14h18M3 19h18"/><path d="M12 9V3m0 0-2 2m2-2 2 2"/></svg><em class="tx">底泥缺氧分解</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18a4 4 0 0 1-.6-8A5.5 5.5 0 0 1 17 9a4.5 4.5 0 0 1 .5 9z"/></svg><em class="tx">CH₄ 產生與氧化</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18a4 4 0 0 1-.6-8A5.5 5.5 0 0 1 17 9a4.5 4.5 0 0 1 .5 9z"/></svg><em class="tx">氣泡／擴散逸散<br><small>氣泡可快速穿過水層</small></em></span></div>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22V8"/><path d="M12 8c-2-1-3-3-3-5 2 1 3 3 3 5zm0 0c2-1 3-3 3-5-2 1-3 3-3 5zM12 13c-2-1-4-2-4-5 2 0 4 2 4 5zm0 0c2-1 4-2 4-5-2 0-4 2-4 5zM12 18c-2-1-4-2-4-5 2 0 4 2 4 5zm0 0c2-1 4-2 4-5-2 0-4 2-4 5z"/></svg><em class="tx">飼料與其他氮源</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="7" r="2.5"/><circle cx="18" cy="7" r="2.5"/><circle cx="12" cy="17" r="2.5"/><path d="M8.5 7h7M7.3 9.2l3.5 5.6M16.7 9.2l-3.5 5.6"/></svg><em class="tx">無機氮供應</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5"/><circle cx="10.5" cy="11" r=".8"/><circle cx="13.5" cy="13.5" r=".8"/><path d="M12 7V3M12 21v-4M7 12H3M21 12h-4M8.5 8.5 6 6M18 18l-2.5-2.5M8.5 15.5 6 18M18 6l-2.5 2.5"/></svg><em class="tx">微生物氮轉化</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18a4 4 0 0 1-.6-8A5.5 5.5 0 0 1 17 9a4.5 4.5 0 0 1 .5 9z"/></svg><em class="tx">N₂O 排到大氣</em></span></div>
+<p>池塘產生的氣體不一定全部排入大氣，要考量生成、消耗與逸散途徑。</p>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.4-4.4"/></svg><em class="tx">掌握需求<br><small>物種、水溫、鹽度、密度；日夜溶氧變化</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 16v-4M12 16V8M17 16v-7"/></svg><em class="tx">校正與監測<br><small>代表性測點；低氧警報與備援</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3.5 4.5 6 7.7 6 10.8A6 6 0 0 1 6 13.8C6 10.7 8.5 7.5 12 3z"/></svg><em class="tx">依溶氧控制<br><small>依負荷調整轉速，維持安全溶氧</small></em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 22l-2.4-1.8-3 .2-.9-2.9L3.2 15.8l1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><em class="tx">驗證成效<br><small>每公斤產品用電；存活率與氣體排放</small></em></span></div>
+<p><mark>增氧</mark>節能：以相同供氧需求與水質目標比較耗能。過度停機可能造成低氧、死亡，反而讓單位產品排放上升。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">增氧是為了避免厭氧反應（池塘 CH₄ 來自底泥厭氧分解）。</p></div>
+<p><b>循環水養殖（RAS）</b>：降低補水、提高環境控制，但增加抽水、供氧、過濾、溫控用電與備援用能。<b>節水不必然等於減排</b>，要以相同規格與數量的可售產品比較總排放。</p>
+
+<h3>冷鏈與配送</h3>
+<div class="tbl"><table>
+<tr><th>環節</th><th>管理措施</th><th>比較資料</th></tr>
+<tr><td>製冰與冷藏</td><td>保溫、設備維護、適當溫度；減少冷媒洩漏</td><td>用電、冷媒種類與補充量；庫存時間與損耗</td></tr>
+<tr><td>運輸與配送</td><td>整併運送、改善裝載；依品質需求選運具</td><td>距離、運具、載重、冷凍耗能；交付量與報廢量</td></tr>
+<tr><td>可售產品</td><td>降低死亡與腐敗損失</td><td>每公斤可售產品交付時的排放</td></tr>
+</table></div>
+
+<h3>演算：單一環節降 25%，整體降多少？</h3>
+<div class="calc">
+  <div class="row">
+    <label for="a1">用電 基線<input id="a1" type="number" value="40"></label>
+    <label for="b1">用電 措施後<input id="b1" type="number" value="30"></label>
+    <label for="a2">飼料 基線<input id="a2" type="number" value="50"></label>
+    <label for="b2">飼料 措施後<input id="b2" type="number" value="48"></label>
+    <label for="a3">水體 CH₄＋N₂O 基線<input id="a3" type="number" value="10"></label>
+    <label for="b3">水體 措施後<input id="b3" type="number" value="12"></label>
+  </div>
+  <div class="out" id="out6" aria-live="polite"></div>
+</div>
+<p style="font-size:14px;color:var(--muted)">預設值是講義的假設例（已換算的 CO₂e 指數，假設兩情境可售產量與品質相同）。</p>
+
+<h3>配套工具</h3>
+<div class="tbl"><table>
+<tr><th>導入障礙</th><th>可規劃的支持工具</th><th>必要配套</th></tr>
+<tr><td>資金與操作能力</td><td>設備融資或補助；示範、維護與操作培訓</td><td>先盤點熱點；追蹤實際節能與維護成本</td></tr>
+<tr><td>資訊與產品溝通</td><td>統一活動數據紀錄與碳足跡計算；採購誘因與可查核產品資訊</td><td>一致的比較單位與範圍；低碳標示是否帶來溢價要另外驗證</td></tr>
+<tr><td>減量成果與專案銜接</td><td>確認是否有適用方法學；協助小規模場域共同建立監測資料；<b>微型專案聚合</b>，統籌查驗機構（VVB）成本，對接自願減量額度買方</td><td>基線、外加性、MRV 與成本</td></tr>
+</table></div>
+<div class="box iso"><span class="tag">連結講義 5</span><p>小規模、微型專案的外加性要求比較寬鬆，聚合起來申請比較划算。<a class="xref" href="05-carbon-pricing.html#apply">講義 5〈碳權申請、審查與核發〉↗</a></p></div>
+</section>
+
+<section id="plan">
+<h2><span class="no">07</span>措施排序與場域提案</h2>
+<h3>四項評估面向</h3>
+<div class="tbl"><table>
+<tr><th>面向</th><th>核心問題</th><th>需要的資料與證據</th></tr>
+<tr><td>減排效益</td><td>相較合理基線少排多少？總量與單位產品排放怎麼變？</td><td>基線、邊界、期間、CO₂e、產量與不確定性</td></tr>
+<tr><td>技術成熟度與適用性</td><td>能在本場域穩定運作？季節、設備、人力匹配嗎？</td><td>場域驗證、操作維護需求；供水、供電、技術支援</td></tr>
+<tr><td>成本與其他效益</td><td>投入與維護負擔得起？生產與環境的取捨？</td><td>投資、運轉成本與節省；產量、用水、污染、品質、動物福利</td></tr>
+<tr><td>MRV 可行性</td><td>能持續監測並量算？資料品質足以支持結論？</td><td>活動紀錄、量測或係數；方法版本、品保與負責人</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">能源；非能源：肥料、材料、使用效率；後端場域的排放（微生物）→ 厭氧。</p></div>
+
+<h3>五步驟完成場域減排提案</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18a4 4 0 0 1-.6-8A5.5 5.5 0 0 1 17 9a4.5 4.5 0 0 1 .5 9z"/></svg><em class="tx">01 盤點排放<br><small>產出：排放來源表</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.4-4.4"/></svg><em class="tx">02 辨識熱點<br><small>產出：優先熱點</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><em class="tx">03 組合措施<br><small>產出：措施組合</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 22l-2.4-1.8-3 .2-.9-2.9L3.2 15.8l1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><em class="tx">04 檢查取捨<br><small>產出：條件與風險（證據）</small></em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 16v-4M12 16V8M17 16v-7"/></svg><em class="tx">05 設計 MRV<br><small>產出：監測計畫</small></em></span></div>
+<div class="box key"><span class="tag">課堂任務</span><p>在 ___ 場域，以 ___ 情境為基線，採取 ___ 措施。追蹤 ___ 排放與產量／品質，並評估 ___ 風險、補充 ___ 資料。<br>選定一項優先措施，列出待補資料，並指定紀錄負責人。</p></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">風險例如：逆轉效應、天災。</p></div>
+</section>
+
+<section id="supp">
+<h2><span class="no">08</span>補充：水稻甲烷減排計算</h2>
+
+<p>用 IPCC 的比例係數（SF）調整基線排放係數，再比較基線和改變灌溉後的差：</p>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3.5 4.5 6 7.7 6 10.8A6 6 0 0 1 6 13.8C6 10.7 8.5 7.5 12 3z"/></svg><em class="tx">基線 EF<br><small>EF<sub>c</sub> × SF<sub>w</sub> × SF<sub>p</sub></small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><em class="tx">專案 EF<br><small>改用專案情境的 SF</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17 9 11l4 4 8-8"/><path d="M15 7h6v6"/></svg><em class="tx">單位減排<br><small>EF<sub>基線</sub> − EF<sub>專案</sub></small></em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18a4 4 0 0 1-.6-8A5.5 5.5 0 0 1 17 9a4.5 4.5 0 0 1 .5 9z"/></svg><em class="tx">總減排<br><small>× 面積 × 10⁻³ × GWP</small></em></span></div>
+<div class="tbl"><table><tr><th>水分管理</th><th>比例係數</th></tr><tr><td>栽種期連續湛水</td><td class="r num">1（基線）</td></tr><tr><td>間歇湛水，栽種期間至少通氣一次</td><td class="r num">0.71</td></tr><tr><td>間歇湛水，栽種期間通氣多次</td><td class="r num">0.55</td></tr><tr><td>期作前非淹水 < 180 天（連續水田）</td><td class="r num">1</td></tr><tr><td>期作前非淹水 > 180 天（水旱輪作）</td><td class="r num">0.89</td></tr></table></div>
+<div class="tbl"><table><tr><th>地區</th><th>一期稻</th><th>二期稻</th></tr><tr><td>臺北基隆</td><td class="r num">69.2</td><td class="r num">144.3</td></tr><tr><td>宜蘭</td><td class="r num">22.5</td><td class="r num">115.7</td></tr><tr><td>桃園新竹</td><td class="r num">29.0</td><td class="r num">123.5</td></tr></table></div>
+<p>上表是國家清冊的各期作甲烷排放係數（公斤 CH₄／公頃／期）。二期稻明顯比一期高。</p>
+<div class="box key"><span class="tag">計算例</span><p>桃園新竹二期稻，連續湛水改成多次通氣：123.5 ×（1 − 0.55）≈ 55.6 公斤 CH₄／公頃；× 28 ÷ 1,000 ≈ <b>1.56 tCO₂e／公頃</b>。</p></div>
+
+</section>
+
+<section id="quiz">
+<h2><span class="no">09</span>自我測驗</h2>
+<details class="q"><summary>1. 一座養豬場加裝沼氣發電，「發電量很大」可以直接當作減排量嗎？</summary><div class="a">不行。要分開算避免的甲烷排放和替代外購電力的減排，並扣掉設備耗能、甲烷洩漏、燃燒不完全、停機與消化液處理的排放。洩漏率太高會抵銷效益。</div></details>
+<details class="q"><summary>2. AWD 讓 CH₄ 降 35%、N₂O 增 20%，為什麼合計還是降 29%？</summary><div class="a">稻田的 CH₄ 排放量換成 CO₂e 遠大於 N₂O，所以 N₂O 小幅增加抵不掉 CH₄ 的大幅下降。但每個場域都要實際合併判讀，研究平均不代表個別場址。</div></details>
+<details class="q"><summary>3. Safe AWD 什麼時候要復水？</summary><div class="a">水深管觀測到水面降到土表下 10–15 cm，或土壤水勢達 −15 至 −20 kPa 時立刻復水，而且要避開幼穗形成到抽穗開花的敏感期。</div></details>
+<details class="q"><summary>4. 牧場的單位產品排放從 1.00 降到 0.88，可以宣稱減排 12% 嗎？</summary><div class="a">只能說排放強度降 12%。如果產量增加 25%，總排放反而增加 10%。總量減排要用同一場域、同一邊界的總排放確認。</div></details>
+<details class="q"><summary>5. 一片長了五十年的森林，可以直接拿它的碳存量申請減排嗎？</summary><div class="a">不行。既有碳存量是基線，減排量要來自「相較合理基線少損失了多少」，並扣除洩漏。要有人為的經營管理，才有增匯或避免損失的效益。</div></details>
+<details class="q"><summary>6. 「生質能源就是零排放」錯在哪？</summary><div class="a">生質燃燒仍會釋放 CO₂（清冊只是分項列計），而且收集、前處理、運輸都有排放；要以實際替代的能量、原料原有處理方式比較完整供應鏈。</div></details>
+<details class="q"><summary>7. 用電排放降 25%，但飼料只降 4%、水體排放還增加，整體減多少？</summary><div class="a">40→30、50→48、10→12，合計 100→90，整體只降 10%。單一環節的減幅不能代表總減幅。</div></details>
+<details class="q"><summary>8. 什麼是活動位移型洩漏？</summary><div class="a">減排措施讓場內產量減少，市場缺口由場外擴大開墾或增產補上，排放轉移到邊界外。淨減排要扣掉這部分。</div></details>
+</section>
+
+<section id="gloss">
+<h2><span class="no">10</span>名詞表</h2>
+<dl class="gloss">
+<dt>AD × EF</dt><dd>活動數據乘排放係數，最常見的估算法</dd>
+<dt>CF／SD／MD</dt><dd>持續淹水／單次排水／多次排水</dd>
+<dt>AWD</dt><dd>乾濕交替灌溉（Alternate Wetting and Drying）</dd>
+<dt>RR</dt><dd>反應比，措施值 ÷ 對照值</dd>
+<dt>硝化／反硝化</dt><dd>氮的微生物轉化，兩者都可能產生 N₂O；反硝化又叫脫氮作用</dd>
+<dt>4R</dt><dd>適量、適時、適位、適當肥源</dd>
+<dt>NUE</dt><dd>氮利用效率</dd>
+<dt>3-NOP</dt><dd>抑制 MCR 酵素、減少瘤胃甲烷的飼料添加物</dd>
+<dt>MCR</dt><dd>甲基輔酶 M 還原酶，甲烷生成最後一步的酵素</dd>
+<dt>Asparagopsis</dt><dd>海門冬屬紅藻，含三溴甲烷，可抑制產甲烷</dd>
+<dt>Fugitive Leakage</dt><dd>沼氣設施未燃燒的甲烷逸散</dd>
+<dt>FCR</dt><dd>飼料轉換率</dd>
+<dt>RAS</dt><dd>循環水養殖系統</dd>
+<dt>Activity-shift Leakage</dt><dd>活動位移型洩漏</dd>
+<dt>排放強度</dt><dd>每單位產品的排放量，和總排放量分開看</dd>
+</dl>
+</section>
+
+<nav class="pager" aria-label="上一講／下一講"><a class="prev" href="05-carbon-pricing.html"><small>← 上一講</small>5. 碳定價與財務策略</a><a class="next" href="07-soil-carbon.html"><small>下一講 →</small>7. 土壤碳匯策略</a></nav>
+</main>
+</div>
+<script>
+(function(){
+  var b=document.body,K='tocOff';
+  function set(off){b.classList.toggle('toc-off',off);try{localStorage.setItem(K,off?'1':'0')}catch(e){}}
+  try{if(localStorage.getItem(K)==='1')b.classList.add('toc-off')}catch(e){}
+  document.getElementById('tocHide').addEventListener('click',function(){set(true)});
+  document.getElementById('tocShow').addEventListener('click',function(){set(false)});
+})();
+</script>
+<script>
+(function(){
+  var NS='http://www.w3.org/2000/svg',n=0;
+  function rp(p,r){var d='M'+p[0][0]+','+p[0][1];for(var i=1;i<p.length-1;i++){var a=p[i-1],b=p[i],c=p[i+1];
+    var l1=Math.hypot(b[0]-a[0],b[1]-a[1]),l2=Math.hypot(c[0]-b[0],c[1]-b[1]),k=Math.min(r,l1/2,l2/2);
+    var x1=b[0]-(b[0]-a[0])/l1*k,y1=b[1]-(b[1]-a[1])/l1*k,x2=b[0]+(c[0]-b[0])/l2*k,y2=b[1]+(c[1]-b[1])/l2*k;
+    d+=' L'+x1+','+y1+' Q'+b[0]+','+b[1]+' '+x2+','+y2}
+    var e=p[p.length-1];return d+' L'+e[0]+','+e[1]}
+  function draw(c){
+    var old=c.querySelector(':scope>.loop-svg'); if(old) old.remove();
+    var spans=[].slice.call(c.querySelectorAll(':scope>span'));
+    var to=c.querySelector('[data-loop-to]')||spans[0], from=c.querySelector('[data-loop-from]')||spans[spans.length-1];
+    if(!to||!from) return;
+    var cr=c.getBoundingClientRect();
+    function R(el){var b=el.getBoundingClientRect();return{l:b.left-cr.left,r:b.right-cr.left,t:b.top-cr.top,b:b.bottom-cr.top,cx:(b.left+b.right)/2-cr.left,cy:(b.top+b.bottom)/2-cr.top}}
+    var a=R(to),z=R(from),maxB=0,minL=1e9,rowFirst=true;
+    spans.forEach(function(k){var r=R(k);if(r.l<minL)minL=r.l;if(k!==to&&Math.abs(r.t-a.t)<6&&r.l<a.l)rowFirst=false});
+    Array.prototype.forEach.call(c.children,function(k){if(k.classList.contains('loop-svg'))return;var b=k.getBoundingClientRect().bottom-cr.top;if(b>maxB)maxB=b});
+    var y=maxB+16,x=minL-18,d,lx;
+    if(Math.abs(a.t-z.t)<6){d=rp([[z.cx,z.b],[z.cx,y],[a.cx,y],[a.cx,a.b+4]],10);lx=(a.cx+z.cx)/2}
+    else if(rowFirst){d=rp([[z.cx,z.b],[z.cx,y],[x,y],[x,a.cy],[a.l-4,a.cy]],10);lx=(x+z.cx)/2}
+    else{var top=a.t-14;d=rp([[z.cx,z.b],[z.cx,y],[x,y],[x,top],[a.cx,top],[a.cx,a.t-4]],10);lx=(x+z.cx)/2}
+    var id='lh'+(++n),s=document.createElementNS(NS,'svg');
+    s.setAttribute('class','loop-svg');s.setAttribute('width',cr.width);s.setAttribute('height',y+24);s.setAttribute('aria-hidden','true');
+    s.innerHTML='<defs><marker id="'+id+'" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0L10,5L0,10z" fill="currentColor"/></marker></defs>'+
+      '<path d="'+d+'" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#'+id+')"/>'+
+      '<text x="'+Math.max(lx,60)+'" y="'+(y+18)+'" text-anchor="middle"></text>';
+    s.querySelector('text').textContent='↺ '+(c.getAttribute('data-loop-label')||'');
+    c.appendChild(s);
+  }
+  var els=document.querySelectorAll('.loop');
+  function all(){els.forEach(draw)}
+  all(); window.addEventListener('resize',all);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(all);
+  if(window.ResizeObserver){var w={};var ro=new ResizeObserver(function(es){es.forEach(function(e){var c=e.target,k=Math.round(e.contentRect.width);if(c._w!==k){c._w=k;draw(c)}})});els.forEach(function(c){ro.observe(c)})}
+})();
+</script>
+<script>
+(function(){
+  var ids=['a1','b1','a2','b2','a3','b3'],el={},o=document.getElementById('out6');
+  ids.forEach(function(i){el[i]=document.getElementById(i)});
+  function v(i){return parseFloat(el[i].value)||0}
+  function f(n){return n.toLocaleString('zh-TW',{maximumFractionDigits:1})}
+  function pc(a,b){return a?((a-b)/a*100):0}
+  function run(){
+    var A=v('a1')+v('a2')+v('a3'),B=v('b1')+v('b2')+v('b3');
+    o.innerHTML='用電 '+f(v('a1'))+' → '+f(v('b1'))+'（'+(pc(v('a1'),v('b1'))>=0?'降 ':'增 ')+f(Math.abs(pc(v('a1'),v('b1'))))+'%）<br>合計 '+f(A)+' → '+f(B)+'<br>整體 '+(A>=B?'降低':'增加')+' <b>'+f(Math.abs(pc(A,B)))+'%</b>';
+  }
+  ids.forEach(function(i){el[i].addEventListener('input',run)});
+  run();
+})();
+</script>
+<!--gm-js--><script>
+/* 跳出式小遊戲引擎：右下角按鈕 → 對話框；題目、解釋、計分；場景由各頁提供 */
+window.GMRUN=function(C){
+  var NS='http://www.w3.org/2000/svg',D=document;
+  var reduce=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
+  function el(tag,a,html,par){var e=D.createElementNS(NS,tag);if(a)for(var k in a)e.setAttribute(k,a[k]);if(html)e.innerHTML=html;if(par)par.appendChild(e);return e}
+  function h(tag,cls,html,par){var e=D.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;if(par)par.appendChild(e);return e}
+
+  /* ---------- 介面 ---------- */
+  var ICON='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.2" r=".6" fill="currentColor"/><circle cx="17.6" cy="13.6" r=".6" fill="currentColor"/></svg>';
+  var fab=h('button','gm-fab',ICON+'<span>小遊戲</span>',D.body);fab.type='button';fab.setAttribute('aria-haspopup','dialog');
+  var tip=h('div','gm-tip','<button type="button" class="gm-tipx" aria-label="關閉提示">×</button><b>考考你</b><span></span>',D.body);
+  tip.querySelector('span').textContent=C.teaser;
+  var ov=h('div','gm-ov',null,D.body);ov.hidden=true;
+  var dlg=h('div','gm-dlg','<div class="gm-hd"><b id="gmTitle"></b><button type="button" class="gm-x" aria-label="關閉小遊戲">×</button></div>'+
+    '<svg class="gm-stage" viewBox="'+(C.vb||'0 0 880 260')+'" role="img"></svg>'+
+    '<div class="gm-card"><div class="gm-prog"></div><p class="gm-q"></p><div class="gm-opts"></div><div class="gm-fb" aria-live="polite"></div></div>',ov);
+  dlg.setAttribute('role','dialog');dlg.setAttribute('aria-modal','true');dlg.setAttribute('aria-labelledby','gmTitle');
+  dlg.querySelector('#gmTitle').textContent='小遊戲：'+C.title;
+  var st=dlg.querySelector('svg'),qEl=dlg.querySelector('.gm-q'),oEl=dlg.querySelector('.gm-opts'),fEl=dlg.querySelector('.gm-fb'),pEl=dlg.querySelector('.gm-prog');
+  st.setAttribute('aria-label',C.alt||C.title);
+
+  /* ---------- 動畫工具 ---------- */
+  var loops=[],touts=[],fx;
+  function stopAll(){loops.forEach(clearInterval);touts.forEach(clearTimeout);loops=[];touts=[]}
+  var api={svg:st,reduce:reduce,el:el,
+    C:{co2:'#86a8e6',ch4:'#c9a66b',n2o:'#d28bb4',gas:'#8fae9a',smoke:'#9aa0a6'},
+    loop:function(fn,ms){fn();loops.push(setInterval(fn,reduce?ms*1.6:ms))},
+    later:function(fn,ms){touts.push(setTimeout(fn,reduce?0:ms))},
+    A:function(e,fr,ms,o){o=o||{};if(!e||!e.animate)return null;if(reduce&&o.iter===Infinity)return null;
+      var an=e.animate(fr,{duration:reduce?1:ms,delay:reduce?0:(o.delay||0),easing:o.ease||'ease-out',fill:o.fill||'forwards',iterations:o.iter||1,direction:o.dir||'normal'});
+      if(o.done)an.onfinish=o.done;return an},
+    /* 放一個物件：外層定位，內層可動（原點在底部中央） */
+    put:function(par,x,y,s,html,origin){var g=el('g',{transform:'translate('+x+' '+y+')'+(s&&s!==1?' scale('+s+')':'')},null,par||st);
+      var i=el('g',{},html,g);i.style.transformBox='fill-box';i.style.transformOrigin=origin||'50% 100%';i.outer=g;i.x=x;i.y=y;i.s=s||1;return i},
+    top:function(){if(!fx)fx=el('g',{});st.appendChild(fx);return fx},
+    puff:function(x,y,o){o=o||{};var g=el('g',{class:'gas'},null,api.top()),n=o.n||3,r=o.r||11;
+      for(var i=0;i<n;i++)el('circle',{cx:x+(i-(n-1)/2)*r*.9,cy:y+(i%2?-r*.55:0),r:r+(i===1?3:0),fill:o.color||api.C.gas,opacity:.6},null,g);
+      if(o.label){var t=el('text',{x:x,y:y-1},null,g);t.textContent=o.label}
+      g.style.transformBox='fill-box';g.style.transformOrigin='50% 50%';
+      var dx=o.dx==null?0:o.dx,dy=o.dy==null?-60:o.dy;
+      api.A(g,[{transform:'translate(0,0) scale(.35)',opacity:0},{opacity:.95,offset:.15},{transform:'translate('+dx+'px,'+dy+'px) scale('+(o.grow||1.5)+')',opacity:0}],o.ms||2400,{done:function(){g.remove()},fill:'none'});
+      if(reduce)api.later(function(){g.remove()},1200);return g},
+    pop:function(x,y,txt,o){o=o||{};var t=el('text',{class:'pop',x:x,y:y},null,api.top());t.textContent=txt;if(o.color)t.style.fill=o.color;if(o.size)t.style.fontSize=o.size+'px';
+      t.style.transformBox='fill-box';t.style.transformOrigin='50% 100%';
+      api.A(t,[{opacity:0,transform:'scale(.4)'},{opacity:1,transform:'scale(1.15)',offset:.2},{opacity:1,transform:'scale(1)',offset:.7},{opacity:0,transform:'translateY(-10px)'}],o.ms||1300,{done:function(){t.remove()},fill:'none'});
+      if(reduce)api.later(function(){t.remove()},1200);return t},
+    pulse:function(e){return api.A(e,[{transform:'scale(1)'},{transform:'scale(1.12)'},{transform:'scale(1)'}],700,{fill:'none'})},
+    /* 背景：地面、草、圍籬、太陽 */
+    bg:function(o){o=o||{};var gy=o.ground==null?200:o.ground,W=880,s='';
+      if(o.sun)s+='<circle cx="'+(o.sun[0])+'" cy="'+(o.sun[1])+'" r="22" fill="#f2c94c" opacity=".85"/>';
+      if(o.hills)s+='<path d="M0 '+(gy-10)+' Q140 '+(gy-70)+' 300 '+(gy-24)+' T600 '+(gy-30)+' T880 '+(gy-40)+' V'+gy+' H0Z" fill="var(--accent-soft)" opacity=".7"/>';
+      if(o.fence){s+='<g stroke="var(--line)" stroke-width="4" stroke-linecap="round"><line x1="0" y1="'+(gy-48)+'" x2="'+W+'" y2="'+(gy-48)+'"/><line x1="0" y1="'+(gy-28)+'" x2="'+W+'" y2="'+(gy-28)+'"/>';
+        for(var x=60;x<W;x+=140)s+='<line x1="'+x+'" y1="'+(gy-62)+'" x2="'+x+'" y2="'+(gy+4)+'"/>';s+='</g>'}
+      s+='<rect x="0" y="'+gy+'" width="'+W+'" height="'+(400-gy)+'" fill="'+(o.color||'var(--accent-soft)')+'"/>';
+      (o.grass||[]).forEach(function(x,i){var y=gy+14+(i%3)*12;s+='<path d="M'+(x-5)+' '+y+' q0 -6 -4 -10 M'+x+' '+y+' q0 -8 2 -13 M'+(x+5)+' '+y+' q1 -6 5 -10" stroke="var(--accent)" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/>'});
+      return el('g',{},s,st)},
+    text:function(x,y,txt,cls,par){var t=el('text',{x:x,y:y,class:cls||'lbl'},null,par||st);t.textContent=txt;return t}
+  };
+
+  /* ---------- 共用圖形（原點在底部中央，面向右） ---------- */
+  var K='#2b2b2b';
+  api.SH={
+    conifer:function(c){c=c||'#3f7d58';return '<rect x="-5" y="-24" width="10" height="24" fill="#7a5a3a"/><path d="M0 -112 L-24 -66 L24 -66Z" fill="'+c+'"/><path d="M0 -92 L-31 -44 L31 -44Z" fill="'+c+'"/><path d="M0 -70 L-38 -20 L38 -20Z" fill="'+c+'"/>'},
+    broad:function(c){c=c||'#4f8f5f';return '<rect x="-6" y="-44" width="12" height="44" fill="#7a5a3a"/><circle cx="-20" cy="-56" r="22" fill="'+c+'"/><circle cx="20" cy="-56" r="22" fill="'+c+'"/><circle cx="0" cy="-74" r="30" fill="'+c+'"/>'},
+    cabbage:'<ellipse cx="0" cy="-13" rx="24" ry="14" fill="#6fae5c"/><ellipse cx="-10" cy="-16" rx="12" ry="10" fill="#86c46f"/><ellipse cx="10" cy="-16" rx="12" ry="10" fill="#86c46f"/><ellipse cx="0" cy="-19" rx="12" ry="10" fill="#b4e09a"/><path d="M-5 -22 q5 -5 10 0" stroke="#6fae5c" stroke-width="2" fill="none"/>',
+    bamboo:function(hh){var s='<rect x="-4" y="-'+hh+'" width="8" height="'+hh+'" rx="3" fill="#7fae4f"/>';for(var y=22;y<hh;y+=22)s+='<rect x="-5" y="-'+y+'" width="10" height="3" fill="#5f8f3a"/>';
+      s+='<path d="M0 -'+(hh-6)+' q16 -6 26 2 q-14 4 -26 -2z M0 -'+(hh-18)+' q-16 -6 -26 2 q14 4 26 -2z M0 -'+(hh-30)+' q16 -4 24 4 q-14 2 -24 -4z" fill="#5f9f4f"/>';return s},
+    rice:function(grain){return '<path d="M0 0 q-5 -28 -16 -44 M0 0 q0 -34 2 -56 M0 0 q5 -28 15 -42 M0 0 q-2 -20 -9 -30" stroke="#5f9f4f" stroke-width="3" fill="none" stroke-linecap="round"/>'+(grain?'<path d="M2 -56 q10 4 12 18" stroke="#d9b44a" stroke-width="4" fill="none" stroke-linecap="round" stroke-dasharray="3 2"/>':'')},
+    mangrove:'<path d="M-24 0 q4 -26 22 -34 M24 0 q-4 -26 -22 -34 M-10 0 q2 -18 8 -34 M10 0 q-2 -18 -8 -34" stroke="#6b4e34" stroke-width="3" fill="none"/><rect x="-3" y="-62" width="6" height="30" fill="#6b4e34"/><ellipse cx="-18" cy="-62" rx="20" ry="13" fill="#4f8f5f"/><ellipse cx="18" cy="-62" rx="20" ry="13" fill="#4f8f5f"/><ellipse cx="0" cy="-74" rx="32" ry="18" fill="#3f7d58"/>',
+    spoonbill:'<line x1="-4" y1="-20" x2="-6" y2="0" stroke="'+K+'" stroke-width="2"/><line x1="5" y1="-20" x2="7" y2="0" stroke="'+K+'" stroke-width="2"/><ellipse cx="2" cy="-28" rx="17" ry="10" fill="#fafafa" stroke="'+K+'" stroke-width="1.5"/><path d="M-11 -33 Q-18 -44 -14 -50" stroke="#fafafa" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M-11 -33 Q-18 -44 -14 -50" stroke="'+K+'" stroke-width="1" fill="none" opacity=".4"/><circle cx="-15" cy="-52" r="6" fill="#fafafa" stroke="'+K+'" stroke-width="1.5"/><path d="M-20 -52 L-36 -45" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/><ellipse cx="-37" cy="-44" rx="4.5" ry="3.2" fill="'+K+'"/><circle cx="-16" cy="-53" r="1.3" fill="'+K+'"/>',
+    pig:'<rect x="-30" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="-16" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="12" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="26" y="-24" width="9" height="24" rx="3" fill="#e993a6"/>'+
+      '<path d="M-44 -42 q-10 -2 -8 -10 q2 -6 8 -2" stroke="'+K+'" stroke-width="2" fill="none"/><ellipse cx="0" cy="-38" rx="46" ry="26" fill="#f4b6c2" stroke="'+K+'" stroke-width="2"/>'+
+      '<circle cx="40" cy="-46" r="19" fill="#f4b6c2" stroke="'+K+'" stroke-width="2"/><path d="M30 -62 l4 -12 l8 9z" fill="#e993a6" stroke="'+K+'" stroke-width="1.5"/><ellipse cx="57" cy="-42" rx="8" ry="7" fill="#e993a6" stroke="'+K+'" stroke-width="2"/><circle cx="55" cy="-42" r="1.5" fill="'+K+'"/><circle cx="60" cy="-42" r="1.5" fill="'+K+'"/><circle cx="44" cy="-52" r="2.4" fill="'+K+'"/>',
+    tractor:'<rect x="-40" y="-42" width="58" height="22" rx="4" fill="#c0503a"/><rect x="-36" y="-74" width="30" height="34" rx="3" fill="none" stroke="'+K+'" stroke-width="3"/><rect x="10" y="-32" width="32" height="15" rx="3" fill="#c0503a"/><rect x="24" y="-56" width="5" height="26" fill="#555"/>'+
+      '<circle cx="-24" cy="-19" r="19" fill="#333"/><circle cx="-24" cy="-19" r="7" fill="#bbb"/><circle cx="32" cy="-12" r="12" fill="#333"/><circle cx="32" cy="-12" r="4.5" fill="#bbb"/>',
+    plow:'<path d="M-44 -26 L-64 -8 L-58 4 L-52 -6 M-58 -18 L-76 -2 L-70 8" stroke="#666" stroke-width="3.5" fill="none" stroke-linecap="round"/>',
+    pole:'<rect x="-3" y="-124" width="6" height="124" fill="#7a5a3a"/><rect x="-24" y="-116" width="48" height="5" fill="#7a5a3a"/><circle cx="-18" cy="-118" r="3" fill="#ccc"/><circle cx="18" cy="-118" r="3" fill="#ccc"/><path d="M4 -86 l-8 14 h7 l-5 14 l12 -18 h-7 l5 -10z" fill="#f2c94c" stroke="'+K+'" stroke-width="1"/>',
+    pond:'<ellipse cx="0" cy="-8" rx="52" ry="13" fill="#6b4e34"/><ellipse cx="0" cy="-10" rx="45" ry="8" fill="#9b7650"/>',
+    factory:'<rect x="30" y="-122" width="16" height="70" fill="#6f777f"/><rect x="-56" y="-60" width="112" height="60" fill="#8a929a"/><path d="M-56 -60 l28 -18 v18 l28 -18 v18 l28 -18 v18" fill="#8a929a"/>'+
+      '<rect x="-44" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="-18" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="8" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="-10" y="-20" width="20" height="20" fill="#5b636b"/>',
+    coin:function(t){return '<circle cx="0" cy="-13" r="13" fill="#e2b84a" stroke="#a7822a" stroke-width="2"/><text x="0" y="-8.5" text-anchor="middle" style="font:700 13px var(--font-num);fill:#7a5a1a">'+(t||'$')+'</text>'},
+    jar:'<path d="M-30 0 h60 v-58 q0 -8 -8 -8 h-44 q-8 0 -8 8z" fill="var(--paper)" stroke="var(--muted)" stroke-width="2.5"/><rect x="-24" y="-74" width="48" height="8" rx="3" fill="var(--muted)"/>',
+    bento:'<rect x="-62" y="-50" width="124" height="50" rx="6" fill="#b5764a" stroke="'+K+'" stroke-width="2"/><rect x="-56" y="-44" width="62" height="38" rx="3" fill="#fbf8ef"/><rect x="10" y="-44" width="46" height="18" rx="3" fill="#7fbf6a"/><rect x="10" y="-24" width="46" height="18" rx="3" fill="#f2d16b"/>'+
+      '<ellipse cx="-24" cy="-30" rx="26" ry="11" fill="#a0612f" stroke="#7a4520" stroke-width="2"/><path d="M-40 -32 h30 M-38 -27 h26" stroke="#7a4520" stroke-width="1.5"/>',
+    train:'<rect x="-110" y="-62" width="220" height="50" rx="10" fill="#e1e5ea" stroke="'+K+'" stroke-width="2"/><rect x="-110" y="-30" width="220" height="8" fill="#d0602f"/>'+
+      '<rect x="-96" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="-52" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="-8" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="36" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="80" y="-54" width="22" height="18" rx="3" fill="#7ea6c9"/>'+
+      '<circle cx="-74" cy="-8" r="8" fill="#333"/><circle cx="-50" cy="-8" r="8" fill="#333"/><circle cx="50" cy="-8" r="8" fill="#333"/><circle cx="74" cy="-8" r="8" fill="#333"/>',
+    dome:'<path d="M-56 0 v-30 a56 44 0 0 1 112 0 v30z" fill="#a7adb3" stroke="'+K+'" stroke-width="2"/><path d="M-56 -30 h112" stroke="'+K+'" stroke-width="1.5" opacity=".5"/><rect x="-6" y="-84" width="12" height="12" fill="#6f777f"/>',
+    bee:'<g><ellipse cx="-2" cy="-10" rx="5" ry="4" fill="#fff" opacity=".85"/><ellipse cx="4" cy="-10" rx="5" ry="4" fill="#fff" opacity=".85"/><ellipse cx="0" cy="-3" rx="9" ry="6.5" fill="#f2c230" stroke="'+K+'" stroke-width="1.2"/><path d="M-2 -9 v12 M3 -8.5 v11" stroke="'+K+'" stroke-width="2"/><circle cx="8" cy="-4" r="1.3" fill="'+K+'"/></g>',
+    flower:function(c){return '<path d="M0 0 v-30" stroke="#5f9f4f" stroke-width="3"/><path d="M0 -14 q-10 -4 -12 -12 q8 0 12 8" fill="#5f9f4f"/><g fill="'+(c||'#e98fa3')+'"><circle cx="0" cy="-40" r="6"/><circle cx="-8" cy="-33" r="6"/><circle cx="8" cy="-33" r="6"/><circle cx="-5" cy="-25" r="6"/><circle cx="5" cy="-25" r="6"/></g><circle cx="0" cy="-32" r="4.5" fill="#f2c94c"/>'},
+    larva:'<ellipse cx="0" cy="-4" rx="11" ry="4.5" fill="#efe6c8" stroke="#8a7a50" stroke-width="1"/><path d="M-5 -8 v8 M0 -8.5 v9 M5 -8 v8" stroke="#8a7a50" stroke-width=".8"/>',
+    truck:'<rect x="-50" y="-48" width="64" height="36" rx="3" fill="#7fa7c9" stroke="'+K+'" stroke-width="2"/><path d="M14 -40 h20 l12 14 v14 h-32z" fill="#d0602f" stroke="'+K+'" stroke-width="2"/><rect x="20" y="-36" width="12" height="10" fill="#cfe3f2"/><circle cx="-30" cy="-10" r="9" fill="#333"/><circle cx="30" cy="-10" r="9" fill="#333"/>',
+    shop:'<rect x="-50" y="-70" width="100" height="70" fill="#e9e4d6" stroke="'+K+'" stroke-width="2"/><path d="M-56 -70 h112 l-8 -18 h-96z" fill="#d0602f" stroke="'+K+'" stroke-width="2"/><rect x="-36" y="-50" width="30" height="24" fill="#cfe3f2" stroke="'+K+'" stroke-width="1.5"/><rect x="10" y="-44" width="24" height="44" fill="#8a6a4a"/>',
+    log:'<rect x="-26" y="-14" width="52" height="14" rx="7" fill="#9b7650" stroke="#6b4e34" stroke-width="2"/><ellipse cx="26" cy="-7" rx="5" ry="7" fill="#d9b98a" stroke="#6b4e34" stroke-width="1.5"/>',
+    seagrass:'<path d="M-10 0 q-6 -20 2 -40 M-3 0 q4 -24 -2 -48 M4 0 q-4 -18 4 -38 M11 0 q6 -16 0 -32" stroke="#3f8f6a" stroke-width="3.5" fill="none" stroke-linecap="round"/>'
+  };
+  /* 牛、羊（左上原點畫，包一層移到底部中央） */
+  var COW='<path d="M14 30 q-14 12 -8 34" fill="none" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/>'+
+    [22,38,80,96].map(function(x,i){return '<g class="leg" data-b="'+(i==1||i==2?1:0)+'"><rect x="'+x+'" y="50" width="10" height="32" rx="3" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/><rect x="'+x+'" y="76" width="10" height="7" fill="'+K+'"/></g>'}).join('')+
+    '<rect x="12" y="20" width="100" height="42" rx="19" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/>'+
+    '<path d="M30 21 q10 12 26 6 q4 -4 2 -7z" fill="'+K+'"/><ellipse cx="82" cy="44" rx="12" ry="8" fill="'+K+'"/><ellipse cx="44" cy="50" rx="6" ry="4" fill="'+K+'"/>'+
+    '<path d="M108 10 q-6 -9 0 -12 M126 9 q6 -9 0 -12" fill="none" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/><ellipse cx="102" cy="16" rx="8" ry="4" fill="#fbfaf6" stroke="'+K+'" stroke-width="2" transform="rotate(-20 102 16)"/>'+
+    '<rect x="102" y="6" width="34" height="32" rx="13" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/><rect x="118" y="23" width="24" height="17" rx="8" fill="#f0b8ad" stroke="'+K+'" stroke-width="2"/>'+
+    '<circle cx="114" cy="17" r="2.6" fill="'+K+'"/><circle cx="129" cy="30" r="1.8" fill="'+K+'"/><circle cx="137" cy="30" r="1.8" fill="'+K+'"/>';
+  var SHEEP=[24,36,66,78].map(function(x,i){return '<g class="leg" data-b="'+(i==1||i==2?1:0)+'"><rect x="'+x+'" y="50" width="7" height="30" rx="2" fill="#3b3631"/></g>'}).join('')+
+    [[24,38,14],[40,27,14],[60,25,14],[78,32,14],[32,52,12],[52,54,12],[72,50,12],[84,44,10]].map(function(c){return '<circle cx="'+c[0]+'" cy="'+c[1]+'" r="'+c[2]+'" fill="#f4f1e8" stroke="'+K+'" stroke-width="2"/>'}).join('')+
+    '<rect x="22" y="28" width="62" height="28" rx="14" fill="#f4f1e8"/><ellipse cx="92" cy="22" rx="8" ry="4" fill="#3b3631" transform="rotate(-25 92 22)"/>'+
+    '<ellipse cx="100" cy="32" rx="12" ry="14" fill="#3b3631"/><circle cx="96" cy="20" r="7" fill="#f4f1e8" stroke="'+K+'" stroke-width="2"/><circle cx="104" cy="28" r="2.6" fill="#fff"/><circle cx="104.5" cy="28.5" r="1.3" fill="'+K+'"/>';
+  api.SH.cow='<g transform="translate(-70 -83)">'+COW+'</g>';
+  api.SH.sheep='<g transform="translate(-56 -80)">'+SHEEP+'</g>';
+  api.SH.cowPts={mouth:[72,-47],nose:[74,-53],rear:[-62,-45]};
+  api.SH.sheepPts={mouth:[54,-40],nose:[56,-44],rear:[-44,-38]};
+  /* 跑步：腳擺動，回傳停止函式 */
+  api.legs=function(g){var a=[];g.querySelectorAll('.leg').forEach(function(l){l.style.transformBox='fill-box';l.style.transformOrigin='50% 0';
+      var an=api.A(l,[{transform:'rotate(20deg)'},{transform:'rotate(-20deg)'}],260,{iter:Infinity,dir:'alternate',ease:'ease-in-out',delay:l.getAttribute('data-b')==='1'?0:0,fill:'none'});
+      if(an&&l.getAttribute('data-b')==='1')an.currentTime=260;if(an)a.push(an)});
+    return function(){a.forEach(function(x){x.cancel()})}};
+
+  /* ---------- 遊戲流程 ---------- */
+  var Q=C.questions,idx=0,score=0,phase='idle',S=C.scene(api);
+  function act(n){if(n&&S.acts&&S.acts[n])S.acts[n]()}
+  function btn(t,cls,fn){var b=D.createElement('button');b.type='button';b.textContent=t;if(cls)b.className=cls;b.addEventListener('click',fn);return b}
+  function show(){phase='q';var q=Q[idx];pEl.textContent='第 '+(idx+1)+' 題／共 '+Q.length+' 題';qEl.textContent=q.q;oEl.innerHTML='';fEl.innerHTML='';
+    q.opts.forEach(function(o,i){oEl.appendChild(btn(o,'',function(){answer(i)}))});stopAll();act(q.act)}
+  function answer(i){phase='a';var q=Q[idx],right=i===q.ans;
+    oEl.querySelectorAll('button').forEach(function(b,j){b.disabled=true;b.classList.add(j===q.ans?'ok':j===i?'bad':'dim')});
+    if(right)score++;
+    if(q.after){stopAll();act(q.after)}
+    var why=typeof q.why==='object'?(q.why[i]||q.why.d):q.why;
+    var box=h('div','res '+(right?'ok':'bad'),'<b>'+(right?'答對了！':'答錯了')+'</b><p></p>',fEl);box.querySelector('p').textContent=right?q.ok:why;
+    var last=idx===Q.length-1,nx=btn(last?'看結果':(right?'下一題 →':'懂了，下一題 →'),'gm-next',function(){if(last)end();else{idx++;show()}});
+    fEl.appendChild(nx);try{nx.focus({preventScroll:true})}catch(e){}}
+  function end(){phase='end';stopAll();act('end');pEl.textContent='完成';
+    qEl.innerHTML='答對 <span class="gm-score">'+score+'／'+Q.length+'</span> 題';oEl.innerHTML='';fEl.innerHTML='';
+    var box=h('div','res ok','<b>重點</b><p></p>',fEl);box.querySelector('p').textContent=C.summary;
+    fEl.appendChild(btn('再玩一次','gm-next',function(){start()}))}
+  function start(){stopAll();idx=0;score=0;phase='enter';oEl.innerHTML='';fEl.innerHTML='';pEl.textContent='　';qEl.textContent=C.intro||'準備開始…';
+    S.enter(function(){if(phase==='enter')show()})}
+  var lastF=null;
+  function open(){hideTip();lastF=D.activeElement;ov.hidden=false;D.documentElement.classList.add('gm-lock');dlg.querySelector('.gm-x').focus();
+    if(phase==='idle'||phase==='enter')start();else if(phase==='q'||phase==='a')act(Q[idx].act)}
+  function close(){stopAll();ov.hidden=true;D.documentElement.classList.remove('gm-lock');if(phase==='enter')phase='idle';try{(lastF||fab).focus()}catch(e){}}
+  fab.addEventListener('click',open);
+  dlg.querySelector('.gm-x').addEventListener('click',close);
+  ov.addEventListener('click',function(e){if(e.target===ov)close()});
+  D.addEventListener('keydown',function(e){if(ov.hidden)return;
+    if(e.key==='Escape'){close();return}
+    if(e.key==='Tab'){var f=[].slice.call(dlg.querySelectorAll('button:not(:disabled)'));if(!f.length)return;var a=f[0],z=f[f.length-1];
+      if(e.shiftKey&&D.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&D.activeElement===z){e.preventDefault();a.focus()}}});
+
+  /* ---------- 提示泡泡：往下讀一段或停留 15 秒後出現一次 ---------- */
+  var tipDone=false,tipT;
+  function hideTip(){tip.classList.remove('on');clearTimeout(tipT)}
+  function showTip(){if(tipDone||!ov.hidden)return;tipDone=true;tip.classList.add('on');fab.classList.add('wig');tipT=setTimeout(hideTip,12000)}
+  tip.addEventListener('click',function(e){if(e.target.classList.contains('gm-tipx')){hideTip();return}open()});
+  setTimeout(showTip,15000);
+  window.addEventListener('scroll',function(){var m=D.scrollingElement||D.documentElement,max=m.scrollHeight-window.innerHeight;if(max>0&&(window.scrollY||m.scrollTop)>max*.25)showTip()},{passive:true});
+  api.open=open;return api;
+};
+GMRUN({title:'稻田冒泡泡',teaser:'淹水的稻田一直冒泡泡，那是什麼氣體？點我玩玩看',alt:'淹水稻田的剖面',intro:'稻田灌水中…',
+summary:'淹水稻田缺氧會產生 CH₄。間歇灌溉（AWD）讓 CH₄ 大降、N₂O 小增，合計仍降約 29%；水面降到土表下 10–15 cm 要復水。IPCC 比例係數：連續湛水 1、通氣一次 0.71、通氣多次 0.55。',
+scene:function(G){
+  var SH=G.SH,SY=192,ch4=false,svg=G.svg;
+  G.bg({ground:SY,color:'#6b4e34',sun:[820,42]});
+  G.el('rect',{x:0,y:SY,width:880,height:70,fill:'#4a3524',opacity:.5},null,svg);
+  var cracks=G.el('path',{d:'M90 '+(SY+4)+' l12 14 l-6 12 M260 '+(SY+3)+' l-8 16 l10 10 M430 '+(SY+4)+' l14 12 l-4 16 M610 '+(SY+3)+' l-10 14 l8 14 M770 '+(SY+4)+' l10 18',stroke:'#2e2116',fill:'none','stroke-width':2.5,opacity:0},null,svg);
+  var water=G.put(null,440,SY,1,'<rect x="-440" y="-44" width="880" height="44" fill="#6fa8d6" opacity=".5"/><path d="M-440 -44 q20 -5 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0" stroke="#9cc6ea" stroke-width="2" fill="none"/>');
+  var lvl=1,wl=null,plants=[];function stopW(){if(wl){wl.cancel();wl=null}}for(var x=60;x<800;x+=74)plants.push(G.put(null,x,SY,1.15,SH.rice(true)));
+  var gauge=G.put(null,846,SY+40,1,'<rect x="-9" y="-130" width="18" height="130" rx="4" fill="var(--paper)" stroke="var(--muted)" stroke-width="2"/><path d="M-14 -40 h28" stroke="var(--fg)" stroke-dasharray="3 2"/>');
+  var gw=G.put(gauge,0,-2,1,'<rect x="-7" y="-80" width="14" height="80" fill="#6fa8d6"/>');
+  G.A(gauge,[{opacity:0}],1);
+  function setLvl(to,ms,o){o=o||{};G.A(water,[{transform:'scaleY('+lvl+')'},{transform:'scaleY('+to+')'}],ms,o);lvl=to}
+  function bubble(){if(lvl<.3&&Math.random()<.7)return;var x=30+Math.random()*820,b=G.el('circle',{cx:x,cy:SY+6,r:4,fill:'none',stroke:'#e8f2fb','stroke-width':1.6},null,G.top());
+    var top=-(44*lvl)-6;G.A(b,[{transform:'translateY(0)',opacity:.9},{transform:'translateY('+top+'px)',opacity:.9}],900,{ease:'ease-in',fill:'none',done:function(){b.remove();
+      G.puff(x,SY+top-4,{dy:-60,dx:6,n:2,r:8,color:G.C.ch4,label:ch4?'CH₄':'',ms:2000})}});if(G.reduce)G.later(function(){b.remove()},500)}
+  function n2o(){var x=40+Math.random()*800;G.puff(x,SY-6,{dy:-70,n:2,r:7,color:G.C.n2o,label:'N₂O',ms:2200})}
+  return {
+    enter:function(done){stopW();ch4=false;lvl=0;setLvl(1,1300);G.A(cracks,[{opacity:0}],1);G.A(gauge,[{opacity:0}],1);
+      plants.forEach(function(p,i){G.A(p,[{transform:'scale(0)'},{transform:'scale(1)'}],700,{delay:i*80,ease:'cubic-bezier(.3,1.4,.5,1)'})});G.later(done,1500)},
+    acts:{
+      flood:function(){stopW();if(lvl<1)setLvl(1,600);G.loop(bubble,350)},
+      reveal:function(){ch4=true;G.loop(bubble,350)},
+      awd:function(){stopW();G.A(cracks,[{opacity:0}],1);wl=G.A(water,[{transform:'scaleY(1)'},{transform:'scaleY(.05)'}],2600,{iter:Infinity,dir:'alternate',ease:'ease-in-out'});lvl=.5;
+        G.later(function(){G.pop(440,70,'排水 ↔ 復水',{size:18})},300);
+        G.loop(function(){if(Math.random()<.5)bubble();if(Math.random()<.35)n2o()},700)},
+      gauge:function(){stopW();lvl=1;G.A(gauge,[{opacity:0},{opacity:1}],400);ch4=true;
+        function cyc(){setLvl(.15,2200,{ease:'ease-in'});G.A(gw,[{transform:'scaleY(1)'},{transform:'scaleY(.32)'}],2200,{ease:'ease-in'});
+          G.A(cracks,[{opacity:0},{opacity:.8}],2200);
+          G.later(function(){G.pop(760,84,'土表下 10–15 cm',{size:15});G.pop(700,120,'該復水了！',{size:18})},2300);
+          G.later(function(){setLvl(1,1200);G.A(gw,[{transform:'scaleY(.32)'},{transform:'scaleY(1)'}],1200);G.A(cracks,[{opacity:.8},{opacity:0}],800)},3300)}
+        G.loop(cyc,5200);G.loop(bubble,900)},
+      end:function(){G.A(gauge,[{opacity:0}],300)}
+    }}},
+questions:[
+  {act:'flood',after:'reveal',q:'淹水的稻田冒出來的泡泡，主要是哪一種溫室氣體？',opts:['CO₂ 二氧化碳','CH₄ 甲烷','N₂O 氧化亞氮'],ans:1,
+   ok:'淹水讓土壤缺氧，產甲烷古菌產生 CH₄，從水面冒泡或經稻株通氣組織排出。',
+   why:'是甲烷 CH₄。講義 2：淹水造成缺氧，有機物發酵後由產甲烷古菌產生 CH₄，經水面冒泡或稻株的通氣組織排出。N₂O 主要和施肥的氮有關。'},
+  {act:'awd',q:'改成 AWD 間歇灌溉：CH₄ 降 35%、N₂O 增 20%。兩個合計的暖化效果呢？',opts:['還是下降，約降 29%','反而增加','剛好打平'],ans:0,
+   ok:'稻田的 CH₄ 換成 CO₂e 遠大於 N₂O，所以 N₂O 小增抵不掉 CH₄ 大降。',
+   why:'合計仍降約 29%（統合分析 RR 0.71），產量持平。稻田 CH₄ 換成 CO₂e 遠大於 N₂O，N₂O 小幅增加抵不掉 CH₄ 的大幅下降。不過每個場域都要實際合併判讀。'},
+  {act:'gauge',q:'Safe AWD 用水深管觀察，水面降到哪裡就要復水？',opts:['土表下 10–15 cm','土表曬到完全乾裂','不用看，每天固定灌一次'],ans:0,
+   ok:'降到土表下 10–15 cm（或土壤水勢 −15 至 −20 kPa）就要立刻復水。',
+   why:'土表下 10–15 cm。講義 6：水深管觀測到水面降到土表下 10–15 cm，或土壤水勢達 −15 至 −20 kPa 時立刻復水，而且要避開幼穗形成到抽穗開花的敏感期。'},
+  {act:'awd',q:'IPCC 比例係數：栽種期「連續湛水」是 1，那「間歇湛水、通氣多次」是多少？',opts:['0.89','0.71','0.55'],ans:2,
+   ok:'通氣多次 0.55；通氣一次 0.71。',
+   why:{0:'0.89 是「期作前非淹水超過 180 天（水旱輪作）」。間歇湛水通氣一次是 0.71，通氣多次是 0.55。例：桃園新竹二期稻改成多次通氣，約少 55.6 kg CH₄／公頃。',
+        1:'0.71 是「通氣一次」。通氣多次是 0.55。例：桃園新竹二期稻改成多次通氣，123.5 ×（1 − 0.55）約少 55.6 kg CH₄／公頃。'}}
+]});
+</script><!--/gm-js-->
+
+</body>
+</html>

@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>森林碳匯策略概論</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: 單欄閱讀講義，桌機左側固定目錄；筆記、ISO 連結、重點用不同框區分 */
+:root{
+  --bg:#f4f6f1; --paper:#ffffff; --fg:#1c231f; --muted:#5b6660; --line:#d9ded6;
+  --accent:#2f6a4c; --accent-soft:#e3eee6;
+  --ink:#2a4a9a; --ink-soft:#e8edf8;
+  --hl:#f3e27a; --soil:#9a6a22; --soil-soft:#f5ecdc;
+  --font-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --font-head:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --font-num:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141a17; --paper:#1b2320; --fg:#e4ebe6; --muted:#9aa8a0; --line:#2e3a35;
+  --accent:#7cc39b; --accent-soft:#1f3329; --ink:#9db4f0; --ink-soft:#1f2740;
+  --hl:#6b5d14; --soil:#d9a85a; --soil-soft:#30281a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141a17; --paper:#1b2320; --fg:#e4ebe6; --muted:#9aa8a0; --line:#2e3a35;
+  --accent:#7cc39b; --accent-soft:#1f3329; --ink:#9db4f0; --ink-soft:#1f2740;
+  --hl:#6b5d14; --soil:#d9a85a; --soil-soft:#30281a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.8;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1480px;margin:0 auto;display:grid;grid-template-columns:190px minmax(0,1fr);gap:36px;padding-block:32px 80px}
+@media (max-width:860px){.wrap{grid-template-columns:minmax(0,1fr)} nav.toc{position:static!important;max-height:none!important}}
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);align-self:start;max-height:calc(100vh - 32px);overflow:auto;font-size:14px}
+nav.toc h2{font-size:13px;letter-spacing:.12em;color:var(--muted);margin:0 0 8px;font-family:var(--font-body)}
+nav.toc ol{margin:0;padding-left:32px;display:grid;gap:4px}
+nav.toc a{color:var(--fg);text-decoration:none}
+nav.toc a:hover,nav.toc a:focus-visible{color:var(--accent);text-decoration:underline}
+main{min-width:0}
+.toc-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px}
+.toc-head h2{margin:0!important}
+.toc-btn{font:inherit;font-size:13px;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:6px;padding:2px 8px;cursor:pointer;line-height:1.6}
+.toc-btn:hover,.toc-btn:focus-visible{color:var(--accent);border-color:var(--accent)}
+.toc-open{display:none;white-space:nowrap}
+body.toc-off .wrap{grid-template-columns:76px minmax(0,1fr)}
+body.toc-off nav.toc>*:not(.toc-open){display:none}
+body.toc-off .toc-open{display:inline-block}
+@media (max-width:860px){body.toc-off .wrap{grid-template-columns:minmax(0,1fr)}}
+header.hero{border-bottom:3px solid var(--accent);padding-bottom:20px;margin-bottom:28px}
+.eyebrow{font-size:13px;letter-spacing:.14em;color:var(--accent);font-weight:700}
+h1{font-family:var(--font-head);font-weight:900;font-size:clamp(28px,5vw,42px);line-height:1.3;margin:6px 0 10px;text-wrap:balance}
+.meta{color:var(--muted);font-size:14px}
+h2{font-family:var(--font-head);font-size:26px;line-height:1.35;margin:56px 0 14px;text-wrap:balance;scroll-margin-top:16px}
+h2 .no{font-family:var(--font-num);color:var(--accent);font-size:18px;margin-right:10px}
+h3{font-size:19px;margin:30px 0 8px;color:var(--accent)}
+p{margin:10px 0}
+ul,ol{padding-left:22px;margin:8px 0}
+li{margin:3px 0}
+mark{background:linear-gradient(transparent 55%,var(--hl) 55%);color:inherit;padding:0 1px}
+.num{font-family:var(--font-num);font-variant-numeric:tabular-nums}
+.box{border-radius:10px;padding:14px 18px;margin:16px 0}
+.box>.tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.08em;padding:1px 8px;border-radius:999px;margin-bottom:4px}
+.box p,.box ul{margin:6px 0}
+.guide{background:var(--paper);border:1px solid var(--line)}
+.guide .tag{background:var(--accent);color:var(--paper)}
+.note{background:var(--ink-soft);border-left:4px solid var(--ink)}
+.note .tag{background:var(--ink);color:var(--paper)}
+.note .hand{color:var(--ink);font-weight:500}
+.iso{background:var(--soil-soft);border-left:4px solid var(--soil)}
+.iso .tag{background:var(--soil);color:var(--paper)}
+.key{background:var(--accent-soft);border-left:4px solid var(--accent)}
+.key .tag{background:var(--accent);color:var(--paper)}
+.unclear{color:var(--muted);font-size:13px;border-bottom:1px dotted var(--muted)}
+.tbl{overflow-x:auto;width:fit-content;max-width:100%;margin:14px 0;border:1px solid var(--line);border-radius:8px;background:var(--paper)}
+table{border-collapse:collapse;width:auto;font-size:15px;min-width:480px}
+th,td{padding:8px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--accent-soft);font-weight:700;white-space:nowrap}
+td.r,th.r{text-align:right}
+td:first-child,th:first-child{white-space:nowrap}
+tr:last-child td{border-bottom:none}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:16px 0}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.stat b{display:block;font-family:var(--font-num);font-size:22px;color:var(--accent);line-height:1.3}
+.stat span{font-size:13px;color:var(--muted)}
+.axes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:16px 0}
+.axis{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:8px;padding:12px 14px}
+.axis h4{margin:0 0 4px;font-size:17px}
+.axis .goal{font-family:var(--font-num);color:var(--accent);font-weight:700}
+.fig{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0;width:fit-content;max-width:100%}
+.fig svg{display:block;max-width:100%;height:auto}
+.fig figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.fig .t{fill:var(--fg);font-size:14px;font-family:var(--font-body)}
+.fig .tb{fill:var(--fg);font-size:14px;font-weight:700;font-family:var(--font-body)}
+.fig .m{fill:var(--muted);font-size:12.5px;font-family:var(--font-body)}
+.fig .n{fill:var(--fg);font-size:13px;font-family:var(--font-num)}
+.fig .ax{stroke:var(--line);stroke-width:1}
+.fig .g-acc{fill:var(--accent)} .fig .s-acc{stroke:var(--accent)}
+.fig .g-soil{fill:var(--soil)} .fig .s-soil{stroke:var(--soil)}
+.fig .g-ink{fill:var(--ink)} .fig .s-ink{stroke:var(--ink)}
+.fig .g-mut{fill:var(--muted)} .fig .s-mut{stroke:var(--muted)}
+.fig .g-accs{fill:var(--accent-soft)} .fig .g-soils{fill:var(--soil-soft)} .fig .g-inks{fill:var(--ink-soft)}
+.fig .hit:hover{opacity:.8}
+.calc{width:fit-content;max-width:100%}
+.loop{position:relative;margin-top:22px!important;margin-bottom:48px!important;padding-left:26px}
+.loop-svg{position:absolute;left:0;top:0;overflow:visible;pointer-events:none;color:var(--accent)}
+.loop-svg text{fill:var(--accent);font-size:13px;font-family:var(--font-body)}
+.flow span.ok{background:var(--accent-soft);border-color:var(--accent);font-weight:700}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0;font-size:14px}
+.flow span{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:4px 10px}
+.flow i{font-style:normal;color:var(--muted)}
+details.q{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0}
+details.q summary{cursor:pointer;font-weight:500}
+details.q summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+details.q[open] summary{color:var(--accent)}
+details.q .a{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+dl.gloss{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 18px;margin:12px 0}
+dl.gloss dt{font-weight:700;color:var(--accent)}
+dl.gloss dd{margin:0}
+@media (max-width:560px){dl.gloss{grid-template-columns:minmax(0,1fr)} dl.gloss dd{margin-bottom:8px}}
+footer{margin-top:60px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+a.xref{display:block;width:fit-content;margin-top:6px}
+.steps{width:fit-content;max-width:100%}
+.box{width:fit-content;max-width:100%}
+.flow span{display:inline-flex;align-items:center;gap:8px}
+.flow span .fi{width:22px;height:22px;flex:none;fill:none;stroke:var(--accent);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.flow span .tx{font-style:normal}
+</style>
+<style>
+.formula{font-family:var(--font-num);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px;overflow-x:auto;white-space:nowrap;font-size:15px;margin:8px 0}
+.calc{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:16px 0;display:grid;gap:12px}
+.calc .row{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:end}
+.calc label{display:grid;gap:4px;font-size:14px;color:var(--muted)}
+.calc input{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 10px;width:160px;max-width:100%}
+.calc input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.calc .out{font-family:var(--font-num);font-size:15px;line-height:1.9;border-top:1px dashed var(--line);padding-top:10px}
+.calc .out b{color:var(--accent);font-size:20px}
+.steps{counter-reset:s;list-style:none;padding:0;display:grid;gap:8px;margin:12px 0}
+.steps li{counter-increment:s;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px 12px 8px 44px;position:relative}
+.steps li::before{content:counter(s);position:absolute;left:12px;top:8px;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--paper);font-family:var(--font-num);font-size:13px;display:grid;place-items:center}
+</style>
+<!--gm-css--><style>
+/* 跳出式小遊戲 */
+.gm-fab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));z-index:60;display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:15px;font-weight:700;color:var(--paper);background:var(--accent);border:0;border-radius:999px;padding:10px 18px 10px 14px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.22)}
+.gm-fab svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.gm-fab:hover,.gm-fab:focus-visible{filter:brightness(1.08);outline:2px solid var(--fg);outline-offset:2px}
+.gm-fab.wig{animation:gmWig .9s ease-in-out 2}
+@keyframes gmWig{0%,100%{transform:rotate(0)}20%{transform:rotate(-8deg) scale(1.06)}40%{transform:rotate(7deg) scale(1.06)}60%{transform:rotate(-4deg)}80%{transform:rotate(3deg)}}
+.gm-tip{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(max(16px,env(safe-area-inset-bottom,0px)) + 58px);z-index:60;max-width:min(300px,calc(100vw - 32px));background:var(--paper);color:var(--fg);border:2px solid var(--accent);border-radius:14px;padding:10px 34px 10px 14px;font-size:15px;line-height:1.55;box-shadow:0 6px 20px rgba(0,0,0,.2);cursor:pointer;opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .3s,transform .3s}
+.gm-tip.on{opacity:1;transform:none;pointer-events:auto}
+.gm-tip::after{content:"";position:absolute;right:34px;bottom:-9px;width:14px;height:14px;background:var(--paper);border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(45deg)}
+.gm-tip b{display:block;font-size:12px;letter-spacing:.1em;color:var(--accent)}
+.gm-tipx{position:absolute;top:4px;right:6px;font:inherit;font-size:18px;line-height:1;color:var(--muted);background:none;border:0;cursor:pointer;padding:4px}
+html.gm-lock,html.gm-lock body{overflow:hidden}
+.gm-ov{position:fixed;inset:0;z-index:70;background:rgba(10,16,13,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.gm-ov[hidden]{display:none}
+.gm-dlg{background:var(--paper);color:var(--fg);border-radius:14px;width:100%;max-width:780px;max-height:calc(100vh - 32px);overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.gm-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px 10px 18px;border-bottom:1px solid var(--line)}
+.gm-hd b{font-family:var(--font-head);font-size:18px}
+.gm-x{font:inherit;font-size:22px;line-height:1;color:var(--muted);background:none;border:1px solid var(--line);border-radius:8px;width:36px;height:36px;cursor:pointer}
+.gm-x:hover,.gm-x:focus-visible{color:var(--accent);border-color:var(--accent)}
+.gm-stage{display:block;width:100%;height:auto;background:linear-gradient(var(--bg),var(--paper))}
+.gm-stage text{font-family:var(--font-body)}
+.gm-stage .lbl{fill:var(--fg);font-size:14px;font-weight:700;text-anchor:middle}
+.gm-stage .sub{fill:var(--muted);font-size:12px;text-anchor:middle}
+.gm-stage .pop{fill:var(--fg);font:900 19px var(--font-head);text-anchor:middle}
+.gm-stage .gas text{fill:var(--fg);font:700 13px var(--font-num);text-anchor:middle;dominant-baseline:middle}
+.gm-card{padding:14px 20px 20px}
+.gm-prog{font-size:13px;color:var(--muted);letter-spacing:.06em;min-height:1.4em}
+.gm-q{font-family:var(--font-head);font-size:21px;font-weight:700;margin:4px 0 12px;line-height:1.45}
+.gm-opts{display:flex;flex-wrap:wrap;gap:10px}
+.gm-opts button,.gm-next{font:inherit;font-size:16px;font-weight:700;color:var(--fg);background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:8px 18px;cursor:pointer;min-width:90px;text-align:left;line-height:1.5}
+.gm-opts button:hover:not(:disabled),.gm-opts button:focus-visible{border-color:var(--accent);color:var(--accent)}
+.gm-opts button:disabled{cursor:default}
+.gm-opts button.ok{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.gm-opts button.bad{background:var(--soil);border-color:var(--soil);color:var(--paper)}
+.gm-opts button.dim{opacity:.45}
+.gm-fb{margin-top:12px}
+.gm-fb .res{border-radius:10px;padding:12px 16px;margin:0 0 10px}
+.gm-fb .res.ok{background:var(--accent-soft);border-left:4px solid var(--accent)}
+.gm-fb .res.bad{background:var(--soil-soft);border-left:4px solid var(--soil)}
+.gm-fb .res b{display:block;font-size:17px;margin-bottom:2px}
+.gm-fb .res.ok b{color:var(--accent)}
+.gm-fb .res.bad b{color:var(--soil)}
+.gm-fb .res p{margin:4px 0}
+.gm-next{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.gm-next:hover,.gm-next:focus-visible{filter:brightness(1.08)}
+.gm-score{font-family:var(--font-num);font-size:28px;color:var(--accent);font-weight:700}
+@media (max-width:560px){.gm-q{font-size:18px}.gm-card{padding:12px 14px 16px}.gm-opts button{flex:1 1 100%}.gm-ov{padding:8px}.gm-dlg{max-height:calc(100vh - 16px)}}
+@media (prefers-reduced-motion:reduce){.gm-fab.wig{animation:none}.gm-tip{transition:none}}
+</style><!--/gm-css-->
+
+<style>
+.site-nav{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px;max-width:1480px;margin:0 auto;padding-top:20px}
+.site-nav+.wrap{padding-top:16px}
+.site-nav a{color:var(--muted);text-decoration:none}
+.site-nav a:hover,.site-nav a:focus-visible{color:var(--accent);text-decoration:underline}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:56px 0 0;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{display:block;padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--fg);text-decoration:none;font-size:15px}
+.pager a:hover,.pager a:focus-visible{border-color:var(--accent)}
+.pager small{display:block;color:var(--muted);font-size:12px}
+.pager .next{text-align:right;grid-column:2}
+@media (max-width:560px){.pager{grid-template-columns:1fr}.pager .next{grid-column:1}}
+</style>
+</head>
+<body>
+<nav class="site-nav" aria-label="網站導覽"><a href="index.html">← 回課程目錄</a><a href="../index.html">學習筆記首頁</a></nav>
+<div class="wrap">
+<nav class="toc" aria-label="目錄">
+  <button type="button" class="toc-btn toc-open" id="tocShow" aria-label="展開目錄">目錄 »</button>
+  <div class="toc-head"><h2>目錄</h2><button type="button" class="toc-btn" id="tocHide" aria-label="收起目錄">« 收起</button></div>
+  <p style="margin:0 0 6px"><a href="#guide">導讀</a></p>
+  <ol>
+    <li><a href="#carbon">森林中的碳</a></li>
+    <li><a href="#intl">國際制度演進</a></li>
+    <li><a href="#tw">臺灣的森林碳匯策略</a></li>
+    <li><a href="#method">森林減量方法學框架</a></li>
+    <li><a href="#supp">補充：森林與竹林碳匯實際怎麼算</a></li>
+    <li><a href="#quiz">自我測驗</a></li>
+    <li><a href="#gloss">名詞表</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="hero">
+  <h1>森林碳匯策略概論</h1>
+</header>
+
+<section id="guide">
+  <div class="box guide">
+    <span class="tag">導讀</span>
+    <p>森林是陸地最大的碳庫，但<mark>天然情況下，植物固定的碳幾乎都會回到大氣</mark>，而且火災、病蟲害、砍伐隨時可能讓碳跑回去（非永久性）。所以森林減碳要靠人為經營，並用方法學證明「比基線多吸了多少」。</p>
+    <p>三個閱讀重點：</p>
+    <ul>
+      <li>國際制度怎麼處理森林的非永久性：從京都的臨時信用、REDD+ 爭議，到巴黎協定的緩衝池，見 <a href="#intl">第 2 節</a>。</li>
+      <li>臺灣的三個策略與四個林業方法學，見 <a href="#tw">第 3 節</a>。</li>
+      <li>方法學框架：碳庫、保守性、基線、淨減量公式、分層與 MRV、決策樹，見 <a href="#method">第 4 節</a>，有計算器可以練習。</li>
+    </ul>
+    <p style="font-size:14px;color:var(--muted)">框的顏色：<span style="color:var(--ink)">藍色＝上課手寫筆記</span>、<span style="color:var(--soil)">棕色＝跟 ISO 或其他講義的連結</span>、綠色＝重點。</p>
+  </div>
+</section>
+
+<section id="carbon">
+<h2><span class="no">01</span>森林中的碳</h2>
+<figure class="fig"><svg viewBox="0 0 500 236" width="500" role="img" aria-label="全球森林碳庫比例圓環圖"><path class="hit g-acc" d="M130.0,26.0A92,92 0 0 1 161.5,204.5L149.8,172.5A58,58 0 0 0 130.0,60.0Z" stroke="var(--paper)" stroke-width="2"><title>活體生物量：44%</title></path><path class="hit g-soil" d="M161.5,204.5A92,92 0 0 1 138.7,209.6L135.5,175.7A58,58 0 0 0 149.8,172.5Z" stroke="var(--paper)" stroke-width="2"><title>枯死木：4%</title></path><path class="hit g-soils" d="M138.7,209.6A92,92 0 0 1 104.1,206.3L113.7,173.7A58,58 0 0 0 135.5,175.7Z" stroke="var(--paper)" stroke-width="2"><title>枯落物：6%</title></path><path class="hit g-ink" d="M104.1,206.3A92,92 0 0 1 130.0,26.0L130.0,60.0A58,58 0 0 0 113.7,173.7Z" stroke="var(--paper)" stroke-width="2"><title>土壤有機質：45%</title></path><text x="130" y="116" text-anchor="middle" class="n" style="font-size:22px">662</text><text x="130" y="136" text-anchor="middle" class="m">Gt 碳</text><rect x="270" y="46" width="14" height="14" rx="3" class="g-acc"/><text x="292" y="58" class="t">活體生物量</text><text x="470" y="58" text-anchor="end" class="n">44%</text><text x="292" y="76" class="m">活樹的樹幹、枝葉、根</text><rect x="270" y="90" width="14" height="14" rx="3" class="g-soil"/><text x="292" y="102" class="t">枯死木</text><text x="470" y="102" text-anchor="end" class="n">4%</text><text x="292" y="120" class="m">倒木、立枯木</text><rect x="270" y="134" width="14" height="14" rx="3" class="g-soils"/><text x="292" y="146" class="t">枯落物</text><text x="470" y="146" text-anchor="end" class="n">6%</text><text x="292" y="164" class="m">落葉、細枝</text><rect x="270" y="178" width="14" height="14" rx="3" class="g-ink"/><text x="292" y="190" class="t">土壤有機質</text><text x="470" y="190" text-anchor="end" class="n">45%</text><text x="292" y="208" class="m">森林土壤中的有機碳</text></svg><figcaption>全球森林碳儲量在各碳庫的比例（FAO 全球森林資源評估 2020）。土壤和活樹各占四成多。中央的總量 662 Gt 碳為補充，出自同一份報告。</figcaption></figure>
+<div class="tbl"><table>
+<tr><th>碳在哪裡</th><th>說明</th></tr>
+<tr><td>植物活體</td><td>光合作用把 CO₂ 變成醣類，再合成木質素、纖維素、半纖維素構成木材；<mark>樹幹、樹枝、樹葉、花、果、根、樹皮</mark>都是儲碳位置</td></tr>
+<tr><td>非活體植物</td><td>枯葉、枯枝、落果、枯倒木、枯立木。容易被動物與微生物<mark>分解成小顆粒</mark>，大部分變回 CO₂，少部分留在地表與土壤</td></tr>
+<tr><td>土壤</td><td>有機碳、無機碳、溶解性有機碳、溶解性無機碳。分布不均，<b>越深越不易受干擾、越穩定</b></td></tr>
+</table></div>
+<h3>減碳實務的六大碳庫</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22v-6"/><path d="M12 2 6 10h3l-4 6h14l-4-6h3z"/></svg><em class="tx">地上部生物量</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22v-6"/><path d="M12 2 6 10h3l-4 6h14l-4-6h3z"/></svg><em class="tx">地下部生物量</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22v-6"/><path d="M12 2 6 10h3l-4 6h14l-4-6h3z"/></svg><em class="tx">枯死木</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21c0-9 6-16 16-17-1 10-8 16-16 17z"/><path d="M5 21 14 12"/></svg><em class="tx">枯落物</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h18M3 14h18M3 19h18"/><path d="M12 9V3m0 0-2 2m2-2 2 2"/></svg><em class="tx">土壤碳</em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/></svg><em class="tx">收穫林產品（HWP）<br><small>延伸碳庫</small></em></span></div>
+<p><b>收穫木產品（HWP）／收穫竹產品（HBP）</b>：伐採後做成鋸材、圓木、板材仍持續儲碳。已離開森林，但可當<mark>延伸碳庫</mark>納入部分方法學（例如 AR-TMS0002），儲碳效益看用途、利用率與使用壽命。現行方法只採計<b>生產後 40 年（竹產品 20 年）</b>仍留存的碳。</p>
+<div class="box iso"><span class="tag">連結講義 3、7</span><p>碳庫的分類和海洋藍碳、土壤碳是同一套邏輯。<a class="xref" href="03-blue-carbon.html#quant">講義 3〈碳匯怎麼量化〉↗</a><a class="xref" href="07-soil-carbon.html#soc">講義 7〈土壤有機碳：量與質〉↗</a></p></div>
+
+<h3>為什麼森林碳是「非永久」的</h3>
+<figure class="fig"><svg viewBox="0 0 880 200" width="880" role="img" aria-label="全球陸地碳通量從 GPP 120 遞減到 NBP 約 1"><text x="190" y="36" text-anchor="end" class="t">GPP 粗初級生產</text><rect class="hit g-acc" x="200" y="20" width="432" height="24" rx="3"><title>GPP 粗初級生產：≈120 Gt C／年</title></rect><text x="640" y="37" class="n">≈120</text><text x="692" y="37" class="m">光合作用吸收</text><text x="190" y="82" text-anchor="end" class="t">NPP 淨初級生產</text><rect class="hit g-acc" x="200" y="66" width="216" height="24" rx="3"><title>NPP 淨初級生產：≈60 Gt C／年</title></rect><text x="424" y="83" class="n">≈60</text><text x="476" y="83" class="m">扣植物自己呼吸 ≈60</text><text x="190" y="128" text-anchor="end" class="t">NEP 淨生態系生產</text><rect class="hit g-acc" x="200" y="112" width="36" height="24" rx="3"><title>NEP 淨生態系生產：≈10 Gt C／年</title></rect><text x="244" y="129" class="n">≈10</text><text x="296" y="129" class="m">扣分解（異營呼吸）≈50</text><text x="190" y="174" text-anchor="end" class="t">NBP 淨生物群系生產</text><rect class="hit g-soil" x="200" y="158" width="4" height="24" rx="3"><title>NBP 淨生物群系生產：≈1 Gt C／年</title></rect><text x="212" y="175" class="n">≈±1</text><text x="264" y="175" class="m">扣擾動（火災、風災、砍伐）≈9</text></svg><figcaption>全球陸地每年的碳通量（Gt C／年，IPCC）。光合作用吸收 120，一層一層扣掉呼吸、分解、擾動，長期真正留下的只剩約 ±1。<b>天然情況下，植物固定的碳幾乎都會回到大氣。</b></figcaption></figure>
+<div class="formula">NPP ＝ GPP − R<sub>a</sub>（自營呼吸）　　NEP ＝ NPP − R<sub>h</sub>（異營呼吸）</div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">NEP 才是真正留下的碳。擾動受人為影響大，也有非生物因素，例如風災、火災。</p></div>
+<p>樹木儲存的碳，會因自身代謝、被吃、被分解而回到大氣；火災、砍伐更會加速釋放。<b>所以要人為介入，才比較容易達成「自然方式減碳」。</b></p>
+</section>
+
+<section id="intl">
+<h2><span class="no">02</span>國際制度演進</h2>
+<figure class="fig"><svg viewBox="0 0 580 256" width="580" role="img" aria-label="全球每年森林擴張與毀林面積"><line x1="40" x2="560" y1="110" y2="110" class="s-mut" stroke-width="1.2"/><rect class="hit g-acc" x="80" y="78" width="56" height="32" rx="3"><title>1990–2000 森林擴張 +6.95</title></rect><text x="108" y="72" text-anchor="middle" class="n">+6.95</text><rect class="hit g-soil" x="140" y="110" width="56" height="81" rx="3"><title>1990–2000 毀林 -17.6</title></rect><text x="168" y="207" text-anchor="middle" class="n">-17.6</text><text x="138" y="244" text-anchor="middle" class="t">1990–2000</text><rect class="hit g-acc" x="250" y="65" width="56" height="45" rx="3"><title>2000–2015 森林擴張 +9.88</title></rect><text x="278" y="59" text-anchor="middle" class="n">+9.88</text><rect class="hit g-soil" x="310" y="110" width="56" height="63" rx="3"><title>2000–2015 毀林 -13.6</title></rect><text x="338" y="189" text-anchor="middle" class="n">-13.6</text><text x="308" y="244" text-anchor="middle" class="t">2000–2015</text><rect class="hit g-acc" x="420" y="79" width="56" height="31" rx="3"><title>2015–2025 森林擴張 +6.78</title></rect><text x="448" y="73" text-anchor="middle" class="n">+6.78</text><rect class="hit g-soil" x="480" y="110" width="56" height="50" rx="3"><title>2015–2025 毀林 -10.9</title></rect><text x="508" y="176" text-anchor="middle" class="n">-10.9</text><text x="478" y="244" text-anchor="middle" class="t">2015–2025</text><rect x="400" y="12" width="12" height="12" rx="2" class="g-acc"/><text x="418" y="22" class="m">森林擴張</text><rect x="480" y="12" width="12" height="12" rx="2" class="g-soil"/><text x="498" y="22" class="m">毀林</text></svg><figcaption>全球每年森林擴張與毀林面積（百萬公頃／年，FAO 森林資源評估 2025）。毀林速度在減緩，但仍大於新增森林。各洲來看，非洲、南美洲持續減少，亞洲、歐洲增加。</figcaption></figure>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">非洲、南美洲在砍伐；毀林 ＞ 新增森林。</p></div>
+<p>除了直接<b>毀林</b>（產業、都市開發），森林還面臨<b>擾動</b>：疾病蟲害、氣象災害、野火、氣候影響。</p>
+
+<h3>從京都到巴黎</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><em class="tx">1992 UNFCCC<br><small>森林是陸地最大碳庫，獲國際公認</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><em class="tx">1997 京都議定書<br><small>核算 1990 年後人為造林、再造林、毀林（ARD，第 3.3 條）</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><em class="tx">2003 COP9<br><small>tCER、lCER 有期限的臨時信用</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><em class="tx">2005–2010 REDD → REDD+<br><small>獎勵「不砍」</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><em class="tx">2015 巴黎協定<br><small>NDC；第六條避免雙重計算</small></em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><em class="tx">2024 COP29<br><small>PACM 緩衝池取代臨時信用</small></em></span></div>
+
+<div class="tbl"><table>
+<tr><th>議題</th><th>內容</th></tr>
+<tr><td>噸年核算法（TYA）</td><td>森林碳的「時間價值」與「非永久性」不固定，測量也有誤差。學界約 2000 年提出依專案實際時程<mark>按比例折算</mark>發放額度，消除物理流失的長期責任；影響了 CDM A/R 的核算</td></tr>
+<tr><td>CDM A/R 臨時信用</td><td>傳統 CDM 適合人工排放源，難處理非永久的森林。2003 年發展 tCER（temporary）、lCER（long-term）有期限的額度；因會消滅、市場接受度低，2020 年停發。但奠定了「基線」「外加性」的負碳認定基礎</td></tr>
+<tr><td>民間碳信用</td><td>京都履約市場範圍有限，企業自願減碳需求增加，VCS、Gold Standard、ACR、CAR 等方法學蓬勃發展</td></tr>
+<tr><td>REDD／REDD+</td><td>熱帶國家的問題不是森林太少，而是<mark>既有森林被砍、退化而持續排碳</mark>。從獎勵「種新樹」擴大到獎勵「不砍」：RED → 防止森林退化（REDD，COP13）→ 維持高碳庫森林（REDD+，COP16）</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">減少森林面積 ＝ 排碳（毀林）。森林的碳會「逆轉」。</p></div>
+<div class="box key"><span class="tag">REDD+ 的爭議</span><p>國家級 REDD+ 與自願碳市場的專案級基準線可能不一致，造成重複計算、洩漏與信用虛增。2023 年，碳權開發商 South Pole 退出辛巴威卡瑞巴（Kariba）REDD+ 專案（保護約 78.5 萬公頃），因碳權額度不實、疑似洗綠；數十家跨國企業曾向該專案購買抵換額度。</p></div>
+<div class="box iso"><span class="tag">連結講義 5</span><p>REDD+ 被質疑、2022→2023 年自願碳市場的信任危機。<a class="xref" href="05-carbon-pricing.html#market">講義 5〈碳市場與碳信用額度〉↗</a></p></div>
+
+<h3>巴黎協定第六條</h3>
+<ul>
+  <li>森林吸收的 1 噸 CO₂，不能同時被地主國和購買國都算成自己的減量。轉讓給別國時，地主國要做<b>相應調整（CA）</b>。</li>
+  <li><b>6.2 條</b>：國家間可轉讓的減量成果（ITMO）。</li>
+  <li><b>6.4 條</b>：巴黎協定碳信用機制（PACM），由聯合國監督、核發 A6.4ER。</li>
+  <li>2024 年 COP29 把森林永久性問題從京都時代的「臨時信用」改成：</li>
+</ul>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5z"/></svg><em class="tx">風險評估</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5z"/></svg><em class="tx">提撥部分額度到集中緩衝池</em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 20h20z"/><path d="M12 9v5M12 17h.01"/></svg><em class="tx">發生逆轉（例如火災）時註銷補償</em></span></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">緩衝池就像保險。</p></div>
+
+<h3>IPCC 的計量依據</h3>
+<div class="tbl"><table>
+<tr><th>年份</th><th>文件</th><th>重點</th></tr>
+<tr><td>2006</td><td>2006 IPCC Guidelines</td><td>把農業與 LULUCF 整合為第 4 卷 <mark>AFOLU</mark>；建立 Tier 1–3、碳庫、土地利用類別與 QA/QC 的核心方法</td></tr>
+<tr><td>2013</td><td>Wetlands Supplement</td><td>補足濕地</td></tr>
+<tr><td>2013</td><td>Kyoto Protocol Supplement</td><td>京都議定書 3.3、3.4 條 LULUCF 活動的補充</td></tr>
+<tr><td>2019</td><td>2019 Refinement</td><td>更新排放係數、參數與方法</td></tr>
+</table></div>
+<div class="box iso"><span class="tag">連結講義 2</span><p>國家清冊的 AFOLU、LULUCF 與 Tier。<a class="xref" href="02-emission-inventory.html#afolu">講義 2〈AFOLU、LULUCF 與三種氣體〉↗</a></p></div>
+</section>
+
+<section id="tw">
+<h2><span class="no">03</span>臺灣的森林碳匯策略</h2>
+<p>2023 年《氣候變遷因應法》；2050 淨零十二項關鍵戰略第 9 項「自然碳匯」。<b>2040 年增匯目標：增加 1,000 萬公噸碳儲量</b>，來自森林碳匯（增加面積、加強經營、提高國產材利用）、土壤碳匯、海洋碳匯。</p>
+<div class="tbl"><table>
+<tr><th>策略</th><th>作法</th><th>效益類型</th></tr>
+<tr><td>一、增加森林面積</td><td>臺灣土地有限、<mark>森林覆蓋率已高</mark>，改走複合目的造林：國有林、海岸林、生態復育造林、排除超限利用造林、邊際農地造林、水利工程植樹、都市林</td><td>吸存（成效有限）</td></tr>
+<tr><td>二、加強森林經營（IFM）</td><td><mark>劣化地復育</mark>（如移除外來種銀合歡再造林）、<mark>人工林撫育</mark>（修枝疏伐，須證明比原經營方式更有效）、<mark>竹林經營</mark>（妥善經營的竹林碳匯效益大於一般森林）</td><td>吸存</td></tr>
+<tr><td>三、提升國產材利用</td><td>減少進口木材<mark>運輸碳排</mark>；復振林產業、<mark>活化林地</mark>；遏制非法木材進口導致的<mark>國際天然林退化</mark></td><td>保存、替代（方法學尚未成熟）</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">國產材自給率約 2%。<br>竹子生長快、累積生物量快，但還是要經營（砍伐）；種密了要隔時間疏伐，不然生長停滯。<br>老林吸存速度會變慢。都市造林可以減碳，但還不算減量（定義問題、還不知道怎麼算）。<br>本課主要討論策略一、二，只有這兩個被算成減量。</p></div>
+
+<h3>從抵換專案到自願減量專案</h3>
+<div class="tbl"><table>
+<tr><th>制度</th><th>重點</th></tr>
+<tr><td>舊制：碳抵換專案（2018 辦法）</td><td>計畫型（Project-based）與方案型（PoA，母專案管理子專案）；母專案最長計入期：非林業 28 年、林業 60 年。截至 2024 年 10 月註冊 95 案（能源效率 37、低碳燃料 18、含氟氣體 15、再生能源 11…），已核發 2,559 萬 t CO₂e、註銷 682 萬</td></tr>
+<tr><td>新制：自願減量專案</td><td>112 年 10 月 12 日《溫室氣體自願減量專案管理辦法》。方法學分 B-1 到 B-14 類，<b>B-11 林業</b>、B-12 農業及土地利用、B-13 畜牧業</td></tr>
+</table></div>
+<p>減量額度交易：環境部指定、委託臺灣碳權交易所辦理。買方是有氣候法第 26 條用途的事業（環評增量抵換、扣除碳費、抵銷總量管制超額），<b>不開放個人</b>，也不含國外減量額度；交易方式有定價、協議、拍賣，<b>移轉僅限 1 次</b>。</p>
+<div class="tbl"><table>
+<tr><th>例子</th><th class="r">執行前</th><th class="r">執行後</th><th class="r">可申請額度</th></tr>
+<tr><td>減量（排放減少）</td><td class="r num">排放 2,000 t</td><td class="r num">排放 1,700 t</td><td class="r num">300 t CO₂e</td></tr>
+<tr><td>增匯（碳匯增加）</td><td class="r num">碳匯 1,000 t</td><td class="r num">碳匯 1,300 t</td><td class="r num">300 t CO₂e</td></tr>
+</table></div>
+<h3>B-11 林業的四個方法學</h3>
+<div class="tbl"><table>
+<tr><th>方法學</th><th>明文排除</th><th>土地條件</th><th>碳庫</th></tr>
+<tr><td>AR-TMS0001 造林</td><td>公告重要濕地；竹林造林</td><td>造林前 6 年內不是森林（災害裸露、移除外來種復育例外）；毗鄰 &gt; 0.5 ha</td><td>地上＋地下必計；SOC 可選；枯死木、枯落物不計</td></tr>
+<tr><td>AR-TMS0002 加強森林經營</td><td>重要濕地；以竹林為主的土地</td><td>符合森林定義；毗鄰 &gt; 0.5 ha</td><td>地上＋地下必計；<b>HWP 可納入</b>；其餘不計</td></tr>
+<tr><td>AR-TMS0003 竹林經營</td><td>無</td><td>符合竹林定義（毗鄰 &gt; 0.1 ha），起始前 5 年至今都是竹林</td><td>地上必計；地下不計；<b>HWP 可納入</b>；其餘不計</td></tr>
+<tr><td>AR-TMS0004 低蓄積林增匯</td><td>竹林、灌木林；濕地管理</td><td>過去 20 年維持林木覆蓋且無商業伐採；證明原為低蓄積林</td><td>地上＋地下計入；其餘不計；伐採木原則上不算 HWP</td></tr>
+</table></div>
+<div class="tbl"><table>
+<tr><th>國際林業方法</th><th>臺灣對應</th></tr>
+<tr><td>新造林、再造林、加強經營管理</td><td>AR-TMS0001、0002、0003（竹林）、0004</td></tr>
+<tr><td>收穫木產品壽命延長或再生</td><td>AR-TMS0002、0003 部分包含，或其他補助政策</td></tr>
+<tr><td>防止毀林與退化（REDD+）</td><td>較不適合我國國情，沒有對應方法學</td></tr>
+</table></div>
+<div class="box key"><span class="tag">真實案例</span><p>高雄市政府農業局在大寮區明善段的造林碳匯專案，用 AR-TMS0001（微型規模），計入期固定 30 年，預估每年減量約 14 公噸 CO₂e。申請書要附場域衛星圖與邊界點位座標（TWD97）。可在環境部氣候變遷署網站查詢過去的計畫書與監測報告格式。</p></div>
+</section>
+
+<section id="method">
+<h2><span class="no">04</span>森林減量方法學框架</h2>
+<div class="tbl"><table>
+<tr><th>考量項目</th><th>內容</th></tr>
+<tr><td><mark>專案設計與適用條件</mark></td><td>減量活動類型、<b>適用土地</b>、排除條件與規模；專案邊界與計入期；土地合格性與權利；碳庫與排放源選擇</td></tr>
+<tr><td><mark>保守性與外加性</mark></td><td>盡量不誇大減碳效果；法規、財務外加性與普遍性；基線情境；不確定性評估與折減</td></tr>
+<tr><td><mark>減量與移除量計算</mark></td><td>生物量推估、碳轉換係數；HWP 碳留存率；作業排放、逆轉風險、洩漏</td></tr>
+<tr><td><mark>監管程序（MRV）</mark></td><td>森林分層、樣區設計、調查頻率；QA/QC；計畫書、監測報告、第三方查驗</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">造林：一開始必須不是森林才算造林。<br>微型不一定要做外加性；規模大要達到經濟效益才算有外加性。</p></div>
+
+<h3>基線：減量的比較基準</h3>
+<p>基線描述「如果沒有執行減量專案，原本最可能發生什麼」。<mark>減量／移除成效 ＝ 專案情境 − 基線情境</mark>，所以基線怎麼設定，直接決定能認列多少額度，重要性不亞於 MRV。</p>
+<div class="tbl"><table>
+<tr><th>類型</th><th>額度公式</th><th>例子</th></tr>
+<tr><td>減排型</td><td>基線排放量（BE）− 專案排放量（PE）</td><td>改用效率較好的燃料</td></tr>
+<tr><td>移除型</td><td>專案移除量（PR）− 基線移除量（BR）</td><td><b>森林（林業以移除型為主）</b></td></tr>
+</table></div>
+<figure class="fig"><svg viewBox="0 0 640 230" width="640" role="img" aria-label="移除型專案：專案移除量高於基線移除量的部分才是額外移除量">
+<line x1="60" x2="60" y1="20" y2="200" class="ax"/><line x1="60" x2="600" y1="200" y2="200" class="ax"/>
+<text x="20" y="110" class="m" transform="rotate(-90 20 110)">移除量</text>
+<line x1="200" x2="200" y1="20" y2="200" class="s-mut" stroke-dasharray="3 3"/>
+<text x="130" y="218" text-anchor="middle" class="m">專案執行前</text><text x="400" y="218" text-anchor="middle" class="m">專案執行後</text>
+<polygon points="200,150 560,60 560,135" class="g-accs"/>
+<path d="M60,155 L200,150 L560,135" fill="none" class="s-mut" stroke-width="2" stroke-dasharray="6 4"/>
+<path d="M200,150 L560,60" fill="none" class="s-acc" stroke-width="2.5"/>
+<text x="566" y="64" class="t">專案移除量 PR</text>
+<text x="566" y="140" class="t">基線移除量 BR</text>
+<text x="430" y="112" text-anchor="middle" class="tb">額外移除量</text>
+</svg><figcaption>林業以<b>移除型</b>為主：減量額度 ＝ 專案移除量 − 基線移除量。基線是「沒有專案時，照舊（BAU）也會發生的移除」。</figcaption></figure>
+<div class="box iso"><span class="tag">連結 ISO 14064-2</span><p>基線、外加性、保守性就是 14064-2 的專案原則。<a class="xref" href="04-iso-standards.html#p-core">講義 4〈核心觀念：基準情境〉↗</a></p></div>
+
+<h3>淨減量怎麼算</h3>
+<div class="formula">淨減量 ＝（專案吸收 − 專案排放 − 基線吸收）×（1 − 不確定性）</div>
+<ul>
+  <li><b>生物碳儲存量</b>：胸徑（DBH）× 樹高 × 形數 → 材積 → 乘密度換成乾重 → 乘碳含量 → × 44/12 換成 CO₂。地上、地下部通常一起推估。</li>
+  <li><b>HWP</b>：木材收穫量 × 碳留存率，預估 40 年後還留多少碳。</li>
+  <li><b>專案排放</b>：化石燃料、運輸、施肥；火燒通常不算額外排放，但要估算燃燒產生的 CH₄、N₂O。</li>
+  <li><b>逆轉風險</b>：火災、病蟲害、伐採，要有監測、補償或緩衝機制。<b>洩漏</b>：專案導致邊界外排放增加，也要扣。</li>
+</ul>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">保守性：寧可少估，不要多估。不確定性要想辦法降低。</p></div>
+<h3>練習：林木碳吸存與淨減量計算器</h3>
+<div class="calc">
+  <div class="row">
+    <label for="v10">材積增加（m³）<input id="v10" type="number" step="1" value="100"></label>
+    <label for="d10">基本密度（t／m³）<input id="d10" type="number" step="0.01" value="0.5"></label>
+    <label for="r10">根莖比<input id="r10" type="number" step="0.01" value="0.24"></label>
+    <label for="c10">碳含量<input id="c10" type="number" step="0.01" value="0.47"></label>
+  </div>
+  <div class="row">
+    <label for="pe10">專案排放（t CO₂e）<input id="pe10" type="number" step="0.1" value="5"></label>
+    <label for="br10">基線吸收（t CO₂e）<input id="br10" type="number" step="0.1" value="20"></label>
+    <label for="u10">不確定性折減（%）<input id="u10" type="number" step="1" value="10"></label>
+  </div>
+  <div class="out" id="out10" aria-live="polite"></div>
+</div>
+<p style="font-size:14px;color:var(--muted)">講義只給公式；預設的密度、根莖比、碳含量、排放與基線都是假設的示範值，實際要用方法學指定的係數。</p>
+
+<h3>分層與監測</h3>
+<p>森林要先<b>分層</b>：層內均質、層間異質。依林型與樹種、密度與蓄積、林齡與樹高、徑級結構、海拔坡度坡向、經營或擾動歷史來分；每一層各自設樣區（隨機或系統抽樣），分層估算後再加總。分層不必過細，避免每層樣本不足。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">分層：1. 空拍資料（植被）2. 實地探查。各分層要有自己的監測樣區。</p></div>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.4-4.4"/></svg><em class="tx">M 找方法學、確認土地合規</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h7M9 17h7"/></svg><em class="tx">R 撰寫計畫書</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 22l-2.4-1.8-3 .2-.9-2.9L3.2 15.8l1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><em class="tx">V 查驗機構確證</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2 20a7 7 0 0 1 14 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 13.5a7 7 0 0 1 4 6.5"/></svg><em class="tx">專案小組、審議會<br><small>環境部 → 註冊立案</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 16v-4M12 16V8M17 16v-7"/></svg><em class="tx">M 執行並監測碳量</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h7M9 17h7"/></svg><em class="tx">R 撰寫監測報告</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 22l-2.4-1.8-3 .2-.9-2.9L3.2 15.8l1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><em class="tx">V 查驗機構查證</em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 22l-2.4-1.8-3 .2-.9-2.9L3.2 15.8l1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><em class="tx">審議通過，核發額度</em></span></div>
+<p>查驗機構（VVB）不是核發單位，核發的是環境部。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">兩種做法：① 完全在計畫內進行；② 先造林再開始申請。確證是申請前的第三方檢查；查證是把監測報告給第三方查驗。</p></div>
+
+<h3>選哪一個方法學</h3>
+<figure class="fig"><svg viewBox="0 0 880 240" width="880" role="img" aria-label="林業方法學選擇決策樹"><rect x="20" y="20" width="280" height="40" rx="8" class="g-inks" stroke="var(--ink)"/><text x="160.0" y="45.0" text-anchor="middle" class="t">Q1 符合森林（或竹林）定義？</text><line x1="160" y1="60" x2="160" y2="100" class="s-mut" stroke-width="1.5"/><text x="166.0" y="80.0" class="m">否</text><rect x="20" y="100" width="280" height="40" rx="8" class="g-inks" stroke="var(--ink)"/><text x="160.0" y="125.0" text-anchor="middle" class="t">造林前 6 年內是非森林地？</text><path d="M100,140 V180" class="s-mut" stroke-width="1.5"/><text x="106" y="166" class="m">是</text><rect x="20" y="180" width="160" height="46" rx="8" class="g-accs" stroke="var(--accent)"/><text x="100.0" y="200" text-anchor="middle" class="tb">AR-TMS0001</text><text x="100.0" y="218" text-anchor="middle" class="m">造林與植林碳匯</text><path d="M230,140 V180" class="s-mut" stroke-width="1.5"/><text x="236" y="166" class="m">否</text><rect x="190" y="180" width="140" height="46" rx="8" class="g-soils" stroke="var(--soil)"/><text x="260" y="200" text-anchor="middle" class="tb">不適用 B-11</text><text x="260" y="218" text-anchor="middle" class="m">改採增量抵換等</text><line x1="300" y1="40" x2="400" y2="40" class="s-mut" stroke-width="1.5"/><text x="356.0" y="40.0" class="m">是</text><rect x="400" y="20" width="220" height="40" rx="8" class="g-inks" stroke="var(--ink)"/><text x="510.0" y="45.0" text-anchor="middle" class="t">Q2 主要是竹林？</text><line x1="620" y1="40" x2="660" y2="40" class="s-mut" stroke-width="1.5"/><text x="646.0" y="40.0" class="m">是</text><rect x="660" y="17" width="200" height="46" rx="8" class="g-accs" stroke="var(--accent)"/><text x="760.0" y="37" text-anchor="middle" class="tb">AR-TMS0003</text><text x="760.0" y="55" text-anchor="middle" class="m">竹林經營碳匯</text><line x1="510" y1="60" x2="510" y2="100" class="s-mut" stroke-width="1.5"/><text x="516.0" y="80.0" class="m">否</text><rect x="400" y="100" width="220" height="40" rx="8" class="g-inks" stroke="var(--ink)"/><text x="510.0" y="125.0" text-anchor="middle" class="t">Q3 蓄積 &lt; 同齡同樹種 70%？</text><line x1="620" y1="120" x2="660" y2="120" class="s-mut" stroke-width="1.5"/><text x="646.0" y="120.0" class="m">是</text><rect x="660" y="97" width="200" height="46" rx="8" class="g-accs" stroke="var(--accent)"/><text x="760.0" y="117" text-anchor="middle" class="tb">AR-TMS0004</text><text x="760.0" y="135" text-anchor="middle" class="m">低蓄積林增匯</text><line x1="510" y1="140" x2="510" y2="180" class="s-mut" stroke-width="1.5"/><text x="516.0" y="160.0" class="m">否</text><rect x="400" y="180" width="220" height="46" rx="8" class="g-accs" stroke="var(--accent)"/><text x="510.0" y="200" text-anchor="middle" class="tb">AR-TMS0002</text><text x="510.0" y="218" text-anchor="middle" class="m">加強森林經營碳匯</text></svg><figcaption>依序回答三個問題就知道用哪一個方法學；四個方法學通常互相排斥。竹林定義：毗鄰面積 &gt; 0.1 ha、成竹高度 &gt; 2 m、竹稈胸徑 &gt; 2 cm。</figcaption></figure>
+<p>註冊階段要提供專案邊界：確保土地處分合法、符合方法學範圍，面積也是計算碳儲量的必要參數。可參考國土測量與森林調查的技術手冊。</p>
+</section>
+
+<section id="supp">
+<h2><span class="no">05</span>補充：森林與竹林碳匯實際怎麼算</h2>
+
+<h3>森林的碳只有一條式子</h3>
+<p><b>ΔC森林 ＝ ΔC生物量（地上＋地下）＋ ΔC死體（枯死木、枯落物）＋ ΔC土壤</b>。臺灣的森林專案通常假設死體和土壤沒有變化，只算生物量（和林產品）。</p>
+<p><b>碳儲存量</b>是某個時刻的存量（t/ha）；<b>碳吸存</b>是前後兩次儲存量相減，再除以時間（t/ha/年）。材積對應儲存量，生長量對應吸存量。</p>
+<h3>從材積算到 CO₂</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22v-6"/><path d="M12 2 6 10h3l-4 6h14l-4-6h3z"/></svg><em class="tx">立木材積<br><small>m³</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 16v-4M12 16V8M17 16v-7"/></svg><em class="tx">× BCEF<br><small>材積轉成地上部乾重</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h18M3 14h18M3 19h18"/><path d="M12 9V3m0 0-2 2m2-2 2 2"/></svg><em class="tx">× (1 + R)<br><small>加上地下部（根）</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="7" r="2.5"/><circle cx="18" cy="7" r="2.5"/><circle cx="12" cy="17" r="2.5"/><path d="M8.5 7h7M7.3 9.2l3.5 5.6M16.7 9.2l-3.5 5.6"/></svg><em class="tx">× CF<br><small>乾重中的碳含量</small></em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18a4 4 0 0 1-.6-8A5.5 5.5 0 0 1 17 9a4.5 4.5 0 0 1 .5 9z"/></svg><em class="tx">× 44/12<br><small>碳換成 CO₂</small></em></span></div>
+<p>單株材積 V ＝ 形數 × (胸徑／2)² × π × 樹高，胸徑在離地 1.3 公尺處量。另一種寫法是材積 × 基礎木材密度 × BEF，兩者都是把材積換成生物量。</p>
+<div class="box key"><span class="tag">計算例</span><p>人工闊葉林：1 m³ × 0.92（BCEF）× 1.24（1＋R）× 0.4691（CF）× 44/12 ≈ <b>1.96 tCO₂e</b>；人工針葉林約 1.10 tCO₂e。看到伐採材積，乘上 1.96 就能估出闊葉林伐採的 CO₂。</p></div>
+<h3>收穫林產品（HWP）</h3>
+<ul>
+<li>AR-TMS0002 只算伐採後 <b>40 年</b>還在使用的林產品。</li>
+<li>3 年內就腐爛的短期產品，收穫當下就當作排放；中期產品用半衰期的一階衰減函數算留存比例（未說明用途的製材預設以建築裝潢材、半衰期 35 年計）；加工廢料和產品損壞的部分也算專案排放。</li>
+<li>車城案的木材打成木屑做菇包，HWP ＝ 0。</li>
+</ul>
+<h3>同一片林子，兩本帳</h3>
+<p>組織盤查（ISO 14064-1）看<b>控制權</b>畫邊界：營運控制算 100%，或依財務控制、股權比例；排放和移除分開報。減量專案（ISO 14064-2）看<b>方法學</b>畫邊界：AR-TMS0002 只扣運輸和火災，只算比基線多的部分。</p>
+<div class="tbl"><table><tr><th>項目</th><th>盤查（ISO 14064-1）</th><th>專案（AR-TMS0002）</th></tr><tr><td>林木生長</td><td>類別一（移除，另列）</td><td>算</td></tr><tr><td>伐採</td><td>類別一（排放）</td><td>算（扣除）</td></tr><tr><td>自有鏈鋸</td><td>類別一</td><td>不算（方法學沒指定）</td></tr><tr><td>承攬商的機具</td><td>類別四（不是自己控制）</td><td>不算</td></tr><tr><td>自有卡車</td><td>類別一</td><td>算（運輸）</td></tr><tr><td>貯木場用電</td><td>類別二</td><td>不算</td></tr><tr><td>保留區</td><td>類別一（移除）</td><td>不算（在組織邊界內、專案邊界外）</td></tr><tr><td>員工通勤</td><td>類別三</td><td>不算</td></tr><tr><td>森林火災</td><td>類別一</td><td>算（CH₄、N₂O）</td></tr></table></div>
+<div class="box key"><span class="tag">最常錯的三題</span><p>承攬機具不是自己控制，盤查放類別四；自有卡車在盤查是類別一，在專案是運輸排放；保留區在組織邊界內，但不在專案邊界內。<b>先看邊界，再看類別。</b></p></div>
+<p>四個林業方法學中，AR-TMS0004（低蓄積林增匯）目前還沒有案子通過。</p>
+<h3>案例：車城 C00120（加強森林經營，AR-TMS0002）</h3>
+<p>緯創資通與永在林業合作，屏東車城，經營區 96.41 公頃分成 A–E 五區、每年伐一區；保留區 130.46 公頃不計入。</p>
+<figure class="fig"><svg viewBox="0 0 820 150" width="820" role="img" aria-label="車城案基線、專案與淨移除"><text x="200" y="35" text-anchor="end" class="t">基線</text><rect class="hit g-mut" x="210" y="20" width="248.6" height="22" rx="3"><title>基線：11892 tCO₂e（計入期合計）</title></rect><text x="464.6" y="36" class="n">11,892</text><text x="200" y="75" text-anchor="end" class="t">專案</text><rect class="hit g-acc" x="210" y="60" width="560.0" height="22" rx="3"><title>專案：26789 tCO₂e（計入期合計）</title></rect><text x="776.0" y="76" class="n">26,789</text><text x="200" y="115" text-anchor="end" class="t">淨移除</text><rect class="hit g-ink" x="210" y="100" width="311.4" height="22" rx="3"><title>淨移除：14897 tCO₂e（計入期合計）</title></rect><text x="527.4" y="116" class="n">14,897</text><text x="820" y="146" text-anchor="end" class="m">單位：tCO₂e（計入期合計）</text></svg><figcaption>淨移除＝專案－基線＝26,789－11,892 ≈ 14,897 tCO₂e，年平均 744，每公頃每年約 7.7。</figcaption></figure>
+<p>A 區 111 年伐採 1,619.88 m³ 闊葉材 × 1.96 ≈ 3,175（計畫書寫 3,178.55 tCO₂e）。同一年的盤查中，鏈鋸 0.71、卡車 3.18、外購電力 1.19 tCO₂e，<b>機具與用電不到伐採排放的 1%</b>，大頭都在林木。</p>
+<h3>竹林（AR-TMS0003）跟森林不一樣</h3>
+<div class="tbl"><table><tr><th></th><th>竹林（0003）</th><th>森林（0002）</th></tr><tr><td>最小面積</td><td>0.1 公頃</td><td>0.5 公頃</td></tr><tr><td>碳庫</td><td>只算地上部（地下莖、枯死竹、土壤不算）</td><td>地上部＋地下部</td></tr><tr><td>產品</td><td>竹產品只算 20 年後還在的</td><td>HWP 只算 40 年後還在的</td></tr><tr><td>排放源</td><td>運輸、火災</td><td>運輸、火災</td></tr></table></div>
+<p>竹林定義：毗鄰面積 > 0.1 公頃、成竹高 > 2 公尺、竹稈胸徑 > 2 公分、竹類比例 ≥ 50%，且專案開始前 5 年已是竹林。</p>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><em class="tx">結構調整期<br><small>調整稈數與竹齡；生物量增加＋竹產品</small></em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 0 1-14 5.3M4 12A8 8 0 0 1 18 6.7"/><path d="M18 2v5h-5M6 22v-5h5"/></svg><em class="tx">結構穩定期<br><small>新竹＝伐採；生物量變化＝0，只剩竹產品</small></em></span></div>
+<ul>
+<li>竹子用秤的：乾重 ＝ 鮮重 ÷ (1＋含水率)；CO₂ ＝ 乾重 × 0.4726 × 44/12。要量單稈鮮重、含水率、每公頃稈數。</li>
+<li>竹產品比例（BPP）：桂竹 11.64%、孟宗竹 28.12%。<b>竹筍、竹筷、竹籤不算竹產品。</b></li>
+<li>竹子長得快、很快就長滿（約 4 年接近承載量），所以碳匯集中在前幾年。</li>
+</ul>
+<h3>案例：復興桂竹林 C00205（第一個竹林專案）</h3>
+<p>中華電信與林業保育署合作，桃園復興國有林，桂竹林 A–D 四區共 33.765 公頃，計入期 20 年。擇伐老竹、除蔓，讓新竹長好。</p>
+<div class="tbl"><table><tr><th>項目</th><th>tCO₂e</th></tr><tr><td>基線</td><td class="r num">229</td></tr><tr><td>專案</td><td class="r num">1,397</td></tr><tr><td>淨移除</td><td class="r num">1,167</td></tr><tr><td>年平均</td><td class="r num">58</td></tr><tr><td>每公頃每年</td><td class="r num">約 1.7（車城約 7.7）</td></tr></table></div>
+<div class="tbl"><table><tr><th>A 區</th><th>第 1 年（調整期）</th><th>第 5 年（穩定期）</th></tr><tr><td>竹林生物量</td><td class="r num">93.48</td><td class="r num">0</td></tr><tr><td>竹產品</td><td class="r num">47.82</td><td class="r num">60.34</td></tr><tr><td>運輸</td><td class="r num">−0.05</td><td class="r num">−0.06</td></tr><tr><td>合計</td><td class="r num">141.25</td><td class="r num">60.28</td></tr></table></div>
+<div class="box note"><span class="tag">確證會改數字</span><p>確證時發現基線生物量算式是 198.33，表上卻寫 49.58（多除了一次 4），基線少算、額度變多。修正後 20 年淨移除由 1,316 改為 1,167。文件審查和現場確證都提出了澄清要求（CL）和矯正行動要求（CAR）：每個數字都要經得起覆算。</p></div>
+
+</section>
+
+<section id="quiz">
+<h2><span class="no">06</span>自我測驗</h2>
+<details class="q"><summary>1. GPP 120、NPP 60、NEP 10、NBP 約 ±1，說明了什麼？</summary><div class="a">植物吸收的碳，大部分會被自己呼吸、被分解、被擾動釋放回大氣，長期真正留下的很少。所以自然碳匯要靠人為經營才能穩定增加。</div></details>
+<details class="q"><summary>2. tCER／lCER 為什麼停發？留下了什麼？</summary><div class="a">它們是有期限、會消滅的臨時信用，市場接受度低，2020 年停發；但奠定了基線、外加性等負碳認定框架。現在改用緩衝池處理永久性。</div></details>
+<details class="q"><summary>3. 巴黎協定為什麼要「相應調整」？</summary><div class="a">避免同一噸減量被地主國和購買國重複計入各自的 NDC。地主國把減量轉出去，就要在自己的帳上扣掉。</div></details>
+<details class="q"><summary>4. 一片竹林、毗鄰 0.3 ha、近 5 年都是竹林，該用哪個方法學？碳庫算哪些？</summary><div class="a">AR-TMS0003 竹林經營碳匯專案。地上部必計、地下部不計，HWP（竹產品）可納入，SOC、枯死木、枯落物不計。</div></details>
+<details class="q"><summary>5. 為什麼臺灣「增加森林面積」成效有限？</summary><div class="a">土地有限且森林覆蓋率已高，可新造林的地不多，所以改走複合目的造林，並把重點放在加強經營。</div></details>
+<details class="q"><summary>6. 淨減量公式為什麼要乘 (1 − 不確定性)？</summary><div class="a">這是保守性原則：生物量推估有取樣、量測、模型誤差，要折減以免高估。</div></details>
+<details class="q"><summary>7. 為什麼森林要分層？</summary><div class="a">降低層內變異、提高碳儲量估計精度、讓樣區配置更有效率，避免把差異很大的林分混在一起估算。</div></details>
+</section>
+
+<section id="gloss">
+<h2><span class="no">07</span>名詞表</h2>
+<dl class="gloss">
+<dt>GPP／NPP／NEP／NBP</dt><dd>粗初級生產／淨初級生產／淨生態系生產／淨生物群系生產</dd>
+<dt>R<sub>a</sub>／R<sub>h</sub></dt><dd>自營呼吸（植物）／異營呼吸（分解者、捕食者）</dd>
+<dt>HWP／HBP</dt><dd>收穫木產品／收穫竹產品，延伸碳庫</dd>
+<dt>ARD</dt><dd>造林、再造林、毀林（京都議定書 3.3 條）</dd>
+<dt>TYA</dt><dd>噸年核算法</dd>
+<dt>tCER／lCER</dt><dd>CDM 造林的臨時、長期信用額度（已停發）</dd>
+<dt>REDD+</dt><dd>減少毀林與森林退化排放，並維持高碳庫森林</dd>
+<dt>NDC</dt><dd>國家自定貢獻</dd>
+<dt>CA</dt><dd>相應調整，避免雙重計算</dd>
+<dt>ITMO／A6.4ER</dt><dd>國際轉讓減量成果／PACM 核發的碳信用單位</dd>
+<dt>緩衝池</dt><dd>提撥部分額度，發生逆轉時註銷補償</dd>
+<dt>IFM</dt><dd>加強森林經營（Improved Forest Management）</dd>
+<dt>BAU</dt><dd>照舊情境，即基線</dd>
+<dt>PR／BR</dt><dd>專案移除量／基線移除量</dd>
+<dt>DBH</dt><dd>胸高直徑</dd>
+<dt>分層</dt><dd>把森林切成內部均質的區塊，各自抽樣</dd>
+</dl>
+</section>
+
+<nav class="pager" aria-label="上一講／下一講"><a class="prev" href="09-circular-agriculture.html"><small>← 上一講</small>9. 循環農業策略</a><a class="next" href="11-agri-esg.html"><small>下一講 →</small>11. 農業 ESG</a></nav>
+</main>
+</div>
+<script>
+(function(){
+  var b=document.body,K='tocOff';
+  function set(off){b.classList.toggle('toc-off',off);try{localStorage.setItem(K,off?'1':'0')}catch(e){}}
+  try{if(localStorage.getItem(K)==='1')b.classList.add('toc-off')}catch(e){}
+  document.getElementById('tocHide').addEventListener('click',function(){set(true)});
+  document.getElementById('tocShow').addEventListener('click',function(){set(false)});
+})();
+</script>
+<script>
+(function(){
+  var NS='http://www.w3.org/2000/svg',n=0;
+  function rp(p,r){var d='M'+p[0][0]+','+p[0][1];for(var i=1;i<p.length-1;i++){var a=p[i-1],b=p[i],c=p[i+1];
+    var l1=Math.hypot(b[0]-a[0],b[1]-a[1]),l2=Math.hypot(c[0]-b[0],c[1]-b[1]),k=Math.min(r,l1/2,l2/2);
+    var x1=b[0]-(b[0]-a[0])/l1*k,y1=b[1]-(b[1]-a[1])/l1*k,x2=b[0]+(c[0]-b[0])/l2*k,y2=b[1]+(c[1]-b[1])/l2*k;
+    d+=' L'+x1+','+y1+' Q'+b[0]+','+b[1]+' '+x2+','+y2}
+    var e=p[p.length-1];return d+' L'+e[0]+','+e[1]}
+  function draw(c){
+    var old=c.querySelector(':scope>.loop-svg'); if(old) old.remove();
+    var spans=[].slice.call(c.querySelectorAll(':scope>span'));
+    var to=c.querySelector('[data-loop-to]')||spans[0], from=c.querySelector('[data-loop-from]')||spans[spans.length-1];
+    if(!to||!from) return;
+    var cr=c.getBoundingClientRect();
+    function R(el){var b=el.getBoundingClientRect();return{l:b.left-cr.left,r:b.right-cr.left,t:b.top-cr.top,b:b.bottom-cr.top,cx:(b.left+b.right)/2-cr.left,cy:(b.top+b.bottom)/2-cr.top}}
+    var a=R(to),z=R(from),maxB=0,minL=1e9,rowFirst=true;
+    spans.forEach(function(k){var r=R(k);if(r.l<minL)minL=r.l;if(k!==to&&Math.abs(r.t-a.t)<6&&r.l<a.l)rowFirst=false});
+    Array.prototype.forEach.call(c.children,function(k){if(k.classList.contains('loop-svg'))return;var b=k.getBoundingClientRect().bottom-cr.top;if(b>maxB)maxB=b});
+    var y=maxB+16,x=minL-18,d,lx;
+    if(Math.abs(a.t-z.t)<6){d=rp([[z.cx,z.b],[z.cx,y],[a.cx,y],[a.cx,a.b+4]],10);lx=(a.cx+z.cx)/2}
+    else if(rowFirst){d=rp([[z.cx,z.b],[z.cx,y],[x,y],[x,a.cy],[a.l-4,a.cy]],10);lx=(x+z.cx)/2}
+    else{var top=a.t-14;d=rp([[z.cx,z.b],[z.cx,y],[x,y],[x,top],[a.cx,top],[a.cx,a.t-4]],10);lx=(x+z.cx)/2}
+    var id='lh'+(++n),s=document.createElementNS(NS,'svg');
+    s.setAttribute('class','loop-svg');s.setAttribute('width',cr.width);s.setAttribute('height',y+24);s.setAttribute('aria-hidden','true');
+    s.innerHTML='<defs><marker id="'+id+'" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0L10,5L0,10z" fill="currentColor"/></marker></defs>'+
+      '<path d="'+d+'" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#'+id+')"/>'+
+      '<text x="'+Math.max(lx,60)+'" y="'+(y+18)+'" text-anchor="middle"></text>';
+    s.querySelector('text').textContent='↺ '+(c.getAttribute('data-loop-label')||'');
+    c.appendChild(s);
+  }
+  var els=document.querySelectorAll('.loop');
+  function all(){els.forEach(draw)}
+  all(); window.addEventListener('resize',all);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(all);
+  if(window.ResizeObserver){var w={};var ro=new ResizeObserver(function(es){es.forEach(function(e){var c=e.target,k=Math.round(e.contentRect.width);if(c._w!==k){c._w=k;draw(c)}})});els.forEach(function(c){ro.observe(c)})}
+})();
+</script>
+<script>
+(function(){
+  var ids=['v10','d10','r10','c10','pe10','br10','u10'],el={},o=document.getElementById('out10');
+  ids.forEach(function(i){el[i]=document.getElementById(i)});
+  function v(i){return parseFloat(el[i].value)||0}
+  function f(n,d){return n.toLocaleString('zh-TW',{maximumFractionDigits:d===undefined?1:d})}
+  function run(){
+    var dry=v('v10')*v('d10'), tot=dry*(1+v('r10')), c=tot*v('c10'), co2=c*44/12;
+    var net=(co2-v('pe10')-v('br10'))*(1-v('u10')/100);
+    o.innerHTML='乾重 ＝ '+f(v('v10'))+' × '+f(v('d10'),2)+' ＝ '+f(dry)+' t；含地下部 × (1＋'+f(v('r10'),2)+') ＝ '+f(tot)+' t<br>碳 ＝ '+f(tot)+' × '+f(v('c10'),2)+' ＝ '+f(c)+' t C；專案吸收 ＝ × 44/12 ＝ '+f(co2)+' t CO₂<br>淨減量 ＝ ('+f(co2)+' − '+f(v('pe10'))+' − '+f(v('br10'))+') × (1 − '+f(v('u10'))+'%) ＝ <b>'+f(net)+' t CO₂e</b>';
+  }
+  ids.forEach(function(i){el[i].addEventListener('input',run)});
+  run();
+})();
+</script>
+<!--gm-js--><script>
+/* 跳出式小遊戲引擎：右下角按鈕 → 對話框；題目、解釋、計分；場景由各頁提供 */
+window.GMRUN=function(C){
+  var NS='http://www.w3.org/2000/svg',D=document;
+  var reduce=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
+  function el(tag,a,html,par){var e=D.createElementNS(NS,tag);if(a)for(var k in a)e.setAttribute(k,a[k]);if(html)e.innerHTML=html;if(par)par.appendChild(e);return e}
+  function h(tag,cls,html,par){var e=D.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;if(par)par.appendChild(e);return e}
+
+  /* ---------- 介面 ---------- */
+  var ICON='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.2" r=".6" fill="currentColor"/><circle cx="17.6" cy="13.6" r=".6" fill="currentColor"/></svg>';
+  var fab=h('button','gm-fab',ICON+'<span>小遊戲</span>',D.body);fab.type='button';fab.setAttribute('aria-haspopup','dialog');
+  var tip=h('div','gm-tip','<button type="button" class="gm-tipx" aria-label="關閉提示">×</button><b>考考你</b><span></span>',D.body);
+  tip.querySelector('span').textContent=C.teaser;
+  var ov=h('div','gm-ov',null,D.body);ov.hidden=true;
+  var dlg=h('div','gm-dlg','<div class="gm-hd"><b id="gmTitle"></b><button type="button" class="gm-x" aria-label="關閉小遊戲">×</button></div>'+
+    '<svg class="gm-stage" viewBox="'+(C.vb||'0 0 880 260')+'" role="img"></svg>'+
+    '<div class="gm-card"><div class="gm-prog"></div><p class="gm-q"></p><div class="gm-opts"></div><div class="gm-fb" aria-live="polite"></div></div>',ov);
+  dlg.setAttribute('role','dialog');dlg.setAttribute('aria-modal','true');dlg.setAttribute('aria-labelledby','gmTitle');
+  dlg.querySelector('#gmTitle').textContent='小遊戲：'+C.title;
+  var st=dlg.querySelector('svg'),qEl=dlg.querySelector('.gm-q'),oEl=dlg.querySelector('.gm-opts'),fEl=dlg.querySelector('.gm-fb'),pEl=dlg.querySelector('.gm-prog');
+  st.setAttribute('aria-label',C.alt||C.title);
+
+  /* ---------- 動畫工具 ---------- */
+  var loops=[],touts=[],fx;
+  function stopAll(){loops.forEach(clearInterval);touts.forEach(clearTimeout);loops=[];touts=[]}
+  var api={svg:st,reduce:reduce,el:el,
+    C:{co2:'#86a8e6',ch4:'#c9a66b',n2o:'#d28bb4',gas:'#8fae9a',smoke:'#9aa0a6'},
+    loop:function(fn,ms){fn();loops.push(setInterval(fn,reduce?ms*1.6:ms))},
+    later:function(fn,ms){touts.push(setTimeout(fn,reduce?0:ms))},
+    A:function(e,fr,ms,o){o=o||{};if(!e||!e.animate)return null;if(reduce&&o.iter===Infinity)return null;
+      var an=e.animate(fr,{duration:reduce?1:ms,delay:reduce?0:(o.delay||0),easing:o.ease||'ease-out',fill:o.fill||'forwards',iterations:o.iter||1,direction:o.dir||'normal'});
+      if(o.done)an.onfinish=o.done;return an},
+    /* 放一個物件：外層定位，內層可動（原點在底部中央） */
+    put:function(par,x,y,s,html,origin){var g=el('g',{transform:'translate('+x+' '+y+')'+(s&&s!==1?' scale('+s+')':'')},null,par||st);
+      var i=el('g',{},html,g);i.style.transformBox='fill-box';i.style.transformOrigin=origin||'50% 100%';i.outer=g;i.x=x;i.y=y;i.s=s||1;return i},
+    top:function(){if(!fx)fx=el('g',{});st.appendChild(fx);return fx},
+    puff:function(x,y,o){o=o||{};var g=el('g',{class:'gas'},null,api.top()),n=o.n||3,r=o.r||11;
+      for(var i=0;i<n;i++)el('circle',{cx:x+(i-(n-1)/2)*r*.9,cy:y+(i%2?-r*.55:0),r:r+(i===1?3:0),fill:o.color||api.C.gas,opacity:.6},null,g);
+      if(o.label){var t=el('text',{x:x,y:y-1},null,g);t.textContent=o.label}
+      g.style.transformBox='fill-box';g.style.transformOrigin='50% 50%';
+      var dx=o.dx==null?0:o.dx,dy=o.dy==null?-60:o.dy;
+      api.A(g,[{transform:'translate(0,0) scale(.35)',opacity:0},{opacity:.95,offset:.15},{transform:'translate('+dx+'px,'+dy+'px) scale('+(o.grow||1.5)+')',opacity:0}],o.ms||2400,{done:function(){g.remove()},fill:'none'});
+      if(reduce)api.later(function(){g.remove()},1200);return g},
+    pop:function(x,y,txt,o){o=o||{};var t=el('text',{class:'pop',x:x,y:y},null,api.top());t.textContent=txt;if(o.color)t.style.fill=o.color;if(o.size)t.style.fontSize=o.size+'px';
+      t.style.transformBox='fill-box';t.style.transformOrigin='50% 100%';
+      api.A(t,[{opacity:0,transform:'scale(.4)'},{opacity:1,transform:'scale(1.15)',offset:.2},{opacity:1,transform:'scale(1)',offset:.7},{opacity:0,transform:'translateY(-10px)'}],o.ms||1300,{done:function(){t.remove()},fill:'none'});
+      if(reduce)api.later(function(){t.remove()},1200);return t},
+    pulse:function(e){return api.A(e,[{transform:'scale(1)'},{transform:'scale(1.12)'},{transform:'scale(1)'}],700,{fill:'none'})},
+    /* 背景：地面、草、圍籬、太陽 */
+    bg:function(o){o=o||{};var gy=o.ground==null?200:o.ground,W=880,s='';
+      if(o.sun)s+='<circle cx="'+(o.sun[0])+'" cy="'+(o.sun[1])+'" r="22" fill="#f2c94c" opacity=".85"/>';
+      if(o.hills)s+='<path d="M0 '+(gy-10)+' Q140 '+(gy-70)+' 300 '+(gy-24)+' T600 '+(gy-30)+' T880 '+(gy-40)+' V'+gy+' H0Z" fill="var(--accent-soft)" opacity=".7"/>';
+      if(o.fence){s+='<g stroke="var(--line)" stroke-width="4" stroke-linecap="round"><line x1="0" y1="'+(gy-48)+'" x2="'+W+'" y2="'+(gy-48)+'"/><line x1="0" y1="'+(gy-28)+'" x2="'+W+'" y2="'+(gy-28)+'"/>';
+        for(var x=60;x<W;x+=140)s+='<line x1="'+x+'" y1="'+(gy-62)+'" x2="'+x+'" y2="'+(gy+4)+'"/>';s+='</g>'}
+      s+='<rect x="0" y="'+gy+'" width="'+W+'" height="'+(400-gy)+'" fill="'+(o.color||'var(--accent-soft)')+'"/>';
+      (o.grass||[]).forEach(function(x,i){var y=gy+14+(i%3)*12;s+='<path d="M'+(x-5)+' '+y+' q0 -6 -4 -10 M'+x+' '+y+' q0 -8 2 -13 M'+(x+5)+' '+y+' q1 -6 5 -10" stroke="var(--accent)" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/>'});
+      return el('g',{},s,st)},
+    text:function(x,y,txt,cls,par){var t=el('text',{x:x,y:y,class:cls||'lbl'},null,par||st);t.textContent=txt;return t}
+  };
+
+  /* ---------- 共用圖形（原點在底部中央，面向右） ---------- */
+  var K='#2b2b2b';
+  api.SH={
+    conifer:function(c){c=c||'#3f7d58';return '<rect x="-5" y="-24" width="10" height="24" fill="#7a5a3a"/><path d="M0 -112 L-24 -66 L24 -66Z" fill="'+c+'"/><path d="M0 -92 L-31 -44 L31 -44Z" fill="'+c+'"/><path d="M0 -70 L-38 -20 L38 -20Z" fill="'+c+'"/>'},
+    broad:function(c){c=c||'#4f8f5f';return '<rect x="-6" y="-44" width="12" height="44" fill="#7a5a3a"/><circle cx="-20" cy="-56" r="22" fill="'+c+'"/><circle cx="20" cy="-56" r="22" fill="'+c+'"/><circle cx="0" cy="-74" r="30" fill="'+c+'"/>'},
+    cabbage:'<ellipse cx="0" cy="-13" rx="24" ry="14" fill="#6fae5c"/><ellipse cx="-10" cy="-16" rx="12" ry="10" fill="#86c46f"/><ellipse cx="10" cy="-16" rx="12" ry="10" fill="#86c46f"/><ellipse cx="0" cy="-19" rx="12" ry="10" fill="#b4e09a"/><path d="M-5 -22 q5 -5 10 0" stroke="#6fae5c" stroke-width="2" fill="none"/>',
+    bamboo:function(hh){var s='<rect x="-4" y="-'+hh+'" width="8" height="'+hh+'" rx="3" fill="#7fae4f"/>';for(var y=22;y<hh;y+=22)s+='<rect x="-5" y="-'+y+'" width="10" height="3" fill="#5f8f3a"/>';
+      s+='<path d="M0 -'+(hh-6)+' q16 -6 26 2 q-14 4 -26 -2z M0 -'+(hh-18)+' q-16 -6 -26 2 q14 4 26 -2z M0 -'+(hh-30)+' q16 -4 24 4 q-14 2 -24 -4z" fill="#5f9f4f"/>';return s},
+    rice:function(grain){return '<path d="M0 0 q-5 -28 -16 -44 M0 0 q0 -34 2 -56 M0 0 q5 -28 15 -42 M0 0 q-2 -20 -9 -30" stroke="#5f9f4f" stroke-width="3" fill="none" stroke-linecap="round"/>'+(grain?'<path d="M2 -56 q10 4 12 18" stroke="#d9b44a" stroke-width="4" fill="none" stroke-linecap="round" stroke-dasharray="3 2"/>':'')},
+    mangrove:'<path d="M-24 0 q4 -26 22 -34 M24 0 q-4 -26 -22 -34 M-10 0 q2 -18 8 -34 M10 0 q-2 -18 -8 -34" stroke="#6b4e34" stroke-width="3" fill="none"/><rect x="-3" y="-62" width="6" height="30" fill="#6b4e34"/><ellipse cx="-18" cy="-62" rx="20" ry="13" fill="#4f8f5f"/><ellipse cx="18" cy="-62" rx="20" ry="13" fill="#4f8f5f"/><ellipse cx="0" cy="-74" rx="32" ry="18" fill="#3f7d58"/>',
+    spoonbill:'<line x1="-4" y1="-20" x2="-6" y2="0" stroke="'+K+'" stroke-width="2"/><line x1="5" y1="-20" x2="7" y2="0" stroke="'+K+'" stroke-width="2"/><ellipse cx="2" cy="-28" rx="17" ry="10" fill="#fafafa" stroke="'+K+'" stroke-width="1.5"/><path d="M-11 -33 Q-18 -44 -14 -50" stroke="#fafafa" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M-11 -33 Q-18 -44 -14 -50" stroke="'+K+'" stroke-width="1" fill="none" opacity=".4"/><circle cx="-15" cy="-52" r="6" fill="#fafafa" stroke="'+K+'" stroke-width="1.5"/><path d="M-20 -52 L-36 -45" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/><ellipse cx="-37" cy="-44" rx="4.5" ry="3.2" fill="'+K+'"/><circle cx="-16" cy="-53" r="1.3" fill="'+K+'"/>',
+    pig:'<rect x="-30" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="-16" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="12" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="26" y="-24" width="9" height="24" rx="3" fill="#e993a6"/>'+
+      '<path d="M-44 -42 q-10 -2 -8 -10 q2 -6 8 -2" stroke="'+K+'" stroke-width="2" fill="none"/><ellipse cx="0" cy="-38" rx="46" ry="26" fill="#f4b6c2" stroke="'+K+'" stroke-width="2"/>'+
+      '<circle cx="40" cy="-46" r="19" fill="#f4b6c2" stroke="'+K+'" stroke-width="2"/><path d="M30 -62 l4 -12 l8 9z" fill="#e993a6" stroke="'+K+'" stroke-width="1.5"/><ellipse cx="57" cy="-42" rx="8" ry="7" fill="#e993a6" stroke="'+K+'" stroke-width="2"/><circle cx="55" cy="-42" r="1.5" fill="'+K+'"/><circle cx="60" cy="-42" r="1.5" fill="'+K+'"/><circle cx="44" cy="-52" r="2.4" fill="'+K+'"/>',
+    tractor:'<rect x="-40" y="-42" width="58" height="22" rx="4" fill="#c0503a"/><rect x="-36" y="-74" width="30" height="34" rx="3" fill="none" stroke="'+K+'" stroke-width="3"/><rect x="10" y="-32" width="32" height="15" rx="3" fill="#c0503a"/><rect x="24" y="-56" width="5" height="26" fill="#555"/>'+
+      '<circle cx="-24" cy="-19" r="19" fill="#333"/><circle cx="-24" cy="-19" r="7" fill="#bbb"/><circle cx="32" cy="-12" r="12" fill="#333"/><circle cx="32" cy="-12" r="4.5" fill="#bbb"/>',
+    plow:'<path d="M-44 -26 L-64 -8 L-58 4 L-52 -6 M-58 -18 L-76 -2 L-70 8" stroke="#666" stroke-width="3.5" fill="none" stroke-linecap="round"/>',
+    pole:'<rect x="-3" y="-124" width="6" height="124" fill="#7a5a3a"/><rect x="-24" y="-116" width="48" height="5" fill="#7a5a3a"/><circle cx="-18" cy="-118" r="3" fill="#ccc"/><circle cx="18" cy="-118" r="3" fill="#ccc"/><path d="M4 -86 l-8 14 h7 l-5 14 l12 -18 h-7 l5 -10z" fill="#f2c94c" stroke="'+K+'" stroke-width="1"/>',
+    pond:'<ellipse cx="0" cy="-8" rx="52" ry="13" fill="#6b4e34"/><ellipse cx="0" cy="-10" rx="45" ry="8" fill="#9b7650"/>',
+    factory:'<rect x="30" y="-122" width="16" height="70" fill="#6f777f"/><rect x="-56" y="-60" width="112" height="60" fill="#8a929a"/><path d="M-56 -60 l28 -18 v18 l28 -18 v18 l28 -18 v18" fill="#8a929a"/>'+
+      '<rect x="-44" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="-18" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="8" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="-10" y="-20" width="20" height="20" fill="#5b636b"/>',
+    coin:function(t){return '<circle cx="0" cy="-13" r="13" fill="#e2b84a" stroke="#a7822a" stroke-width="2"/><text x="0" y="-8.5" text-anchor="middle" style="font:700 13px var(--font-num);fill:#7a5a1a">'+(t||'$')+'</text>'},
+    jar:'<path d="M-30 0 h60 v-58 q0 -8 -8 -8 h-44 q-8 0 -8 8z" fill="var(--paper)" stroke="var(--muted)" stroke-width="2.5"/><rect x="-24" y="-74" width="48" height="8" rx="3" fill="var(--muted)"/>',
+    bento:'<rect x="-62" y="-50" width="124" height="50" rx="6" fill="#b5764a" stroke="'+K+'" stroke-width="2"/><rect x="-56" y="-44" width="62" height="38" rx="3" fill="#fbf8ef"/><rect x="10" y="-44" width="46" height="18" rx="3" fill="#7fbf6a"/><rect x="10" y="-24" width="46" height="18" rx="3" fill="#f2d16b"/>'+
+      '<ellipse cx="-24" cy="-30" rx="26" ry="11" fill="#a0612f" stroke="#7a4520" stroke-width="2"/><path d="M-40 -32 h30 M-38 -27 h26" stroke="#7a4520" stroke-width="1.5"/>',
+    train:'<rect x="-110" y="-62" width="220" height="50" rx="10" fill="#e1e5ea" stroke="'+K+'" stroke-width="2"/><rect x="-110" y="-30" width="220" height="8" fill="#d0602f"/>'+
+      '<rect x="-96" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="-52" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="-8" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="36" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="80" y="-54" width="22" height="18" rx="3" fill="#7ea6c9"/>'+
+      '<circle cx="-74" cy="-8" r="8" fill="#333"/><circle cx="-50" cy="-8" r="8" fill="#333"/><circle cx="50" cy="-8" r="8" fill="#333"/><circle cx="74" cy="-8" r="8" fill="#333"/>',
+    dome:'<path d="M-56 0 v-30 a56 44 0 0 1 112 0 v30z" fill="#a7adb3" stroke="'+K+'" stroke-width="2"/><path d="M-56 -30 h112" stroke="'+K+'" stroke-width="1.5" opacity=".5"/><rect x="-6" y="-84" width="12" height="12" fill="#6f777f"/>',
+    bee:'<g><ellipse cx="-2" cy="-10" rx="5" ry="4" fill="#fff" opacity=".85"/><ellipse cx="4" cy="-10" rx="5" ry="4" fill="#fff" opacity=".85"/><ellipse cx="0" cy="-3" rx="9" ry="6.5" fill="#f2c230" stroke="'+K+'" stroke-width="1.2"/><path d="M-2 -9 v12 M3 -8.5 v11" stroke="'+K+'" stroke-width="2"/><circle cx="8" cy="-4" r="1.3" fill="'+K+'"/></g>',
+    flower:function(c){return '<path d="M0 0 v-30" stroke="#5f9f4f" stroke-width="3"/><path d="M0 -14 q-10 -4 -12 -12 q8 0 12 8" fill="#5f9f4f"/><g fill="'+(c||'#e98fa3')+'"><circle cx="0" cy="-40" r="6"/><circle cx="-8" cy="-33" r="6"/><circle cx="8" cy="-33" r="6"/><circle cx="-5" cy="-25" r="6"/><circle cx="5" cy="-25" r="6"/></g><circle cx="0" cy="-32" r="4.5" fill="#f2c94c"/>'},
+    larva:'<ellipse cx="0" cy="-4" rx="11" ry="4.5" fill="#efe6c8" stroke="#8a7a50" stroke-width="1"/><path d="M-5 -8 v8 M0 -8.5 v9 M5 -8 v8" stroke="#8a7a50" stroke-width=".8"/>',
+    truck:'<rect x="-50" y="-48" width="64" height="36" rx="3" fill="#7fa7c9" stroke="'+K+'" stroke-width="2"/><path d="M14 -40 h20 l12 14 v14 h-32z" fill="#d0602f" stroke="'+K+'" stroke-width="2"/><rect x="20" y="-36" width="12" height="10" fill="#cfe3f2"/><circle cx="-30" cy="-10" r="9" fill="#333"/><circle cx="30" cy="-10" r="9" fill="#333"/>',
+    shop:'<rect x="-50" y="-70" width="100" height="70" fill="#e9e4d6" stroke="'+K+'" stroke-width="2"/><path d="M-56 -70 h112 l-8 -18 h-96z" fill="#d0602f" stroke="'+K+'" stroke-width="2"/><rect x="-36" y="-50" width="30" height="24" fill="#cfe3f2" stroke="'+K+'" stroke-width="1.5"/><rect x="10" y="-44" width="24" height="44" fill="#8a6a4a"/>',
+    log:'<rect x="-26" y="-14" width="52" height="14" rx="7" fill="#9b7650" stroke="#6b4e34" stroke-width="2"/><ellipse cx="26" cy="-7" rx="5" ry="7" fill="#d9b98a" stroke="#6b4e34" stroke-width="1.5"/>',
+    seagrass:'<path d="M-10 0 q-6 -20 2 -40 M-3 0 q4 -24 -2 -48 M4 0 q-4 -18 4 -38 M11 0 q6 -16 0 -32" stroke="#3f8f6a" stroke-width="3.5" fill="none" stroke-linecap="round"/>'
+  };
+  /* 牛、羊（左上原點畫，包一層移到底部中央） */
+  var COW='<path d="M14 30 q-14 12 -8 34" fill="none" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/>'+
+    [22,38,80,96].map(function(x,i){return '<g class="leg" data-b="'+(i==1||i==2?1:0)+'"><rect x="'+x+'" y="50" width="10" height="32" rx="3" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/><rect x="'+x+'" y="76" width="10" height="7" fill="'+K+'"/></g>'}).join('')+
+    '<rect x="12" y="20" width="100" height="42" rx="19" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/>'+
+    '<path d="M30 21 q10 12 26 6 q4 -4 2 -7z" fill="'+K+'"/><ellipse cx="82" cy="44" rx="12" ry="8" fill="'+K+'"/><ellipse cx="44" cy="50" rx="6" ry="4" fill="'+K+'"/>'+
+    '<path d="M108 10 q-6 -9 0 -12 M126 9 q6 -9 0 -12" fill="none" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/><ellipse cx="102" cy="16" rx="8" ry="4" fill="#fbfaf6" stroke="'+K+'" stroke-width="2" transform="rotate(-20 102 16)"/>'+
+    '<rect x="102" y="6" width="34" height="32" rx="13" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/><rect x="118" y="23" width="24" height="17" rx="8" fill="#f0b8ad" stroke="'+K+'" stroke-width="2"/>'+
+    '<circle cx="114" cy="17" r="2.6" fill="'+K+'"/><circle cx="129" cy="30" r="1.8" fill="'+K+'"/><circle cx="137" cy="30" r="1.8" fill="'+K+'"/>';
+  var SHEEP=[24,36,66,78].map(function(x,i){return '<g class="leg" data-b="'+(i==1||i==2?1:0)+'"><rect x="'+x+'" y="50" width="7" height="30" rx="2" fill="#3b3631"/></g>'}).join('')+
+    [[24,38,14],[40,27,14],[60,25,14],[78,32,14],[32,52,12],[52,54,12],[72,50,12],[84,44,10]].map(function(c){return '<circle cx="'+c[0]+'" cy="'+c[1]+'" r="'+c[2]+'" fill="#f4f1e8" stroke="'+K+'" stroke-width="2"/>'}).join('')+
+    '<rect x="22" y="28" width="62" height="28" rx="14" fill="#f4f1e8"/><ellipse cx="92" cy="22" rx="8" ry="4" fill="#3b3631" transform="rotate(-25 92 22)"/>'+
+    '<ellipse cx="100" cy="32" rx="12" ry="14" fill="#3b3631"/><circle cx="96" cy="20" r="7" fill="#f4f1e8" stroke="'+K+'" stroke-width="2"/><circle cx="104" cy="28" r="2.6" fill="#fff"/><circle cx="104.5" cy="28.5" r="1.3" fill="'+K+'"/>';
+  api.SH.cow='<g transform="translate(-70 -83)">'+COW+'</g>';
+  api.SH.sheep='<g transform="translate(-56 -80)">'+SHEEP+'</g>';
+  api.SH.cowPts={mouth:[72,-47],nose:[74,-53],rear:[-62,-45]};
+  api.SH.sheepPts={mouth:[54,-40],nose:[56,-44],rear:[-44,-38]};
+  /* 跑步：腳擺動，回傳停止函式 */
+  api.legs=function(g){var a=[];g.querySelectorAll('.leg').forEach(function(l){l.style.transformBox='fill-box';l.style.transformOrigin='50% 0';
+      var an=api.A(l,[{transform:'rotate(20deg)'},{transform:'rotate(-20deg)'}],260,{iter:Infinity,dir:'alternate',ease:'ease-in-out',delay:l.getAttribute('data-b')==='1'?0:0,fill:'none'});
+      if(an&&l.getAttribute('data-b')==='1')an.currentTime=260;if(an)a.push(an)});
+    return function(){a.forEach(function(x){x.cancel()})}};
+
+  /* ---------- 遊戲流程 ---------- */
+  var Q=C.questions,idx=0,score=0,phase='idle',S=C.scene(api);
+  function act(n){if(n&&S.acts&&S.acts[n])S.acts[n]()}
+  function btn(t,cls,fn){var b=D.createElement('button');b.type='button';b.textContent=t;if(cls)b.className=cls;b.addEventListener('click',fn);return b}
+  function show(){phase='q';var q=Q[idx];pEl.textContent='第 '+(idx+1)+' 題／共 '+Q.length+' 題';qEl.textContent=q.q;oEl.innerHTML='';fEl.innerHTML='';
+    q.opts.forEach(function(o,i){oEl.appendChild(btn(o,'',function(){answer(i)}))});stopAll();act(q.act)}
+  function answer(i){phase='a';var q=Q[idx],right=i===q.ans;
+    oEl.querySelectorAll('button').forEach(function(b,j){b.disabled=true;b.classList.add(j===q.ans?'ok':j===i?'bad':'dim')});
+    if(right)score++;
+    if(q.after){stopAll();act(q.after)}
+    var why=typeof q.why==='object'?(q.why[i]||q.why.d):q.why;
+    var box=h('div','res '+(right?'ok':'bad'),'<b>'+(right?'答對了！':'答錯了')+'</b><p></p>',fEl);box.querySelector('p').textContent=right?q.ok:why;
+    var last=idx===Q.length-1,nx=btn(last?'看結果':(right?'下一題 →':'懂了，下一題 →'),'gm-next',function(){if(last)end();else{idx++;show()}});
+    fEl.appendChild(nx);try{nx.focus({preventScroll:true})}catch(e){}}
+  function end(){phase='end';stopAll();act('end');pEl.textContent='完成';
+    qEl.innerHTML='答對 <span class="gm-score">'+score+'／'+Q.length+'</span> 題';oEl.innerHTML='';fEl.innerHTML='';
+    var box=h('div','res ok','<b>重點</b><p></p>',fEl);box.querySelector('p').textContent=C.summary;
+    fEl.appendChild(btn('再玩一次','gm-next',function(){start()}))}
+  function start(){stopAll();idx=0;score=0;phase='enter';oEl.innerHTML='';fEl.innerHTML='';pEl.textContent='　';qEl.textContent=C.intro||'準備開始…';
+    S.enter(function(){if(phase==='enter')show()})}
+  var lastF=null;
+  function open(){hideTip();lastF=D.activeElement;ov.hidden=false;D.documentElement.classList.add('gm-lock');dlg.querySelector('.gm-x').focus();
+    if(phase==='idle'||phase==='enter')start();else if(phase==='q'||phase==='a')act(Q[idx].act)}
+  function close(){stopAll();ov.hidden=true;D.documentElement.classList.remove('gm-lock');if(phase==='enter')phase='idle';try{(lastF||fab).focus()}catch(e){}}
+  fab.addEventListener('click',open);
+  dlg.querySelector('.gm-x').addEventListener('click',close);
+  ov.addEventListener('click',function(e){if(e.target===ov)close()});
+  D.addEventListener('keydown',function(e){if(ov.hidden)return;
+    if(e.key==='Escape'){close();return}
+    if(e.key==='Tab'){var f=[].slice.call(dlg.querySelectorAll('button:not(:disabled)'));if(!f.length)return;var a=f[0],z=f[f.length-1];
+      if(e.shiftKey&&D.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&D.activeElement===z){e.preventDefault();a.focus()}}});
+
+  /* ---------- 提示泡泡：往下讀一段或停留 15 秒後出現一次 ---------- */
+  var tipDone=false,tipT;
+  function hideTip(){tip.classList.remove('on');clearTimeout(tipT)}
+  function showTip(){if(tipDone||!ov.hidden)return;tipDone=true;tip.classList.add('on');fab.classList.add('wig');tipT=setTimeout(hideTip,12000)}
+  tip.addEventListener('click',function(e){if(e.target.classList.contains('gm-tipx')){hideTip();return}open()});
+  setTimeout(showTip,15000);
+  window.addEventListener('scroll',function(){var m=D.scrollingElement||D.documentElement,max=m.scrollHeight-window.innerHeight;if(max>0&&(window.scrollY||m.scrollTop)>max*.25)showTip()},{passive:true});
+  api.open=open;return api;
+};
+GMRUN({title:'老森林算不算碳匯？',teaser:'原本就有的老森林，可以直接拿去換碳權嗎？點我玩玩看',alt:'一片森林',intro:'森林長出來了…',
+summary:'既有森林的碳存量是基線，不能直接拿來換碳權。要靠人為經營（例如疏伐），用方法學證明比基線多吸存的部分才算；砍下來做成木製品的碳（HWP）可以納入。',
+scene:function(G){
+  var SH=G.SH,GY=214;G.bg({ground:210,hills:true,sun:[60,44],grass:[40,300,520,700,860]});
+  var xs=[80,165,250,335,420,505,590,675,760],trees=xs.map(function(x,i){var t=G.put(null,x,GY,1,SH.conifer(i%2?'#4a8a62':'#3f7d58'));t.sc=1.05;t.cut=(i%2===1);return t});
+  var logs=G.el('g',{},null,G.svg),thinned=false,made=false;
+  function mkLog(t,anim){var l=G.put(logs,t.x,GY,.9,SH.log);if(anim)G.A(l,[{transform:'scale(0)'},{transform:'scale(1)'}],400)}
+  function ensure(){if(made)return;made=true;thinned=true;logs.innerHTML='';trees.forEach(function(t){if(t.cut){G.A(t,[{opacity:0}],1);mkLog(t,false)}else if(t.sc<1.3)sc(t,1.3,600)})}
+  function sc(t,to,ms){G.A(t,[{transform:'scale('+t.sc+')',opacity:1},{transform:'scale('+to+')',opacity:1}],ms||900,{ease:'cubic-bezier(.3,1.3,.5,1)'});t.sc=to}
+  function live(){return trees.filter(function(t){return !(thinned&&t.cut)})}
+  function rnd(a){return a[Math.floor(Math.random()*a.length)]}
+  function down(t){G.puff(t.x,40,{dy:50,color:G.C.co2,label:'CO₂',n:2,r:9,grow:1.1,ms:1500})}
+  function up(t){G.puff(t.x+10,GY-70,{dy:-110,dx:14,color:G.C.co2,label:'CO₂',n:2,r:9,ms:2400})}
+  return {
+    enter:function(done){thinned=false;made=false;logs.innerHTML='';
+      trees.forEach(function(t,i){t.sc=0;G.A(t,[{transform:'scale(0)',opacity:1},{transform:'scale(1.05)',opacity:1}],800,{delay:i*110,ease:'cubic-bezier(.3,1.4,.5,1)'});t.sc=1.05});
+      G.later(done,1900)},
+    acts:{
+      balance:function(){G.loop(function(){var a=rnd(trees);down(a);G.later(function(){up(rnd(trees))},700)},1500);
+        G.later(function(){G.pop(440,70,'吸進來的 ≈ 放回去的',{size:17})},400)},
+      crowded:function(){G.loop(function(){var t=rnd(live());G.A(t,[{transform:'scale('+t.sc+') rotate(0)'},{transform:'scale('+t.sc+') rotate(-4deg)'},{transform:'scale('+t.sc+') rotate(4deg)'},{transform:'scale('+t.sc+') rotate(0)'}],600,{fill:'none'});
+        G.pop(t.x,GY-108,rnd(['好擠…','長不動','借過一下']),{size:15})},900)},
+      thin:function(){thinned=true;G.pop(440,60,'疏伐！',{size:22});
+        trees.forEach(function(t,i){if(!t.cut)return;
+          G.A(t,[{transform:'scale('+t.sc+') rotate(0)',opacity:1},{transform:'scale('+t.sc+') rotate(88deg)',opacity:1,offset:.7},{transform:'scale('+t.sc+') rotate(88deg)',opacity:0}],1100,{delay:i*90,ease:'ease-in'});
+          G.later(function(){if(!made)mkLog(t,true)},900+i*90)});
+        G.later(function(){live().forEach(function(t){sc(t,1.3,1400)})},1300);G.later(function(){made=true},1800)},
+      logs:function(){ensure();G.loop(function(){var ls=logs.children;if(!ls.length)return;var l=rnd([].slice.call(ls)).firstChild;G.pulse(l)},800);
+        G.later(function(){G.pop(440,120,'木頭做成家具、建材：碳還鎖在裡面',{size:16})},300)},
+      grow:function(){ensure();G.loop(function(){var t=rnd(live());down(t);G.later(function(){if(t.sc<1.5)sc(t,t.sc+.05,600)},1200)},1100);
+        G.later(function(){G.pop(440,70,'比基線多長的才算',{size:17})},500)}
+    }}},
+questions:[
+  {act:'balance',q:'這片長了五十年的老森林，可以直接拿它的碳存量申請碳權嗎？',opts:['可以','不行'],ans:1,
+   ok:'既有碳存量是基線；要有人為經營、比基線多出來的才算。',
+   why:'不行。既有碳存量是基線，減碳量要來自「相較基線多吸存或少損失了多少」，而且要有人為的經營管理（講義 6）。講義 10 也說：天然情況下植物固定的碳幾乎都會回到大氣，老林吸存速度也會變慢。'},
+  {act:'crowded',after:'thin',q:'樹種得太密，長不動了。要讓森林繼續多吸碳，該怎麼做？',opts:['疏伐：砍掉一部分，讓留下的樹長大','全部砍光重種','放著不管就好'],ans:0,
+   ok:'種密了要隔一段時間疏伐，不然生長停滯。',
+   why:'疏伐。講義 10 課堂筆記：種密了要隔時間疏伐，不然生長停滯。人工林撫育（修枝、疏伐）屬於「加強森林經營」，但要證明比原本的經營方式更有效。'},
+  {act:'logs',q:'疏伐砍下來的木頭做成家具、建材，裡面的碳可以算嗎？',opts:['可以，算伐採木製品（HWP）','不行，砍下來就全部算排放'],ans:0,
+   ok:'加強森林經營方法學（AR-TMS0002）裡，HWP 可以納入。',
+   why:'可以。講義 10：加強森林經營（AR-TMS0002）和竹林經營（AR-TMS0003）的碳庫，伐採木製品 HWP 都可以納入。木頭做成長期使用的產品，碳還鎖在裡面。'},
+  {act:'grow',q:'最後可以算成碳匯（碳權）的，是哪一部分？',opts:['整片森林的全部碳存量','相較基線額外增加的部分','砍下來的木頭總重量'],ans:1,
+   ok:'用方法學證明「比基線多」的部分才算。',
+   why:'是相較基線額外增加的部分。既有存量本身就是基線，不能直接拿來算。講義 10 的車城 C00120 案例，旁邊 130.46 公頃的保留區就不計入。'}
+]});
+</script><!--/gm-js-->
+
+</body>
+</html>

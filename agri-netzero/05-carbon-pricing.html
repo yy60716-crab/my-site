@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>碳定價與財務策略</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: 單欄閱讀講義，桌機左側固定目錄；筆記、ISO 連結、重點用不同框區分 */
+:root{
+  --bg:#f4f6f1; --paper:#ffffff; --fg:#1c231f; --muted:#5b6660; --line:#d9ded6;
+  --accent:#2f6a4c; --accent-soft:#e3eee6;
+  --ink:#2a4a9a; --ink-soft:#e8edf8;
+  --hl:#f3e27a; --soil:#9a6a22; --soil-soft:#f5ecdc;
+  --font-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --font-head:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --font-num:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141a17; --paper:#1b2320; --fg:#e4ebe6; --muted:#9aa8a0; --line:#2e3a35;
+  --accent:#7cc39b; --accent-soft:#1f3329; --ink:#9db4f0; --ink-soft:#1f2740;
+  --hl:#6b5d14; --soil:#d9a85a; --soil-soft:#30281a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141a17; --paper:#1b2320; --fg:#e4ebe6; --muted:#9aa8a0; --line:#2e3a35;
+  --accent:#7cc39b; --accent-soft:#1f3329; --ink:#9db4f0; --ink-soft:#1f2740;
+  --hl:#6b5d14; --soil:#d9a85a; --soil-soft:#30281a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.8;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1480px;margin:0 auto;display:grid;grid-template-columns:190px minmax(0,1fr);gap:36px;padding-block:32px 80px}
+@media (max-width:860px){.wrap{grid-template-columns:minmax(0,1fr)} nav.toc{position:static!important;max-height:none!important}}
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);align-self:start;max-height:calc(100vh - 32px);overflow:auto;font-size:14px}
+nav.toc h2{font-size:13px;letter-spacing:.12em;color:var(--muted);margin:0 0 8px;font-family:var(--font-body)}
+nav.toc ol{margin:0;padding-left:32px;display:grid;gap:4px}
+nav.toc a{color:var(--fg);text-decoration:none}
+nav.toc a:hover,nav.toc a:focus-visible{color:var(--accent);text-decoration:underline}
+main{min-width:0}
+.toc-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px}
+.toc-head h2{margin:0!important}
+.toc-btn{font:inherit;font-size:13px;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:6px;padding:2px 8px;cursor:pointer;line-height:1.6}
+.toc-btn:hover,.toc-btn:focus-visible{color:var(--accent);border-color:var(--accent)}
+.toc-open{display:none;white-space:nowrap}
+body.toc-off .wrap{grid-template-columns:76px minmax(0,1fr)}
+body.toc-off nav.toc>*:not(.toc-open){display:none}
+body.toc-off .toc-open{display:inline-block}
+@media (max-width:860px){body.toc-off .wrap{grid-template-columns:minmax(0,1fr)}}
+header.hero{border-bottom:3px solid var(--accent);padding-bottom:20px;margin-bottom:28px}
+.eyebrow{font-size:13px;letter-spacing:.14em;color:var(--accent);font-weight:700}
+h1{font-family:var(--font-head);font-weight:900;font-size:clamp(28px,5vw,42px);line-height:1.3;margin:6px 0 10px;text-wrap:balance}
+.meta{color:var(--muted);font-size:14px}
+h2{font-family:var(--font-head);font-size:26px;line-height:1.35;margin:56px 0 14px;text-wrap:balance;scroll-margin-top:16px}
+h2 .no{font-family:var(--font-num);color:var(--accent);font-size:18px;margin-right:10px}
+h3{font-size:19px;margin:30px 0 8px;color:var(--accent)}
+p{margin:10px 0}
+ul,ol{padding-left:22px;margin:8px 0}
+li{margin:3px 0}
+mark{background:linear-gradient(transparent 55%,var(--hl) 55%);color:inherit;padding:0 1px}
+.num{font-family:var(--font-num);font-variant-numeric:tabular-nums}
+.box{border-radius:10px;padding:14px 18px;margin:16px 0}
+.box>.tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.08em;padding:1px 8px;border-radius:999px;margin-bottom:4px}
+.box p,.box ul{margin:6px 0}
+.guide{background:var(--paper);border:1px solid var(--line)}
+.guide .tag{background:var(--accent);color:var(--paper)}
+.note{background:var(--ink-soft);border-left:4px solid var(--ink)}
+.note .tag{background:var(--ink);color:var(--paper)}
+.note .hand{color:var(--ink);font-weight:500}
+.iso{background:var(--soil-soft);border-left:4px solid var(--soil)}
+.iso .tag{background:var(--soil);color:var(--paper)}
+.key{background:var(--accent-soft);border-left:4px solid var(--accent)}
+.key .tag{background:var(--accent);color:var(--paper)}
+.unclear{color:var(--muted);font-size:13px;border-bottom:1px dotted var(--muted)}
+.tbl{overflow-x:auto;width:fit-content;max-width:100%;margin:14px 0;border:1px solid var(--line);border-radius:8px;background:var(--paper)}
+table{border-collapse:collapse;width:auto;font-size:15px;min-width:480px}
+th,td{padding:8px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--accent-soft);font-weight:700;white-space:nowrap}
+td.r,th.r{text-align:right}
+td:first-child,th:first-child{white-space:nowrap}
+tr:last-child td{border-bottom:none}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:16px 0}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.stat b{display:block;font-family:var(--font-num);font-size:22px;color:var(--accent);line-height:1.3}
+.stat span{font-size:13px;color:var(--muted)}
+.axes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:16px 0}
+.axis{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:8px;padding:12px 14px}
+.axis h4{margin:0 0 4px;font-size:17px}
+.axis .goal{font-family:var(--font-num);color:var(--accent);font-weight:700}
+.fig{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0;width:fit-content;max-width:100%}
+.fig svg{display:block;max-width:100%;height:auto}
+.fig figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.fig .t{fill:var(--fg);font-size:14px;font-family:var(--font-body)}
+.fig .tb{fill:var(--fg);font-size:14px;font-weight:700;font-family:var(--font-body)}
+.fig .m{fill:var(--muted);font-size:12.5px;font-family:var(--font-body)}
+.fig .n{fill:var(--fg);font-size:13px;font-family:var(--font-num)}
+.fig .ax{stroke:var(--line);stroke-width:1}
+.fig .g-acc{fill:var(--accent)} .fig .s-acc{stroke:var(--accent)}
+.fig .g-soil{fill:var(--soil)} .fig .s-soil{stroke:var(--soil)}
+.fig .g-ink{fill:var(--ink)} .fig .s-ink{stroke:var(--ink)}
+.fig .g-mut{fill:var(--muted)} .fig .s-mut{stroke:var(--muted)}
+.fig .g-accs{fill:var(--accent-soft)} .fig .g-soils{fill:var(--soil-soft)} .fig .g-inks{fill:var(--ink-soft)}
+.fig .hit:hover{opacity:.8}
+.calc{width:fit-content;max-width:100%}
+.loop{position:relative;margin-top:22px!important;margin-bottom:48px!important;padding-left:26px}
+.loop-svg{position:absolute;left:0;top:0;overflow:visible;pointer-events:none;color:var(--accent)}
+.loop-svg text{fill:var(--accent);font-size:13px;font-family:var(--font-body)}
+.flow span.ok{background:var(--accent-soft);border-color:var(--accent);font-weight:700}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0;font-size:14px}
+.flow span{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:4px 10px}
+.flow i{font-style:normal;color:var(--muted)}
+details.q{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0}
+details.q summary{cursor:pointer;font-weight:500}
+details.q summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+details.q[open] summary{color:var(--accent)}
+details.q .a{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+dl.gloss{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 18px;margin:12px 0}
+dl.gloss dt{font-weight:700;color:var(--accent)}
+dl.gloss dd{margin:0}
+@media (max-width:560px){dl.gloss{grid-template-columns:minmax(0,1fr)} dl.gloss dd{margin-bottom:8px}}
+footer{margin-top:60px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+a.xref{display:block;width:fit-content;margin-top:6px}
+.steps{width:fit-content;max-width:100%}
+.box{width:fit-content;max-width:100%}
+.flow span{display:inline-flex;align-items:center;gap:8px}
+.flow span .fi{width:22px;height:22px;flex:none;fill:none;stroke:var(--accent);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.flow span .tx{font-style:normal}
+</style>
+<style>
+.formula{font-family:var(--font-num);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px;overflow-x:auto;white-space:nowrap;font-size:15px;margin:8px 0}
+.calc{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:16px 0;display:grid;gap:12px}
+.calc .row{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:end}
+.calc label{display:grid;gap:4px;font-size:14px;color:var(--muted)}
+.calc input{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 10px;width:160px;max-width:100%}
+.calc input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.calc .out{font-family:var(--font-num);font-size:15px;line-height:1.9;border-top:1px dashed var(--line);padding-top:10px}
+.calc .out b{color:var(--accent);font-size:20px}
+.steps{counter-reset:s;list-style:none;padding:0;display:grid;gap:8px;margin:12px 0}
+.steps li{counter-increment:s;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px 12px 8px 44px;position:relative}
+.steps li::before{content:counter(s);position:absolute;left:12px;top:8px;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--paper);font-family:var(--font-num);font-size:13px;display:grid;place-items:center}
+</style>
+<!--gm-css--><style>
+/* 跳出式小遊戲 */
+.gm-fab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));z-index:60;display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:15px;font-weight:700;color:var(--paper);background:var(--accent);border:0;border-radius:999px;padding:10px 18px 10px 14px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.22)}
+.gm-fab svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.gm-fab:hover,.gm-fab:focus-visible{filter:brightness(1.08);outline:2px solid var(--fg);outline-offset:2px}
+.gm-fab.wig{animation:gmWig .9s ease-in-out 2}
+@keyframes gmWig{0%,100%{transform:rotate(0)}20%{transform:rotate(-8deg) scale(1.06)}40%{transform:rotate(7deg) scale(1.06)}60%{transform:rotate(-4deg)}80%{transform:rotate(3deg)}}
+.gm-tip{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(max(16px,env(safe-area-inset-bottom,0px)) + 58px);z-index:60;max-width:min(300px,calc(100vw - 32px));background:var(--paper);color:var(--fg);border:2px solid var(--accent);border-radius:14px;padding:10px 34px 10px 14px;font-size:15px;line-height:1.55;box-shadow:0 6px 20px rgba(0,0,0,.2);cursor:pointer;opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .3s,transform .3s}
+.gm-tip.on{opacity:1;transform:none;pointer-events:auto}
+.gm-tip::after{content:"";position:absolute;right:34px;bottom:-9px;width:14px;height:14px;background:var(--paper);border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(45deg)}
+.gm-tip b{display:block;font-size:12px;letter-spacing:.1em;color:var(--accent)}
+.gm-tipx{position:absolute;top:4px;right:6px;font:inherit;font-size:18px;line-height:1;color:var(--muted);background:none;border:0;cursor:pointer;padding:4px}
+html.gm-lock,html.gm-lock body{overflow:hidden}
+.gm-ov{position:fixed;inset:0;z-index:70;background:rgba(10,16,13,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.gm-ov[hidden]{display:none}
+.gm-dlg{background:var(--paper);color:var(--fg);border-radius:14px;width:100%;max-width:780px;max-height:calc(100vh - 32px);overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.gm-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px 10px 18px;border-bottom:1px solid var(--line)}
+.gm-hd b{font-family:var(--font-head);font-size:18px}
+.gm-x{font:inherit;font-size:22px;line-height:1;color:var(--muted);background:none;border:1px solid var(--line);border-radius:8px;width:36px;height:36px;cursor:pointer}
+.gm-x:hover,.gm-x:focus-visible{color:var(--accent);border-color:var(--accent)}
+.gm-stage{display:block;width:100%;height:auto;background:linear-gradient(var(--bg),var(--paper))}
+.gm-stage text{font-family:var(--font-body)}
+.gm-stage .lbl{fill:var(--fg);font-size:14px;font-weight:700;text-anchor:middle}
+.gm-stage .sub{fill:var(--muted);font-size:12px;text-anchor:middle}
+.gm-stage .pop{fill:var(--fg);font:900 19px var(--font-head);text-anchor:middle}
+.gm-stage .gas text{fill:var(--fg);font:700 13px var(--font-num);text-anchor:middle;dominant-baseline:middle}
+.gm-card{padding:14px 20px 20px}
+.gm-prog{font-size:13px;color:var(--muted);letter-spacing:.06em;min-height:1.4em}
+.gm-q{font-family:var(--font-head);font-size:21px;font-weight:700;margin:4px 0 12px;line-height:1.45}
+.gm-opts{display:flex;flex-wrap:wrap;gap:10px}
+.gm-opts button,.gm-next{font:inherit;font-size:16px;font-weight:700;color:var(--fg);background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:8px 18px;cursor:pointer;min-width:90px;text-align:left;line-height:1.5}
+.gm-opts button:hover:not(:disabled),.gm-opts button:focus-visible{border-color:var(--accent);color:var(--accent)}
+.gm-opts button:disabled{cursor:default}
+.gm-opts button.ok{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.gm-opts button.bad{background:var(--soil);border-color:var(--soil);color:var(--paper)}
+.gm-opts button.dim{opacity:.45}
+.gm-fb{margin-top:12px}
+.gm-fb .res{border-radius:10px;padding:12px 16px;margin:0 0 10px}
+.gm-fb .res.ok{background:var(--accent-soft);border-left:4px solid var(--accent)}
+.gm-fb .res.bad{background:var(--soil-soft);border-left:4px solid var(--soil)}
+.gm-fb .res b{display:block;font-size:17px;margin-bottom:2px}
+.gm-fb .res.ok b{color:var(--accent)}
+.gm-fb .res.bad b{color:var(--soil)}
+.gm-fb .res p{margin:4px 0}
+.gm-next{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.gm-next:hover,.gm-next:focus-visible{filter:brightness(1.08)}
+.gm-score{font-family:var(--font-num);font-size:28px;color:var(--accent);font-weight:700}
+@media (max-width:560px){.gm-q{font-size:18px}.gm-card{padding:12px 14px 16px}.gm-opts button{flex:1 1 100%}.gm-ov{padding:8px}.gm-dlg{max-height:calc(100vh - 16px)}}
+@media (prefers-reduced-motion:reduce){.gm-fab.wig{animation:none}.gm-tip{transition:none}}
+</style><!--/gm-css-->
+
+<style>
+.site-nav{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px;max-width:1480px;margin:0 auto;padding-top:20px}
+.site-nav+.wrap{padding-top:16px}
+.site-nav a{color:var(--muted);text-decoration:none}
+.site-nav a:hover,.site-nav a:focus-visible{color:var(--accent);text-decoration:underline}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:56px 0 0;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{display:block;padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--fg);text-decoration:none;font-size:15px}
+.pager a:hover,.pager a:focus-visible{border-color:var(--accent)}
+.pager small{display:block;color:var(--muted);font-size:12px}
+.pager .next{text-align:right;grid-column:2}
+@media (max-width:560px){.pager{grid-template-columns:1fr}.pager .next{grid-column:1}}
+</style>
+</head>
+<body>
+<nav class="site-nav" aria-label="網站導覽"><a href="index.html">← 回課程目錄</a><a href="../index.html">學習筆記首頁</a></nav>
+<div class="wrap">
+<nav class="toc" aria-label="目錄">
+  <button type="button" class="toc-btn toc-open" id="tocShow" aria-label="展開目錄">目錄 »</button>
+  <div class="toc-head"><h2>目錄</h2><button type="button" class="toc-btn" id="tocHide" aria-label="收起目錄">« 收起</button></div>
+  <p style="margin:0 0 6px"><a href="#guide">導讀</a></p>
+  <ol>
+    <li><a href="#concept">碳定價的概念與政策演進</a></li>
+    <li><a href="#market">碳市場與碳信用額度</a></li>
+    <li><a href="#registry">碳權制度架構：註冊、交易、使用</a></li>
+    <li><a href="#apply">碳權申請、審查與核發</a></li>
+    <li><a href="#method">方法學與案例</a></li>
+    <li><a href="#offset">碳權與減量效益：增量抵換</a></li>
+    <li><a href="#icp">企業內部碳定價（ICP）</a></li>
+    <li><a href="#quiz">自我測驗</a></li>
+    <li><a href="#gloss">名詞表</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="hero">
+  <h1>碳定價與財務策略</h1>
+</header>
+
+<section id="guide">
+  <div class="box guide">
+    <span class="tag">導讀</span>
+    <p>這份講義在講「碳怎麼變成錢」：政府用碳費、碳稅或總量管制讓排放有價格，企業再用碳權、內部碳價把減碳算進財務決策。<mark>碳一旦有價格，就會進入財務系統統籌管理。</mark></p>
+    <p>三個閱讀重點：</p>
+    <ul>
+      <li>合規市場（配額）和自願市場（碳權）的差別，以及碳權從註冊、交易到註銷的流程，見 <a href="#market">第 2 節</a>、<a href="#registry">第 3 節</a>。</li>
+      <li>一個減量專案要變成碳權，要過 MRV 三條件＋五大原則，外加性依規模有不同要求，見 <a href="#apply">第 4 節</a>。</li>
+      <li>實際算一次：節能專案的碳權收入通常只占總效益一成左右，見 <a href="#method">第 5 節</a>的案例和計算器。</li>
+    </ul>
+    <p style="font-size:14px;color:var(--muted)">框的顏色：<span style="color:var(--ink)">藍色＝上課手寫筆記</span>、<span style="color:var(--soil)">棕色＝跟 ISO 或其他講義的連結</span>、綠色＝重點。</p>
+  </div>
+</section>
+
+<section id="concept">
+<h2><span class="no">01</span>碳定價的概念與政策演進</h2>
+<div class="box key"><span class="tag">定義</span><p><b>碳定價（Carbon Pricing）</b>：以貨幣方式反映溫室氣體排放的社會成本，使「污染者付費（Polluter Pays Principle）」成為經濟決策依據。碳定價是把排放成本<b>內部化</b>的市場工具。</p></div>
+<p>目的與功能：</p>
+<ul>
+  <li>把外部環境成本轉成企業內部的決策成本。</li>
+  <li><mark>提供碳價信號，引導企業投資低碳技術。</mark></li>
+  <li>強化資源配置效率，促進減碳創新。</li>
+</ul>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">碳 → 進到財務系統統籌管理。</p></div>
+
+<h3>企業外部碳定價兩大類型</h3>
+<div class="tbl"><table>
+<tr><th>類型</th><th>做法</th><th>價格</th><th>減量</th><th>政府角色</th></tr>
+<tr><td>碳稅或碳費（Carbon Tax / Fee）</td><td>對每噸排放設定固定費率</td><td>穩定性高</td><td>確定性低</td><td>徵收</td></tr>
+<tr><td>排放權交易制度（ETS）</td><td>設定總量上限（Cap），企業買賣排放配額</td><td>波動較大</td><td>確定性高</td><td>核配與監督</td></tr>
+</table></div>
+<p>一句話記：<b>碳費定價格、讓量浮動；ETS 定總量、讓價格浮動。</b></p>
+
+<h3>全球碳定價制度的演進</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><em class="tx">2005–2010<br><small>歐盟 ETS 啟動，成為全球範例（排放許可交易）</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><em class="tx">2010–2020<br><small>亞洲多國試行（韓國、中國省級市場）</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><em class="tx">2020 之後<br><small>碳費、碳稅與 ETS 並行，納入氣候金融體系</small></em></span></div>
+<p>未來方向：碳價逐步成為企業財務決策的核心變數，政策從「管制導向」轉向「市場導向＋金融連結」。</p>
+
+<h3>區域碳政策趨勢</h3>
+<div class="tbl"><table>
+<tr><th>區域</th><th>做法</th></tr>
+<tr><td>歐盟</td><td>CBAM 跨境碳稅帶動全球供應鏈調整，是最具影響力的碳定價機制</td></tr>
+<tr><td>美國</td><td>沒有聯邦 ETS，以 IRA 補貼誘導企業減排，用市場激勵取代強制管制</td></tr>
+<tr><td>亞洲</td><td>採混合制度（碳費＋ETS），各國因地制宜發展碳市場</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">亞洲：韓、中；高碳排。</p></div>
+
+<h3>市場導向機制（Market-Based Mechanisms）</h3>
+<p>核心理念：透過價格信號而不是行政命令，讓「碳排放」成為可交易的稀缺資源。</p>
+<div class="tbl"><table>
+<tr><th>項目</th><th>特性</th><th>效益</th></tr>
+<tr><td>政府角色</td><td>設定總量與市場規則</td><td>以市場效率達成減量目標</td></tr>
+<tr><td>企業角色</td><td>自行決定減排或購買配額</td><td>增加彈性與成本效益</td></tr>
+<tr><td>價格功能</td><td>提供「碳價」信號</td><td>引導投資低碳技術</td></tr>
+</table></div>
+
+<h3>金融連結（Carbon Finance）</h3>
+<ul>
+  <li><b>資產價值影響</b>：碳價不只影響生產成本，也影響資產價值與投資報酬率。</li>
+  <li><b>碳金融生態系</b>：金融商品和碳市場結合，形成「碳金融」。</li>
+  <li><b>內部碳價應用</b>：企業用內部碳價（ICP）當投資門檻，永續債券與碳權投資成為資本配置工具。</li>
+</ul>
+<div class="tbl"><table>
+<tr><th>類別</th><th>實例</th><th>說明</th></tr>
+<tr><td>綠色金融工具</td><td>綠色債券、永續連結債券</td><td>利率與碳績效掛鉤</td></tr>
+<tr><td>投資基金</td><td>氣候轉型基金、碳信用基金</td><td>投資碳減量專案與交易收益</td></tr>
+<tr><td>企業決策</td><td>微軟、Google 導入內部碳價</td><td>以碳價評估投資報酬與採購決策</td></tr>
+<tr><td>政策連結</td><td>EU CBAM、IFRS S2</td><td>促使碳資訊財務化、透明化</td></tr>
+</table></div>
+</section>
+
+<section id="market">
+<h2><span class="no">02</span>碳市場與碳信用額度</h2>
+<h3>碳信用額度的分類</h3>
+<figure class="fig"><svg viewBox="0 0 780 330" width="780" role="img" aria-label="碳信用額度分成合規與自願兩類"><rect x="310.0" y="10" width="160" height="34" rx="8" class="g-accs" stroke="var(--accent)"/><text x="390" y="32" text-anchor="middle" class="tb">碳信用額度</text><path d="M390,44 V67.0 H150 V90" fill="none" class="s-mut" stroke-width="1.5"/><path d="M390,44 V67.0 H540 V90" fill="none" class="s-mut" stroke-width="1.5"/><rect x="50.0" y="90" width="200" height="44" rx="8" class="g-inks" stroke="var(--ink)"/><text x="150" y="112" text-anchor="middle" class="tb">合規碳信用額度</text><text x="150" y="128" text-anchor="middle" class="m">排放許可權（政府核配）</text><rect x="440.0" y="90" width="200" height="44" rx="8" class="g-accs" stroke="var(--accent)"/><text x="540" y="112" text-anchor="middle" class="tb">自願碳信用額度</text><text x="540" y="128" text-anchor="middle" class="m">碳權（專案產生）</text><path d="M150,134 V157.0 H150 V180" fill="none" class="s-mut" stroke-width="1.5"/><rect x="50.0" y="180" width="200" height="44" rx="8" class="g-inks" stroke="var(--ink)"/><text x="150" y="202" text-anchor="middle" class="tb">排放容許配額</text><text x="150" y="218" text-anchor="middle" class="m">Cap and Trade</text><path d="M150,224 V243.0 H150 V262" fill="none" class="s-mut" stroke-width="1.5"/><rect x="90.0" y="262" width="120" height="34" rx="8" class="g-inks" stroke="var(--ink)"/><text x="150" y="284" text-anchor="middle" class="tb">ETS</text><path d="M540,134 V157.0 H410 V180" fill="none" class="s-mut" stroke-width="1.5"/><path d="M540,134 V157.0 H540 V180" fill="none" class="s-mut" stroke-width="1.5"/><path d="M540,134 V157.0 H680 V180" fill="none" class="s-mut" stroke-width="1.5"/><rect x="350.0" y="180" width="120" height="44" rx="8" class="g-soils" stroke="var(--soil)"/><text x="410" y="202" text-anchor="middle" class="tb">避免</text><text x="410" y="218" text-anchor="middle" class="m">保護森林、REDD+</text><rect x="480.0" y="180" width="120" height="44" rx="8" class="g-accs" stroke="var(--accent)"/><text x="540" y="202" text-anchor="middle" class="tb">削減</text><text x="540" y="218" text-anchor="middle" class="m">換 LED、再生能源</text><rect x="620.0" y="180" width="120" height="44" rx="8" class="g-accs" stroke="var(--accent)"/><text x="680" y="202" text-anchor="middle" class="tb">移除</text><text x="680" y="218" text-anchor="middle" class="m">種樹、DAC</text><path d="M410,224 V247.0 H540 V270" fill="none" class="s-mut" stroke-width="1.5"/><path d="M540,224 V247.0 H540 V270" fill="none" class="s-mut" stroke-width="1.5"/><path d="M680,224 V247.0 H540 V270" fill="none" class="s-mut" stroke-width="1.5"/><rect x="440.0" y="270" width="200" height="34" rx="8" class="g-accs" stroke="var(--accent)"/><text x="540" y="292" text-anchor="middle" class="tb">自願減量交易平台</text></svg><figcaption>手寫筆記：避免型是「假設」出來的減量，REDD+ 常被質疑漂綠；淨零只認移除型。</figcaption></figure>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">淨零只有 removal 才算。<br>合規的叫「排放許可權」；自願的才叫「碳權」。<br>避免：假設的減量，REDD+ 有漂綠疑慮。削減：例如換 LED 燈。移除：增加碳匯，例如種樹。</p></div>
+<div class="tbl"><table>
+<tr><th>類型</th><th>意思</th><th>例子</th></tr>
+<tr><td>移除（Removal）</td><td>從大氣中移除 CO₂，分生物碳儲存與地質碳儲存</td><td>造林、直接空氣捕捉（DAC）</td></tr>
+<tr><td>削減（Reduction）</td><td>用技術或能源轉型降低排放</td><td>改用再生能源、節能爐具</td></tr>
+<tr><td>避免（Avoidance）</td><td>保護自然資源，避免排放發生</td><td>防止森林砍伐、森林保育</td></tr>
+</table></div>
+
+<h3>總量管制與交易（Cap and Trade）</h3>
+<p>政府設定容許排放量上限。企業 A 排放低於配額，可以把剩餘配額賣給超標的企業 B；B 付錢換配額，避免罰款。<b>讓減碳成本最低的企業優先減排。</b></p>
+<figure class="fig">
+<svg viewBox="0 0 640 250" width="640" role="img" aria-label="總量管制與交易：A 公司排放低於配額，把多出來的配額賣給超標的 B 公司">
+<line x1="40" x2="600" y1="70" y2="70" class="s-soil" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="40" y="60" class="m">每家公司的配額（容許排放量）</text>
+<rect x="110" y="130" width="70" height="90" rx="4" class="g-acc"/>
+<rect x="110" y="70" width="70" height="60" rx="4" fill="none" class="s-acc" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="145" y="105" text-anchor="middle" class="m">剩餘</text>
+<text x="145" y="242" text-anchor="middle" class="tb">A 公司</text>
+<rect x="460" y="40" width="70" height="180" rx="4" class="g-soil"/>
+<text x="495" y="242" text-anchor="middle" class="tb">B 公司</text>
+<text x="540" y="56" class="m">超標</text>
+<defs><marker id="cpA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--accent)"/></marker>
+<marker id="cpS" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--soil)"/></marker></defs>
+<line x1="200" x2="440" y1="110" y2="110" class="s-acc" stroke-width="2.5" marker-end="url(#cpA)"/>
+<text x="320" y="100" text-anchor="middle" class="t">賣出剩餘配額</text>
+<line x1="440" x2="200" y1="160" y2="160" class="s-soil" stroke-width="2.5" marker-end="url(#cpS)"/>
+<text x="320" y="185" text-anchor="middle" class="t">付錢買配額（免罰款）</text>
+</svg>
+<figcaption>減碳成本低的 A 公司多減，把配額賣給減碳成本高的 B 公司。總量不變，但整體減碳成本最低。</figcaption>
+</figure>
+
+<h3>強制性 vs. 自願性碳市場</h3>
+<div class="tbl"><table>
+<tr><th>比較</th><th>強制性碳市場（Carbon Allowance）</th><th>自願性碳市場（Carbon Credit）</th></tr>
+<tr><td>基礎</td><td>排放總量管制，政府核配配額</td><td>企業自願參與</td></tr>
+<tr><td>代表</td><td>歐盟碳交易系統（EU ETS）</td><td>VCS、Gold Standard</td></tr>
+<tr><td>用途</td><td>超標須購買或受罰</td><td>碳中和宣告、品牌形象</td></tr>
+<tr><td>價格與品質</td><td>—</td><td>價格波動大，品質差異顯著</td></tr>
+</table></div>
+
+<h3>歐盟碳邊境調整機制（CBAM）</h3>
+<div class="formula">總輸入歐盟 CO₂e 排放 ＝ 產品碳足跡 × 總輸入產品數量</div>
+<div class="formula">應付碳價 ＝ 總輸入歐盟 CO₂e 排放 × CBAM 憑證價格（依 EU ETS 市場價）</div>
+<div class="formula">實付碳價 ＝ 應付碳價 − 生產國已付碳費</div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">產品碳足跡要「根據 CBAM 算出來的」；數量只算管制項目；實付的錢由進口商付。</p></div>
+<div class="box iso"><span class="tag">連結 ISO 14067</span><p>CBAM 的第一個式子就是「產品碳足跡 × 數量」，但採用的是 CBAM 自己規定的計算方法與邊界，不能直接拿一份 ISO 14067 報告的數字去套。在國內已繳的碳費可以扣掉，這就是為什麼臺灣碳費和 CBAM 有關。</p></div>
+
+<h3>全球碳價現況</h3>
+<div class="stats">
+  <div class="stat"><b>1%</b><span>2024 年全球排放中，碳價高到足以達成巴黎協定溫控目標的比例</span></div>
+  <div class="stat"><b>$32</b><span>全球平均碳價（US$/噸 CO₂e）</span></div>
+  <div class="stat"><b>$40–$80</b><span>巴黎協定所需的碳價範圍（US$/噸）</span></div>
+</div>
+<figure class="fig">
+<svg viewBox="0 0 720 300" width="720" role="img" aria-label="2024 年各國碳價與巴黎協定所需 40 到 80 美元區間">
+<rect x="298" y="18" width="168" height="252" class="g-accs"/>
+<text x="382" y="290" text-anchor="middle" class="m">巴黎協定所需 $40–$80</text>
+<line x1="264" x2="264" y1="18" y2="270" class="s-soil" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="260" y="14" text-anchor="end" class="m">全球平均 $32</text>
+<text x="122" y="47" text-anchor="end" class="t">瑞典碳稅</text><rect class="hit g-acc" x="130" y="34" width="533" height="20" rx="4"><title>瑞典碳稅：US$127/噸 CO₂e</title></rect><text x="671" y="49" class="n">$127</text><text x="122" y="81" text-anchor="end" class="t">挪威碳稅</text><rect class="hit g-acc" x="130" y="68" width="454" height="20" rx="4"><title>挪威碳稅：US$108/噸 CO₂e</title></rect><text x="592" y="83" class="n">$108</text><text x="122" y="115" text-anchor="end" class="t">EU ETS</text><rect class="hit g-acc" x="130" y="102" width="256" height="20" rx="4"><title>EU ETS：US$61/噸 CO₂e</title></rect><text x="394" y="117" class="n">$61</text><text x="122" y="149" text-anchor="end" class="t">新加坡碳稅</text><rect class="hit g-mut" x="130" y="136" width="76" height="20" rx="4"><title>新加坡碳稅：US$18/噸 CO₂e</title></rect><text x="214" y="151" class="n">$18</text><text x="122" y="183" text-anchor="end" class="t">中國全國 ETS</text><rect class="hit g-mut" x="130" y="170" width="55" height="20" rx="4"><title>中國全國 ETS：US$13/噸 CO₂e</title></rect><text x="193" y="185" class="n">$13</text><text x="122" y="217" text-anchor="end" class="t">台灣碳費</text><rect class="hit g-mut" x="130" y="204" width="38" height="20" rx="4"><title>台灣碳費：US$9/噸 CO₂e</title></rect><text x="176" y="219" class="n">$9</text><text x="122" y="251" text-anchor="end" class="t">韓國 ETS</text><rect class="hit g-mut" x="130" y="238" width="25" height="20" rx="4"><title>韓國 ETS：US$6/噸 CO₂e</title></rect><text x="163" y="253" class="n">$6</text>
+</svg>
+<figcaption>2024 年主要碳價（US$/噸 CO₂e）。綠色是已達巴黎協定所需區間的制度；台灣碳費 $9 在最低的一群。資料來源：Carbon Market Watch，2024 年 5 月。</figcaption>
+</figure>
+<p>世界銀行指出，碳定價是關鍵氣候政策；更高的碳價和更廣的實施很重要，尤其是在美國等高排放國家。</p>
+
+<h3>自願性碳市場的起伏</h3>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">質疑 REDD；2022→2023 是「信任危機與重整」。</p></div>
+<figure class="fig">
+<svg viewBox="0 0 820 310" width="820" role="img" aria-label="自願性碳市場年交易額：2021 年 21 億美元高峰後，2023 年跌到 7.55 億美元">
+<text x="40" y="20" class="m">百萬美元</text>
+<line x1="44" x2="806" y1="250" y2="250" class="ax"/><text x="40" y="254" text-anchor="end" class="m" style="font-size:11px">0</text><line x1="44" x2="806" y1="202" y2="202" class="ax"/><text x="40" y="206" text-anchor="end" class="m" style="font-size:11px">500</text><line x1="44" x2="806" y1="155" y2="155" class="ax"/><text x="40" y="159" text-anchor="end" class="m" style="font-size:11px">1000</text><line x1="44" x2="806" y1="107" y2="107" class="ax"/><text x="40" y="111" text-anchor="end" class="m" style="font-size:11px">1500</text><line x1="44" x2="806" y1="59" y2="59" class="ax"/><text x="40" y="63" text-anchor="end" class="m" style="font-size:11px">2000</text><rect class="hit g-mut" x="50" y="221" width="28" height="29" rx="3"><title>Pre-2005：$301M</title></rect><text x="64.0" y="215" text-anchor="middle" class="n" style="font-size:11px">$301M</text><rect class="hit g-mut" x="86" y="245" width="28" height="5" rx="3"><title>2005：$48M</title></rect><text x="100.0" y="266" text-anchor="middle" class="m" style="font-size:11px">2005</text><rect class="hit g-mut" x="122" y="239" width="28" height="11" rx="3"><title>2006：$111M</title></rect><rect class="hit g-mut" x="158" y="216" width="28" height="34" rx="3"><title>2007：$359M</title></rect><text x="172.0" y="266" text-anchor="middle" class="m" style="font-size:11px">2007</text><rect class="hit g-mut" x="194" y="175" width="28" height="75" rx="3"><title>2008：$790M</title></rect><text x="208.0" y="169" text-anchor="middle" class="n" style="font-size:11px">$790M</text><rect class="hit g-mut" x="230" y="204" width="28" height="46" rx="3"><title>2009：$485M</title></rect><text x="244.0" y="266" text-anchor="middle" class="m" style="font-size:11px">2009</text><rect class="hit g-mut" x="266" y="208" width="28" height="42" rx="3"><title>2010：$444M</title></rect><rect class="hit g-mut" x="302" y="193" width="28" height="57" rx="3"><title>2011：$602M</title></rect><text x="316.0" y="266" text-anchor="middle" class="m" style="font-size:11px">2011</text><rect class="hit g-mut" x="338" y="199" width="28" height="51" rx="3"><title>2012：$530M</title></rect><rect class="hit g-mut" x="374" y="218" width="28" height="32" rx="3"><title>2013：$339M</title></rect><text x="388.0" y="266" text-anchor="middle" class="m" style="font-size:11px">2013</text><rect class="hit g-mut" x="410" y="222" width="28" height="28" rx="3"><title>2014：$298M</title></rect><rect class="hit g-mut" x="446" y="223" width="28" height="27" rx="3"><title>2015：$278M</title></rect><text x="460.0" y="266" text-anchor="middle" class="m" style="font-size:11px">2015</text><rect class="hit g-mut" x="482" y="231" width="28" height="19" rx="3"><title>2016：$199M</title></rect><rect class="hit g-mut" x="518" y="237" width="28" height="13" rx="3"><title>2017：$136M</title></rect><text x="532.0" y="231" text-anchor="middle" class="n" style="font-size:11px">$136M</text><text x="532.0" y="266" text-anchor="middle" class="m" style="font-size:11px">2017</text><rect class="hit g-mut" x="554" y="223" width="28" height="27" rx="3"><title>2018：$285M</title></rect><rect class="hit g-mut" x="590" y="219" width="28" height="31" rx="3"><title>2019：$320M</title></rect><text x="604.0" y="266" text-anchor="middle" class="m" style="font-size:11px">2019</text><rect class="hit g-mut" x="626" y="199" width="28" height="51" rx="3"><title>2020：$534M</title></rect><rect class="hit g-acc" x="662" y="50" width="28" height="200" rx="3"><title>2021：$2.1B</title></rect><text x="676.0" y="44" text-anchor="middle" class="n" style="font-size:11px">$2.1B</text><text x="676.0" y="266" text-anchor="middle" class="m" style="font-size:11px">2021</text><rect class="hit g-acc" x="698" y="69" width="28" height="181" rx="3"><title>2022：$1.9B</title></rect><text x="712.0" y="63" text-anchor="middle" class="n" style="font-size:11px">$1.9B</text><rect class="hit g-soil" x="734" y="178" width="28" height="72" rx="3"><title>2023：$755M</title></rect><text x="748.0" y="172" text-anchor="middle" class="n" style="font-size:11px">$755M</text><text x="748.0" y="266" text-anchor="middle" class="m" style="font-size:11px">2023</text><rect class="hit g-soil" x="770" y="199" width="28" height="51" rx="3"><title>2024：$535M</title></rect><text x="784.0" y="193" text-anchor="middle" class="n" style="font-size:11px">$535M</text><text x="784.0" y="266" text-anchor="middle" class="m" style="font-size:11px">2024</text>
+<path d="M50,276 v6 H366 v-6" fill="none" class="s-mut"/><text x="208.0" y="298" text-anchor="middle" class="m">醞釀期與第一波高峰</text><path d="M374,276 v6 H726 v-6" fill="none" class="s-mut"/><text x="550.0" y="298" text-anchor="middle" class="m">平緩期與第二波高峰</text><path d="M734,276 v6 H798 v-6" fill="none" class="s-mut"/><text x="766.0" y="298" text-anchor="middle" class="m">審慎發展期</text>
+</svg>
+<figcaption>自願性碳市場每年成交金額。2021–2022 衝到 20 億美元左右，2023 年因碳權品質爭議（信任危機）跌到 7.55 億。資料來源：Ecosystem Marketplace, State of the Voluntary Carbon Market 2025。</figcaption>
+</figure>
+</section>
+
+<section id="registry">
+<h2><span class="no">03</span>碳權制度架構：註冊、交易、使用</h2>
+<div class="flow loop" data-loop-label="轉移：原買方變賣方，再次投入市場"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21v-9"/><path d="M12 12C12 7 9 5 4 5c0 5 3 7 8 7z"/><path d="M12 14c0-4 2.5-6 7-6 0 4-2.5 6-7 6z"/><path d="M6 21h12"/></svg><em class="tx">減量專案<br><small>碳權生產者</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 22l-2.4-1.8-3 .2-.9-2.9L3.2 15.8l1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><em class="tx">① 註冊 Register<br><small>國際／民間／區域政府體系＋VVB 查驗</small></em></span><i>→</i><span data-loop-to><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v10h16V10"/><path d="M3 10 5 4h14l2 6z"/><path d="M10 20v-5h4v5"/></svg><em class="tx">② 交易 Trade<br><small>上架、拍賣、場外、撮合</small></em></span><i>→</i><span class="ok" data-loop-from><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 22l-2.4-1.8-3 .2-.9-2.9L3.2 15.8l1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><em class="tx">③ 使用 Use<br><small>註銷後抵碳費、碳中和、增量抵換</small></em></span></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">要用 5 年內的碳權，不能囤貨、不能轉賣。</p></div>
+
+<h3>在哪註冊？三種註冊體系</h3>
+<p>註冊體系決定「由誰發行碳權」：訂定規則（方法學）、主導流程、確保專案品質、最終發行額度。</p>
+<div class="tbl"><table>
+<tr><th>體系</th><th>例子</th><th>設立目的</th></tr>
+<tr><td>國際政府註冊體系</td><td>清潔發展機制（CDM，已停止受理）、巴黎協定碳信用機制（PACM，尚未開放）</td><td>國際協定遵約，幫國家達成減量目標／NDC</td></tr>
+<tr><td>民間獨立註冊體系</td><td>VCS（Verra）、黃金標準（GS）、美國碳登記（ACR）、氣候行動儲備（CAR）</td><td>企業個體運用：碳中和、抵碳稅費</td></tr>
+<tr><td>區域政府註冊體系</td><td>臺灣自願減量專案（TCER）、中國 CCER、泰國 T-VER；臺灣抵換專案已停用</td><td>協助國內減量</td></tr>
+</table></div>
+<p><b>CDM</b>：附件 B 國家（京都議定書有量化減排目標的國家）出資，到非附件一國家（開發中國家）做減量專案，換取減量額度。附件 B 國家一定是附件一國家，反過來不一定。<b>PACM</b> 是巴黎協定版，買方與地主國都不再限定開發程度。</p>
+<p>2022 年各註冊體系核發量約 5 億噸 CO₂e，其中 VCS 42%、CDM 32%、Gold Standard 8.2%，其餘是各國國內體系（World Bank, 2023 State and Trends of Carbon Pricing）。</p>
+
+<h3>三個體系的時間與費用</h3>
+<div class="tbl"><table>
+<tr><th>項目</th><th>Verra VCS</th><th>Gold Standard</th><th>臺灣環境部自願減量</th></tr>
+<tr><td>創立</td><td>2006</td><td>2003（WWF 等）</td><td>《溫室氣體自願減量專案管理辦法》</td></tr>
+<tr><td>特色</td><td>只看減排，不要求額外環境社會效益</td><td>重視額外效益：至少貢獻 3 項 SDGs，並符合性別平等規範</td><td>分「移除」與「減少或避免排放」兩類；方法學含部分 CDM 與本土方法學</td></tr>
+<tr><td>規模</td><td>4,000 多件、13 億噸以上、95 國</td><td>4,044 件、4 億噸以上、117 國</td><td>註冊通過 19 案，核發 0</td></tr>
+<tr><td>方法學</td><td>VCS 42 項＋部分 CDM 68 項</td><td>GS 47 項＋CDM 172 項</td><td>六大類：能源、製造、運輸與逸散、廢棄物、農業與土地利用、其他</td></tr>
+<tr><td>單位</td><td>VCU</td><td>VER</td><td>TCER</td></tr>
+<tr><td>註冊審查</td><td>約 1 個月，3,750 USD</td><td>約 1 個月，2,500 USD／件</td><td>6–12 個月，免費</td></tr>
+<tr><td>計入期</td><td>7 年（可展延兩次共 21 年）或固定 10 年</td><td>5 年（可展延兩次共 15 年）或固定 10 年</td><td>5 年（可展延兩次共 15 年）或固定 10 年</td></tr>
+<tr><td>查證</td><td>VVB，約 1 年</td><td>VVB，約 3–6 個月</td><td>VVB，約 3–6 個月</td></tr>
+<tr><td>核發</td><td>即時，發行費 $0.23／VCU</td><td>即時，發行費 $0.25／VER</td><td>6–12 個月，免費</td></tr>
+</table></div>
+<p style="font-size:14px;color:var(--muted)">VCS 另有開戶 750 USD、帳戶年費 750 USD／年、專案建檔 1,500 USD／件；GS 帳戶年費 1,000 USD／年、初步審查 1,000 USD／件。查證費用都要另向查驗機構詢價。</p>
+
+<h3>亞洲各國的碳信用與交易平台</h3>
+<div class="tbl"><table>
+<tr><th>國家</th><th>額度名稱</th><th>交易平台</th><th>上線</th></tr>
+<tr><td>臺灣</td><td>臺灣核證減量額度（TCER）</td><td>臺灣碳權交易所（TCX）</td><td>2023</td></tr>
+<tr><td>中國</td><td>中國核證自願減排量（CCER）</td><td>北京綠色交易所（CBGEX）</td><td>2012；2024 重啟</td></tr>
+<tr><td>泰國</td><td>泰國自願減排額度（T-VER）</td><td>FTIX；TGO registry</td><td>2013（T-VER）；2022（FTIX）</td></tr>
+<tr><td>馬來西亞</td><td>以國際單位為主</td><td>Bursa Carbon Exchange（BCX）</td><td>2022 成立；2023 首拍</td></tr>
+<tr><td>越南</td><td>以國際單位為主</td><td>—</td><td>規劃中</td></tr>
+<tr><td>印尼</td><td>溫室氣體減排證書（SPE-GRK）</td><td>IDXCarbon</td><td>2023</td></tr>
+<tr><td>新加坡</td><td>以國際單位為主</td><td>ACX；Climate Impact X（CIX）</td><td>2019（ACX）；2021（CIX）</td></tr>
+<tr><td>韓國</td><td>KOC、KCU</td><td>KRX Carbon Market（K-ETS 下）</td><td>2015</td></tr>
+<tr><td>日本</td><td>J-Credit</td><td>JPX／TSE Carbon Credit Market</td><td>2023</td></tr>
+</table></div>
+<div class="stats">
+  <div class="stat"><b>91.1 萬噸</b><span>中國 CCER 2024 年重啟後首五天交易量</span></div>
+  <div class="stat"><b>US$14.82</b><span>CCER 初始價格（每噸），比 ETS 配額高 21%</span></div>
+  <div class="stat"><b>$140B</b><span>北京綠色交易所預測的 CCER 年交易額</span></div>
+</div>
+<div class="tbl"><table>
+<tr><th>國家</th><th>東南亞的碳市場行動</th></tr>
+<tr><td>泰國</td><td>2027 年啟動自願性碳市場，企業可用碳權抵換 15% 碳排</td></tr>
+<tr><td>馬來西亞</td><td>2022 年啟動自願性碳市場；預計 2026 年開徵碳稅（先針對鋼鐵和能源），ETS 規劃中</td></tr>
+<tr><td>印尼</td><td>2025 年 1 月啟動國際碳權交易，允許國外買家採購以達成 NDC</td></tr>
+<tr><td>越南</td><td>預計 2029 年 ETS 上線，先涵蓋電力、水泥、鋼鐵，允許最高 20% 碳抵換</td></tr>
+</table></div>
+<p>馬來西亞在 COP29 帶頭推動「東協共同碳框架（ACCF）」，由泰、馬、印尼、新加坡的碳市場相關協會合作，提升區域碳市場流動性。</p>
+
+<h3>交易方式</h3>
+<div class="tbl"><table>
+<tr><th>方式</th><th>怎麼交易</th><th>優點</th><th>缺點</th></tr>
+<tr><td>上架式（Listed Marketplace）</td><td>像網路商城，賣家標價、買家下單</td><td>直覺、透明</td><td>不能議價</td></tr>
+<tr><td>拍賣式（Auction）</td><td>買家競標，中標者得碳權</td><td>反映需求，高品質碳權有溢價</td><td>流程繁瑣</td></tr>
+<tr><td>場外交易（OTC）</td><td>買賣雙方私下議定，交易所協助交割</td><td>彈性高、可客製</td><td>不透明、耗時</td></tr>
+<tr><td>撮合式（Order Book）</td><td>平台撮合報價，價格相符即成交</td><td>即時、流動性高、價格透明</td><td>—</td></tr>
+</table></div>
+<p><b>使用</b>：買方可以把碳權<b>註銷（Retirement）</b>，用來抵碳費、宣告碳中和或做增量抵換；也可以<b>轉移（Transfer）</b>，再次投入市場賣給新買方。註銷之後就不能再用，這是避免重複計算的關鍵。</p>
+</section>
+
+<section id="apply">
+<h2><span class="no">04</span>碳權申請、審查與核發</h2>
+<h3>碳權註冊流程</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 18h14M4 9h16L12 3z"/><path d="M6 9v9M10 9v9M14 9v9M18 9v9"/></svg><em class="tx">① 選擇方法學<br><small>專案申請者</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h7M9 17h7"/></svg><em class="tx">提交申請資料</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 22l-2.4-1.8-3 .2-.9-2.9L3.2 15.8l1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><em class="tx">確證 Validation<br><small>VVB：方法對不對</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 22l-2.4-1.8-3 .2-.9-2.9L3.2 15.8l1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><em class="tx">計畫審查<br><small>註冊系統</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 22l-2.4-1.8-3 .2-.9-2.9L3.2 15.8l1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><em class="tx">計畫通過</em></span></div>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><em class="tx">② 專案執行</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h7M9 17h7"/></svg><em class="tx">③ 提交監測報告</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 22l-2.4-1.8-3 .2-.9-2.9L3.2 15.8l1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><em class="tx">查證 Verification<br><small>VVB：數據對不對</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 22l-2.4-1.8-3 .2-.9-2.9L3.2 15.8l1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><em class="tx">最終審查<br><small>註冊系統</small></em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/></svg><em class="tx">額度發行</em></span></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">選方法學（MRV）→ 執行（設計）→ 監測報告。確證看「執行方法對不對」，查證看「數據對不對」。</p></div>
+<div class="box iso"><span class="tag">連結講義</span><p>確證與查證的差別、臺灣自願減量的申請步驟，講義 1 和講義 3 都有流程圖可以對照。<a class="xref" href="01-net-zero.html#credit">講義 1〈碳定價、碳權與自願減量專案〉↗</a><a class="xref" href="03-blue-carbon.html#process">講義 3〈認證流程與 MRV〉↗</a></p></div>
+
+<h3>臺灣環境部的流程</h3>
+<div class="tbl"><table>
+<tr><th>階段</th><th>做什麼</th><th>輔導</th></tr>
+<tr><td>準備期</td><td>減碳措施規劃、選定方法學，建立碳權專案的系統性流程</td><td>專案參與單位</td></tr>
+<tr><td>註冊申請</td><td>撰寫專案計畫（專案活動、外加性分析、減量／移除量計算、監測方法、期程、環境衝擊、公眾意見）<br>→ 查驗機構確證（或免確證）→ 審查 → 通過註冊</td><td>查驗證顧問輔導、送審與修正</td></tr>
+<tr><td>額度申請</td><td>撰寫監測報告 → 查驗機構查證 → 審查 → 取得額度</td><td>監測報告範本、查驗證與審查輔導</td></tr>
+</table></div>
+
+<h3>減量認定框架：3 個技術條件＋5 大原則</h3>
+<div class="tbl"><table>
+<tr><th>類別</th><th>條件</th><th>意思</th></tr>
+<tr><td rowspan="3">MRV</td><td>可量測（Measurable）</td><td>能精確計算排放減少量</td></tr>
+<tr><td>可驗證（Verifiable）</td><td>能由第三方驗證減量真實性</td></tr>
+<tr><td>可報告（Reportable）</td><td>能產出透明完整的減量報告</td></tr>
+<tr><td rowspan="5">5 大原則</td><td>外加性（Additionality）</td><td>不是法律要求、也不是常規下就會發生。<b>拿去宣告碳中和的減碳行為，不能再申請碳權</b></td></tr>
+<tr><td>保守性（Conservativeness）</td><td>有不確定性時採保守估算</td></tr>
+<tr><td>永久性（Permanence）</td><td>減量效果不會被反轉（例如林木砍伐後反排）</td></tr>
+<tr><td>避免危害（No Net Harm）</td><td>不能對社會、環境造成其他負面影響</td></tr>
+<tr><td>避免重複計算（No Double Counting）</td><td>同一減量不能被兩個以上專案重複申報</td></tr>
+</table></div>
+<p>另外兩個前提：<b>基線情境明確</b>（沒有減碳行為時原本會排多少？）、<b>專案邊界明確</b>（時間、空間、設備範圍）。</p>
+<div class="box iso"><span class="tag">連結 ISO 14064-2</span><p>基線情境、專案邊界、外加性、保守性，就是 ISO 14064-2 專案量化的骨架。<a class="xref" href="04-iso-standards.html#p-core">講義 4〈核心觀念：基準情境〉↗</a></p></div>
+
+<h3>外加性怎麼論證</h3>
+<p>CDM 的外加性論證有四個面向：</p>
+<div class="tbl"><table>
+<tr><th>面向</th><th>要回答的問題</th></tr>
+<tr><td>法規外加性</td><td>不是因法規要求才做？專案優於法規要求？</td></tr>
+<tr><td>財務外加性</td><td>專案在財務上不具吸引力？</td></tr>
+<tr><td>障礙分析</td><td>沒有碳權收益時，至少有一項障礙讓專案無法實行？而且至少有一個替代方案不受這個障礙影響？</td></tr>
+<tr><td>普遍性</td><td>沒有相似活動？若有，能說明與本專案的不同？</td></tr>
+</table></div>
+<p>環境部依專案規模要求不同：</p>
+<div class="tbl"><table>
+<tr><th>規模</th><th>門檻</th><th>法規外加性</th><th>財務／障礙／普遍性</th></tr>
+<tr><td>大規模</td><td>減碳 ≥ 6 萬噸／年</td><td>✓</td><td>三項都要</td></tr>
+<tr><td>小規模</td><td>再生能源 &lt; 15 MW；節能 &lt; 6,000 萬度／年；減碳 &lt; 6 萬噸／年</td><td>✓</td><td>三項擇一</td></tr>
+<tr><td>微型規模</td><td>再生能源 &lt; 5 MW；節能 &lt; 2,000 萬度／年；減碳 &lt; 2 萬噸／年</td><td>✓</td><td>免</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">避免重複計算 → SBTi。</p></div>
+</section>
+
+<section id="method">
+<h2><span class="no">05</span>方法學與案例</h2>
+<h3>方法學長什麼樣子：兩個例子</h3>
+<div class="tbl"><table>
+<tr><th>方法學</th><th>減量來源</th><th>基線情境</th><th>專案情境</th></tr>
+<tr><td>AM0105 資料中心動態電源管理</td><td>用動態電源管理（DPM）讓伺服器運轉與冷卻耗電更少</td><td>沒有 DPM，伺服器 Always On</td><td>加裝 DPM，沒負載時切到關閉模式</td></tr>
+<tr><td>AMS.II.C 需求端能源效率（小規模）</td><td>改用高效設備（燈具、冰箱、馬達、冷氣、泵浦、冰水主機）</td><td>低效設備耗能多</td><td>高效設備耗能少</td></tr>
+</table></div>
+<p>AM0105 的重要量測指標：基線要三年的負載與運行時數、現有伺服器耗電量與交易處理能力、電力排放係數；專案要伺服器關機時間、負載情況、該技術的市場占有率。AMS.II.C 是小規模方法學：單一專案總節能量每年不能超過 60 GWh，熱輸入上限 180 GWh。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">方法學 → ISO 14064-2。</p></div>
+
+<h3>案例：節能專案的碳權值多少？</h3>
+<p><b>A 廠（AMS.II.C）汰舊換新</b>：</p>
+<div class="tbl"><table>
+<tr><th>改善項目</th><th class="r">減少耗電（kWh／年）</th><th class="r">節能效益（萬元／年）</th><th class="r">投資（萬元）</th><th class="r">回收年限</th><th class="r">減量（t CO₂e／年）</th></tr>
+<tr><td>空壓機汰舊換新</td><td class="r num">118,961</td><td class="r num">31</td><td class="r num">100</td><td class="r num">3.4</td><td class="r num">58.9</td></tr>
+<tr><td>以效率較高冰水主機運轉</td><td class="r num">115,281</td><td class="r num">30.1</td><td class="r num">—</td><td class="r num">—</td><td class="r num">57.1</td></tr>
+<tr><td>更換冷卻水塔散熱材</td><td class="r num">40,250</td><td class="r num">10.5</td><td class="r num">40</td><td class="r num">4</td><td class="r num">19.9</td></tr>
+<tr><td>冷卻水塔風扇改變頻</td><td class="r num">123,847</td><td class="r num">32.3</td><td class="r num">100</td><td class="r num">3.3</td><td class="r num">61.3</td></tr>
+<tr><td><b>合計</b></td><td class="r num">398,339</td><td class="r num">103.9</td><td class="r num">240</td><td class="r num">—</td><td class="r num"><b>197.2</b></td></tr>
+</table></div>
+<ol class="steps">
+  <li>減量額度 197.2 t CO₂e／年，10 年共 1,972 t CO₂e</li>
+  <li>碳權效益（10 年）＝ 1,972 × US$20 ＝ 126.2 萬元</li>
+  <li>節能效益（10 年）＝ 103.9 萬 × 10 ＝ 1,039 萬元</li>
+  <li>總效益 ＝ 1,039 ＋ 126.2 ＝ 1,165.2 萬元（未考慮時間價值）；投資報酬率 ＝ 1,165.2 ÷ 240 ＝ 485.5%</li>
+  <li><b>碳權增加的效益 ＝ 126.2 ÷ 1,165.2 ＝ 10.8%</b></li>
+</ol>
+<p><b>B 廠（AMS-II.Q）建築能源管理系統 BEMS</b>：每年減碳 466 噸，10 年，每噸 US$20（GS 能效專案均價），匯率 31.45 → 碳權 2,931,140 元。每年省電 466 ÷ 0.494 kg／度 ＝ 943,320 度，× 3.98 元／度 ＝ 每年電費 375.4 萬元，10 年 3,754.4 萬元。總效益 4,047.5 萬元，<b>碳權只占 7.2%</b>。</p>
+<p style="font-size:14px;color:var(--muted)">講義把 943,320 度寫成「10 年」的節能度數，但 466 ÷ 0.494 算出來的是每年度數，後面乘 10 年的算式也是用每年度數。</p>
+<figure class="fig">
+<svg viewBox="0 0 660 150" width="660" role="img" aria-label="十年總效益中碳權只占一成左右">
+<text x="0" y="27" class="t">A 廠 汰舊換新</text><rect class="hit g-mut" x="120" y="10" width="464" height="26" rx="4"><title>節能效益 1,039 萬元</title></rect><rect class="hit g-acc" x="586" y="10" width="54" height="26" rx="4"><title>碳權效益 126.2 萬元</title></rect><text x="612" y="54" text-anchor="middle" class="n">碳權 10.8%</text>
+<text x="0" y="97" class="t">B 廠 BEMS</text><rect class="hit g-mut" x="120" y="80" width="482" height="26" rx="4"><title>節能效益 3,754.4 萬元</title></rect><rect class="hit g-acc" x="604" y="80" width="36" height="26" rx="4"><title>碳權效益 293.1 萬元</title></rect><text x="621" y="124" text-anchor="middle" class="n">碳權 7.2%</text>
+</svg>
+<figcaption>十年總效益的組成：灰色是省下的電費，綠色是賣碳權的收入。碳權大約只占 7%–11%，真正的錢在節能本身。</figcaption>
+</figure>
+<div class="box key"><span class="tag">重點</span><p>節能專案本身就划算，碳權只是「加分」。這也是外加性的難題：如果不靠碳權就已經賺錢，財務外加性就很難成立，小規模專案通常要靠障礙分析或普遍性來論證。</p></div>
+
+<h3>案例：更換高效率冰水主機（TMS-II.003）</h3>
+<p>某半導體廠 5 樓冰水系統原有 8 台 240RT 螺旋式冰水主機，舊機冷凍能力只剩約 68%。專案汰換其中 5 台，改為 3 台 300RT 新機。</p>
+<div class="formula">基線 BE ＝ 3,376,805 kWh × 0.536 kg CO₂e/kWh ÷ 1,000 ＝ 1,810 t CO₂e/年</div>
+<div class="formula">專案 PE ＝ 1,771,439 kWh × 0.536 ÷ 1,000 ＝ 949 t CO₂e/年</div>
+<div class="formula">冷媒洩漏 LE ＝ 22 − 0 ＝ 22 t CO₂e/年</div>
+<div class="formula">減量 ER ＝ BE − (PE ＋ LE) ＝ 1,810 − (949 ＋ 22) ＝ 839 t CO₂e/年</div>
+<div class="box iso"><span class="tag">連結 ISO 14064-2</span><p>ER ＝ BE − PE − LE 就是講義 3、講義 4 那條專案減量公式。這個例子的「洩漏」是新冰水主機的冷媒逸散，提醒專案排放不只有用電。<a class="xref" href="03-blue-carbon.html#principles">講義 3〈碳匯專案六大原則〉↗</a></p></div>
+
+<h3>案例：台達 LED 智慧路燈（AMS-II.L）</h3>
+<div class="formula">ER ＝ (P<sub>BL</sub> − P<sub>P</sub>) × O × EF</div>
+<p>P<sub>BL</sub>：汰換前路燈 kW；P<sub>P</sub>：新 LED 路燈 kW；O：每日照明時數（不得超過日落到日出的平均時數）；EF：電力排放係數（kg CO₂e／度）。台達自 2010 年起裝了 60 萬盞路燈，但臺灣碳權申請有三年內的有效期限，所以只算還在期限內的 12 萬盞。</p>
+<div class="tbl"><table>
+<tr><th>項目</th><th class="r">臺灣</th><th class="r">雅加達</th></tr>
+<tr><td>路燈數</td><td class="r num">120,000</td><td class="r num">20,000</td></tr>
+<tr><td>瓦數</td><td class="r num">250 W → 120 W</td><td class="r num">250 W → 120 W</td></tr>
+<tr><td>每日時數</td><td class="r num">12</td><td class="r num">12</td></tr>
+<tr><td>電力排放係數</td><td class="r num">0.474（113 年）</td><td class="r num">0.717（印尼 110 年）</td></tr>
+<tr><td>每日減碳</td><td class="r num">88.7 t</td><td class="r num">22.4 t</td></tr>
+<tr><td>每年減碳</td><td class="r num">32,375 t</td><td class="r num">8,165.2 t</td></tr>
+<tr><td>每年碳權價值（US$20／t）</td><td class="r num">19,425,000 元</td><td class="r num">4,899,177 元</td></tr>
+</table></div>
+<p>同樣是換燈，電網越髒（排放係數越高），每盞燈的減碳越多。台達另外估算全球 34 棟綠建築（2023 年經認證 25 棟）共節電 4,326 萬度、約減碳 22,694 噸，以 US$20 計碳權價值約 1,361.6 萬元。</p>
+
+<h3>練習：照明汰換減碳計算器</h3>
+<div class="calc">
+  <div class="row">
+    <label for="n5">盞數<input id="n5" type="number" step="1" value="120000"></label>
+    <label for="w1">舊燈瓦數（W）<input id="w1" type="number" step="1" value="250"></label>
+    <label for="w2">新燈瓦數（W）<input id="w2" type="number" step="1" value="120"></label>
+    <label for="h5">每日時數<input id="h5" type="number" step="0.5" value="12"></label>
+    <label for="ef5">排放係數（kg/度）<input id="ef5" type="number" step="0.001" value="0.474"></label>
+    <label for="p5">碳權價格（US$/t）<input id="p5" type="number" step="1" value="20"></label>
+  </div>
+  <div class="out" id="out5" aria-live="polite"></div>
+</div>
+<p style="font-size:14px;color:var(--muted)">換算台幣用 1 美元 ＝ 30 元，和講義的算法一致。計算器算出 32,387 噸，講義是 32,375 噸，差在講義先把每日減碳四捨五入成 88.7 再乘 365。</p>
+</section>
+
+<section id="offset">
+<h2><span class="no">06</span>碳權與減量效益：增量抵換</h2>
+<p>除了自願減量的碳權，臺灣還有一種「減量效益」，只能用在<b>環評開發案的增量抵換</b>。</p>
+<h3>溫室氣體增量抵換管理辦法</h3>
+<p><b>誰要抵換</b>：<mark>新設排放源</mark>達一定規模、依法<mark>應實施環境影響評估</mark>，而且會增加溫室氣體排放的開發案：</p>
+<ul>
+  <li>工廠設立，年排放達 2.5 萬公噸 CO₂e</li>
+  <li>園區興建或擴建</li>
+  <li>火力發電廠、汽電共生廠興建或加機組（天然氣或每部 2.5 萬瓩以下除外）</li>
+  <li>高度 120 公尺以上的高樓建築</li>
+</ul>
+<p><mark>事業變更排放源</mark>：通過環評後變更內容須重新環評，而且排放增量達 10% 以上。</p>
+<p><b>可以用什麼抵換</b>：自願減量專案額度、抵換專案額度、民國 99 年 9 月 10 日後的先期專案額度，或在開發範圍以外執行下列措施取得的減量效益：</p>
+<ol class="steps">
+  <li>老舊汽（機）車換電動汽（機）車</li>
+  <li>空調換高效率空調</li>
+  <li>照明換高效率照明（LED）</li>
+  <li>老舊農機換電動農機</li>
+  <li>既有增氧設備換高效率增氧設備</li>
+  <li>超過指定目標的減量</li>
+</ol>
+<div class="tbl"><table>
+<tr><th>減量措施</th><th class="r">減量效益（kg CO₂e／單位）</th><th class="r">等同森林固碳面積（ha）</th></tr>
+<tr><td>汰換高效率照明</td><td class="r num">5.92</td><td class="r num">—</td></tr>
+<tr><td>汰換高效率空調</td><td class="r num">983.66</td><td class="r num">0.098</td></tr>
+<tr><td>汰換機車</td><td class="r num">2,313.85</td><td class="r num">0.23</td></tr>
+<tr><td>汰換汽車</td><td class="r num">19,667.26</td><td class="r num">1.97</td></tr>
+<tr><td>汰換柴油車</td><td class="r num">23,746.31</td><td class="r num">2.37</td></tr>
+</table></div>
+<div class="tbl"><table>
+<tr><th>淘汰</th><th>換成</th><th>減量效益</th><th class="r">最低收購單價</th></tr>
+<tr><td>汽油小客／小貨車</td><td>電動車</td><td>每輛 19.3 t CO₂e</td><td class="r num">12,000 元</td></tr>
+<tr><td>柴油小客／小貨車</td><td>電動車</td><td>每輛 23.2 t CO₂e</td><td class="r num">15,000 元</td></tr>
+</table></div>
+
+<h3>農業例子：魷釣漁船 LED 集魚燈</h3>
+<p>台達開發 1,200 W 智能魷釣 LED 集魚燈（農業部農科專案），取代耗電、高溫的金屬鹵化物燈。目前<b>沒有碳權方法學（可開發）</b>，但可以用《汰換漁船集魚燈設備為發光二極體集魚燈設備之減量效益計算基準》申請減量效益，給增量抵換用。</p>
+<div class="formula">LRE ＝ (LE1 − LE2) × LYT × EF</div>
+<p>LE1／LE2：汰換前後的集魚燈 kW；LYT：耐用總時數 ＝ 年作業時數 × 3（10 噸以下漁船 582 小時、10 噸以上 1,387 小時、魷釣船 1,200 小時、秋刀魚棒受網 1,000 小時）。</p>
+<ol class="steps">
+  <li>100 艘魷釣船 × 每艘 150 盞 ＝ 15,000 盞</li>
+  <li>4 kW → 1.2 kW；耐用時數 1,200 × 3 ＝ 3,600 小時；EF 0.474</li>
+  <li>減量效益 ＝ 15,000 × (4 − 1.2) × 3,600 × 0.474 ÷ 1,000 ＝ <b>71,668.8 t CO₂e</b></li>
+  <li>以減量效益均價 600 元／t 計 ＝ 43,001,280 元</li>
+</ol>
+
+<h3>綠電、碳權、減量效益怎麼分</h3>
+<div class="tbl"><table>
+<tr><th>比較</th><th>T-REC 再生能源憑證</th><th>自願減量額度（碳權）</th><th>減量效益</th></tr>
+<tr><td>價格（元／t CO₂e）</td><td>約 10,000</td><td>60 ～ 1,500 多</td><td>約 600</td></tr>
+<tr><td>用途</td><td>RE100；降低範疇 2 排放</td><td><mark>碳中和</mark>；淨零殘餘排放抵換（只能用移除型）；<mark>碳費折抵</mark>；<mark>環評增量抵換</mark></td><td>只能做環評增量抵換</td></tr>
+<tr><td>買主</td><td>承諾 RE100、自主減量</td><td>碳中和目標、SBTi 長程目標、年排 2.5 萬噸以上的碳費大戶、環評開發單位</td><td>被環評要求增量抵換的開發單位</td></tr>
+<tr><td>去哪買</td><td>台電、綠電售電業者</td><td>自願減量碳權交易平台</td><td>環境部媒合平台</td></tr>
+<tr><td>法規</td><td>再生能源發展條例</td><td>溫室氣體減量額度交易管理辦法</td><td>溫室氣體增量抵換辦法</td></tr>
+</table></div>
+<div class="box iso"><span class="tag">連結 ISO 14064-1</span><p>T-REC 影響的是盤查裡的「範疇 2（輸入能源）」用什麼排放係數；碳權則是盤查之外另外報告的抵換，不能直接從排放量扣掉。<a class="xref" href="04-iso-standards.html#o-elec">講義 4〈電力與再生能源〉↗</a></p></div>
+
+<h3>碳權四大用途</h3>
+<div class="tbl"><table>
+<tr><th>用途</th><th>依據與重點</th></tr>
+<tr><td>折抵碳費</td><td>《氣候變遷因應法》首波對年排 2.5 萬公噸以上的 281 家大戶徵收碳費，減量額度可扣抵排放量</td></tr>
+<tr><td>開發案增量抵換</td><td>《溫室氣體排放量增量抵換管理辦法》：一定規模的新設排放源每年抵換 10% 的排放量</td></tr>
+<tr><td>企業碳中和</td><td>依 ISO 14068-1，計算年度所有排放並以抵換中和；用於品牌、行銷、ESG 報告，回應供應鏈碳中和要求</td></tr>
+<tr><td>淨零殘餘抵換</td><td>依 SBTi 淨零準則，只有「無法再減的殘餘排放」才能抵換，而且<b>必須用移除型碳權</b></td></tr>
+</table></div>
+</section>
+
+<section id="icp">
+<h2><span class="no">07</span>企業內部碳定價（ICP）</h2>
+<div class="box key"><span class="tag">定義</span><p><b>內部碳價</b>：企業在內部決策中，自行設定每噸 CO₂ 的金額，反映氣候風險與碳成本。關鍵功能是把碳排轉成「財務語言」，讓部門、供應商、專案都能用碳價衡量氣候績效。</p></div>
+<p>目的：把減碳納入投資決策與營運管理；提前因應未來的碳稅、碳費或 ETS；對齊 SBTi、TCFD 與 IFRS S2。</p>
+<div class="tbl"><table>
+<tr><th>模式</th><th>做法</th><th>特徵</th><th>適用</th></tr>
+<tr><td>影子碳價（Shadow Price）</td><td>投資或採購時假設碳有某個價格，做敏感度分析</td><td>不實際收費；用於預算與風險評估</td><td>預測碳價對營運的影響</td></tr>
+<tr><td>內部碳費（Internal Carbon Fee）</td><td>按部門或產品的實際排放收費，收入再投資低碳專案</td><td>真的收錢；激勵減碳</td><td>大型跨國企業、能源密集產業</td></tr>
+<tr><td>內部碳交易（Internal Trading）</td><td>公司內部設配額，部門之間交易</td><td>管理成本高；模擬外部 ETS</td><td>多據點集團、能源部門多元的企業</td></tr>
+</table></div>
+
+<h3>兩個案例</h3>
+<div class="tbl"><table>
+<tr><th>比較</th><th>微軟</th><th>台達電</th></tr>
+<tr><td>開始</td><td>2012 年導入內部碳費</td><td>2014 年起訂各地區影子碳價；2021 年全球統一內部碳費</td></tr>
+<tr><td>範圍</td><td>最初範疇 1、2；2020 財年起擴大到所有範疇 3（含供應鏈）</td><td>新設備投資與汰換（CapEx）、產線能效專案、供應鏈碳盤查輔導</td></tr>
+<tr><td>價格</td><td>範疇 2 約 $15／t；商務旅行 FY22 起提高到 $100／t；其他範疇 3 較低（例如 $8／t）</td><td>初期以 US$300／t CO₂e 試算</td></tr>
+<tr><td>錢用在哪</td><td>匯入 Carbon Fund：買 REC、投資減碳與能效專案、研發碳移除（例如 DAC）</td><td>驅動低碳投資和決策</td></tr>
+<tr><td>採購</td><td>採購評估就計入碳成本；有碳管理目標的供應商加分；減碳要求寫進供應商行為準則</td><td>要求供應商揭露碳排與減碳計畫；有 ISO 14064／14067 驗證或 SBTi 承諾者加分；用碳價模擬「隱含碳成本」</td></tr>
+<tr><td>成效</td><td>連續十年碳中和（2012–2022）；目標 2030 年碳負排</td><td>全球範疇 1、2 排放顯著下降；碳風險揭露對應 IFRS S2</td></tr>
+</table></div>
+<div class="box iso"><span class="tag">連結 ISO 14064-1 / 14067</span><p>內部碳費要有可信的排放數字才收得到錢：組織用 ISO 14064-1 盤查決定各部門的排放，產品或供應商用 ISO 14067 碳足跡比較隱含碳成本。台達對有 14064／14067 驗證的供應商加分，就是這個邏輯。</p></div>
+
+<h3>全球碳市場的三大挑戰</h3>
+<div class="tbl"><table>
+<tr><th>挑戰</th><th>內容</th></tr>
+<tr><td>碳價偏低</td><td>只有 1% 排放量的碳價足以達成巴黎協定目標，多數國家遠低於 $40–$80／噸</td></tr>
+<tr><td>信任危機</td><td>2023 年熱帶雨林碳權虛報等品質爭議，交易額從 2022 年 $1.9B 跌到 $755M</td></tr>
+<tr><td>制度碎片化</td><td>各國標準不一，跨境交易複雜、重複計算風險高，需要 PACM、ACCF 等國際協調</td></tr>
+</table></div>
+
+<h3>企業行動建議</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><em class="tx">短期行動<br><small>建立範疇 1/2/3 盤查；評估碳費影響；用影子碳價做投資敏感度分析</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><em class="tx">中期布局<br><small>申請 TCER／VCS／GS 碳權；評估設備汰換的碳權效益；整合供應鏈碳管理</small></em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/></svg><em class="tx">長期目標<br><small>設定 SBTi 目標；導入正式 ICP；對齊 IFRS S2；邁向碳中和與淨零</small></em></span></div>
+</section>
+
+<section id="quiz">
+<h2><span class="no">08</span>自我測驗</h2>
+<details class="q"><summary>1. 碳費和 ETS 各自「固定」了什麼？</summary><div class="a">碳費固定每噸的價格，減量多少不確定；ETS 固定排放總量，價格由市場決定、波動較大。</div></details>
+<details class="q"><summary>2. 「排放許可權」和「碳權」差在哪？</summary><div class="a">排放許可權是合規市場裡政府核配的配額（Cap and Trade）；碳權是自願市場裡，減量專案依方法學、經查證後核發的額度。</div></details>
+<details class="q"><summary>3. 依 SBTi，淨零的殘餘排放可以用哪種碳權抵換？</summary><div class="a">只能用移除型碳權，而且只有無法再減的殘餘排放才能抵換。</div></details>
+<details class="q"><summary>4. 一家公司把換 LED 的減量拿去宣告碳中和，還能拿同一筆減量申請碳權嗎？</summary><div class="a">不行。外加性原則寫明，拿去宣告碳中和的減碳行為不能再申請碳權；同一減量也不能重複申報（避免重複計算）。</div></details>
+<details class="q"><summary>5. 小規模專案（例如年減碳 3 萬噸）的外加性要做哪些分析？</summary><div class="a">法規外加性一定要做，再從財務外加性、障礙分析、普遍性三項中擇一。微型規模（&lt; 2 萬噸／年）只要法規外加性。</div></details>
+<details class="q"><summary>6. 確證和查證各在看什麼？</summary><div class="a">確證（Validation）在計畫階段看方法對不對；查證（Verification）在執行後看監測數據對不對。兩者都由第三方查驗機構（VVB）執行。</div></details>
+<details class="q"><summary>7. A 廠節能專案十年總效益 1,165.2 萬元，碳權占多少？這說明什麼？</summary><div class="a">126.2 萬，約 10.8%。節能本身就有主要收益，碳權只是加分；也因此財務外加性不容易成立。</div></details>
+<details class="q"><summary>8. 魷釣船換 LED 集魚燈目前能拿到碳權嗎？</summary><div class="a">目前沒有適用的碳權方法學，但可以依環境部的計算基準申請「減量效益」，只能用在環評開發案的增量抵換。</div></details>
+<details class="q"><summary>9. 影子碳價和內部碳費最大的差別？</summary><div class="a">影子碳價不實際收錢，只在投資或採購評估時假設碳價；內部碳費按實際排放向部門收費，收入再投資低碳專案。</div></details>
+</section>
+
+<section id="gloss">
+<h2><span class="no">09</span>名詞表</h2>
+<dl class="gloss">
+<dt>Carbon Pricing</dt><dd>碳定價：用價格反映排放的社會成本</dd>
+<dt>ETS</dt><dd>排放權交易制度（Cap and Trade），設總量、交易配額</dd>
+<dt>CBAM</dt><dd>歐盟碳邊境調整機制，對進口品依碳含量收費</dd>
+<dt>Carbon Allowance</dt><dd>合規市場的排放配額</dd>
+<dt>Carbon Credit</dt><dd>碳信用額度（碳權），自願市場的減量或移除額度</dd>
+<dt>Removal／Reduction／Avoidance</dt><dd>移除／削減／避免，碳權的三大類型</dd>
+<dt>CDM／PACM</dt><dd>京都議定書清潔發展機制／巴黎協定碳信用機制</dd>
+<dt>VCS（VCU）</dt><dd>Verra 的碳驗證標準與其額度單位</dd>
+<dt>Gold Standard（VER）</dt><dd>黃金標準與其額度單位，重視 SDGs 效益</dd>
+<dt>TCER</dt><dd>臺灣核證減量額度（環境部自願減量專案）</dd>
+<dt>VVB</dt><dd>第三方確證／查證機構</dd>
+<dt>Validation／Verification</dt><dd>確證（事前看計畫）／查證（事後看數據）</dd>
+<dt>Retirement</dt><dd>註銷：碳權用掉，不能再交易</dd>
+<dt>增量抵換</dt><dd>環評開發案對新增排放的抵換義務（每年 10%）</dd>
+<dt>減量效益</dt><dd>依環境部計算基準取得、只能做增量抵換的減量</dd>
+<dt>T-REC</dt><dd>臺灣再生能源憑證</dd>
+<dt>ICP</dt><dd>企業內部碳定價：影子碳價、內部碳費、內部碳交易</dd>
+<dt>IFRS S2</dt><dd>國際永續揭露準則的氣候相關揭露</dd>
+</dl>
+</section>
+
+<nav class="pager" aria-label="上一講／下一講"><a class="prev" href="04-iso-standards.html"><small>← 上一講</small>4. ISO 14064 與 14067</a><a class="next" href="06-emission-reduction.html"><small>下一講 →</small>6. 農林漁畜牧減排策略</a></nav>
+</main>
+</div>
+<script>
+(function(){
+  var b=document.body,K='tocOff';
+  function set(off){b.classList.toggle('toc-off',off);try{localStorage.setItem(K,off?'1':'0')}catch(e){}}
+  try{if(localStorage.getItem(K)==='1')b.classList.add('toc-off')}catch(e){}
+  document.getElementById('tocHide').addEventListener('click',function(){set(true)});
+  document.getElementById('tocShow').addEventListener('click',function(){set(false)});
+})();
+</script>
+<script>
+(function(){
+  var NS='http://www.w3.org/2000/svg',n=0;
+  function rp(p,r){var d='M'+p[0][0]+','+p[0][1];for(var i=1;i<p.length-1;i++){var a=p[i-1],b=p[i],c=p[i+1];
+    var l1=Math.hypot(b[0]-a[0],b[1]-a[1]),l2=Math.hypot(c[0]-b[0],c[1]-b[1]),k=Math.min(r,l1/2,l2/2);
+    var x1=b[0]-(b[0]-a[0])/l1*k,y1=b[1]-(b[1]-a[1])/l1*k,x2=b[0]+(c[0]-b[0])/l2*k,y2=b[1]+(c[1]-b[1])/l2*k;
+    d+=' L'+x1+','+y1+' Q'+b[0]+','+b[1]+' '+x2+','+y2}
+    var e=p[p.length-1];return d+' L'+e[0]+','+e[1]}
+  function draw(c){
+    var old=c.querySelector(':scope>.loop-svg'); if(old) old.remove();
+    var spans=[].slice.call(c.querySelectorAll(':scope>span'));
+    var to=c.querySelector('[data-loop-to]')||spans[0], from=c.querySelector('[data-loop-from]')||spans[spans.length-1];
+    if(!to||!from) return;
+    var cr=c.getBoundingClientRect();
+    function R(el){var b=el.getBoundingClientRect();return{l:b.left-cr.left,r:b.right-cr.left,t:b.top-cr.top,b:b.bottom-cr.top,cx:(b.left+b.right)/2-cr.left,cy:(b.top+b.bottom)/2-cr.top}}
+    var a=R(to),z=R(from),maxB=0,minL=1e9,rowFirst=true;
+    spans.forEach(function(k){var r=R(k);if(r.l<minL)minL=r.l;if(k!==to&&Math.abs(r.t-a.t)<6&&r.l<a.l)rowFirst=false});
+    Array.prototype.forEach.call(c.children,function(k){if(k.classList.contains('loop-svg'))return;var b=k.getBoundingClientRect().bottom-cr.top;if(b>maxB)maxB=b});
+    var y=maxB+16,x=minL-18,d,lx;
+    if(Math.abs(a.t-z.t)<6){d=rp([[z.cx,z.b],[z.cx,y],[a.cx,y],[a.cx,a.b+4]],10);lx=(a.cx+z.cx)/2}
+    else if(rowFirst){d=rp([[z.cx,z.b],[z.cx,y],[x,y],[x,a.cy],[a.l-4,a.cy]],10);lx=(x+z.cx)/2}
+    else{var top=a.t-14;d=rp([[z.cx,z.b],[z.cx,y],[x,y],[x,top],[a.cx,top],[a.cx,a.t-4]],10);lx=(x+z.cx)/2}
+    var id='lh'+(++n),s=document.createElementNS(NS,'svg');
+    s.setAttribute('class','loop-svg');s.setAttribute('width',cr.width);s.setAttribute('height',y+24);s.setAttribute('aria-hidden','true');
+    s.innerHTML='<defs><marker id="'+id+'" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0L10,5L0,10z" fill="currentColor"/></marker></defs>'+
+      '<path d="'+d+'" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#'+id+')"/>'+
+      '<text x="'+Math.max(lx,60)+'" y="'+(y+18)+'" text-anchor="middle"></text>';
+    s.querySelector('text').textContent='↺ '+(c.getAttribute('data-loop-label')||'');
+    c.appendChild(s);
+  }
+  var els=document.querySelectorAll('.loop');
+  function all(){els.forEach(draw)}
+  all(); window.addEventListener('resize',all);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(all);
+  if(window.ResizeObserver){var w={};var ro=new ResizeObserver(function(es){es.forEach(function(e){var c=e.target,k=Math.round(e.contentRect.width);if(c._w!==k){c._w=k;draw(c)}})});els.forEach(function(c){ro.observe(c)})}
+})();
+</script>
+<script>
+(function(){
+  var ids=['n5','w1','w2','h5','ef5','p5'],el={},o=document.getElementById('out5');
+  ids.forEach(function(i){el[i]=document.getElementById(i)});
+  function v(i){return parseFloat(el[i].value)||0}
+  function f(n,d){return n.toLocaleString('zh-TW',{maximumFractionDigits:d===undefined?1:d})}
+  function run(){
+    var dkw=(v('w1')-v('w2'))/1000, day=v('n5')*dkw*v('h5')*v('ef5')/1000, yr=day*365, twd=yr*v('p5')*30;
+    o.innerHTML='每日減碳 ＝ '+f(v('n5'),0)+' × ('+f(v('w1')/1000,3)+' − '+f(v('w2')/1000,3)+') × '+f(v('h5'))+' × '+v('ef5')+' ÷ 1,000 ＝ '+f(day)+' t CO₂e<br>每年減碳 ＝ '+f(day)+' × 365 ＝ <b>'+f(yr,0)+' t CO₂e</b><br>每年碳權價值 ＝ '+f(yr,0)+' × US$'+f(v('p5'))+' × 30 ＝ '+f(twd,0)+' 元';
+  }
+  ids.forEach(function(i){el[i].addEventListener('input',run)});
+  run();
+})();
+</script>
+<!--gm-js--><script>
+/* 跳出式小遊戲引擎：右下角按鈕 → 對話框；題目、解釋、計分；場景由各頁提供 */
+window.GMRUN=function(C){
+  var NS='http://www.w3.org/2000/svg',D=document;
+  var reduce=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
+  function el(tag,a,html,par){var e=D.createElementNS(NS,tag);if(a)for(var k in a)e.setAttribute(k,a[k]);if(html)e.innerHTML=html;if(par)par.appendChild(e);return e}
+  function h(tag,cls,html,par){var e=D.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;if(par)par.appendChild(e);return e}
+
+  /* ---------- 介面 ---------- */
+  var ICON='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.2" r=".6" fill="currentColor"/><circle cx="17.6" cy="13.6" r=".6" fill="currentColor"/></svg>';
+  var fab=h('button','gm-fab',ICON+'<span>小遊戲</span>',D.body);fab.type='button';fab.setAttribute('aria-haspopup','dialog');
+  var tip=h('div','gm-tip','<button type="button" class="gm-tipx" aria-label="關閉提示">×</button><b>考考你</b><span></span>',D.body);
+  tip.querySelector('span').textContent=C.teaser;
+  var ov=h('div','gm-ov',null,D.body);ov.hidden=true;
+  var dlg=h('div','gm-dlg','<div class="gm-hd"><b id="gmTitle"></b><button type="button" class="gm-x" aria-label="關閉小遊戲">×</button></div>'+
+    '<svg class="gm-stage" viewBox="'+(C.vb||'0 0 880 260')+'" role="img"></svg>'+
+    '<div class="gm-card"><div class="gm-prog"></div><p class="gm-q"></p><div class="gm-opts"></div><div class="gm-fb" aria-live="polite"></div></div>',ov);
+  dlg.setAttribute('role','dialog');dlg.setAttribute('aria-modal','true');dlg.setAttribute('aria-labelledby','gmTitle');
+  dlg.querySelector('#gmTitle').textContent='小遊戲：'+C.title;
+  var st=dlg.querySelector('svg'),qEl=dlg.querySelector('.gm-q'),oEl=dlg.querySelector('.gm-opts'),fEl=dlg.querySelector('.gm-fb'),pEl=dlg.querySelector('.gm-prog');
+  st.setAttribute('aria-label',C.alt||C.title);
+
+  /* ---------- 動畫工具 ---------- */
+  var loops=[],touts=[],fx;
+  function stopAll(){loops.forEach(clearInterval);touts.forEach(clearTimeout);loops=[];touts=[]}
+  var api={svg:st,reduce:reduce,el:el,
+    C:{co2:'#86a8e6',ch4:'#c9a66b',n2o:'#d28bb4',gas:'#8fae9a',smoke:'#9aa0a6'},
+    loop:function(fn,ms){fn();loops.push(setInterval(fn,reduce?ms*1.6:ms))},
+    later:function(fn,ms){touts.push(setTimeout(fn,reduce?0:ms))},
+    A:function(e,fr,ms,o){o=o||{};if(!e||!e.animate)return null;if(reduce&&o.iter===Infinity)return null;
+      var an=e.animate(fr,{duration:reduce?1:ms,delay:reduce?0:(o.delay||0),easing:o.ease||'ease-out',fill:o.fill||'forwards',iterations:o.iter||1,direction:o.dir||'normal'});
+      if(o.done)an.onfinish=o.done;return an},
+    /* 放一個物件：外層定位，內層可動（原點在底部中央） */
+    put:function(par,x,y,s,html,origin){var g=el('g',{transform:'translate('+x+' '+y+')'+(s&&s!==1?' scale('+s+')':'')},null,par||st);
+      var i=el('g',{},html,g);i.style.transformBox='fill-box';i.style.transformOrigin=origin||'50% 100%';i.outer=g;i.x=x;i.y=y;i.s=s||1;return i},
+    top:function(){if(!fx)fx=el('g',{});st.appendChild(fx);return fx},
+    puff:function(x,y,o){o=o||{};var g=el('g',{class:'gas'},null,api.top()),n=o.n||3,r=o.r||11;
+      for(var i=0;i<n;i++)el('circle',{cx:x+(i-(n-1)/2)*r*.9,cy:y+(i%2?-r*.55:0),r:r+(i===1?3:0),fill:o.color||api.C.gas,opacity:.6},null,g);
+      if(o.label){var t=el('text',{x:x,y:y-1},null,g);t.textContent=o.label}
+      g.style.transformBox='fill-box';g.style.transformOrigin='50% 50%';
+      var dx=o.dx==null?0:o.dx,dy=o.dy==null?-60:o.dy;
+      api.A(g,[{transform:'translate(0,0) scale(.35)',opacity:0},{opacity:.95,offset:.15},{transform:'translate('+dx+'px,'+dy+'px) scale('+(o.grow||1.5)+')',opacity:0}],o.ms||2400,{done:function(){g.remove()},fill:'none'});
+      if(reduce)api.later(function(){g.remove()},1200);return g},
+    pop:function(x,y,txt,o){o=o||{};var t=el('text',{class:'pop',x:x,y:y},null,api.top());t.textContent=txt;if(o.color)t.style.fill=o.color;if(o.size)t.style.fontSize=o.size+'px';
+      t.style.transformBox='fill-box';t.style.transformOrigin='50% 100%';
+      api.A(t,[{opacity:0,transform:'scale(.4)'},{opacity:1,transform:'scale(1.15)',offset:.2},{opacity:1,transform:'scale(1)',offset:.7},{opacity:0,transform:'translateY(-10px)'}],o.ms||1300,{done:function(){t.remove()},fill:'none'});
+      if(reduce)api.later(function(){t.remove()},1200);return t},
+    pulse:function(e){return api.A(e,[{transform:'scale(1)'},{transform:'scale(1.12)'},{transform:'scale(1)'}],700,{fill:'none'})},
+    /* 背景：地面、草、圍籬、太陽 */
+    bg:function(o){o=o||{};var gy=o.ground==null?200:o.ground,W=880,s='';
+      if(o.sun)s+='<circle cx="'+(o.sun[0])+'" cy="'+(o.sun[1])+'" r="22" fill="#f2c94c" opacity=".85"/>';
+      if(o.hills)s+='<path d="M0 '+(gy-10)+' Q140 '+(gy-70)+' 300 '+(gy-24)+' T600 '+(gy-30)+' T880 '+(gy-40)+' V'+gy+' H0Z" fill="var(--accent-soft)" opacity=".7"/>';
+      if(o.fence){s+='<g stroke="var(--line)" stroke-width="4" stroke-linecap="round"><line x1="0" y1="'+(gy-48)+'" x2="'+W+'" y2="'+(gy-48)+'"/><line x1="0" y1="'+(gy-28)+'" x2="'+W+'" y2="'+(gy-28)+'"/>';
+        for(var x=60;x<W;x+=140)s+='<line x1="'+x+'" y1="'+(gy-62)+'" x2="'+x+'" y2="'+(gy+4)+'"/>';s+='</g>'}
+      s+='<rect x="0" y="'+gy+'" width="'+W+'" height="'+(400-gy)+'" fill="'+(o.color||'var(--accent-soft)')+'"/>';
+      (o.grass||[]).forEach(function(x,i){var y=gy+14+(i%3)*12;s+='<path d="M'+(x-5)+' '+y+' q0 -6 -4 -10 M'+x+' '+y+' q0 -8 2 -13 M'+(x+5)+' '+y+' q1 -6 5 -10" stroke="var(--accent)" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/>'});
+      return el('g',{},s,st)},
+    text:function(x,y,txt,cls,par){var t=el('text',{x:x,y:y,class:cls||'lbl'},null,par||st);t.textContent=txt;return t}
+  };
+
+  /* ---------- 共用圖形（原點在底部中央，面向右） ---------- */
+  var K='#2b2b2b';
+  api.SH={
+    conifer:function(c){c=c||'#3f7d58';return '<rect x="-5" y="-24" width="10" height="24" fill="#7a5a3a"/><path d="M0 -112 L-24 -66 L24 -66Z" fill="'+c+'"/><path d="M0 -92 L-31 -44 L31 -44Z" fill="'+c+'"/><path d="M0 -70 L-38 -20 L38 -20Z" fill="'+c+'"/>'},
+    broad:function(c){c=c||'#4f8f5f';return '<rect x="-6" y="-44" width="12" height="44" fill="#7a5a3a"/><circle cx="-20" cy="-56" r="22" fill="'+c+'"/><circle cx="20" cy="-56" r="22" fill="'+c+'"/><circle cx="0" cy="-74" r="30" fill="'+c+'"/>'},
+    cabbage:'<ellipse cx="0" cy="-13" rx="24" ry="14" fill="#6fae5c"/><ellipse cx="-10" cy="-16" rx="12" ry="10" fill="#86c46f"/><ellipse cx="10" cy="-16" rx="12" ry="10" fill="#86c46f"/><ellipse cx="0" cy="-19" rx="12" ry="10" fill="#b4e09a"/><path d="M-5 -22 q5 -5 10 0" stroke="#6fae5c" stroke-width="2" fill="none"/>',
+    bamboo:function(hh){var s='<rect x="-4" y="-'+hh+'" width="8" height="'+hh+'" rx="3" fill="#7fae4f"/>';for(var y=22;y<hh;y+=22)s+='<rect x="-5" y="-'+y+'" width="10" height="3" fill="#5f8f3a"/>';
+      s+='<path d="M0 -'+(hh-6)+' q16 -6 26 2 q-14 4 -26 -2z M0 -'+(hh-18)+' q-16 -6 -26 2 q14 4 26 -2z M0 -'+(hh-30)+' q16 -4 24 4 q-14 2 -24 -4z" fill="#5f9f4f"/>';return s},
+    rice:function(grain){return '<path d="M0 0 q-5 -28 -16 -44 M0 0 q0 -34 2 -56 M0 0 q5 -28 15 -42 M0 0 q-2 -20 -9 -30" stroke="#5f9f4f" stroke-width="3" fill="none" stroke-linecap="round"/>'+(grain?'<path d="M2 -56 q10 4 12 18" stroke="#d9b44a" stroke-width="4" fill="none" stroke-linecap="round" stroke-dasharray="3 2"/>':'')},
+    mangrove:'<path d="M-24 0 q4 -26 22 -34 M24 0 q-4 -26 -22 -34 M-10 0 q2 -18 8 -34 M10 0 q-2 -18 -8 -34" stroke="#6b4e34" stroke-width="3" fill="none"/><rect x="-3" y="-62" width="6" height="30" fill="#6b4e34"/><ellipse cx="-18" cy="-62" rx="20" ry="13" fill="#4f8f5f"/><ellipse cx="18" cy="-62" rx="20" ry="13" fill="#4f8f5f"/><ellipse cx="0" cy="-74" rx="32" ry="18" fill="#3f7d58"/>',
+    spoonbill:'<line x1="-4" y1="-20" x2="-6" y2="0" stroke="'+K+'" stroke-width="2"/><line x1="5" y1="-20" x2="7" y2="0" stroke="'+K+'" stroke-width="2"/><ellipse cx="2" cy="-28" rx="17" ry="10" fill="#fafafa" stroke="'+K+'" stroke-width="1.5"/><path d="M-11 -33 Q-18 -44 -14 -50" stroke="#fafafa" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M-11 -33 Q-18 -44 -14 -50" stroke="'+K+'" stroke-width="1" fill="none" opacity=".4"/><circle cx="-15" cy="-52" r="6" fill="#fafafa" stroke="'+K+'" stroke-width="1.5"/><path d="M-20 -52 L-36 -45" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/><ellipse cx="-37" cy="-44" rx="4.5" ry="3.2" fill="'+K+'"/><circle cx="-16" cy="-53" r="1.3" fill="'+K+'"/>',
+    pig:'<rect x="-30" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="-16" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="12" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="26" y="-24" width="9" height="24" rx="3" fill="#e993a6"/>'+
+      '<path d="M-44 -42 q-10 -2 -8 -10 q2 -6 8 -2" stroke="'+K+'" stroke-width="2" fill="none"/><ellipse cx="0" cy="-38" rx="46" ry="26" fill="#f4b6c2" stroke="'+K+'" stroke-width="2"/>'+
+      '<circle cx="40" cy="-46" r="19" fill="#f4b6c2" stroke="'+K+'" stroke-width="2"/><path d="M30 -62 l4 -12 l8 9z" fill="#e993a6" stroke="'+K+'" stroke-width="1.5"/><ellipse cx="57" cy="-42" rx="8" ry="7" fill="#e993a6" stroke="'+K+'" stroke-width="2"/><circle cx="55" cy="-42" r="1.5" fill="'+K+'"/><circle cx="60" cy="-42" r="1.5" fill="'+K+'"/><circle cx="44" cy="-52" r="2.4" fill="'+K+'"/>',
+    tractor:'<rect x="-40" y="-42" width="58" height="22" rx="4" fill="#c0503a"/><rect x="-36" y="-74" width="30" height="34" rx="3" fill="none" stroke="'+K+'" stroke-width="3"/><rect x="10" y="-32" width="32" height="15" rx="3" fill="#c0503a"/><rect x="24" y="-56" width="5" height="26" fill="#555"/>'+
+      '<circle cx="-24" cy="-19" r="19" fill="#333"/><circle cx="-24" cy="-19" r="7" fill="#bbb"/><circle cx="32" cy="-12" r="12" fill="#333"/><circle cx="32" cy="-12" r="4.5" fill="#bbb"/>',
+    plow:'<path d="M-44 -26 L-64 -8 L-58 4 L-52 -6 M-58 -18 L-76 -2 L-70 8" stroke="#666" stroke-width="3.5" fill="none" stroke-linecap="round"/>',
+    pole:'<rect x="-3" y="-124" width="6" height="124" fill="#7a5a3a"/><rect x="-24" y="-116" width="48" height="5" fill="#7a5a3a"/><circle cx="-18" cy="-118" r="3" fill="#ccc"/><circle cx="18" cy="-118" r="3" fill="#ccc"/><path d="M4 -86 l-8 14 h7 l-5 14 l12 -18 h-7 l5 -10z" fill="#f2c94c" stroke="'+K+'" stroke-width="1"/>',
+    pond:'<ellipse cx="0" cy="-8" rx="52" ry="13" fill="#6b4e34"/><ellipse cx="0" cy="-10" rx="45" ry="8" fill="#9b7650"/>',
+    factory:'<rect x="30" y="-122" width="16" height="70" fill="#6f777f"/><rect x="-56" y="-60" width="112" height="60" fill="#8a929a"/><path d="M-56 -60 l28 -18 v18 l28 -18 v18 l28 -18 v18" fill="#8a929a"/>'+
+      '<rect x="-44" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="-18" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="8" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="-10" y="-20" width="20" height="20" fill="#5b636b"/>',
+    coin:function(t){return '<circle cx="0" cy="-13" r="13" fill="#e2b84a" stroke="#a7822a" stroke-width="2"/><text x="0" y="-8.5" text-anchor="middle" style="font:700 13px var(--font-num);fill:#7a5a1a">'+(t||'$')+'</text>'},
+    jar:'<path d="M-30 0 h60 v-58 q0 -8 -8 -8 h-44 q-8 0 -8 8z" fill="var(--paper)" stroke="var(--muted)" stroke-width="2.5"/><rect x="-24" y="-74" width="48" height="8" rx="3" fill="var(--muted)"/>',
+    bento:'<rect x="-62" y="-50" width="124" height="50" rx="6" fill="#b5764a" stroke="'+K+'" stroke-width="2"/><rect x="-56" y="-44" width="62" height="38" rx="3" fill="#fbf8ef"/><rect x="10" y="-44" width="46" height="18" rx="3" fill="#7fbf6a"/><rect x="10" y="-24" width="46" height="18" rx="3" fill="#f2d16b"/>'+
+      '<ellipse cx="-24" cy="-30" rx="26" ry="11" fill="#a0612f" stroke="#7a4520" stroke-width="2"/><path d="M-40 -32 h30 M-38 -27 h26" stroke="#7a4520" stroke-width="1.5"/>',
+    train:'<rect x="-110" y="-62" width="220" height="50" rx="10" fill="#e1e5ea" stroke="'+K+'" stroke-width="2"/><rect x="-110" y="-30" width="220" height="8" fill="#d0602f"/>'+
+      '<rect x="-96" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="-52" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="-8" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="36" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="80" y="-54" width="22" height="18" rx="3" fill="#7ea6c9"/>'+
+      '<circle cx="-74" cy="-8" r="8" fill="#333"/><circle cx="-50" cy="-8" r="8" fill="#333"/><circle cx="50" cy="-8" r="8" fill="#333"/><circle cx="74" cy="-8" r="8" fill="#333"/>',
+    dome:'<path d="M-56 0 v-30 a56 44 0 0 1 112 0 v30z" fill="#a7adb3" stroke="'+K+'" stroke-width="2"/><path d="M-56 -30 h112" stroke="'+K+'" stroke-width="1.5" opacity=".5"/><rect x="-6" y="-84" width="12" height="12" fill="#6f777f"/>',
+    bee:'<g><ellipse cx="-2" cy="-10" rx="5" ry="4" fill="#fff" opacity=".85"/><ellipse cx="4" cy="-10" rx="5" ry="4" fill="#fff" opacity=".85"/><ellipse cx="0" cy="-3" rx="9" ry="6.5" fill="#f2c230" stroke="'+K+'" stroke-width="1.2"/><path d="M-2 -9 v12 M3 -8.5 v11" stroke="'+K+'" stroke-width="2"/><circle cx="8" cy="-4" r="1.3" fill="'+K+'"/></g>',
+    flower:function(c){return '<path d="M0 0 v-30" stroke="#5f9f4f" stroke-width="3"/><path d="M0 -14 q-10 -4 -12 -12 q8 0 12 8" fill="#5f9f4f"/><g fill="'+(c||'#e98fa3')+'"><circle cx="0" cy="-40" r="6"/><circle cx="-8" cy="-33" r="6"/><circle cx="8" cy="-33" r="6"/><circle cx="-5" cy="-25" r="6"/><circle cx="5" cy="-25" r="6"/></g><circle cx="0" cy="-32" r="4.5" fill="#f2c94c"/>'},
+    larva:'<ellipse cx="0" cy="-4" rx="11" ry="4.5" fill="#efe6c8" stroke="#8a7a50" stroke-width="1"/><path d="M-5 -8 v8 M0 -8.5 v9 M5 -8 v8" stroke="#8a7a50" stroke-width=".8"/>',
+    truck:'<rect x="-50" y="-48" width="64" height="36" rx="3" fill="#7fa7c9" stroke="'+K+'" stroke-width="2"/><path d="M14 -40 h20 l12 14 v14 h-32z" fill="#d0602f" stroke="'+K+'" stroke-width="2"/><rect x="20" y="-36" width="12" height="10" fill="#cfe3f2"/><circle cx="-30" cy="-10" r="9" fill="#333"/><circle cx="30" cy="-10" r="9" fill="#333"/>',
+    shop:'<rect x="-50" y="-70" width="100" height="70" fill="#e9e4d6" stroke="'+K+'" stroke-width="2"/><path d="M-56 -70 h112 l-8 -18 h-96z" fill="#d0602f" stroke="'+K+'" stroke-width="2"/><rect x="-36" y="-50" width="30" height="24" fill="#cfe3f2" stroke="'+K+'" stroke-width="1.5"/><rect x="10" y="-44" width="24" height="44" fill="#8a6a4a"/>',
+    log:'<rect x="-26" y="-14" width="52" height="14" rx="7" fill="#9b7650" stroke="#6b4e34" stroke-width="2"/><ellipse cx="26" cy="-7" rx="5" ry="7" fill="#d9b98a" stroke="#6b4e34" stroke-width="1.5"/>',
+    seagrass:'<path d="M-10 0 q-6 -20 2 -40 M-3 0 q4 -24 -2 -48 M4 0 q-4 -18 4 -38 M11 0 q6 -16 0 -32" stroke="#3f8f6a" stroke-width="3.5" fill="none" stroke-linecap="round"/>'
+  };
+  /* 牛、羊（左上原點畫，包一層移到底部中央） */
+  var COW='<path d="M14 30 q-14 12 -8 34" fill="none" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/>'+
+    [22,38,80,96].map(function(x,i){return '<g class="leg" data-b="'+(i==1||i==2?1:0)+'"><rect x="'+x+'" y="50" width="10" height="32" rx="3" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/><rect x="'+x+'" y="76" width="10" height="7" fill="'+K+'"/></g>'}).join('')+
+    '<rect x="12" y="20" width="100" height="42" rx="19" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/>'+
+    '<path d="M30 21 q10 12 26 6 q4 -4 2 -7z" fill="'+K+'"/><ellipse cx="82" cy="44" rx="12" ry="8" fill="'+K+'"/><ellipse cx="44" cy="50" rx="6" ry="4" fill="'+K+'"/>'+
+    '<path d="M108 10 q-6 -9 0 -12 M126 9 q6 -9 0 -12" fill="none" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/><ellipse cx="102" cy="16" rx="8" ry="4" fill="#fbfaf6" stroke="'+K+'" stroke-width="2" transform="rotate(-20 102 16)"/>'+
+    '<rect x="102" y="6" width="34" height="32" rx="13" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/><rect x="118" y="23" width="24" height="17" rx="8" fill="#f0b8ad" stroke="'+K+'" stroke-width="2"/>'+
+    '<circle cx="114" cy="17" r="2.6" fill="'+K+'"/><circle cx="129" cy="30" r="1.8" fill="'+K+'"/><circle cx="137" cy="30" r="1.8" fill="'+K+'"/>';
+  var SHEEP=[24,36,66,78].map(function(x,i){return '<g class="leg" data-b="'+(i==1||i==2?1:0)+'"><rect x="'+x+'" y="50" width="7" height="30" rx="2" fill="#3b3631"/></g>'}).join('')+
+    [[24,38,14],[40,27,14],[60,25,14],[78,32,14],[32,52,12],[52,54,12],[72,50,12],[84,44,10]].map(function(c){return '<circle cx="'+c[0]+'" cy="'+c[1]+'" r="'+c[2]+'" fill="#f4f1e8" stroke="'+K+'" stroke-width="2"/>'}).join('')+
+    '<rect x="22" y="28" width="62" height="28" rx="14" fill="#f4f1e8"/><ellipse cx="92" cy="22" rx="8" ry="4" fill="#3b3631" transform="rotate(-25 92 22)"/>'+
+    '<ellipse cx="100" cy="32" rx="12" ry="14" fill="#3b3631"/><circle cx="96" cy="20" r="7" fill="#f4f1e8" stroke="'+K+'" stroke-width="2"/><circle cx="104" cy="28" r="2.6" fill="#fff"/><circle cx="104.5" cy="28.5" r="1.3" fill="'+K+'"/>';
+  api.SH.cow='<g transform="translate(-70 -83)">'+COW+'</g>';
+  api.SH.sheep='<g transform="translate(-56 -80)">'+SHEEP+'</g>';
+  api.SH.cowPts={mouth:[72,-47],nose:[74,-53],rear:[-62,-45]};
+  api.SH.sheepPts={mouth:[54,-40],nose:[56,-44],rear:[-44,-38]};
+  /* 跑步：腳擺動，回傳停止函式 */
+  api.legs=function(g){var a=[];g.querySelectorAll('.leg').forEach(function(l){l.style.transformBox='fill-box';l.style.transformOrigin='50% 0';
+      var an=api.A(l,[{transform:'rotate(20deg)'},{transform:'rotate(-20deg)'}],260,{iter:Infinity,dir:'alternate',ease:'ease-in-out',delay:l.getAttribute('data-b')==='1'?0:0,fill:'none'});
+      if(an&&l.getAttribute('data-b')==='1')an.currentTime=260;if(an)a.push(an)});
+    return function(){a.forEach(function(x){x.cancel()})}};
+
+  /* ---------- 遊戲流程 ---------- */
+  var Q=C.questions,idx=0,score=0,phase='idle',S=C.scene(api);
+  function act(n){if(n&&S.acts&&S.acts[n])S.acts[n]()}
+  function btn(t,cls,fn){var b=D.createElement('button');b.type='button';b.textContent=t;if(cls)b.className=cls;b.addEventListener('click',fn);return b}
+  function show(){phase='q';var q=Q[idx];pEl.textContent='第 '+(idx+1)+' 題／共 '+Q.length+' 題';qEl.textContent=q.q;oEl.innerHTML='';fEl.innerHTML='';
+    q.opts.forEach(function(o,i){oEl.appendChild(btn(o,'',function(){answer(i)}))});stopAll();act(q.act)}
+  function answer(i){phase='a';var q=Q[idx],right=i===q.ans;
+    oEl.querySelectorAll('button').forEach(function(b,j){b.disabled=true;b.classList.add(j===q.ans?'ok':j===i?'bad':'dim')});
+    if(right)score++;
+    if(q.after){stopAll();act(q.after)}
+    var why=typeof q.why==='object'?(q.why[i]||q.why.d):q.why;
+    var box=h('div','res '+(right?'ok':'bad'),'<b>'+(right?'答對了！':'答錯了')+'</b><p></p>',fEl);box.querySelector('p').textContent=right?q.ok:why;
+    var last=idx===Q.length-1,nx=btn(last?'看結果':(right?'下一題 →':'懂了，下一題 →'),'gm-next',function(){if(last)end();else{idx++;show()}});
+    fEl.appendChild(nx);try{nx.focus({preventScroll:true})}catch(e){}}
+  function end(){phase='end';stopAll();act('end');pEl.textContent='完成';
+    qEl.innerHTML='答對 <span class="gm-score">'+score+'／'+Q.length+'</span> 題';oEl.innerHTML='';fEl.innerHTML='';
+    var box=h('div','res ok','<b>重點</b><p></p>',fEl);box.querySelector('p').textContent=C.summary;
+    fEl.appendChild(btn('再玩一次','gm-next',function(){start()}))}
+  function start(){stopAll();idx=0;score=0;phase='enter';oEl.innerHTML='';fEl.innerHTML='';pEl.textContent='　';qEl.textContent=C.intro||'準備開始…';
+    S.enter(function(){if(phase==='enter')show()})}
+  var lastF=null;
+  function open(){hideTip();lastF=D.activeElement;ov.hidden=false;D.documentElement.classList.add('gm-lock');dlg.querySelector('.gm-x').focus();
+    if(phase==='idle'||phase==='enter')start();else if(phase==='q'||phase==='a')act(Q[idx].act)}
+  function close(){stopAll();ov.hidden=true;D.documentElement.classList.remove('gm-lock');if(phase==='enter')phase='idle';try{(lastF||fab).focus()}catch(e){}}
+  fab.addEventListener('click',open);
+  dlg.querySelector('.gm-x').addEventListener('click',close);
+  ov.addEventListener('click',function(e){if(e.target===ov)close()});
+  D.addEventListener('keydown',function(e){if(ov.hidden)return;
+    if(e.key==='Escape'){close();return}
+    if(e.key==='Tab'){var f=[].slice.call(dlg.querySelectorAll('button:not(:disabled)'));if(!f.length)return;var a=f[0],z=f[f.length-1];
+      if(e.shiftKey&&D.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&D.activeElement===z){e.preventDefault();a.focus()}}});
+
+  /* ---------- 提示泡泡：往下讀一段或停留 15 秒後出現一次 ---------- */
+  var tipDone=false,tipT;
+  function hideTip(){tip.classList.remove('on');clearTimeout(tipT)}
+  function showTip(){if(tipDone||!ov.hidden)return;tipDone=true;tip.classList.add('on');fab.classList.add('wig');tipT=setTimeout(hideTip,12000)}
+  tip.addEventListener('click',function(e){if(e.target.classList.contains('gm-tipx')){hideTip();return}open()});
+  setTimeout(showTip,15000);
+  window.addEventListener('scroll',function(){var m=D.scrollingElement||D.documentElement,max=m.scrollHeight-window.innerHeight;if(max>0&&(window.scrollY||m.scrollTop)>max*.25)showTip()},{passive:true});
+  api.open=open;return api;
+};
+GMRUN({title:'碳的價格',teaser:'碳費和碳交易，各自「固定」了什麼？點我玩玩看',alt:'工廠、兩個存錢罐和一棵樹',intro:'工廠開工了…',
+summary:'碳費固定價格、ETS 固定總量。同一筆減量不能宣告碳中和又申請碳權。SBTi 淨零的殘餘排放只能用移除型碳權抵換。碳權收入通常只是加分（A 廠約 10.8%），所以財務外加性不容易成立。',
+scene:function(G){
+  var SH=G.SH,GY=210,svg=G.svg;
+  G.bg({ground:GY,grass:[30,260,420,720,860]});
+  var fac=G.put(null,120,GY,1,SH.factory);
+  var sign=G.put(null,290,GY,1,'<rect x="-3" y="-70" width="6" height="70" fill="#7a5a3a"/><rect x="-54" y="-118" width="108" height="50" rx="6" fill="var(--paper)" stroke="var(--fg)" stroke-width="2"/>');
+  var st1=G.text(290,GY-98,'每噸 CO₂e','sub',sign.outer);st1.setAttribute('x',0);st1.setAttribute('y',-98);
+  var st2=G.text(0,-78,'價格固定','lbl',sign.outer);
+  var j1=G.put(null,480,GY,1,SH.jar),j2=G.put(null,600,GY,1,SH.jar);
+  G.text(480,GY+22,'宣告碳中和','sub');G.text(600,GY+22,'申請碳權','sub');
+  var tree=G.put(null,780,GY,1,SH.broad());G.text(780,GY+22,'移除型','sub');
+  var coin=G.put(null,540,GY-150,1,SH.coin('減'),'50% 50%');G.A(coin,[{opacity:0}],1);
+  var piles=G.el('g',{},null,svg);
+  function smoke(){G.puff(158,GY-126,{dy:-60,dx:20,n:3,r:9,color:G.C.smoke,label:'CO₂',ms:2200})}
+  function drop(){var c=G.put(G.top(),158,GY-140,.8,SH.coin('$'),'50% 50%');
+    G.A(c,[{transform:'translate(0,0)',opacity:1},{transform:'translate(66px,-40px)',opacity:1,offset:.4},{transform:'translate(132px,40px)',opacity:0}],1300,{ease:'ease-in',done:function(){c.outer.remove()}})}
+  return {
+    enter:function(done){piles.innerHTML='';G.A(coin,[{opacity:0}],1);
+      [fac,sign,j1,j2,tree].forEach(function(e,i){G.A(e,[{transform:'scale(0)'},{transform:'scale(1)'}],600,{delay:i*130,ease:'cubic-bezier(.3,1.4,.5,1)'})});G.later(done,1300)},
+    acts:{
+      fee:function(){G.loop(function(){smoke();G.later(drop,400)},1300)},
+      double:function(){G.A(coin,[{transform:'translateX(-60px)',opacity:1},{transform:'translateX(60px)',opacity:1}],900,{iter:Infinity,dir:'alternate',ease:'ease-in-out'});
+        G.later(function(){G.pop(540,40,'同一筆減量…兩邊都要？',{size:16})},400)},
+      split:function(){G.A(coin,[{transform:'translateX(-60px)',opacity:1},{transform:'translate(-60px,110px) scale(.7)',opacity:0}],900,{ease:'ease-in'});
+        G.later(function(){G.pulse(j1);G.pop(600,GY-80,'✕',{size:46,color:'#c0503a',ms:3000});G.pop(540,40,'只能用一次',{size:18,ms:2500})},900)},
+      remove:function(){G.loop(function(){G.puff(780+(Math.random()*40-20),20,{dy:60,n:2,r:9,color:G.C.co2,label:'CO₂',grow:1.1,ms:1500});G.later(function(){G.pulse(tree)},1300)},1200);
+        G.loop(smoke,1500)},
+      money:function(){piles.innerHTML='';var big=G.put(piles,400,GY-2,1,''),small=G.put(piles,520,GY-2,1,'');
+        for(var i=0;i<10;i++){var c=G.put(big,0,-i*9,1,'<ellipse cx="0" cy="-5" rx="22" ry="6" fill="#e2b84a" stroke="#a7822a" stroke-width="1.5"/>');G.A(c,[{transform:'translateY(-80px)',opacity:0},{transform:'none',opacity:1}],400,{delay:i*120,ease:'ease-in'})}
+        var c2=G.put(small,0,0,1,'<ellipse cx="0" cy="-5" rx="22" ry="6" fill="#8fbf7a" stroke="#5f8f4a" stroke-width="1.5"/>');G.A(c2,[{transform:'translateY(-80px)',opacity:0},{transform:'none',opacity:1}],400,{delay:1300,ease:'ease-in'});
+        [j1,j2,coin].forEach(function(e){G.A(e,[{opacity:0}],300)});
+        G.later(function(){G.pop(400,GY-112,'節能收益',{size:15,ms:30000});G.pop(520,GY-40,'碳權',{size:15,ms:30000})},1500)}
+    }}},
+questions:[
+  {act:'fee',q:'碳費（carbon fee）固定的是什麼？',opts:['每噸的價格','排放總量'],ans:0,
+   ok:'碳費固定價格，減量多少不確定；ETS 固定總量，價格由市場決定。',
+   why:'每噸的價格。碳費固定每噸價格，減量多少不確定；排放交易（ETS）固定排放總量，價格由市場決定、波動較大。'},
+  {act:'double',after:'split',q:'公司把換 LED 的減量拿去宣告碳中和，同一筆減量還能再申請碳權嗎？',opts:['可以','不行'],ans:1,
+   ok:'拿去宣告碳中和的減碳行為，不能再申請碳權（避免重複計算）。',
+   why:'不行。外加性原則寫明：拿去宣告碳中和的減碳行為不能再申請碳權；同一筆減量也不能重複申報，避免重複計算。'},
+  {act:'remove',q:'依 SBTi，淨零時無法再減的殘餘排放，只能用哪一種碳權抵換？',opts:['移除型碳權','減量型碳權','任何碳權都可以'],ans:0,
+   ok:'只能用移除型碳權，而且只能抵換真的減不掉的殘餘排放。',
+   why:'移除型碳權。SBTi 規定淨零的殘餘排放只能用移除型碳權抵換，而且只限無法再減的殘餘排放。'},
+  {act:'money',q:'A 廠節能專案十年總效益 1,165.2 萬元，其中碳權收入大約占多少？',opts:['約 10.8%','約 50%','約 90%'],ans:0,
+   ok:'碳權 126.2 萬，約 10.8%。節能本身就有主要收益，碳權只是加分。',
+   why:'約 10.8%（126.2 萬）。節能本身就有主要收益，碳權只是加分；也因此財務外加性不容易成立。'}
+]});
+</script><!--/gm-js-->
+
+</body>
+</html>

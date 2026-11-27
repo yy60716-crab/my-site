@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>循環農業策略概論</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: 單欄閱讀講義，桌機左側固定目錄；筆記、ISO 連結、重點用不同框區分 */
+:root{
+  --bg:#f4f6f1; --paper:#ffffff; --fg:#1c231f; --muted:#5b6660; --line:#d9ded6;
+  --accent:#2f6a4c; --accent-soft:#e3eee6;
+  --ink:#2a4a9a; --ink-soft:#e8edf8;
+  --hl:#f3e27a; --soil:#9a6a22; --soil-soft:#f5ecdc;
+  --font-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --font-head:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --font-num:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141a17; --paper:#1b2320; --fg:#e4ebe6; --muted:#9aa8a0; --line:#2e3a35;
+  --accent:#7cc39b; --accent-soft:#1f3329; --ink:#9db4f0; --ink-soft:#1f2740;
+  --hl:#6b5d14; --soil:#d9a85a; --soil-soft:#30281a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141a17; --paper:#1b2320; --fg:#e4ebe6; --muted:#9aa8a0; --line:#2e3a35;
+  --accent:#7cc39b; --accent-soft:#1f3329; --ink:#9db4f0; --ink-soft:#1f2740;
+  --hl:#6b5d14; --soil:#d9a85a; --soil-soft:#30281a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.8;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1480px;margin:0 auto;display:grid;grid-template-columns:190px minmax(0,1fr);gap:36px;padding-block:32px 80px}
+@media (max-width:860px){.wrap{grid-template-columns:minmax(0,1fr)} nav.toc{position:static!important;max-height:none!important}}
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);align-self:start;max-height:calc(100vh - 32px);overflow:auto;font-size:14px}
+nav.toc h2{font-size:13px;letter-spacing:.12em;color:var(--muted);margin:0 0 8px;font-family:var(--font-body)}
+nav.toc ol{margin:0;padding-left:32px;display:grid;gap:4px}
+nav.toc a{color:var(--fg);text-decoration:none}
+nav.toc a:hover,nav.toc a:focus-visible{color:var(--accent);text-decoration:underline}
+main{min-width:0}
+.toc-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px}
+.toc-head h2{margin:0!important}
+.toc-btn{font:inherit;font-size:13px;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:6px;padding:2px 8px;cursor:pointer;line-height:1.6}
+.toc-btn:hover,.toc-btn:focus-visible{color:var(--accent);border-color:var(--accent)}
+.toc-open{display:none;white-space:nowrap}
+body.toc-off .wrap{grid-template-columns:76px minmax(0,1fr)}
+body.toc-off nav.toc>*:not(.toc-open){display:none}
+body.toc-off .toc-open{display:inline-block}
+@media (max-width:860px){body.toc-off .wrap{grid-template-columns:minmax(0,1fr)}}
+header.hero{border-bottom:3px solid var(--accent);padding-bottom:20px;margin-bottom:28px}
+.eyebrow{font-size:13px;letter-spacing:.14em;color:var(--accent);font-weight:700}
+h1{font-family:var(--font-head);font-weight:900;font-size:clamp(28px,5vw,42px);line-height:1.3;margin:6px 0 10px;text-wrap:balance}
+.meta{color:var(--muted);font-size:14px}
+h2{font-family:var(--font-head);font-size:26px;line-height:1.35;margin:56px 0 14px;text-wrap:balance;scroll-margin-top:16px}
+h2 .no{font-family:var(--font-num);color:var(--accent);font-size:18px;margin-right:10px}
+h3{font-size:19px;margin:30px 0 8px;color:var(--accent)}
+p{margin:10px 0}
+ul,ol{padding-left:22px;margin:8px 0}
+li{margin:3px 0}
+mark{background:linear-gradient(transparent 55%,var(--hl) 55%);color:inherit;padding:0 1px}
+.num{font-family:var(--font-num);font-variant-numeric:tabular-nums}
+.box{border-radius:10px;padding:14px 18px;margin:16px 0}
+.box>.tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.08em;padding:1px 8px;border-radius:999px;margin-bottom:4px}
+.box p,.box ul{margin:6px 0}
+.guide{background:var(--paper);border:1px solid var(--line)}
+.guide .tag{background:var(--accent);color:var(--paper)}
+.note{background:var(--ink-soft);border-left:4px solid var(--ink)}
+.note .tag{background:var(--ink);color:var(--paper)}
+.note .hand{color:var(--ink);font-weight:500}
+.iso{background:var(--soil-soft);border-left:4px solid var(--soil)}
+.iso .tag{background:var(--soil);color:var(--paper)}
+.key{background:var(--accent-soft);border-left:4px solid var(--accent)}
+.key .tag{background:var(--accent);color:var(--paper)}
+.unclear{color:var(--muted);font-size:13px;border-bottom:1px dotted var(--muted)}
+.tbl{overflow-x:auto;width:fit-content;max-width:100%;margin:14px 0;border:1px solid var(--line);border-radius:8px;background:var(--paper)}
+table{border-collapse:collapse;width:auto;font-size:15px;min-width:480px}
+th,td{padding:8px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--accent-soft);font-weight:700;white-space:nowrap}
+td.r,th.r{text-align:right}
+td:first-child,th:first-child{white-space:nowrap}
+tr:last-child td{border-bottom:none}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:16px 0}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.stat b{display:block;font-family:var(--font-num);font-size:22px;color:var(--accent);line-height:1.3}
+.stat span{font-size:13px;color:var(--muted)}
+.axes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:16px 0}
+.axis{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:8px;padding:12px 14px}
+.axis h4{margin:0 0 4px;font-size:17px}
+.axis .goal{font-family:var(--font-num);color:var(--accent);font-weight:700}
+.fig{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0;width:fit-content;max-width:100%}
+.fig svg{display:block;max-width:100%;height:auto}
+.fig figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.fig .t{fill:var(--fg);font-size:14px;font-family:var(--font-body)}
+.fig .tb{fill:var(--fg);font-size:14px;font-weight:700;font-family:var(--font-body)}
+.fig .m{fill:var(--muted);font-size:12.5px;font-family:var(--font-body)}
+.fig .n{fill:var(--fg);font-size:13px;font-family:var(--font-num)}
+.fig .ax{stroke:var(--line);stroke-width:1}
+.fig .g-acc{fill:var(--accent)} .fig .s-acc{stroke:var(--accent)}
+.fig .g-soil{fill:var(--soil)} .fig .s-soil{stroke:var(--soil)}
+.fig .g-ink{fill:var(--ink)} .fig .s-ink{stroke:var(--ink)}
+.fig .g-mut{fill:var(--muted)} .fig .s-mut{stroke:var(--muted)}
+.fig .g-accs{fill:var(--accent-soft)} .fig .g-soils{fill:var(--soil-soft)} .fig .g-inks{fill:var(--ink-soft)}
+.fig .hit:hover{opacity:.8}
+.calc{width:fit-content;max-width:100%}
+.loop{position:relative;margin-top:22px!important;margin-bottom:48px!important;padding-left:26px}
+.loop-svg{position:absolute;left:0;top:0;overflow:visible;pointer-events:none;color:var(--accent)}
+.loop-svg text{fill:var(--accent);font-size:13px;font-family:var(--font-body)}
+.flow span.ok{background:var(--accent-soft);border-color:var(--accent);font-weight:700}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0;font-size:14px}
+.flow span{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:4px 10px}
+.flow i{font-style:normal;color:var(--muted)}
+details.q{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0}
+details.q summary{cursor:pointer;font-weight:500}
+details.q summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+details.q[open] summary{color:var(--accent)}
+details.q .a{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+dl.gloss{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 18px;margin:12px 0}
+dl.gloss dt{font-weight:700;color:var(--accent)}
+dl.gloss dd{margin:0}
+@media (max-width:560px){dl.gloss{grid-template-columns:minmax(0,1fr)} dl.gloss dd{margin-bottom:8px}}
+footer{margin-top:60px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+a.xref{display:block;width:fit-content;margin-top:6px}
+.steps{width:fit-content;max-width:100%}
+.box{width:fit-content;max-width:100%}
+.flow span{display:inline-flex;align-items:center;gap:8px}
+.flow span .fi{width:22px;height:22px;flex:none;fill:none;stroke:var(--accent);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.flow span .tx{font-style:normal}
+</style>
+<style>
+.formula{font-family:var(--font-num);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px;overflow-x:auto;white-space:nowrap;font-size:15px;margin:8px 0}
+.calc{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:16px 0;display:grid;gap:12px}
+.calc .row{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:end}
+.calc label{display:grid;gap:4px;font-size:14px;color:var(--muted)}
+.calc input{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 10px;width:160px;max-width:100%}
+.calc input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.calc .out{font-family:var(--font-num);font-size:15px;line-height:1.9;border-top:1px dashed var(--line);padding-top:10px}
+.calc .out b{color:var(--accent);font-size:20px}
+.steps{counter-reset:s;list-style:none;padding:0;display:grid;gap:8px;margin:12px 0}
+.steps li{counter-increment:s;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px 12px 8px 44px;position:relative}
+.steps li::before{content:counter(s);position:absolute;left:12px;top:8px;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--paper);font-family:var(--font-num);font-size:13px;display:grid;place-items:center}
+</style>
+<!--gm-css--><style>
+/* 跳出式小遊戲 */
+.gm-fab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));z-index:60;display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:15px;font-weight:700;color:var(--paper);background:var(--accent);border:0;border-radius:999px;padding:10px 18px 10px 14px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.22)}
+.gm-fab svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.gm-fab:hover,.gm-fab:focus-visible{filter:brightness(1.08);outline:2px solid var(--fg);outline-offset:2px}
+.gm-fab.wig{animation:gmWig .9s ease-in-out 2}
+@keyframes gmWig{0%,100%{transform:rotate(0)}20%{transform:rotate(-8deg) scale(1.06)}40%{transform:rotate(7deg) scale(1.06)}60%{transform:rotate(-4deg)}80%{transform:rotate(3deg)}}
+.gm-tip{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(max(16px,env(safe-area-inset-bottom,0px)) + 58px);z-index:60;max-width:min(300px,calc(100vw - 32px));background:var(--paper);color:var(--fg);border:2px solid var(--accent);border-radius:14px;padding:10px 34px 10px 14px;font-size:15px;line-height:1.55;box-shadow:0 6px 20px rgba(0,0,0,.2);cursor:pointer;opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .3s,transform .3s}
+.gm-tip.on{opacity:1;transform:none;pointer-events:auto}
+.gm-tip::after{content:"";position:absolute;right:34px;bottom:-9px;width:14px;height:14px;background:var(--paper);border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(45deg)}
+.gm-tip b{display:block;font-size:12px;letter-spacing:.1em;color:var(--accent)}
+.gm-tipx{position:absolute;top:4px;right:6px;font:inherit;font-size:18px;line-height:1;color:var(--muted);background:none;border:0;cursor:pointer;padding:4px}
+html.gm-lock,html.gm-lock body{overflow:hidden}
+.gm-ov{position:fixed;inset:0;z-index:70;background:rgba(10,16,13,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.gm-ov[hidden]{display:none}
+.gm-dlg{background:var(--paper);color:var(--fg);border-radius:14px;width:100%;max-width:780px;max-height:calc(100vh - 32px);overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.gm-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px 10px 18px;border-bottom:1px solid var(--line)}
+.gm-hd b{font-family:var(--font-head);font-size:18px}
+.gm-x{font:inherit;font-size:22px;line-height:1;color:var(--muted);background:none;border:1px solid var(--line);border-radius:8px;width:36px;height:36px;cursor:pointer}
+.gm-x:hover,.gm-x:focus-visible{color:var(--accent);border-color:var(--accent)}
+.gm-stage{display:block;width:100%;height:auto;background:linear-gradient(var(--bg),var(--paper))}
+.gm-stage text{font-family:var(--font-body)}
+.gm-stage .lbl{fill:var(--fg);font-size:14px;font-weight:700;text-anchor:middle}
+.gm-stage .sub{fill:var(--muted);font-size:12px;text-anchor:middle}
+.gm-stage .pop{fill:var(--fg);font:900 19px var(--font-head);text-anchor:middle}
+.gm-stage .gas text{fill:var(--fg);font:700 13px var(--font-num);text-anchor:middle;dominant-baseline:middle}
+.gm-card{padding:14px 20px 20px}
+.gm-prog{font-size:13px;color:var(--muted);letter-spacing:.06em;min-height:1.4em}
+.gm-q{font-family:var(--font-head);font-size:21px;font-weight:700;margin:4px 0 12px;line-height:1.45}
+.gm-opts{display:flex;flex-wrap:wrap;gap:10px}
+.gm-opts button,.gm-next{font:inherit;font-size:16px;font-weight:700;color:var(--fg);background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:8px 18px;cursor:pointer;min-width:90px;text-align:left;line-height:1.5}
+.gm-opts button:hover:not(:disabled),.gm-opts button:focus-visible{border-color:var(--accent);color:var(--accent)}
+.gm-opts button:disabled{cursor:default}
+.gm-opts button.ok{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.gm-opts button.bad{background:var(--soil);border-color:var(--soil);color:var(--paper)}
+.gm-opts button.dim{opacity:.45}
+.gm-fb{margin-top:12px}
+.gm-fb .res{border-radius:10px;padding:12px 16px;margin:0 0 10px}
+.gm-fb .res.ok{background:var(--accent-soft);border-left:4px solid var(--accent)}
+.gm-fb .res.bad{background:var(--soil-soft);border-left:4px solid var(--soil)}
+.gm-fb .res b{display:block;font-size:17px;margin-bottom:2px}
+.gm-fb .res.ok b{color:var(--accent)}
+.gm-fb .res.bad b{color:var(--soil)}
+.gm-fb .res p{margin:4px 0}
+.gm-next{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.gm-next:hover,.gm-next:focus-visible{filter:brightness(1.08)}
+.gm-score{font-family:var(--font-num);font-size:28px;color:var(--accent);font-weight:700}
+@media (max-width:560px){.gm-q{font-size:18px}.gm-card{padding:12px 14px 16px}.gm-opts button{flex:1 1 100%}.gm-ov{padding:8px}.gm-dlg{max-height:calc(100vh - 16px)}}
+@media (prefers-reduced-motion:reduce){.gm-fab.wig{animation:none}.gm-tip{transition:none}}
+</style><!--/gm-css-->
+
+<style>
+.site-nav{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px;max-width:1480px;margin:0 auto;padding-top:20px}
+.site-nav+.wrap{padding-top:16px}
+.site-nav a{color:var(--muted);text-decoration:none}
+.site-nav a:hover,.site-nav a:focus-visible{color:var(--accent);text-decoration:underline}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:56px 0 0;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{display:block;padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--fg);text-decoration:none;font-size:15px}
+.pager a:hover,.pager a:focus-visible{border-color:var(--accent)}
+.pager small{display:block;color:var(--muted);font-size:12px}
+.pager .next{text-align:right;grid-column:2}
+@media (max-width:560px){.pager{grid-template-columns:1fr}.pager .next{grid-column:1}}
+</style>
+</head>
+<body>
+<nav class="site-nav" aria-label="網站導覽"><a href="index.html">← 回課程目錄</a><a href="../index.html">學習筆記首頁</a></nav>
+<div class="wrap">
+<nav class="toc" aria-label="目錄">
+  <button type="button" class="toc-btn toc-open" id="tocShow" aria-label="展開目錄">目錄 »</button>
+  <div class="toc-head"><h2>目錄</h2><button type="button" class="toc-btn" id="tocHide" aria-label="收起目錄">« 收起</button></div>
+  <p style="margin:0 0 6px"><a href="#guide">導讀</a></p>
+  <ol>
+    <li><a href="#why">為什麼要循環農業</a></li>
+    <li><a href="#law">法規與政策</a></li>
+    <li><a href="#waste">臺灣的農業廢棄物</a></li>
+    <li><a href="#tech">循環利用技術</a></li>
+    <li><a href="#cases">實際案例</a></li>
+    <li><a href="#compare">技術比較與效益評估</a></li>
+    <li><a href="#supp">補充：林業剩餘資材氣化與減碳計算</a></li>
+    <li><a href="#quiz">自我測驗</a></li>
+    <li><a href="#gloss">名詞表</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="hero">
+  <h1>循環農業策略概論</h1>
+</header>
+
+<section id="guide">
+  <div class="box guide">
+    <span class="tag">導讀</span>
+    <p>傳統農業是一條直線：投入資源 → 生產 → 留下廢棄物。<mark>循環農業把廢棄物轉回資源，再投入農業生產</mark>，靠的是「資源化」（變原料、肥料、能源）和「產品化」（提高價值）。</p>
+    <p>三個閱讀重點：</p>
+    <ul>
+      <li>臺灣農業廢棄物有多少、是什麼，見 <a href="#waste">第 3 節</a>。</li>
+      <li>六種循環技術各自適合處理什麼、優缺點，見 <a href="#tech">第 4 節</a> 與 <a href="#compare">第 6 節</a>的比較表。</li>
+      <li>實際案例：文旦枝條、黑水虻、菱角生物炭、福壽、石安牧場，見 <a href="#cases">第 5 節</a>。</li>
+    </ul>
+    <p style="font-size:14px;color:var(--muted)">框的顏色：<span style="color:var(--ink)">藍色＝上課手寫筆記</span>、<span style="color:var(--soil)">棕色＝跟 ISO 或其他講義的連結</span>、綠色＝重點。</p>
+  </div>
+</section>
+
+<section id="why">
+<h2><span class="no">01</span>為什麼要循環農業</h2>
+<p>農業是第一級產業，除了大量自然資源，也需要人力、技術、資金與機械；過程中免不了環境負荷，例如非點源污染。狹義的農業只指耕作；廣義包含作物、林、漁、牧業。</p>
+<div class="tbl"><table>
+<tr><th>挑戰</th><th>內容</th></tr>
+<tr><td>糧食安全</td><td>人口成長、糧食需求增加，產量與品質都要顧</td></tr>
+<tr><td>資源短缺</td><td>仰賴水、土地、能源；化石能源與肥料價格波動，提高成本與對外依賴</td></tr>
+<tr><td>氣候變遷</td><td>高溫、乾旱、強降雨讓生產不穩定</td></tr>
+<tr><td>環境污染</td><td>廢棄物處理不當造成污染與溫室氣體，衝擊土壤、水體與生態</td></tr>
+</table></div>
+<div class="flow loop" data-loop-label="再投入農業生產"><span data-loop-to><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21c0-9 6-16 16-17-1 10-8 16-16 17z"/><path d="M5 21 14 12"/></svg><em class="tx">農業生產<br><small>農田、畜牧、漁業</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 0 1-14 5.3M4 12A8 8 0 0 1 18 6.7"/><path d="M18 2v5h-5M6 22v-5h5"/></svg><em class="tx">農業廢棄物<br><small>直接、加工間接產生</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><em class="tx">資源循環技術<br><small>處理設備、黑水虻、菌絲材料…</small></em></span><i>→</i><span class="ok" data-loop-from><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 0 1-14 5.3M4 12A8 8 0 0 1 18 6.7"/><path d="M18 2v5h-5M6 22v-5h5"/></svg><em class="tx">循環資源<br><small>肥料、飼料、能源、高值產品</small></em></span></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">循環農業讓系統的韌性不一樣。</p></div>
+<h3>四個核心原則</h3>
+<div class="tbl"><table>
+<tr><th>原則</th><th>意思</th><th>課堂筆記</th></tr>
+<tr><td>減量 Reduce</td><td>減少資源消耗與廢棄物產生</td><td>合理化施肥</td></tr>
+<tr><td>再利用 Reuse</td><td>延長資材壽命，減少一次性消耗</td><td>紙杯：看價值</td></tr>
+<tr><td>再循環 Recycle</td><td>把廢棄物加工轉化為可再利用的資源</td><td>—</td></tr>
+<tr><td>資源化 Recovery</td><td>從無法直接再用或循環的廢棄物中回收有價值物質</td><td>分解、破碎再拿回來用</td></tr>
+</table></div>
+</section>
+
+<section id="law">
+<h2><span class="no">02</span>法規與政策</h2>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><em class="tx">1970s–1990s<br><small>廢棄物清理與污染防治萌芽</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><em class="tx">2000s–2010s<br><small>推廣循環利用：流程、技術、制度、獎懲</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><em class="tx">2020–至今<br><small>精進廢棄物管理與資源循環法規</small></em></span></div>
+<div class="tbl"><table>
+<tr><th>時期</th><th>法規</th><th>重點</th></tr>
+<tr><td>1970s–1990s</td><td>《廢棄物清理法》</td><td>奠定廢棄物管理規範：區分一般與事業廢棄物、指定清除地區、事業廢棄物處理流程、民營清除處理機構、罰則</td></tr>
+<tr><td>1970s–1990s</td><td>《肥料管理法》</td><td>管理肥料生產到販賣：定義肥料與堆肥、成分標示、業者登記、製造與輸出入檢查</td></tr>
+<tr><td>2000s–2010s</td><td>《農業事業廢棄物再利用管理辦法》</td><td>再利用的種類與管理、申請流程、試驗計畫審查；依民國 90 年修正的《廢棄物清理法》訂定</td></tr>
+<tr><td>2000s–2010s</td><td>《資源循環推動法》</td><td>定義再生資源、再使用、再生利用；規範產品設計、源頭減量等；原《資源回收再利用法》，民國 115 年更名</td></tr>
+<tr><td>2020–至今</td><td>《農業再生資源再生利用管理辦法》</td><td>專為農業廢棄物：產生者、再生利用者、清運、貯存、設施與紀錄；依《資源循環推動法》訂定</td></tr>
+<tr><td>2020–至今</td><td>《申請農業用地作農業設施容許使用審查辦法》</td><td>允許農業循環設施設在農業用地上</td></tr>
+<tr><td>2020–至今</td><td>《有機農業促進法》</td><td>有機產品的定義、標示、認證與推廣</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">《廢棄物清理法》管源頭；另外還有《水污染防治法》《空氣污染防制法》。</p></div>
+<h3>農業部淨零主軸：循環</h3>
+<p>四大主軸是<mark>減量、增匯、循環、綠趨勢</mark>。「循環」底下有三項：</p>
+<div class="tbl"><table>
+<tr><th>策略</th><th>內容（主責單位）</th></tr>
+<tr><td>1 農業剩餘資源材料化與加值再利用</td><td>副產物與剩餘資材利用（資源永續利用司）；畜禽糞尿再利用、沼氣與生質能效率（畜牧司）；可循環農業資材（農糧署）；剩餘資源產業化（資源永續利用司）；生物炭產製與利用（林試所）</td></tr>
+<tr><td>2 推動農業跨域循環場域</td><td>建立跨域循環低碳場域、剩餘資源營運模式；跨國、跨企業、跨部會合作</td></tr>
+<tr><td>3 循環技術科技研發</td><td>計算跨域循環的經濟產出與淨零效益；精進沼氣技術（畜試所）；低碳農漁畜設施與水質處理</td></tr>
+</table></div>
+<div class="box iso"><span class="tag">連結講義 1</span><p>四大主軸的全貌。<a class="xref" href="01-net-zero.html#circular">講義 1〈主軸三 循環〉↗</a></p></div>
+</section>
+
+<section id="waste">
+<h2><span class="no">03</span>臺灣的農業廢棄物</h2>
+<p>FAO 2025 年發表有機物質資料庫（OMD），收錄穀類、糖類、酒類、飲料、食用油、生質能源、禽畜屠宰、漁業、禽畜糞、木材加工等廢棄物數據。</p>
+<figure class="fig"><svg viewBox="0 0 620 366" width="620" role="img" aria-label="臺灣生物質副資材來源與去向"><text x="0" y="16" class="tb">來源（萬公噸／年）</text><text x="190" y="44" text-anchor="end" class="t">民生生活（環境部）</text><rect class="hit g-ink" x="200" y="28" width="338" height="22" rx="3"><title>民生生活（環境部）：676.3 萬公噸</title></rect><text x="546" y="44" class="n">676.3</text><text x="190" y="74" text-anchor="end" class="t">農林漁牧（農業部）</text><rect class="hit g-acc" x="200" y="58" width="247" height="22" rx="3"><title>農林漁牧（農業部）：493.6 萬公噸</title></rect><text x="455" y="74" class="n">493.6</text><text x="190" y="104" text-anchor="end" class="t">加工製造（經濟部）</text><rect class="hit g-soil" x="200" y="88" width="216" height="22" rx="3"><title>加工製造（經濟部）：432.9 萬公噸</title></rect><text x="424" y="104" class="n">432.9</text><text x="190" y="134" text-anchor="end" class="t">其他部會</text><rect class="hit g-mut" x="200" y="118" width="29" height="22" rx="3"><title>其他部會：57.5 萬公噸</title></rect><text x="237" y="134" class="n">57.5</text><text x="0" y="172" class="tb">去向（%）</text><text x="190" y="200" text-anchor="end" class="t">材料化（廢紙等）</text><rect class="hit g-acc" x="200" y="184" width="338" height="22" rx="3"><title>材料化（廢紙等）：42.3%</title></rect><text x="546" y="200" class="n">42.3%</text><text x="190" y="230" text-anchor="end" class="t">焚化掩埋</text><rect class="hit g-mut" x="200" y="214" width="143" height="22" rx="3"><title>焚化掩埋：17.9%</title></rect><text x="351" y="230" class="n">17.9%</text><text x="190" y="260" text-anchor="end" class="t">肥料（禽畜糞、廚餘堆肥）</text><rect class="hit g-acc" x="200" y="244" width="137" height="22" rx="3"><title>肥料（禽畜糞、廚餘堆肥）：17.1%</title></rect><text x="345" y="260" class="n">17.1%</text><text x="190" y="290" text-anchor="end" class="t">農用（覆蓋、介質、墊料）</text><rect class="hit g-acc" x="200" y="274" width="102" height="22" rx="3"><title>農用（覆蓋、介質、墊料）：12.7%</title></rect><text x="310" y="290" class="n">12.7%</text><text x="190" y="320" text-anchor="end" class="t">飼料（廚餘、酒糟）</text><rect class="hit g-acc" x="200" y="304" width="51" height="22" rx="3"><title>飼料（廚餘、酒糟）：6.4%</title></rect><text x="259" y="320" class="n">6.4%</text><text x="190" y="350" text-anchor="end" class="t">能源化（廢木材、稻殼）</text><rect class="hit g-acc" x="200" y="334" width="28" height="22" rx="3"><title>能源化（廢木材、稻殼）：3.5%</title></rect><text x="236" y="350" class="n">3.5%</text></svg>
+<figcaption>國內生物質副資材約 1,660 萬公噸／年，再利用 1,363.2 萬公噸（82.1%），其餘 17.9% 焚化掩埋。農業部門約 494 萬公噸；去向最大宗是材料化（主要是廢紙）。</figcaption></figure>
+<h3>生物性 vs. 非生物性</h3>
+<div class="tbl"><table>
+<tr><th>類型</th><th>定義</th><th>例子</th><th class="r">2025 年（公噸）</th></tr>
+<tr><td>生物性農業廢棄物</td><td>環境可自然分解</td><td>稻蒿、果菜殘渣、果樹枝條、牡蠣殼、禽畜邊角料</td><td class="r num">4,961,704（98.1%）</td></tr>
+<tr><td>非生物性農業資材廢棄物</td><td>環境不可自然分解</td><td>包裝、農膜、漁網、繩索、塑膠管線、育苗盤</td><td class="r num">96,088（1.9%）</td></tr>
+</table></div>
+<div class="tbl"><table>
+<tr><th>生物性細項</th><th>內容</th></tr>
+<tr><td>農產廢棄物</td><td>稻殼、稻蒿、廢棄菇包、果樹枝條、竹蓆園剩餘殘體</td></tr>
+<tr><td>漁產廢棄物</td><td>牡蠣殼</td></tr>
+<tr><td>畜產廢棄物</td><td>禽畜糞、屠宰後廢棄物、死廢畜禽</td></tr>
+<tr><td>批發市場廢棄物</td><td>果渣、花卉、漁產殘渣（24,492 公噸，0.4%）</td></tr>
+<tr><td>食品加工廢棄物</td><td>蔬果截切等（130 公噸）</td></tr>
+</table></div>
+<p>另外三大項是 2,426,326 公噸（48.9%）、2,413,837 公噸（48.6%）、96,918 公噸（1.9%）。</p>
+<p style="font-size:14px;color:var(--muted)">課堂筆記把 48.6% 標為漁產、1.9% 標為畜產；但禽畜糞量通常很大、牡蠣殼在十萬噸級，兩者可能相反，建議對照講義原圖的圖例顏色。</p>
+<p>非生物性的大宗是<b>漁產資材</b>（水產養殖廢棄物 68,301 公噸，71.1%），其次是批發市場包裝（15.1%）和農產資材（塑膠膜、廢棄菇包塑膠袋，13.9%）。</p>
+</section>
+
+<section id="tech">
+<h2><span class="no">04</span>循環利用技術</h2>
+<p>循環利用技術：用物理、化學、生物方法，把生產與加工產生的廢棄物再變成原物料、材料、燃料或產品。</p>
+<div class="tbl"><table>
+<tr><th>類別</th><th>技術</th></tr>
+<tr><td>現地處理</td><td>粉碎、翻耕掩埋、堆肥</td></tr>
+<tr><td>生物精煉</td><td>昆蟲轉化、固液分離、厭氧與好氧處理、熱裂解、水熱處理</td></tr>
+</table></div>
+<div class="tbl"><table>
+<tr><th>產品類別</th><th>產品</th></tr>
+<tr><td>肥料類</td><td>堆肥、沼渣、沼液、有機質肥料</td></tr>
+<tr><td>能源類</td><td>沼氣、生質油、可燃氣體</td></tr>
+<tr><td>材料類</td><td>生物炭、再生材料、土壤改良劑</td></tr>
+<tr><td>飼料類</td><td>昆蟲蛋白、農業副產物飼料原料</td></tr>
+</table></div>
+
+<h3>現地處理</h3>
+<p>針對<b>體積大、重量重、含水量高、可能擴散疫情或污染</b>的廢棄物（稻蒿、稻殼、果樹枝條、禽畜糞、加工廢棄物），在產地直接處理：降低運輸成本與碳排、防止污染、減緩疫情、促進再循環。枝條稻蒿可以粉碎或翻耕掩埋；生物性廢棄物可以堆肥。</p>
+
+<h3>昆蟲轉化</h3>
+<p>利用幼蟲以腐敗食物、糞便為食的昆蟲（例如黑水虻），處理加工廢棄物、禽畜糞、廚餘。廢棄物打成泥狀 → 餵食 → 蟲體（蛋白質）與蟲糞 → 肥料、飼料、土壤改良劑等原料。</p>
+
+<h3>固液分離</h3>
+<p>用物理方式把固體和液體分開，分別處理：固體去堆肥，液體去廢水處理或回收。降低後續處理負荷、貯存空間成本，提升設施效率。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">原理是比重、過濾。</p></div>
+
+<h3>厭氧消化</h3>
+<p>特定微生物在無氧環境把有機廢棄物轉成沼氣、沼渣、沼液。沼氣可發電；沼渣沼液當肥料回田。</p>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="7" r="2.5"/><circle cx="18" cy="7" r="2.5"/><circle cx="12" cy="17" r="2.5"/><path d="M8.5 7h7M7.3 9.2l3.5 5.6M16.7 9.2l-3.5 5.6"/></svg><em class="tx">複雜有機物<br><small>碳水化合物、蛋白質、脂肪</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5"/><circle cx="10.5" cy="11" r=".8"/><circle cx="13.5" cy="13.5" r=".8"/><path d="M12 7V3M12 21v-4M7 12H3M21 12h-4M8.5 8.5 6 6M18 18l-2.5-2.5M8.5 15.5 6 18M18 6l-2.5 2.5"/></svg><em class="tx">① 水解<br><small>醣類、胺基酸、長鏈脂肪酸</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5"/><circle cx="10.5" cy="11" r=".8"/><circle cx="13.5" cy="13.5" r=".8"/><path d="M12 7V3M12 21v-4M7 12H3M21 12h-4M8.5 8.5 6 6M18 18l-2.5-2.5M8.5 15.5 6 18M18 6l-2.5 2.5"/></svg><em class="tx">② 酸化<br><small>醋酸、丙酸、丁酸；氫氣、CO₂</small></em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9h14v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"/><path d="M5 9c0-3 3-5 7-5s7 2 7 5"/><path d="M9 14h6M12 4V2"/></svg><em class="tx">③ 甲烷化<br><small>甲烷菌分解脂肪酸或利用氫氣 → CH₄＋CO₂</small></em></span></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">絕對不能有氧，甲烷菌才能工作（代謝過程）。好氧分解比較快、厭氧時間長。<br>水解：加水把大分子拆開。</p></div>
+
+<h3>好氧處理</h3>
+<p>好氧微生物把污水中的有機物<b>氧化</b>成無機物，同時<b>同化</b>合成新細胞、把氨<b>硝化</b>成硝酸鹽。結果是水質改善、產生污泥與硝酸鹽；目的在符合放流水標準、降低病蟲害與惡臭。</p>
+
+<h3>熱裂解</h3>
+<p>在高溫、缺氧（或惰性氣體）下把大分子斷成小分子：</p>
+<div class="flow loop" data-loop-label="可燃氣體回到爐子當燃料"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 0 1-14 5.3M4 12A8 8 0 0 1 18 6.7"/><path d="M18 2v5h-5M6 22v-5h5"/></svg><em class="tx">農業廢棄物<br><small>含非生物性廢棄物</small></em></span><i>→</i><span data-loop-to><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-4-3-6-4-10-2 2-3 4-3 6-1-1-2-2-2-4-2 2-5 5-5 8a7 7 0 0 0 7 7z"/></svg><em class="tx">熱裂解爐</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3.5 4.5 6 7.7 6 10.8A6 6 0 0 1 6 13.8C6 10.7 8.5 7.5 12 3z"/></svg><em class="tx">冷凝</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/></svg><em class="tx">固化 → 生物炭<br>液化 → 生質油、化學品</em></span><i>→</i><span class="ok" data-loop-from><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-4-3-6-4-10-2 2-3 4-3 6-1-1-2-2-2-4-2 2-5 5-5 8a7 7 0 0 0 7 7z"/></svg><em class="tx">氣化 → 可燃氣體</em></span></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">熱裂解＝無氧燃燒。生質油是碳氫化合物，脫氧加氫可以做航空油。</p></div>
+<div class="box iso"><span class="tag">連結講義 7</span><p>生物炭施用對土壤碳的影響，見講義 7 的龍潭試驗。<a class="xref" href="07-soil-carbon.html#trial">講義 7〈土壤碳匯怎麼量：龍潭田間試驗〉↗</a></p></div>
+
+<h3>水熱處理</h3>
+<p>以<b>水</b>為介質在高溫高壓下分解有機物，<b>適合含水量高</b>的廢棄物（不必先乾燥，省能源）。依條件分成水熱碳化（固體，土壤改良）、水熱液化（生質油、化學品）、水熱氣化（燃氣）。</p>
+</section>
+
+<section id="cases">
+<h2><span class="no">05</span>實際案例</h2>
+<div class="tbl"><table>
+<tr><th>技術</th><th>案例</th></tr>
+<tr><td>現地處理</td><td>文旦：台南區農業改良場輔導農民用小型割草機就地粉碎；果樹枝條：農糧署輔導使用小型碎木機。產物可做肥料、農膜、燃料</td></tr>
+<tr><td>昆蟲轉化</td><td>黑水虻處理廚餘：脫脂幼蟲粉當水產飼料；蟲糞含有機質、氮、磷可當肥料；外殼的幾丁質可做醫藥、健康食品與美妝</td></tr>
+<tr><td>熱裂解</td><td>菱角殼：台南官田（生物炭、肥料、菱醋液、除臭包）；枯枝落葉：彰化大有社區；稻殼：花蓮區農業改良場。可燃氣體回到爐子，焦油和木醋液可做產品</td></tr>
+</table></div>
+<div class="stats">
+  <div class="stat"><b>4</b><span>黑水虻卵期（天）</span></div>
+  <div class="stat"><b>14</b><span>幼蟲期（天），吃廚餘的階段</span></div>
+  <div class="stat"><b>14</b><span>蛹期（天）</span></div>
+  <div class="stat"><b>9</b><span>成蟲期（天）</span></div>
+</div>
+
+<h3>禽畜糞：傳統 vs. 資源循環</h3>
+<div class="tbl"><table>
+<tr><th>路線</th><th>流程</th><th>結果</th></tr>
+<tr><td>傳統三段式</td><td>固液分離 → 厭氧消化 → 好氧處理</td><td>放流水符合規定，但資源沒有回收（課堂筆記：無法真正解決）</td></tr>
+<tr><td>資源循環</td><td>厭氧消化</td><td>沼氣發電；沼渣沼液當肥料回田</td></tr>
+</table></div>
+<div class="box iso"><span class="tag">連結講義 6</span><p>沼氣的減排計算與甲烷洩漏風險。<a class="xref" href="06-emission-reduction.html#livestock">講義 6〈畜牧減排〉↗</a></p></div>
+<p><b>串接技術</b>：德國生質研究中心（DBFZ）先厭氧消化、再水熱處理剩下的消化物；丹麥奧胡斯大學則先水熱處理禽畜糞與稻蒿（把大分子拆小），再厭氧消化，提高產氣量。</p>
+
+<h3>場域案例</h3>
+<div class="flow loop" data-loop-label="農產品再收購，回到加工"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22V8"/><path d="M12 8c-2-1-3-3-3-5 2 1 3 3 3 5zm0 0c2-1 3-3 3-5-2 1-3 3-3 5zM12 13c-2-1-4-2-4-5 2 0 4 2 4 5zm0 0c2-1 4-2 4-5-2 0-4 2-4 5zM12 18c-2-1-4-2-4-5 2 0 4 2 4 5zm0 0c2-1 4-2 4-5-2 0-4 2-4 5z"/></svg><em class="tx">契作與收購農作物</em></span><i>→</i><span data-loop-to><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21V10l5 3V10l5 3V5h4v16z"/><path d="M3 21h18"/><path d="M7 17h2M12 17h2"/></svg><em class="tx">食品與飼料製造</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 0 1-14 5.3M4 12A8 8 0 0 1 18 6.7"/><path d="M18 2v5h-5M6 22v-5h5"/></svg><em class="tx">加工廢棄物資源化</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5"/><circle cx="10.5" cy="11" r=".8"/><circle cx="13.5" cy="13.5" r=".8"/><path d="M12 7V3M12 21v-4M7 12H3M21 12h-4M8.5 8.5 6 6M18 18l-2.5-2.5M8.5 15.5 6 18M18 6l-2.5 2.5"/></svg><em class="tx">微生物發酵與堆肥</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><em class="tx">有機資材與技術輔導</em></span><i>→</i><span class="ok" data-loop-from><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21c0-9 6-16 16-17-1 10-8 16-16 17z"/><path d="M5 21 14 12"/></svg><em class="tx">作物生產</em></span></div>
+<p><b>福壽實業</b>：農業上下游整合，回到農產品加工，形成糧農循環經濟。</p>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21V10l9-7 9 7v11z"/><path d="M8 21v-7h8v7M8 14l8 7M16 14l-8 7"/></svg><em class="tx">畜牧糞便與洗選廢水回收</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9h14v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"/><path d="M5 9c0-3 3-5 7-5s7 2 7 5"/><path d="M9 14h6M12 4V2"/></svg><em class="tx">厭氧消化</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg><em class="tx">沼氣 → 沼氣發電 → 牧場自用</em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21v-9"/><path d="M12 12C12 7 9 5 4 5c0 5 3 7 8 7z"/><path d="M12 14c0-4 2.5-6 7-6 0 4-2.5 6-7 6z"/><path d="M6 21h12"/></svg><em class="tx">液態消化液 → 液態有機肥 → 農場施用</em></span></div>
+<p><b>石安牧場</b>：雞糞與蛋品洗選廢水一起厭氧消化，提升農地資源利用效率，形成畜牧與農業的資源循環。</p>
+</section>
+
+<section id="compare">
+<h2><span class="no">06</span>技術比較與效益評估</h2>
+<div class="tbl"><table>
+<tr><th>技術</th><th>優點</th><th>缺點</th></tr>
+<tr><td>現地處理</td><td>運輸成本與設備需求低；就地回歸土壤、循環養分</td><td>受場地、氣候、操作限制；處理不當產生臭味與溫室氣體</td></tr>
+<tr><td>昆蟲轉化</td><td>部分有機廢棄物轉為可用資源；蟲糞可做肥料</td><td>受廢棄物成分與昆蟲耐受性限制；產品法規與市場仍是挑戰</td></tr>
+<tr><td>固液分離</td><td>降低後續處理負荷；有助養分回收與運輸</td><td>要搭配其他技術；細小顆粒與溶解性養分不易分離</td></tr>
+<tr><td>厭氧、好氧處理</td><td>產生沼氣回收能源；有機物轉成穩定的堆肥</td><td>啟動與操作複雜，可能有臭味與<b>甲烷逸散</b>；可能產生氨氣與溫室氣體</td></tr>
+<tr><td>水熱處理</td><td>適合高含水率原料；改善燃料特性、回收有機物</td><td>投資與能源成本高；製程廢水可能含有機污染物</td></tr>
+<tr><td>熱裂解</td><td>轉為生物炭、生質油、可燃氣；生物炭可改良土壤與<b>碳封存</b></td><td>設備投資與製程控制要求高；焦油、廢氣與生物炭污染物要妥善管理</td></tr>
+</table></div>
+<h3>怎麼評估效益</h3>
+<p>三個工具：<b>碳足跡</b>、<b>生命週期評估</b>、<b>經濟可行性</b>。循環不一定減碳：運輸、加工耗能、甲烷逸散都要算進去。</p>
+<div class="box iso"><span class="tag">連結講義 8</span><p>LCA 與碳足跡的算法，見講義 8。<a class="xref" href="08-carbon-footprint.html#lca">講義 8〈生命週期評估（LCA）〉↗</a></p></div>
+<div class="box key"><span class="tag">結論</span><p><b>SDG 12 責任消費與生產</b>：減廢、資源優化、再利用、回收與再生能源。未來方向：從單一技術轉向跨產業系統整合；促進區域型資源交換與循環產業鏈；建立可量化的環境與經濟績效指標；強化標準、品質驗證、人才與市場機制。依資材特性選合適的處理方式，兼顧資源回收、污染防治與經濟效益。</p></div>
+</section>
+
+<section id="supp">
+<h2><span class="no">07</span>補充：林業剩餘資材氣化與減碳計算</h2>
+
+<p>林業署兩個工作站把林業剩餘資材氣化，一個發電、一個供熱。用三種國際方法學去算同一個場域，減碳量可以差十倍以上。</p>
+<h3>生質物當燃料的缺點</h3>
+<ul>
+<li>空隙超過 70%，體積能量密度低，收集、運輸、儲存成本高；通常要先破碎、造粒。</li>
+<li>易吸水，含水率高會降低熱值；熱值約為化石燃料的一半（絕乾木材約 18–22 MJ/kg）。</li>
+<li>揮發分高（木材 72–78%），容易點燃也容易燒盡；部分農業殘體灰分熔點低，容易結渣。</li>
+<li>依 ISO，生質燃料燃燒的 CO₂ 屬生物源，不計入排放；專案排放主要是砍伐、運輸、破碎和輔助設備的用油用電。</li>
+</ul>
+<h3>氣化</h3>
+<p>在<b>限量氧氣</b>下高溫反應，把木材轉成可燃氣（約 CO 22%、H₂ 18%、CH₄ 3%，熱值 5–6 MJ/kg）。燃燒區放出的熱（可達 1,400°C）推動還原區把碳轉成 CO 和 H₂。氣化爐分上吸式（逆流）和下吸式（同流）。</p>
+<div class="tbl"><table><tr><th></th><th>氣化</th><th>焚化</th></tr><tr><td>反應溫度</td><td>高</td><td>中</td></tr><tr><td>適合處理量</td><td>大</td><td>小到中</td></tr><tr><td>能源轉化效率</td><td>高</td><td>中</td></tr><tr><td>初設成本、操作技術</td><td>高</td><td>中</td></tr><tr><td>污染</td><td>少</td><td>視操作而定</td></tr></table></div>
+<h3>兩個場域</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22v-6"/><path d="M12 2 6 10h3l-4 6h14l-4-6h3z"/></svg><em class="tx">原木砍伐<br><small>鏈鋸用油</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 6h11v10H2zM13 10h4l4 3v3h-8"/><circle cx="6" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg><em class="tx">集運<br><small>貨車柴油</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><em class="tx">破碎<br><small>破碎機柴油</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-4-3-6-4-10-2 2-3 4-3 6-1-1-2-2-2-4-2 2-5 5-5 8a7 7 0 0 0 7 7z"/></svg><em class="tx">氣化爐<br><small>合成氣</small></em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg><em class="tx">發電或供熱</em></span></div>
+<ul>
+<li><b>花蓮南華工作站</b>：氣化發電，標稱 100 kWe，每小時進料約 150 公斤，供廠區用電。</li>
+<li><b>嘉義奮起湖工作站</b>：氣化供熱，給精油蒸餾和熱風乾燥使用。</li>
+</ul>
+<h3>同一個場域，三種方法學</h3>
+<div class="tbl"><table><tr><th>方法學</th><th>基線怎麼看</th><th>南華每年減碳</th><th>奮起湖每年減碳</th></tr><tr><td>VCS VM0018</td><td>能源效率與廢棄物分流；基線與專案要功能等效</td><td class="r num">77.94</td><td class="r num">81.71</td></tr><tr><td>CDM AM0057</td><td>資材原本會被掩埋或腐爛，<b>避免甲烷</b></td><td class="r num">966.53</td><td class="r num">953.77</td></tr><tr><td>J-Credit EN-R-001</td><td>只看燃料替代：被取代的化石燃料、購電</td><td class="r num">77.94</td><td class="r num">87.59</td></tr></table></div>
+<figure class="fig"><svg viewBox="0 0 820 150" width="820" role="img" aria-label="南華場域三種方法學每公噸資材減碳量"><text x="200" y="35" text-anchor="end" class="t">VM0018</text><rect class="hit g-ink" x="210" y="20" width="45.2" height="22" rx="3"><title>VM0018：0.26 tCO₂e／每公噸剩餘資材</title></rect><text x="261.2" y="36" class="n">0.26</text><text x="200" y="75" text-anchor="end" class="t">AM0057</text><rect class="hit g-soil" x="210" y="60" width="560.0" height="22" rx="3"><title>AM0057：3.22 tCO₂e／每公噸剩餘資材</title></rect><text x="776.0" y="76" class="n">3.22</text><text x="200" y="115" text-anchor="end" class="t">EN-R-001</text><rect class="hit g-acc" x="210" y="100" width="45.2" height="22" rx="3"><title>EN-R-001：0.26 tCO₂e／每公噸剩餘資材</title></rect><text x="261.2" y="116" class="n">0.26</text><text x="820" y="146" text-anchor="end" class="m">單位：tCO₂e／每公噸剩餘資材</text></svg><figcaption>南華場域每公噸林業剩餘資材的減碳量。AM0057 把「原本會腐爛產生甲烷」算進基線，結果是另外兩種的 12 倍：邊界和基線的假設決定了數字。</figcaption></figure>
+<div class="box note"><span class="tag">細節</span><p>後續簡報用另一套假設重算，南華每年減排 67.26（基線 98.22－專案 30.96）、奮起湖 87.18 tCO₂e。VM0018 規定洩漏超過專案排放 1% 就不能排除；微型專案單元每年最多 5,000 tCO₂e、群組合計 10,000。</p></div>
+
+</section>
+
+<section id="quiz">
+<h2><span class="no">08</span>自我測驗</h2>
+<details class="q"><summary>1. 「資源化」和「產品化」差在哪？</summary><div class="a">資源化是把廢棄物轉成原料、自然資源或生質能源；產品化是轉化後的產物價值提高（例如保養品、環保袋）。</div></details>
+<details class="q"><summary>2. 高含水量的禽畜糞，熱裂解和水熱處理哪個比較適合？</summary><div class="a">水熱處理。它以水為介質，不必先把原料乾燥；熱裂解則要先乾燥，耗能較高。</div></details>
+<details class="q"><summary>3. 厭氧消化的三個步驟？</summary><div class="a">水解（大分子拆成醣、胺基酸、脂肪酸）→ 酸化（產生醋酸、揮發性脂肪酸、氫氣與 CO₂）→ 甲烷化（甲烷菌產生 CH₄）。</div></details>
+<details class="q"><summary>4. 為什麼說傳統三段式處理「無法真正解決」？</summary><div class="a">固液分離、厭氧、好氧處理只讓放流水符合標準，沼氣和養分沒有回收利用；資源循環路線則把沼氣拿來發電、沼渣沼液回田。</div></details>
+<details class="q"><summary>5. 黑水虻處理廚餘可以做出哪三類產品？</summary><div class="a">脫脂幼蟲粉做水產飼料；蟲糞做肥料；外殼的幾丁質做醫藥、健康食品與美妝。</div></details>
+<details class="q"><summary>6. 臺灣 2025 年農業廢棄物中，非生物性的大宗是什麼？</summary><div class="a">漁產資材廢棄物（水產養殖廢棄物），約 6.8 萬公噸，占非生物性的 71.1%。</div></details>
+<details class="q"><summary>7. 循環農業一定減碳嗎？</summary><div class="a">不一定。要用碳足跡或 LCA 把運輸、處理耗能、甲烷逸散、替代效益都算進去，才知道淨效益。</div></details>
+</section>
+
+<section id="gloss">
+<h2><span class="no">09</span>名詞表</h2>
+<dl class="gloss">
+<dt>循環農業</dt><dd>把農業廢棄物轉為再生資源，再投入生產</dd>
+<dt>Reduce／Reuse／Recycle／Recovery</dt><dd>減量、再利用、再循環、資源化</dd>
+<dt>副資材</dt><dd>生產過程留下的剩餘資材</dd>
+<dt>非點源污染</dt><dd>沒有固定排放口的污染，例如農田逕流</dd>
+<dt>現地處理</dt><dd>在產地直接粉碎、掩埋或堆肥</dd>
+<dt>生物精煉</dt><dd>用生物或熱化學方法把生質轉成多種產品</dd>
+<dt>厭氧消化</dt><dd>無氧下微生物產生沼氣</dd>
+<dt>沼渣、沼液</dt><dd>厭氧消化後的固體與液體，可當肥料</dd>
+<dt>熱裂解</dt><dd>高溫缺氧分解，產生生物炭、生質油、可燃氣</dd>
+<dt>水熱處理</dt><dd>以水為介質的高溫高壓處理：碳化、液化、氣化</dd>
+<dt>黑水虻</dt><dd>幼蟲可分解廚餘、糞便的昆蟲</dd>
+<dt>幾丁質</dt><dd>昆蟲外殼成分，可做醫藥與美妝原料</dd>
+<dt>OMD</dt><dd>FAO 有機物質資料庫</dd>
+<dt>SDG 12</dt><dd>責任消費與生產</dd>
+</dl>
+</section>
+
+<nav class="pager" aria-label="上一講／下一講"><a class="prev" href="08-carbon-footprint.html"><small>← 上一講</small>8. 農畜產品碳足跡</a><a class="next" href="10-forest-carbon.html"><small>下一講 →</small>10. 森林碳匯策略</a></nav>
+</main>
+</div>
+<script>
+(function(){
+  var b=document.body,K='tocOff';
+  function set(off){b.classList.toggle('toc-off',off);try{localStorage.setItem(K,off?'1':'0')}catch(e){}}
+  try{if(localStorage.getItem(K)==='1')b.classList.add('toc-off')}catch(e){}
+  document.getElementById('tocHide').addEventListener('click',function(){set(true)});
+  document.getElementById('tocShow').addEventListener('click',function(){set(false)});
+})();
+</script>
+<script>
+(function(){
+  var NS='http://www.w3.org/2000/svg',n=0;
+  function rp(p,r){var d='M'+p[0][0]+','+p[0][1];for(var i=1;i<p.length-1;i++){var a=p[i-1],b=p[i],c=p[i+1];
+    var l1=Math.hypot(b[0]-a[0],b[1]-a[1]),l2=Math.hypot(c[0]-b[0],c[1]-b[1]),k=Math.min(r,l1/2,l2/2);
+    var x1=b[0]-(b[0]-a[0])/l1*k,y1=b[1]-(b[1]-a[1])/l1*k,x2=b[0]+(c[0]-b[0])/l2*k,y2=b[1]+(c[1]-b[1])/l2*k;
+    d+=' L'+x1+','+y1+' Q'+b[0]+','+b[1]+' '+x2+','+y2}
+    var e=p[p.length-1];return d+' L'+e[0]+','+e[1]}
+  function draw(c){
+    var old=c.querySelector(':scope>.loop-svg'); if(old) old.remove();
+    var spans=[].slice.call(c.querySelectorAll(':scope>span'));
+    var to=c.querySelector('[data-loop-to]')||spans[0], from=c.querySelector('[data-loop-from]')||spans[spans.length-1];
+    if(!to||!from) return;
+    var cr=c.getBoundingClientRect();
+    function R(el){var b=el.getBoundingClientRect();return{l:b.left-cr.left,r:b.right-cr.left,t:b.top-cr.top,b:b.bottom-cr.top,cx:(b.left+b.right)/2-cr.left,cy:(b.top+b.bottom)/2-cr.top}}
+    var a=R(to),z=R(from),maxB=0,minL=1e9,rowFirst=true;
+    spans.forEach(function(k){var r=R(k);if(r.l<minL)minL=r.l;if(k!==to&&Math.abs(r.t-a.t)<6&&r.l<a.l)rowFirst=false});
+    Array.prototype.forEach.call(c.children,function(k){if(k.classList.contains('loop-svg'))return;var b=k.getBoundingClientRect().bottom-cr.top;if(b>maxB)maxB=b});
+    var y=maxB+16,x=minL-18,d,lx;
+    if(Math.abs(a.t-z.t)<6){d=rp([[z.cx,z.b],[z.cx,y],[a.cx,y],[a.cx,a.b+4]],10);lx=(a.cx+z.cx)/2}
+    else if(rowFirst){d=rp([[z.cx,z.b],[z.cx,y],[x,y],[x,a.cy],[a.l-4,a.cy]],10);lx=(x+z.cx)/2}
+    else{var top=a.t-14;d=rp([[z.cx,z.b],[z.cx,y],[x,y],[x,top],[a.cx,top],[a.cx,a.t-4]],10);lx=(x+z.cx)/2}
+    var id='lh'+(++n),s=document.createElementNS(NS,'svg');
+    s.setAttribute('class','loop-svg');s.setAttribute('width',cr.width);s.setAttribute('height',y+24);s.setAttribute('aria-hidden','true');
+    s.innerHTML='<defs><marker id="'+id+'" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0L10,5L0,10z" fill="currentColor"/></marker></defs>'+
+      '<path d="'+d+'" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#'+id+')"/>'+
+      '<text x="'+Math.max(lx,60)+'" y="'+(y+18)+'" text-anchor="middle"></text>';
+    s.querySelector('text').textContent='↺ '+(c.getAttribute('data-loop-label')||'');
+    c.appendChild(s);
+  }
+  var els=document.querySelectorAll('.loop');
+  function all(){els.forEach(draw)}
+  all(); window.addEventListener('resize',all);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(all);
+  if(window.ResizeObserver){var w={};var ro=new ResizeObserver(function(es){es.forEach(function(e){var c=e.target,k=Math.round(e.contentRect.width);if(c._w!==k){c._w=k;draw(c)}})});els.forEach(function(c){ro.observe(c)})}
+})();
+</script>
+<!--gm-js--><script>
+/* 跳出式小遊戲引擎：右下角按鈕 → 對話框；題目、解釋、計分；場景由各頁提供 */
+window.GMRUN=function(C){
+  var NS='http://www.w3.org/2000/svg',D=document;
+  var reduce=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
+  function el(tag,a,html,par){var e=D.createElementNS(NS,tag);if(a)for(var k in a)e.setAttribute(k,a[k]);if(html)e.innerHTML=html;if(par)par.appendChild(e);return e}
+  function h(tag,cls,html,par){var e=D.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;if(par)par.appendChild(e);return e}
+
+  /* ---------- 介面 ---------- */
+  var ICON='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.2" r=".6" fill="currentColor"/><circle cx="17.6" cy="13.6" r=".6" fill="currentColor"/></svg>';
+  var fab=h('button','gm-fab',ICON+'<span>小遊戲</span>',D.body);fab.type='button';fab.setAttribute('aria-haspopup','dialog');
+  var tip=h('div','gm-tip','<button type="button" class="gm-tipx" aria-label="關閉提示">×</button><b>考考你</b><span></span>',D.body);
+  tip.querySelector('span').textContent=C.teaser;
+  var ov=h('div','gm-ov',null,D.body);ov.hidden=true;
+  var dlg=h('div','gm-dlg','<div class="gm-hd"><b id="gmTitle"></b><button type="button" class="gm-x" aria-label="關閉小遊戲">×</button></div>'+
+    '<svg class="gm-stage" viewBox="'+(C.vb||'0 0 880 260')+'" role="img"></svg>'+
+    '<div class="gm-card"><div class="gm-prog"></div><p class="gm-q"></p><div class="gm-opts"></div><div class="gm-fb" aria-live="polite"></div></div>',ov);
+  dlg.setAttribute('role','dialog');dlg.setAttribute('aria-modal','true');dlg.setAttribute('aria-labelledby','gmTitle');
+  dlg.querySelector('#gmTitle').textContent='小遊戲：'+C.title;
+  var st=dlg.querySelector('svg'),qEl=dlg.querySelector('.gm-q'),oEl=dlg.querySelector('.gm-opts'),fEl=dlg.querySelector('.gm-fb'),pEl=dlg.querySelector('.gm-prog');
+  st.setAttribute('aria-label',C.alt||C.title);
+
+  /* ---------- 動畫工具 ---------- */
+  var loops=[],touts=[],fx;
+  function stopAll(){loops.forEach(clearInterval);touts.forEach(clearTimeout);loops=[];touts=[]}
+  var api={svg:st,reduce:reduce,el:el,
+    C:{co2:'#86a8e6',ch4:'#c9a66b',n2o:'#d28bb4',gas:'#8fae9a',smoke:'#9aa0a6'},
+    loop:function(fn,ms){fn();loops.push(setInterval(fn,reduce?ms*1.6:ms))},
+    later:function(fn,ms){touts.push(setTimeout(fn,reduce?0:ms))},
+    A:function(e,fr,ms,o){o=o||{};if(!e||!e.animate)return null;if(reduce&&o.iter===Infinity)return null;
+      var an=e.animate(fr,{duration:reduce?1:ms,delay:reduce?0:(o.delay||0),easing:o.ease||'ease-out',fill:o.fill||'forwards',iterations:o.iter||1,direction:o.dir||'normal'});
+      if(o.done)an.onfinish=o.done;return an},
+    /* 放一個物件：外層定位，內層可動（原點在底部中央） */
+    put:function(par,x,y,s,html,origin){var g=el('g',{transform:'translate('+x+' '+y+')'+(s&&s!==1?' scale('+s+')':'')},null,par||st);
+      var i=el('g',{},html,g);i.style.transformBox='fill-box';i.style.transformOrigin=origin||'50% 100%';i.outer=g;i.x=x;i.y=y;i.s=s||1;return i},
+    top:function(){if(!fx)fx=el('g',{});st.appendChild(fx);return fx},
+    puff:function(x,y,o){o=o||{};var g=el('g',{class:'gas'},null,api.top()),n=o.n||3,r=o.r||11;
+      for(var i=0;i<n;i++)el('circle',{cx:x+(i-(n-1)/2)*r*.9,cy:y+(i%2?-r*.55:0),r:r+(i===1?3:0),fill:o.color||api.C.gas,opacity:.6},null,g);
+      if(o.label){var t=el('text',{x:x,y:y-1},null,g);t.textContent=o.label}
+      g.style.transformBox='fill-box';g.style.transformOrigin='50% 50%';
+      var dx=o.dx==null?0:o.dx,dy=o.dy==null?-60:o.dy;
+      api.A(g,[{transform:'translate(0,0) scale(.35)',opacity:0},{opacity:.95,offset:.15},{transform:'translate('+dx+'px,'+dy+'px) scale('+(o.grow||1.5)+')',opacity:0}],o.ms||2400,{done:function(){g.remove()},fill:'none'});
+      if(reduce)api.later(function(){g.remove()},1200);return g},
+    pop:function(x,y,txt,o){o=o||{};var t=el('text',{class:'pop',x:x,y:y},null,api.top());t.textContent=txt;if(o.color)t.style.fill=o.color;if(o.size)t.style.fontSize=o.size+'px';
+      t.style.transformBox='fill-box';t.style.transformOrigin='50% 100%';
+      api.A(t,[{opacity:0,transform:'scale(.4)'},{opacity:1,transform:'scale(1.15)',offset:.2},{opacity:1,transform:'scale(1)',offset:.7},{opacity:0,transform:'translateY(-10px)'}],o.ms||1300,{done:function(){t.remove()},fill:'none'});
+      if(reduce)api.later(function(){t.remove()},1200);return t},
+    pulse:function(e){return api.A(e,[{transform:'scale(1)'},{transform:'scale(1.12)'},{transform:'scale(1)'}],700,{fill:'none'})},
+    /* 背景：地面、草、圍籬、太陽 */
+    bg:function(o){o=o||{};var gy=o.ground==null?200:o.ground,W=880,s='';
+      if(o.sun)s+='<circle cx="'+(o.sun[0])+'" cy="'+(o.sun[1])+'" r="22" fill="#f2c94c" opacity=".85"/>';
+      if(o.hills)s+='<path d="M0 '+(gy-10)+' Q140 '+(gy-70)+' 300 '+(gy-24)+' T600 '+(gy-30)+' T880 '+(gy-40)+' V'+gy+' H0Z" fill="var(--accent-soft)" opacity=".7"/>';
+      if(o.fence){s+='<g stroke="var(--line)" stroke-width="4" stroke-linecap="round"><line x1="0" y1="'+(gy-48)+'" x2="'+W+'" y2="'+(gy-48)+'"/><line x1="0" y1="'+(gy-28)+'" x2="'+W+'" y2="'+(gy-28)+'"/>';
+        for(var x=60;x<W;x+=140)s+='<line x1="'+x+'" y1="'+(gy-62)+'" x2="'+x+'" y2="'+(gy+4)+'"/>';s+='</g>'}
+      s+='<rect x="0" y="'+gy+'" width="'+W+'" height="'+(400-gy)+'" fill="'+(o.color||'var(--accent-soft)')+'"/>';
+      (o.grass||[]).forEach(function(x,i){var y=gy+14+(i%3)*12;s+='<path d="M'+(x-5)+' '+y+' q0 -6 -4 -10 M'+x+' '+y+' q0 -8 2 -13 M'+(x+5)+' '+y+' q1 -6 5 -10" stroke="var(--accent)" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/>'});
+      return el('g',{},s,st)},
+    text:function(x,y,txt,cls,par){var t=el('text',{x:x,y:y,class:cls||'lbl'},null,par||st);t.textContent=txt;return t}
+  };
+
+  /* ---------- 共用圖形（原點在底部中央，面向右） ---------- */
+  var K='#2b2b2b';
+  api.SH={
+    conifer:function(c){c=c||'#3f7d58';return '<rect x="-5" y="-24" width="10" height="24" fill="#7a5a3a"/><path d="M0 -112 L-24 -66 L24 -66Z" fill="'+c+'"/><path d="M0 -92 L-31 -44 L31 -44Z" fill="'+c+'"/><path d="M0 -70 L-38 -20 L38 -20Z" fill="'+c+'"/>'},
+    broad:function(c){c=c||'#4f8f5f';return '<rect x="-6" y="-44" width="12" height="44" fill="#7a5a3a"/><circle cx="-20" cy="-56" r="22" fill="'+c+'"/><circle cx="20" cy="-56" r="22" fill="'+c+'"/><circle cx="0" cy="-74" r="30" fill="'+c+'"/>'},
+    cabbage:'<ellipse cx="0" cy="-13" rx="24" ry="14" fill="#6fae5c"/><ellipse cx="-10" cy="-16" rx="12" ry="10" fill="#86c46f"/><ellipse cx="10" cy="-16" rx="12" ry="10" fill="#86c46f"/><ellipse cx="0" cy="-19" rx="12" ry="10" fill="#b4e09a"/><path d="M-5 -22 q5 -5 10 0" stroke="#6fae5c" stroke-width="2" fill="none"/>',
+    bamboo:function(hh){var s='<rect x="-4" y="-'+hh+'" width="8" height="'+hh+'" rx="3" fill="#7fae4f"/>';for(var y=22;y<hh;y+=22)s+='<rect x="-5" y="-'+y+'" width="10" height="3" fill="#5f8f3a"/>';
+      s+='<path d="M0 -'+(hh-6)+' q16 -6 26 2 q-14 4 -26 -2z M0 -'+(hh-18)+' q-16 -6 -26 2 q14 4 26 -2z M0 -'+(hh-30)+' q16 -4 24 4 q-14 2 -24 -4z" fill="#5f9f4f"/>';return s},
+    rice:function(grain){return '<path d="M0 0 q-5 -28 -16 -44 M0 0 q0 -34 2 -56 M0 0 q5 -28 15 -42 M0 0 q-2 -20 -9 -30" stroke="#5f9f4f" stroke-width="3" fill="none" stroke-linecap="round"/>'+(grain?'<path d="M2 -56 q10 4 12 18" stroke="#d9b44a" stroke-width="4" fill="none" stroke-linecap="round" stroke-dasharray="3 2"/>':'')},
+    mangrove:'<path d="M-24 0 q4 -26 22 -34 M24 0 q-4 -26 -22 -34 M-10 0 q2 -18 8 -34 M10 0 q-2 -18 -8 -34" stroke="#6b4e34" stroke-width="3" fill="none"/><rect x="-3" y="-62" width="6" height="30" fill="#6b4e34"/><ellipse cx="-18" cy="-62" rx="20" ry="13" fill="#4f8f5f"/><ellipse cx="18" cy="-62" rx="20" ry="13" fill="#4f8f5f"/><ellipse cx="0" cy="-74" rx="32" ry="18" fill="#3f7d58"/>',
+    spoonbill:'<line x1="-4" y1="-20" x2="-6" y2="0" stroke="'+K+'" stroke-width="2"/><line x1="5" y1="-20" x2="7" y2="0" stroke="'+K+'" stroke-width="2"/><ellipse cx="2" cy="-28" rx="17" ry="10" fill="#fafafa" stroke="'+K+'" stroke-width="1.5"/><path d="M-11 -33 Q-18 -44 -14 -50" stroke="#fafafa" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M-11 -33 Q-18 -44 -14 -50" stroke="'+K+'" stroke-width="1" fill="none" opacity=".4"/><circle cx="-15" cy="-52" r="6" fill="#fafafa" stroke="'+K+'" stroke-width="1.5"/><path d="M-20 -52 L-36 -45" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/><ellipse cx="-37" cy="-44" rx="4.5" ry="3.2" fill="'+K+'"/><circle cx="-16" cy="-53" r="1.3" fill="'+K+'"/>',
+    pig:'<rect x="-30" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="-16" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="12" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="26" y="-24" width="9" height="24" rx="3" fill="#e993a6"/>'+
+      '<path d="M-44 -42 q-10 -2 -8 -10 q2 -6 8 -2" stroke="'+K+'" stroke-width="2" fill="none"/><ellipse cx="0" cy="-38" rx="46" ry="26" fill="#f4b6c2" stroke="'+K+'" stroke-width="2"/>'+
+      '<circle cx="40" cy="-46" r="19" fill="#f4b6c2" stroke="'+K+'" stroke-width="2"/><path d="M30 -62 l4 -12 l8 9z" fill="#e993a6" stroke="'+K+'" stroke-width="1.5"/><ellipse cx="57" cy="-42" rx="8" ry="7" fill="#e993a6" stroke="'+K+'" stroke-width="2"/><circle cx="55" cy="-42" r="1.5" fill="'+K+'"/><circle cx="60" cy="-42" r="1.5" fill="'+K+'"/><circle cx="44" cy="-52" r="2.4" fill="'+K+'"/>',
+    tractor:'<rect x="-40" y="-42" width="58" height="22" rx="4" fill="#c0503a"/><rect x="-36" y="-74" width="30" height="34" rx="3" fill="none" stroke="'+K+'" stroke-width="3"/><rect x="10" y="-32" width="32" height="15" rx="3" fill="#c0503a"/><rect x="24" y="-56" width="5" height="26" fill="#555"/>'+
+      '<circle cx="-24" cy="-19" r="19" fill="#333"/><circle cx="-24" cy="-19" r="7" fill="#bbb"/><circle cx="32" cy="-12" r="12" fill="#333"/><circle cx="32" cy="-12" r="4.5" fill="#bbb"/>',
+    plow:'<path d="M-44 -26 L-64 -8 L-58 4 L-52 -6 M-58 -18 L-76 -2 L-70 8" stroke="#666" stroke-width="3.5" fill="none" stroke-linecap="round"/>',
+    pole:'<rect x="-3" y="-124" width="6" height="124" fill="#7a5a3a"/><rect x="-24" y="-116" width="48" height="5" fill="#7a5a3a"/><circle cx="-18" cy="-118" r="3" fill="#ccc"/><circle cx="18" cy="-118" r="3" fill="#ccc"/><path d="M4 -86 l-8 14 h7 l-5 14 l12 -18 h-7 l5 -10z" fill="#f2c94c" stroke="'+K+'" stroke-width="1"/>',
+    pond:'<ellipse cx="0" cy="-8" rx="52" ry="13" fill="#6b4e34"/><ellipse cx="0" cy="-10" rx="45" ry="8" fill="#9b7650"/>',
+    factory:'<rect x="30" y="-122" width="16" height="70" fill="#6f777f"/><rect x="-56" y="-60" width="112" height="60" fill="#8a929a"/><path d="M-56 -60 l28 -18 v18 l28 -18 v18 l28 -18 v18" fill="#8a929a"/>'+
+      '<rect x="-44" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="-18" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="8" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="-10" y="-20" width="20" height="20" fill="#5b636b"/>',
+    coin:function(t){return '<circle cx="0" cy="-13" r="13" fill="#e2b84a" stroke="#a7822a" stroke-width="2"/><text x="0" y="-8.5" text-anchor="middle" style="font:700 13px var(--font-num);fill:#7a5a1a">'+(t||'$')+'</text>'},
+    jar:'<path d="M-30 0 h60 v-58 q0 -8 -8 -8 h-44 q-8 0 -8 8z" fill="var(--paper)" stroke="var(--muted)" stroke-width="2.5"/><rect x="-24" y="-74" width="48" height="8" rx="3" fill="var(--muted)"/>',
+    bento:'<rect x="-62" y="-50" width="124" height="50" rx="6" fill="#b5764a" stroke="'+K+'" stroke-width="2"/><rect x="-56" y="-44" width="62" height="38" rx="3" fill="#fbf8ef"/><rect x="10" y="-44" width="46" height="18" rx="3" fill="#7fbf6a"/><rect x="10" y="-24" width="46" height="18" rx="3" fill="#f2d16b"/>'+
+      '<ellipse cx="-24" cy="-30" rx="26" ry="11" fill="#a0612f" stroke="#7a4520" stroke-width="2"/><path d="M-40 -32 h30 M-38 -27 h26" stroke="#7a4520" stroke-width="1.5"/>',
+    train:'<rect x="-110" y="-62" width="220" height="50" rx="10" fill="#e1e5ea" stroke="'+K+'" stroke-width="2"/><rect x="-110" y="-30" width="220" height="8" fill="#d0602f"/>'+
+      '<rect x="-96" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="-52" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="-8" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="36" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="80" y="-54" width="22" height="18" rx="3" fill="#7ea6c9"/>'+
+      '<circle cx="-74" cy="-8" r="8" fill="#333"/><circle cx="-50" cy="-8" r="8" fill="#333"/><circle cx="50" cy="-8" r="8" fill="#333"/><circle cx="74" cy="-8" r="8" fill="#333"/>',
+    dome:'<path d="M-56 0 v-30 a56 44 0 0 1 112 0 v30z" fill="#a7adb3" stroke="'+K+'" stroke-width="2"/><path d="M-56 -30 h112" stroke="'+K+'" stroke-width="1.5" opacity=".5"/><rect x="-6" y="-84" width="12" height="12" fill="#6f777f"/>',
+    bee:'<g><ellipse cx="-2" cy="-10" rx="5" ry="4" fill="#fff" opacity=".85"/><ellipse cx="4" cy="-10" rx="5" ry="4" fill="#fff" opacity=".85"/><ellipse cx="0" cy="-3" rx="9" ry="6.5" fill="#f2c230" stroke="'+K+'" stroke-width="1.2"/><path d="M-2 -9 v12 M3 -8.5 v11" stroke="'+K+'" stroke-width="2"/><circle cx="8" cy="-4" r="1.3" fill="'+K+'"/></g>',
+    flower:function(c){return '<path d="M0 0 v-30" stroke="#5f9f4f" stroke-width="3"/><path d="M0 -14 q-10 -4 -12 -12 q8 0 12 8" fill="#5f9f4f"/><g fill="'+(c||'#e98fa3')+'"><circle cx="0" cy="-40" r="6"/><circle cx="-8" cy="-33" r="6"/><circle cx="8" cy="-33" r="6"/><circle cx="-5" cy="-25" r="6"/><circle cx="5" cy="-25" r="6"/></g><circle cx="0" cy="-32" r="4.5" fill="#f2c94c"/>'},
+    larva:'<ellipse cx="0" cy="-4" rx="11" ry="4.5" fill="#efe6c8" stroke="#8a7a50" stroke-width="1"/><path d="M-5 -8 v8 M0 -8.5 v9 M5 -8 v8" stroke="#8a7a50" stroke-width=".8"/>',
+    truck:'<rect x="-50" y="-48" width="64" height="36" rx="3" fill="#7fa7c9" stroke="'+K+'" stroke-width="2"/><path d="M14 -40 h20 l12 14 v14 h-32z" fill="#d0602f" stroke="'+K+'" stroke-width="2"/><rect x="20" y="-36" width="12" height="10" fill="#cfe3f2"/><circle cx="-30" cy="-10" r="9" fill="#333"/><circle cx="30" cy="-10" r="9" fill="#333"/>',
+    shop:'<rect x="-50" y="-70" width="100" height="70" fill="#e9e4d6" stroke="'+K+'" stroke-width="2"/><path d="M-56 -70 h112 l-8 -18 h-96z" fill="#d0602f" stroke="'+K+'" stroke-width="2"/><rect x="-36" y="-50" width="30" height="24" fill="#cfe3f2" stroke="'+K+'" stroke-width="1.5"/><rect x="10" y="-44" width="24" height="44" fill="#8a6a4a"/>',
+    log:'<rect x="-26" y="-14" width="52" height="14" rx="7" fill="#9b7650" stroke="#6b4e34" stroke-width="2"/><ellipse cx="26" cy="-7" rx="5" ry="7" fill="#d9b98a" stroke="#6b4e34" stroke-width="1.5"/>',
+    seagrass:'<path d="M-10 0 q-6 -20 2 -40 M-3 0 q4 -24 -2 -48 M4 0 q-4 -18 4 -38 M11 0 q6 -16 0 -32" stroke="#3f8f6a" stroke-width="3.5" fill="none" stroke-linecap="round"/>'
+  };
+  /* 牛、羊（左上原點畫，包一層移到底部中央） */
+  var COW='<path d="M14 30 q-14 12 -8 34" fill="none" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/>'+
+    [22,38,80,96].map(function(x,i){return '<g class="leg" data-b="'+(i==1||i==2?1:0)+'"><rect x="'+x+'" y="50" width="10" height="32" rx="3" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/><rect x="'+x+'" y="76" width="10" height="7" fill="'+K+'"/></g>'}).join('')+
+    '<rect x="12" y="20" width="100" height="42" rx="19" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/>'+
+    '<path d="M30 21 q10 12 26 6 q4 -4 2 -7z" fill="'+K+'"/><ellipse cx="82" cy="44" rx="12" ry="8" fill="'+K+'"/><ellipse cx="44" cy="50" rx="6" ry="4" fill="'+K+'"/>'+
+    '<path d="M108 10 q-6 -9 0 -12 M126 9 q6 -9 0 -12" fill="none" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/><ellipse cx="102" cy="16" rx="8" ry="4" fill="#fbfaf6" stroke="'+K+'" stroke-width="2" transform="rotate(-20 102 16)"/>'+
+    '<rect x="102" y="6" width="34" height="32" rx="13" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/><rect x="118" y="23" width="24" height="17" rx="8" fill="#f0b8ad" stroke="'+K+'" stroke-width="2"/>'+
+    '<circle cx="114" cy="17" r="2.6" fill="'+K+'"/><circle cx="129" cy="30" r="1.8" fill="'+K+'"/><circle cx="137" cy="30" r="1.8" fill="'+K+'"/>';
+  var SHEEP=[24,36,66,78].map(function(x,i){return '<g class="leg" data-b="'+(i==1||i==2?1:0)+'"><rect x="'+x+'" y="50" width="7" height="30" rx="2" fill="#3b3631"/></g>'}).join('')+
+    [[24,38,14],[40,27,14],[60,25,14],[78,32,14],[32,52,12],[52,54,12],[72,50,12],[84,44,10]].map(function(c){return '<circle cx="'+c[0]+'" cy="'+c[1]+'" r="'+c[2]+'" fill="#f4f1e8" stroke="'+K+'" stroke-width="2"/>'}).join('')+
+    '<rect x="22" y="28" width="62" height="28" rx="14" fill="#f4f1e8"/><ellipse cx="92" cy="22" rx="8" ry="4" fill="#3b3631" transform="rotate(-25 92 22)"/>'+
+    '<ellipse cx="100" cy="32" rx="12" ry="14" fill="#3b3631"/><circle cx="96" cy="20" r="7" fill="#f4f1e8" stroke="'+K+'" stroke-width="2"/><circle cx="104" cy="28" r="2.6" fill="#fff"/><circle cx="104.5" cy="28.5" r="1.3" fill="'+K+'"/>';
+  api.SH.cow='<g transform="translate(-70 -83)">'+COW+'</g>';
+  api.SH.sheep='<g transform="translate(-56 -80)">'+SHEEP+'</g>';
+  api.SH.cowPts={mouth:[72,-47],nose:[74,-53],rear:[-62,-45]};
+  api.SH.sheepPts={mouth:[54,-40],nose:[56,-44],rear:[-44,-38]};
+  /* 跑步：腳擺動，回傳停止函式 */
+  api.legs=function(g){var a=[];g.querySelectorAll('.leg').forEach(function(l){l.style.transformBox='fill-box';l.style.transformOrigin='50% 0';
+      var an=api.A(l,[{transform:'rotate(20deg)'},{transform:'rotate(-20deg)'}],260,{iter:Infinity,dir:'alternate',ease:'ease-in-out',delay:l.getAttribute('data-b')==='1'?0:0,fill:'none'});
+      if(an&&l.getAttribute('data-b')==='1')an.currentTime=260;if(an)a.push(an)});
+    return function(){a.forEach(function(x){x.cancel()})}};
+
+  /* ---------- 遊戲流程 ---------- */
+  var Q=C.questions,idx=0,score=0,phase='idle',S=C.scene(api);
+  function act(n){if(n&&S.acts&&S.acts[n])S.acts[n]()}
+  function btn(t,cls,fn){var b=D.createElement('button');b.type='button';b.textContent=t;if(cls)b.className=cls;b.addEventListener('click',fn);return b}
+  function show(){phase='q';var q=Q[idx];pEl.textContent='第 '+(idx+1)+' 題／共 '+Q.length+' 題';qEl.textContent=q.q;oEl.innerHTML='';fEl.innerHTML='';
+    q.opts.forEach(function(o,i){oEl.appendChild(btn(o,'',function(){answer(i)}))});stopAll();act(q.act)}
+  function answer(i){phase='a';var q=Q[idx],right=i===q.ans;
+    oEl.querySelectorAll('button').forEach(function(b,j){b.disabled=true;b.classList.add(j===q.ans?'ok':j===i?'bad':'dim')});
+    if(right)score++;
+    if(q.after){stopAll();act(q.after)}
+    var why=typeof q.why==='object'?(q.why[i]||q.why.d):q.why;
+    var box=h('div','res '+(right?'ok':'bad'),'<b>'+(right?'答對了！':'答錯了')+'</b><p></p>',fEl);box.querySelector('p').textContent=right?q.ok:why;
+    var last=idx===Q.length-1,nx=btn(last?'看結果':(right?'下一題 →':'懂了，下一題 →'),'gm-next',function(){if(last)end();else{idx++;show()}});
+    fEl.appendChild(nx);try{nx.focus({preventScroll:true})}catch(e){}}
+  function end(){phase='end';stopAll();act('end');pEl.textContent='完成';
+    qEl.innerHTML='答對 <span class="gm-score">'+score+'／'+Q.length+'</span> 題';oEl.innerHTML='';fEl.innerHTML='';
+    var box=h('div','res ok','<b>重點</b><p></p>',fEl);box.querySelector('p').textContent=C.summary;
+    fEl.appendChild(btn('再玩一次','gm-next',function(){start()}))}
+  function start(){stopAll();idx=0;score=0;phase='enter';oEl.innerHTML='';fEl.innerHTML='';pEl.textContent='　';qEl.textContent=C.intro||'準備開始…';
+    S.enter(function(){if(phase==='enter')show()})}
+  var lastF=null;
+  function open(){hideTip();lastF=D.activeElement;ov.hidden=false;D.documentElement.classList.add('gm-lock');dlg.querySelector('.gm-x').focus();
+    if(phase==='idle'||phase==='enter')start();else if(phase==='q'||phase==='a')act(Q[idx].act)}
+  function close(){stopAll();ov.hidden=true;D.documentElement.classList.remove('gm-lock');if(phase==='enter')phase='idle';try{(lastF||fab).focus()}catch(e){}}
+  fab.addEventListener('click',open);
+  dlg.querySelector('.gm-x').addEventListener('click',close);
+  ov.addEventListener('click',function(e){if(e.target===ov)close()});
+  D.addEventListener('keydown',function(e){if(ov.hidden)return;
+    if(e.key==='Escape'){close();return}
+    if(e.key==='Tab'){var f=[].slice.call(dlg.querySelectorAll('button:not(:disabled)'));if(!f.length)return;var a=f[0],z=f[f.length-1];
+      if(e.shiftKey&&D.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&D.activeElement===z){e.preventDefault();a.focus()}}});
+
+  /* ---------- 提示泡泡：往下讀一段或停留 15 秒後出現一次 ---------- */
+  var tipDone=false,tipT;
+  function hideTip(){tip.classList.remove('on');clearTimeout(tipT)}
+  function showTip(){if(tipDone||!ov.hidden)return;tipDone=true;tip.classList.add('on');fab.classList.add('wig');tipT=setTimeout(hideTip,12000)}
+  tip.addEventListener('click',function(e){if(e.target.classList.contains('gm-tipx')){hideTip();return}open()});
+  setTimeout(showTip,15000);
+  window.addEventListener('scroll',function(){var m=D.scrollingElement||D.documentElement,max=m.scrollHeight-window.innerHeight;if(max>0&&(window.scrollY||m.scrollTop)>max*.25)showTip()},{passive:true});
+  api.open=open;return api;
+};
+GMRUN({title:'廢棄物變資源',teaser:'黑水虻吃廚餘，可以變出哪些東西？點我玩玩看',alt:'豬、沼氣槽、發電、黑水虻和卡車',intro:'循環農場開張…',
+summary:'厭氧消化：水解 → 酸化 → 甲烷化，沼氣發電、沼渣沼液回田。含水量高的禽畜糞適合水熱處理。黑水虻把廚餘變成飼料、肥料和幾丁質。循環農業不一定減碳，要用碳足跡或 LCA 算淨效益。',
+scene:function(G){
+  var SH=G.SH,GY=210,svg=G.svg;
+  G.bg({ground:GY,grass:[20,220,520,860]});
+  var pig=G.put(null,80,GY,.62,SH.pig);
+  G.el('path',{d:'M120 '+(GY-12)+' H250',stroke:'#7a6a5a','stroke-width':7,'stroke-linecap':'round'},null,svg);
+  var dome=G.put(null,300,GY,1,SH.dome);G.text(300,GY+22,'厭氧消化槽','sub');
+  G.el('path',{d:'M300 '+(GY-88)+' V'+(GY-110)+' H420 V'+(GY-80),stroke:'#7a6a5a','stroke-width':5,fill:'none'},null,svg);
+  var pole=G.put(null,430,GY,.75,SH.pole);G.text(430,GY+22,'沼氣發電','sub');
+  var pile=G.put(null,620,GY,1,'<path d="M-70 0 Q-50 -40 0 -44 Q50 -40 70 0Z" fill="#8a7a3a"/><circle cx="-30" cy="-18" r="7" fill="#c0503a"/><circle cx="20" cy="-26" r="6" fill="#e2b84a"/><circle cx="40" cy="-10" r="7" fill="#7fbf6a"/><circle cx="-6" cy="-10" r="6" fill="#d58f5a"/>');
+  G.text(620,GY+22,'廚餘＋黑水虻','sub');
+  var lv=[[-44,-14],[-20,-30],[6,-36],[30,-22],[50,-8],[-8,-16]].map(function(p){return G.put(pile.outer,p[0],p[1],1,SH.larva,'50% 50%')});
+  var manure=G.put(null,170,GY,1,'<path d="M-30 0 Q-20 -20 0 -22 Q20 -20 30 0Z" fill="#6b4e34"/>');G.A(manure,[{opacity:0}],1);
+  var truck=G.put(null,0,GY+30,.7,SH.truck);G.A(truck,[{opacity:0}],1);
+  function rnd(a){return a[Math.floor(Math.random()*a.length)]}
+  function bub(){var x=270+Math.random()*60,b=G.el('circle',{cx:x,cy:GY-8,r:4,fill:'#e8eef2',opacity:.9},null,G.top());
+    G.A(b,[{transform:'translateY(0)'},{transform:'translateY(-60px)'}],1100,{ease:'ease-in',fill:'none',done:function(){b.remove()}});if(G.reduce)G.later(function(){b.remove()},400)}
+  function wig(){lv.forEach(function(l,i){G.A(l,[{transform:'rotate(-14deg)'},{transform:'rotate(14deg)'}],400+i*40,{iter:Infinity,dir:'alternate',ease:'ease-in-out'})})}
+  return {
+    enter:function(done){G.A(manure,[{opacity:0}],1);G.A(truck,[{opacity:0}],1);
+      [pig,dome,pole,pile].forEach(function(e,i){G.A(e,[{transform:'scale(0)'},{transform:'scale(1)'}],600,{delay:i*150,ease:'cubic-bezier(.3,1.4,.5,1)'})});G.later(function(){wig();done()},1100)},
+    acts:{
+      digest:function(){var s=['水解','酸化','甲烷化'],k=0;G.loop(bub,300);
+        G.loop(function(){G.pop(300,GY-104,s[k%3],{size:16,ms:1300});if(k++%3===2){G.puff(420,GY-90,{dy:-40,n:2,r:8,color:G.C.ch4,label:'CH₄',ms:1500});G.later(function(){G.pulse(pole);G.pop(430,GY-112,'發電！',{size:15})},700)}},1400)},
+      wet:function(){G.A(manure,[{opacity:0},{opacity:1}],400);
+        G.loop(function(){var d=G.el('path',{d:'M'+(150+Math.random()*40)+' 40 q-5 9 0 12 q5 -3 0 -12z',fill:'#6fa8d6'},null,G.top());
+          G.A(d,[{transform:'translateY(0)'},{transform:'translateY('+(GY-70)+'px)'}],900,{ease:'ease-in',fill:'none',done:function(){d.remove()}})},300);
+        G.later(function(){G.pop(170,GY-50,'含水量好高',{size:15})},600)},
+      bsf:function(){var p=['幼蟲粉 → 水產飼料','蟲糞 → 肥料','幾丁質 → 醫藥、美妝'],k=0;G.loop(function(){G.pop(620,GY-70,p[k++%3],{size:15,ms:1600})},1700)},
+      net:function(){G.A(truck,[{opacity:1,transform:'translateX(80px)'},{opacity:1,transform:'translateX(860px)'}],4200,{iter:Infinity,ease:'linear'});
+        G.loop(function(){G.puff(300+(Math.random()*400),GY+8,{dy:-50,n:2,r:7,color:G.C.smoke,label:'CO₂',ms:1700});if(Math.random()<.5)G.puff(320,GY-80,{dy:-50,n:2,r:7,color:G.C.ch4,label:'逸散',ms:1700})},900);
+        G.later(function(){G.pop(440,60,'運輸、耗能、甲烷逸散也要算',{size:16})},400)},
+      end:function(){G.A(truck,[{opacity:0}],300)}
+    }}},
+questions:[
+  {act:'digest',q:'厭氧消化的三個步驟，順序是？',opts:['水解 → 酸化 → 甲烷化','酸化 → 水解 → 甲烷化','甲烷化 → 酸化 → 水解'],ans:0,
+   ok:'大分子先水解，再酸化成有機酸、H₂、CO₂，最後由甲烷菌產生 CH₄。',
+   why:'水解 → 酸化 → 甲烷化。水解把大分子拆成醣、胺基酸、脂肪酸；酸化產生醋酸、揮發性脂肪酸、氫氣與 CO₂；最後甲烷菌產生 CH₄。'},
+  {act:'wet',q:'含水量很高的禽畜糞，熱裂解和水熱處理哪一個比較適合？',opts:['熱裂解','水熱處理'],ans:1,
+   ok:'水熱處理以水為介質，不必先乾燥。',
+   why:'水熱處理。它以水為介質，不必先把原料乾燥；熱裂解要先乾燥，耗能比較高。'},
+  {act:'bsf',q:'黑水虻處理廚餘，下面哪一個「不是」講義提到的產品？',opts:['脫脂幼蟲粉做水產飼料','蟲糞做肥料','外殼幾丁質做醫藥、美妝','翅膀做成衣服布料'],ans:3,
+   ok:'三類產品：幼蟲粉（飼料）、蟲糞（肥料）、幾丁質（醫藥、健康食品、美妝）。',
+   why:'翅膀做衣服是亂編的。講義 9 的三類產品：脫脂幼蟲粉做水產飼料、蟲糞做肥料、外殼的幾丁質做醫藥、健康食品與美妝。'},
+  {act:'net',q:'循環農業一定減碳嗎？',opts:['一定','不一定'],ans:1,
+   ok:'要用碳足跡或 LCA 把運輸、耗能、甲烷逸散、替代效益都算進去。',
+   why:'不一定。要用碳足跡或 LCA 把運輸、處理耗能、甲烷逸散、替代效益都算進去，才知道淨效益。'}
+]});
+</script><!--/gm-js-->
+
+</body>
+</html>

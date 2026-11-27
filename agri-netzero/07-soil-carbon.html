@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>土壤碳匯策略概論</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: 單欄閱讀講義，桌機左側固定目錄；筆記、ISO 連結、重點用不同框區分 */
+:root{
+  --bg:#f4f6f1; --paper:#ffffff; --fg:#1c231f; --muted:#5b6660; --line:#d9ded6;
+  --accent:#2f6a4c; --accent-soft:#e3eee6;
+  --ink:#2a4a9a; --ink-soft:#e8edf8;
+  --hl:#f3e27a; --soil:#9a6a22; --soil-soft:#f5ecdc;
+  --font-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --font-head:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --font-num:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141a17; --paper:#1b2320; --fg:#e4ebe6; --muted:#9aa8a0; --line:#2e3a35;
+  --accent:#7cc39b; --accent-soft:#1f3329; --ink:#9db4f0; --ink-soft:#1f2740;
+  --hl:#6b5d14; --soil:#d9a85a; --soil-soft:#30281a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141a17; --paper:#1b2320; --fg:#e4ebe6; --muted:#9aa8a0; --line:#2e3a35;
+  --accent:#7cc39b; --accent-soft:#1f3329; --ink:#9db4f0; --ink-soft:#1f2740;
+  --hl:#6b5d14; --soil:#d9a85a; --soil-soft:#30281a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.8;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1480px;margin:0 auto;display:grid;grid-template-columns:190px minmax(0,1fr);gap:36px;padding-block:32px 80px}
+@media (max-width:860px){.wrap{grid-template-columns:minmax(0,1fr)} nav.toc{position:static!important;max-height:none!important}}
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);align-self:start;max-height:calc(100vh - 32px);overflow:auto;font-size:14px}
+nav.toc h2{font-size:13px;letter-spacing:.12em;color:var(--muted);margin:0 0 8px;font-family:var(--font-body)}
+nav.toc ol{margin:0;padding-left:32px;display:grid;gap:4px}
+nav.toc a{color:var(--fg);text-decoration:none}
+nav.toc a:hover,nav.toc a:focus-visible{color:var(--accent);text-decoration:underline}
+main{min-width:0}
+.toc-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px}
+.toc-head h2{margin:0!important}
+.toc-btn{font:inherit;font-size:13px;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:6px;padding:2px 8px;cursor:pointer;line-height:1.6}
+.toc-btn:hover,.toc-btn:focus-visible{color:var(--accent);border-color:var(--accent)}
+.toc-open{display:none;white-space:nowrap}
+body.toc-off .wrap{grid-template-columns:76px minmax(0,1fr)}
+body.toc-off nav.toc>*:not(.toc-open){display:none}
+body.toc-off .toc-open{display:inline-block}
+@media (max-width:860px){body.toc-off .wrap{grid-template-columns:minmax(0,1fr)}}
+header.hero{border-bottom:3px solid var(--accent);padding-bottom:20px;margin-bottom:28px}
+.eyebrow{font-size:13px;letter-spacing:.14em;color:var(--accent);font-weight:700}
+h1{font-family:var(--font-head);font-weight:900;font-size:clamp(28px,5vw,42px);line-height:1.3;margin:6px 0 10px;text-wrap:balance}
+.meta{color:var(--muted);font-size:14px}
+h2{font-family:var(--font-head);font-size:26px;line-height:1.35;margin:56px 0 14px;text-wrap:balance;scroll-margin-top:16px}
+h2 .no{font-family:var(--font-num);color:var(--accent);font-size:18px;margin-right:10px}
+h3{font-size:19px;margin:30px 0 8px;color:var(--accent)}
+p{margin:10px 0}
+ul,ol{padding-left:22px;margin:8px 0}
+li{margin:3px 0}
+mark{background:linear-gradient(transparent 55%,var(--hl) 55%);color:inherit;padding:0 1px}
+.num{font-family:var(--font-num);font-variant-numeric:tabular-nums}
+.box{border-radius:10px;padding:14px 18px;margin:16px 0}
+.box>.tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.08em;padding:1px 8px;border-radius:999px;margin-bottom:4px}
+.box p,.box ul{margin:6px 0}
+.guide{background:var(--paper);border:1px solid var(--line)}
+.guide .tag{background:var(--accent);color:var(--paper)}
+.note{background:var(--ink-soft);border-left:4px solid var(--ink)}
+.note .tag{background:var(--ink);color:var(--paper)}
+.note .hand{color:var(--ink);font-weight:500}
+.iso{background:var(--soil-soft);border-left:4px solid var(--soil)}
+.iso .tag{background:var(--soil);color:var(--paper)}
+.key{background:var(--accent-soft);border-left:4px solid var(--accent)}
+.key .tag{background:var(--accent);color:var(--paper)}
+.unclear{color:var(--muted);font-size:13px;border-bottom:1px dotted var(--muted)}
+.tbl{overflow-x:auto;width:fit-content;max-width:100%;margin:14px 0;border:1px solid var(--line);border-radius:8px;background:var(--paper)}
+table{border-collapse:collapse;width:auto;font-size:15px;min-width:480px}
+th,td{padding:8px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--accent-soft);font-weight:700;white-space:nowrap}
+td.r,th.r{text-align:right}
+td:first-child,th:first-child{white-space:nowrap}
+tr:last-child td{border-bottom:none}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:16px 0}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.stat b{display:block;font-family:var(--font-num);font-size:22px;color:var(--accent);line-height:1.3}
+.stat span{font-size:13px;color:var(--muted)}
+.axes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:16px 0}
+.axis{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:8px;padding:12px 14px}
+.axis h4{margin:0 0 4px;font-size:17px}
+.axis .goal{font-family:var(--font-num);color:var(--accent);font-weight:700}
+.fig{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0;width:fit-content;max-width:100%}
+.fig svg{display:block;max-width:100%;height:auto}
+.fig figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.fig .t{fill:var(--fg);font-size:14px;font-family:var(--font-body)}
+.fig .tb{fill:var(--fg);font-size:14px;font-weight:700;font-family:var(--font-body)}
+.fig .m{fill:var(--muted);font-size:12.5px;font-family:var(--font-body)}
+.fig .n{fill:var(--fg);font-size:13px;font-family:var(--font-num)}
+.fig .ax{stroke:var(--line);stroke-width:1}
+.fig .g-acc{fill:var(--accent)} .fig .s-acc{stroke:var(--accent)}
+.fig .g-soil{fill:var(--soil)} .fig .s-soil{stroke:var(--soil)}
+.fig .g-ink{fill:var(--ink)} .fig .s-ink{stroke:var(--ink)}
+.fig .g-mut{fill:var(--muted)} .fig .s-mut{stroke:var(--muted)}
+.fig .g-accs{fill:var(--accent-soft)} .fig .g-soils{fill:var(--soil-soft)} .fig .g-inks{fill:var(--ink-soft)}
+.fig .hit:hover{opacity:.8}
+.calc{width:fit-content;max-width:100%}
+.loop{position:relative;margin-top:22px!important;margin-bottom:48px!important;padding-left:26px}
+.loop-svg{position:absolute;left:0;top:0;overflow:visible;pointer-events:none;color:var(--accent)}
+.loop-svg text{fill:var(--accent);font-size:13px;font-family:var(--font-body)}
+.flow span.ok{background:var(--accent-soft);border-color:var(--accent);font-weight:700}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0;font-size:14px}
+.flow span{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:4px 10px}
+.flow i{font-style:normal;color:var(--muted)}
+details.q{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0}
+details.q summary{cursor:pointer;font-weight:500}
+details.q summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+details.q[open] summary{color:var(--accent)}
+details.q .a{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+dl.gloss{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 18px;margin:12px 0}
+dl.gloss dt{font-weight:700;color:var(--accent)}
+dl.gloss dd{margin:0}
+@media (max-width:560px){dl.gloss{grid-template-columns:minmax(0,1fr)} dl.gloss dd{margin-bottom:8px}}
+footer{margin-top:60px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+a.xref{display:block;width:fit-content;margin-top:6px}
+.steps{width:fit-content;max-width:100%}
+.box{width:fit-content;max-width:100%}
+.flow span{display:inline-flex;align-items:center;gap:8px}
+.flow span .fi{width:22px;height:22px;flex:none;fill:none;stroke:var(--accent);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.flow span .tx{font-style:normal}
+</style>
+<style>
+.formula{font-family:var(--font-num);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px;overflow-x:auto;white-space:nowrap;font-size:15px;margin:8px 0}
+.calc{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:16px 0;display:grid;gap:12px}
+.calc .row{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:end}
+.calc label{display:grid;gap:4px;font-size:14px;color:var(--muted)}
+.calc input{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 10px;width:160px;max-width:100%}
+.calc input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.calc .out{font-family:var(--font-num);font-size:15px;line-height:1.9;border-top:1px dashed var(--line);padding-top:10px}
+.calc .out b{color:var(--accent);font-size:20px}
+.steps{counter-reset:s;list-style:none;padding:0;display:grid;gap:8px;margin:12px 0}
+.steps li{counter-increment:s;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px 12px 8px 44px;position:relative}
+.steps li::before{content:counter(s);position:absolute;left:12px;top:8px;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--paper);font-family:var(--font-num);font-size:13px;display:grid;place-items:center}
+</style>
+<!--gm-css--><style>
+/* 跳出式小遊戲 */
+.gm-fab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));z-index:60;display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:15px;font-weight:700;color:var(--paper);background:var(--accent);border:0;border-radius:999px;padding:10px 18px 10px 14px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.22)}
+.gm-fab svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.gm-fab:hover,.gm-fab:focus-visible{filter:brightness(1.08);outline:2px solid var(--fg);outline-offset:2px}
+.gm-fab.wig{animation:gmWig .9s ease-in-out 2}
+@keyframes gmWig{0%,100%{transform:rotate(0)}20%{transform:rotate(-8deg) scale(1.06)}40%{transform:rotate(7deg) scale(1.06)}60%{transform:rotate(-4deg)}80%{transform:rotate(3deg)}}
+.gm-tip{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(max(16px,env(safe-area-inset-bottom,0px)) + 58px);z-index:60;max-width:min(300px,calc(100vw - 32px));background:var(--paper);color:var(--fg);border:2px solid var(--accent);border-radius:14px;padding:10px 34px 10px 14px;font-size:15px;line-height:1.55;box-shadow:0 6px 20px rgba(0,0,0,.2);cursor:pointer;opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .3s,transform .3s}
+.gm-tip.on{opacity:1;transform:none;pointer-events:auto}
+.gm-tip::after{content:"";position:absolute;right:34px;bottom:-9px;width:14px;height:14px;background:var(--paper);border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(45deg)}
+.gm-tip b{display:block;font-size:12px;letter-spacing:.1em;color:var(--accent)}
+.gm-tipx{position:absolute;top:4px;right:6px;font:inherit;font-size:18px;line-height:1;color:var(--muted);background:none;border:0;cursor:pointer;padding:4px}
+html.gm-lock,html.gm-lock body{overflow:hidden}
+.gm-ov{position:fixed;inset:0;z-index:70;background:rgba(10,16,13,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.gm-ov[hidden]{display:none}
+.gm-dlg{background:var(--paper);color:var(--fg);border-radius:14px;width:100%;max-width:780px;max-height:calc(100vh - 32px);overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.gm-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px 10px 18px;border-bottom:1px solid var(--line)}
+.gm-hd b{font-family:var(--font-head);font-size:18px}
+.gm-x{font:inherit;font-size:22px;line-height:1;color:var(--muted);background:none;border:1px solid var(--line);border-radius:8px;width:36px;height:36px;cursor:pointer}
+.gm-x:hover,.gm-x:focus-visible{color:var(--accent);border-color:var(--accent)}
+.gm-stage{display:block;width:100%;height:auto;background:linear-gradient(var(--bg),var(--paper))}
+.gm-stage text{font-family:var(--font-body)}
+.gm-stage .lbl{fill:var(--fg);font-size:14px;font-weight:700;text-anchor:middle}
+.gm-stage .sub{fill:var(--muted);font-size:12px;text-anchor:middle}
+.gm-stage .pop{fill:var(--fg);font:900 19px var(--font-head);text-anchor:middle}
+.gm-stage .gas text{fill:var(--fg);font:700 13px var(--font-num);text-anchor:middle;dominant-baseline:middle}
+.gm-card{padding:14px 20px 20px}
+.gm-prog{font-size:13px;color:var(--muted);letter-spacing:.06em;min-height:1.4em}
+.gm-q{font-family:var(--font-head);font-size:21px;font-weight:700;margin:4px 0 12px;line-height:1.45}
+.gm-opts{display:flex;flex-wrap:wrap;gap:10px}
+.gm-opts button,.gm-next{font:inherit;font-size:16px;font-weight:700;color:var(--fg);background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:8px 18px;cursor:pointer;min-width:90px;text-align:left;line-height:1.5}
+.gm-opts button:hover:not(:disabled),.gm-opts button:focus-visible{border-color:var(--accent);color:var(--accent)}
+.gm-opts button:disabled{cursor:default}
+.gm-opts button.ok{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.gm-opts button.bad{background:var(--soil);border-color:var(--soil);color:var(--paper)}
+.gm-opts button.dim{opacity:.45}
+.gm-fb{margin-top:12px}
+.gm-fb .res{border-radius:10px;padding:12px 16px;margin:0 0 10px}
+.gm-fb .res.ok{background:var(--accent-soft);border-left:4px solid var(--accent)}
+.gm-fb .res.bad{background:var(--soil-soft);border-left:4px solid var(--soil)}
+.gm-fb .res b{display:block;font-size:17px;margin-bottom:2px}
+.gm-fb .res.ok b{color:var(--accent)}
+.gm-fb .res.bad b{color:var(--soil)}
+.gm-fb .res p{margin:4px 0}
+.gm-next{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.gm-next:hover,.gm-next:focus-visible{filter:brightness(1.08)}
+.gm-score{font-family:var(--font-num);font-size:28px;color:var(--accent);font-weight:700}
+@media (max-width:560px){.gm-q{font-size:18px}.gm-card{padding:12px 14px 16px}.gm-opts button{flex:1 1 100%}.gm-ov{padding:8px}.gm-dlg{max-height:calc(100vh - 16px)}}
+@media (prefers-reduced-motion:reduce){.gm-fab.wig{animation:none}.gm-tip{transition:none}}
+</style><!--/gm-css-->
+
+<style>
+.site-nav{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px;max-width:1480px;margin:0 auto;padding-top:20px}
+.site-nav+.wrap{padding-top:16px}
+.site-nav a{color:var(--muted);text-decoration:none}
+.site-nav a:hover,.site-nav a:focus-visible{color:var(--accent);text-decoration:underline}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:56px 0 0;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{display:block;padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--fg);text-decoration:none;font-size:15px}
+.pager a:hover,.pager a:focus-visible{border-color:var(--accent)}
+.pager small{display:block;color:var(--muted);font-size:12px}
+.pager .next{text-align:right;grid-column:2}
+@media (max-width:560px){.pager{grid-template-columns:1fr}.pager .next{grid-column:1}}
+</style>
+</head>
+<body>
+<nav class="site-nav" aria-label="網站導覽"><a href="index.html">← 回課程目錄</a><a href="../index.html">學習筆記首頁</a></nav>
+<div class="wrap">
+<nav class="toc" aria-label="目錄">
+  <button type="button" class="toc-btn toc-open" id="tocShow" aria-label="展開目錄">目錄 »</button>
+  <div class="toc-head"><h2>目錄</h2><button type="button" class="toc-btn" id="tocHide" aria-label="收起目錄">« 收起</button></div>
+  <p style="margin:0 0 6px"><a href="#guide">導讀</a></p>
+  <ol>
+    <li><a href="#why">為什麼是土壤</a></li>
+    <li><a href="#soc">土壤有機碳：量與質</a></li>
+    <li><a href="#storage">儲存 ≠ 吸存，專案要比基線</a></li>
+    <li><a href="#factors">影響土壤碳匯的條件</a></li>
+    <li><a href="#practice">怎麼增加與維護土壤碳</a></li>
+    <li><a href="#trial">土壤碳匯怎麼量：龍潭田間試驗</a></li>
+    <li><a href="#mrv">土壤碳的 MRV 與資料庫</a></li>
+    <li><a href="#supp">補充：改進農業土壤管理方法學</a></li>
+    <li><a href="#quiz">自我測驗</a></li>
+    <li><a href="#gloss">名詞表</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="hero">
+  <h1>土壤碳匯策略概論</h1>
+</header>
+
+<section id="guide">
+  <div class="box guide">
+    <span class="tag">導讀</span>
+    <p>土壤是陸地最大的碳庫（約 1,500–2,400 Gt C，比大氣多兩到三倍），但進到土壤的碳大部分很快又變回 CO₂。這份講義的核心是：<mark>碳要「放得進去」（量），也要「留得住」（質）</mark>。</p>
+    <p>三個閱讀重點：</p>
+    <ul>
+      <li>土壤有機碳分成活性、慢性、惰性；被團粒包住或與礦物結合的碳才穩定，見 <a href="#soc">第 2 節</a>。</li>
+      <li>「土壤碳儲存」不等於「從大氣吸存」；專案能主張的是比照舊情境多出來的部分，見 <a href="#storage">第 3 節</a>。</li>
+      <li>土壤碳匯怎麼算、龍潭田間試驗怎麼做、MRV 六階段，見 <a href="#trial">第 6 節</a>、<a href="#mrv">第 7 節</a>，還有計算器可以練習。</li>
+    </ul>
+    <p style="font-size:14px;color:var(--muted)">框的顏色：<span style="color:var(--ink)">藍色＝上課手寫筆記</span>、<span style="color:var(--soil)">棕色＝跟 ISO 或其他講義的連結</span>、綠色＝重點。</p>
+  </div>
+</section>
+
+<section id="why">
+<h2><span class="no">01</span>為什麼是土壤</h2>
+<p>碳循環：大氣 CO₂ 經光合作用變成植物體 → 凋落物進入土壤成為有機質 → 微生物呼吸把碳氧化回 CO₂，一部分隨水流失到地下水。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">有機碳 vs. 石灰等無機碳。</p></div>
+<h3>土地利用已經讓土壤流失大量碳</h3>
+<div class="tbl"><table>
+<tr><th>時期</th><th>來源</th><th class="r">歷史碳排放（Gt C）</th></tr>
+<tr><td>工業化前</td><td>化石燃料</td><td class="r num">0</td></tr>
+<tr><td>工業化前</td><td>土地利用轉換（每年 0.04 Gt C，持續 7,800 年）</td><td class="r num">320</td></tr>
+<tr><td>工業化後</td><td>化石燃料（1850 年起）</td><td class="r num">270 ± 30</td></tr>
+<tr><td>工業化後</td><td>土地利用轉換：耕作 78 ± 12（侵蝕 26 ± 9、礦化 52 ± 8）</td><td class="r num">136 ± 5</td></tr>
+</table></div>
+<p style="font-size:14px;color:var(--muted)">Lal（2004, Science 304:1623）。Ruddiman 估計工業化後土地利用轉換約每年 0.8 Gt C、200 年共 160 Gt C。</p>
+<p>土壤失掉的碳和化石燃料排放是同一個數量級。反過來說，<b>把碳補回土壤也有很大的潛力</b>。2019 年臺灣農業部門占總排放 1.15%（能源 90.80%、工業製程 7.10%、廢棄物 0.94%）；臺灣 2050 淨零十二項關鍵戰略中，第 9 項就是「自然碳匯」。</p>
+<div class="box iso"><span class="tag">連結講義 1</span><p>土壤增匯是農業淨零四大主軸裡的「增匯」。<a class="xref" href="01-net-zero.html#sink">講義 1〈主軸二 增匯〉↗</a></p></div>
+
+<h3>千分之四倡議（4 per 1000）</h3>
+<div class="stats">
+  <div class="stat"><b>+4.3</b><span>大氣碳每年增加（Gt C／年）：化石 +8.9、毀林 +0.9、植被 −2.9、海洋 −2.6</span></div>
+  <div class="stat"><b>860 Gt</b><span>全球表層土壤碳存量（土壤總碳 1,500–2,400 Gt）</span></div>
+  <div class="stat"><b>3.44</b><span>860 × 0.004，每年增加千分之四就幾乎抵銷大氣的年增量（Gt C）</span></div>
+</div>
+<p>關鍵是要有<b>快速又方便的 SOC 量測方法</b>，才能把土壤碳儲潛力（高碳土壤避免流失、農地與退化地多存碳）連到碳交易（CDM、VCS、Gold Standard、臺灣環境部）。</p>
+</section>
+
+<section id="soc">
+<h2><span class="no">02</span>土壤有機碳：量與質</h2>
+<h3>三個分庫</h3>
+<figure class="fig"><svg viewBox="0 0 710 185" width="710" role="img" aria-label="土壤有機碳三個分庫：活性、慢性、惰性"><rect x="20" y="30" width="210" height="96" rx="10" class="g-soils" stroke="var(--soil)"/><text x="125" y="60" text-anchor="middle" class="tb">活性 active</text><text x="125" y="86" text-anchor="middle" class="n">約 5%</text><text x="125" y="110" text-anchor="middle" class="m">周轉 數日到數年</text><rect x="250" y="30" width="210" height="96" rx="10" class="g-accs" stroke="var(--accent)"/><text x="355" y="60" text-anchor="middle" class="tb">慢性 slow</text><text x="355" y="86" text-anchor="middle" class="n">約 60–85%</text><text x="355" y="110" text-anchor="middle" class="m">周轉 數年到數十年</text><rect x="480" y="30" width="210" height="96" rx="10" class="g-inks" stroke="var(--ink)"/><text x="585" y="60" text-anchor="middle" class="tb">惰性 passive</text><text x="585" y="86" text-anchor="middle" class="n">其餘</text><text x="585" y="110" text-anchor="middle" class="m">周轉 數十年到數千年</text><defs><marker id="pa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--muted)"/></marker></defs><line x1="20" x2="690" y1="150" y2="150" class="s-mut" stroke-width="1.5" marker-end="url(#pa)"/><text x="20" y="172" class="m">好分解、留得短</text><text x="690" y="172" text-anchor="end" class="m">難分解、留得久（多與黏粒結合成黏粒-腐植質錯合物）</text></svg><figcaption>依 CENTURY 模式（Parton 等 1988）。腐植質分子量與芳香環愈多、與礦物結合愈緊，愈難被分解。</figcaption></figure>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">臺灣多紅土（氧化鐵多）。要看總量，也要看品質。<br>越黏的土壤越好，固碳潛勢高。</p></div>
+
+<h3>碳怎麼被「保護」起來</h3>
+<div class="tbl"><table>
+<tr><th>保護方式</th><th>說明</th></tr>
+<tr><td><mark>團粒包圍保護</mark></td><td>有機碳被包在土壤團粒（微團粒）內部，微生物碰不到</td></tr>
+<tr><td><mark>與礦物結合</mark></td><td>吸附在黏土礦物表面或層間</td></tr>
+<tr><td>低溫或潮濕環境</td><td>分解速度變慢（濕地、永凍土）</td></tr>
+</table></div>
+<p><b>易分解碳（Labile C）</b>：植物殘體（碳氮比高）被撕碎成顆粒有機質，酵素把它分解成溶解性有機碳，被微生物利用後變成 CO₂。<b>穩定碳（Humus）</b>：受保護的有機質，也就是腐植質；燃燒產生的焦炭（Char）也屬於穩定碳（Weil &amp; Brady 2017）。</p>
+<figure class="fig"><svg viewBox="0 0 660 176" width="660" role="img" aria-label="100 公克有機殘體中，60 到 80 公克變成二氧化碳，腐植質只留 15 到 35 公克"><rect class="hit g-mut" x="20" y="50" width="428" height="40" rx="4"><title>變成 CO₂：60–80 g</title></rect><text x="235" y="112" text-anchor="middle" class="t">變成 CO₂</text><text x="235" y="130" text-anchor="middle" class="n">60–80 g</text><rect class="hit g-soil" x="450" y="50" width="32" height="40" rx="4"><title>微生物體：3–8 g</title></rect><text x="467" y="22" text-anchor="end" class="t">微生物體 3–8 g</text><line x1="467" x2="467" y1="28" y2="48" class="s-mut"/><rect class="hit g-ink" x="483" y="50" width="32" height="40" rx="4"><title>非腐植物質：3–8 g</title></rect><text x="500" y="40" text-anchor="start" class="t" dx="6">非腐植物質 3–8 g</text><line x1="500" x2="500" y1="34" y2="48" class="s-mut"/><rect class="hit g-acc" x="517" y="50" width="121" height="40" rx="4"><title>複雜腐植物質：10–30 g</title></rect><text x="579" y="112" text-anchor="middle" class="t">複雜腐植物質</text><text x="579" y="130" text-anchor="middle" class="n">10–30 g</text><path d="M483,140 v6 H638 v-6" fill="none" class="s-acc"/><text x="562" y="164" text-anchor="middle" class="tb">腐植質 15–35 g</text></svg><figcaption>100 g 有機殘體放進土壤後的去向（Weil &amp; Brady 2017，長條以區間中點示意）。大部分變回 CO₂，真正留成腐植質的只有一到三成。</figcaption></figure>
+
+<h3>碳氮比與分解速度</h3>
+<ul>
+  <li><b>分解速度</b>：碳氮比越高越慢。C/N 87 的黑麥殘體 128 天後還剩約六成；C/N 10 的野豌豆只剩約兩成（Weil &amp; Brady 2017）。</li>
+  <li><b>觸發效應（Priming effect）</b>：加入高 C/N 殘體時，微生物大量繁殖、搶走土壤中的可溶性氮，出現「硝酸鹽抑制期」，作物會缺氮；低 C/N 殘體沒有這個問題。</li>
+  <li>模型用不同的分解函數描述，最常見的是一階動力學 C<sub>t</sub> ＝ C<sub>0</sub>e<sup>−kt</sup>（RothC、ICBM 模型；Smith 等 2020）。</li>
+</ul>
+<div class="box iso"><span class="tag">連結講義 6</span><p>稻稈還田會增加 CH₄、高 C/N 殘體會搶氮，這是減排那一面；土壤碳匯則是同一件事的增匯那一面。兩者要分開核算。<a class="xref" href="06-emission-reduction.html#crop">講義 6〈農作減排〉↗</a></p></div>
+
+<h3>土壤能存多少：飽和、可達、臨界</h3>
+<p>依土壤質地，SOC 有一條「飽和曲線」（理論上限）、一條「可達曲線」（實際管理可達到）、一條「臨界曲線」（低於它土壤功能受損）。三條都隨黏粒含量而變，而且受氣候、土壤類別、地形影響。黏粒越多，上限越高。</p>
+</section>
+
+<section id="storage">
+<h2><span class="no">03</span>儲存 ≠ 吸存，專案要比基線</h2>
+<div class="tbl"><table>
+<tr><th>名詞</th><th>意思</th></tr>
+<tr><td>Soil C storage（儲存）</td><td>單位時間、單位面積能增加土壤有機碳的能力，但<b>不一定</b>是從大氣移除 CO₂（Chenu 等 2019）</td></tr>
+<tr><td>Soil C sequestration（吸存）</td><td>透過植物光合作用，把大氣 CO₂ 轉成土壤中穩定的碳，例如腐植質（Olsen 等 2014）</td></tr>
+</table></div>
+<div class="box key"><span class="tag">重點</span><p>許多改良劑（例如從別處運來的堆肥）可以增加這塊地的土壤碳，但<b>不一定增加吸存</b>：碳可能只是從 A 地搬到 B 地。</p></div>
+<figure class="fig"><svg viewBox="0 0 880 210" width="880" role="img" aria-label="四種土壤情境下，永續管理與照舊的有機碳變化"><g transform="translate(0,0)"><line x1="20" x2="20" y1="30" y2="150" class="ax"/><line x1="20" x2="200" y1="150" y2="150" class="ax"/><line x1="20" x2="200" y1="90" y2="90" class="s-mut" stroke-dasharray="3 3"/><path d="M20,90 H200" fill="none" class="s-soil" stroke-width="2.2" stroke-dasharray="6 4"/><path d="M20,90 C70,60 120,52 200,50" fill="none" class="s-acc" stroke-width="2.5"/><text x="110" y="20" text-anchor="middle" class="tb">a 已平衡</text><text x="110" y="172" text-anchor="middle" class="m">可以再往上</text></g><g transform="translate(220,0)"><line x1="20" x2="20" y1="30" y2="150" class="ax"/><line x1="20" x2="200" y1="150" y2="150" class="ax"/><line x1="20" x2="200" y1="90" y2="90" class="s-mut" stroke-dasharray="3 3"/><path d="M20,90 C80,80 140,74 200,70" fill="none" class="s-soil" stroke-width="2.2" stroke-dasharray="6 4"/><path d="M20,90 C70,60 120,46 200,42" fill="none" class="s-acc" stroke-width="2.5"/><text x="110" y="20" text-anchor="middle" class="tb">b 正在增加</text><text x="110" y="172" text-anchor="middle" class="m">可以增加更多</text></g><g transform="translate(440,0)"><line x1="20" x2="20" y1="30" y2="150" class="ax"/><line x1="20" x2="200" y1="150" y2="150" class="ax"/><line x1="20" x2="200" y1="90" y2="90" class="s-mut" stroke-dasharray="3 3"/><path d="M20,90 C80,115 140,128 200,134" fill="none" class="s-soil" stroke-width="2.2" stroke-dasharray="6 4"/><path d="M20,90 C70,100 120,104 200,106" fill="none" class="s-acc" stroke-width="2.5"/><text x="110" y="20" text-anchor="middle" class="tb">c 正在流失</text><text x="110" y="172" text-anchor="middle" class="m">可以止血、少掉一點</text></g><g transform="translate(660,0)"><line x1="20" x2="20" y1="30" y2="150" class="ax"/><line x1="20" x2="200" y1="150" y2="150" class="ax"/><line x1="20" x2="200" y1="90" y2="90" class="s-mut" stroke-dasharray="3 3"/><path d="M20,90 C80,115 140,128 200,134" fill="none" class="s-soil" stroke-width="2.2" stroke-dasharray="6 4"/><path d="M20,90 C70,62 120,54 200,52" fill="none" class="s-acc" stroke-width="2.5"/><text x="110" y="20" text-anchor="middle" class="tb">d 正在流失</text><text x="110" y="172" text-anchor="middle" class="m">甚至扭轉成增加</text></g><line x1="20" x2="50" y1="196" y2="196" class="s-acc" stroke-width="2.5"/><text x="56" y="200" class="m">永續土壤管理 SSM</text><line x1="200" x2="230" y1="196" y2="196" class="s-soil" stroke-width="2.2" stroke-dasharray="6 4"/><text x="236" y="200" class="m">照舊 BAU</text><line x1="330" x2="360" y1="196" y2="196" class="s-mut" stroke-dasharray="3 3"/><text x="366" y="200" class="m">起始存量</text></svg><figcaption>FAO（2020）。橫軸 2020→2040，縱軸 SOC 存量。專案能主張的是「SSM 比 BAU 多出來的」，不是「比起始存量多出來的」。c 的情況 SOC 還是下降，但相對 BAU 仍有效益。</figcaption></figure>
+<div class="box iso"><span class="tag">連結 ISO 14064-2</span><p>「SSM 比 BAU 多出來的才算」就是基線情境的概念；講義 3 的海草例子是同一張圖。<a class="xref" href="03-blue-carbon.html#principles">講義 3〈碳匯專案六大原則〉↗</a></p></div>
+
+<h3>碳的收支平衡</h3>
+<div class="tbl"><table>
+<tr><th>碳進來（Carbon In）</th><th>碳出去（Carbon Out）</th></tr>
+<tr><td>植物凋落物與殘體、動物糞便、外來生物資材、根分泌物、根殘體</td><td>氧化成 CO₂、收穫移出、沖蝕、溶解性有機碳淋洗</td></tr>
+</table></div>
+<p>補充兩件事：乾旱地區與石灰岩土壤的碳酸鹽屬於<b>無機碳（SIC）</b>，約占全部土壤碳的 1/3（700–940 Gt）；有機質土壤（濕地、泥炭土）的碳約占全球 SOC 的 1/5，但面積只有全球 3%。<b>所以影響碳匯最大的，是大多數做為農業用途的礦質土壤。</b></p>
+</section>
+
+<section id="factors">
+<h2><span class="no">04</span>影響土壤碳匯的條件</h2>
+<p>溫度、水分與土壤質地是直接因素；延伸出來的是土壤類型、氣候、排水與管理方式。</p>
+<div class="tbl"><table>
+<tr><th>因素</th><th>重點</th></tr>
+<tr><td>土壤類型</td><td>有機質土多在溫帶、極圈的永凍或潮濕低溫環境，<mark>有機碳分解緩慢，所以存量最高</mark>；濕地因此是重要碳匯。熱帶有機質土的碳占全球有機質土 28%，但熱帶開發最快，是最脆弱的一環。<mark>全球土壤碳匯有 40% 在森林土壤</mark></td></tr>
+<tr><td>氣候與植被</td><td>美洲沖積平原 1 公尺深的有機碳：亞馬遜 7.0 kg/m²、俄亥俄（北緯 40°）約 10 kg/m²、新英格蘭（北緯 45°）超過 18 kg/m²。緯度越高、溫度越低，分解越慢</td></tr>
+<tr><td>深度</td><td>有機碳集中在表土。全球 0–30 cm 約 684–724 Gt，0–100 cm 約 1,462–1,548 Gt，表層占一半。IPCC 統一分 0–30、30–50、50–100 cm 計算</td></tr>
+</table></div>
+<div class="stats">
+  <div class="stat"><b>&lt; 2.0%</b><span>全臺農田土壤有機碳平均值</span></div>
+  <div class="stat"><b>7.0%</b><span>日本（溫度低，又有大量火山灰土）</span></div>
+</div>
+<div class="tbl"><table>
+<tr><th>土壤</th><th>有機碳剖面</th><th>課堂筆記</th></tr>
+<tr><td>淋澱土</td><td>表層高，30–40 cm 處有第二個高峰（淋洗累積）</td><td>低溫潮濕、針葉林</td></tr>
+<tr><td>極育土</td><td>表層約 1% 後快速下降</td><td>紅土，有機碳少</td></tr>
+<tr><td>旱境土</td><td>整體很低</td><td>乾旱</td></tr>
+<tr><td>新成土</td><td>不規則、多層</td><td>沖積層</td></tr>
+<tr><td>新成土（經翻耕）</td><td>表層均勻</td><td>—</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">人類活動的影響很難超過 1 公尺深。</p></div>
+</section>
+
+<section id="practice">
+<h2><span class="no">05</span>怎麼增加與維護土壤碳</h2>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21v-9"/><path d="M12 12C12 7 9 5 4 5c0 5 3 7 8 7z"/><path d="M12 14c0-4 2.5-6 7-6 0 4-2.5 6-7 6z"/><path d="M6 21h12"/></svg><em class="tx">添加<br><small>有機物料、改良劑</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><em class="tx">維護<br><small>調整環境</small></em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17 9 11l4 4 8-8"/><path d="M15 7h6v6"/></svg><em class="tx">改善</em></span></div>
+<p>農地的碳通常在從森林、草地、泥炭地轉作時就流失了。之後要看管理：<b>投入 ＞ 產出</b>才是吸存（最佳管理措施 BMP：增加碳投入、保育措施）；<b>投入 ＝ 產出</b>是維持（良好農業規範 GAP：輪作、施肥）；<b>投入 ＜ 產出</b>就繼續流失（施肥不足、裸露休耕、排水），通常接著土壤劣化（Amelung 等 2020）。</p>
+<div class="tbl"><table>
+<tr><th>減少破壞</th><th>促進增加</th><th>補足復育</th></tr>
+<tr><td>土壤保育、水土保持、避免土壤封實、減少素地開發</td><td>永續土壤管理、減少耕犁或不耕犁、有機農業、都市農業與都市森林</td><td>農業廢棄物、堆肥、沼液沼渣、生物炭</td></tr>
+</table></div>
+<p>施肥、綠肥與覆蓋作物是主要管道。有機質除了碳匯，還能提高保肥、保水與土壤健康。任何適當的有機物料投入都是增匯策略，<mark>但技術關鍵在有機質的來源、品質與管理</mark>。核心工作：<b>提高進入土壤的有機碳量（quantity），並控制它在土壤中的品質（quality）</b>。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">例如：草生栽培。</p></div>
+
+<h3>維護土壤有機碳的六個原則</h3>
+<ol class="steps">
+  <li>持續添加有機資材，<mark>維持有機碳含量水準</mark>；休耕也要種覆蓋作物，避免土壤裸露。</li>
+  <li>維持<mark>作物—氣候—土壤系統</mark>可支配的足夠有機碳。</li>
+  <li>合理施用氮肥，輪作期間種綠肥，<mark>維持碳氮平衡</mark>。</li>
+  <li>適度施用改良劑與肥料，<mark>讓作物長得好</mark>，並把殘體留在土壤裡。</li>
+  <li>保育式耕犁，<mark>降低耕犁強度</mark>，減緩有機碳分解。</li>
+  <li>農田適度保留多年生草木，<mark>維持自然生態</mark>。</li>
+</ol>
+
+<h3>耕犁的影響</h3>
+<p>森林或草地變成農地，有機碳會減少：耕犁加速通氣、破壞團粒，讓有機碳容易被分解；收穫後植株又被移走，沒有回到土壤。傳統全面翻土還會讓機械壓實底下的土，形成<b>犁底層</b>，阻礙通氣排水；翻鬆的表土遇雨膠結、流失有機質，只好再全面翻土，惡性循環。<b>保育式耕犁</b>只翻要種的區域、把殘體混入土壤、保留地表覆蓋，可以減少沖蝕、提高團粒穩定度，碳匯自然增加。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">耕犁會破壞土壤團粒構造。</p></div>
+
+<h3>各種措施能吸存多少</h3>
+<div class="tbl"><table>
+<tr><th>最佳管理措施</th><th class="r">溫帶濕潤</th><th class="r">溫帶乾燥</th><th class="r">熱帶濕潤</th><th class="r">熱帶乾燥</th></tr>
+<tr><td>保育耕作</td><td class="r num">0.5–1.0</td><td class="r num">0.25–0.5</td><td class="r num">0.25–0.5</td><td class="r num">0.1–0.25</td></tr>
+<tr><td>覆蓋作物</td><td class="r num">0.2–0.5</td><td class="r num">0.1–0.2</td><td class="r num">0.1–0.2</td><td class="r num">0.05–0.1</td></tr>
+<tr><td>綜合養分管理／施用糞肥</td><td class="r num">0.3–0.6</td><td class="r num">0.2–0.4</td><td class="r num">0.2–0.4</td><td class="r num">0.1–0.2</td></tr>
+<tr><td>改良放牧</td><td class="r num">0.02–0.4</td><td class="r num">0.1–0.2</td><td class="r num">0.4–0.8</td><td class="r num">0.1–0.2</td></tr>
+</table></div>
+<p style="font-size:14px;color:var(--muted)">單位 t C／ha／年（Stockmann 等 2013，引自 Lal 2008）。乘 44/12 換成 CO₂。</p>
+<div class="tbl"><table>
+<tr><th>臺灣的研究</th><th>深度</th><th class="r">吸存率（t C／ha／年）</th><th class="r">觀察年數</th></tr>
+<tr><td>添加堆肥</td><td>0–15 cm</td><td class="r num">0.46–1.00</td><td class="r num">13–20</td></tr>
+<tr><td>堆肥＋化肥</td><td>0–15 cm</td><td class="r num">0.40–0.80</td><td class="r num">20</td></tr>
+<tr><td>造林</td><td>0–20 cm</td><td class="r num">0.34</td><td class="r num">23</td></tr>
+</table></div>
+<p style="font-size:14px;color:var(--muted)">整理自 Minasny 等（2017, Geoderma 292:59）。全球土壤每年吸存潛力約 0.4–1.2 Gt C，其中農地 0.4–0.8（Lal 2004）。</p>
+<p><b>覆蓋作物</b>的整合分析（Jian 等 2020）：顯著提高產量、微生物量、礦化氮、酵素活性、陽離子交換能力、氮磷鉀與團粒穩定；顯著降低容積密度、逕流與沖蝕。固碳量和年均溫、種植年數、持續時間正相關，和緯度、原本的土壤碳量負相關（原本碳越少，增加越多）。</p>
+<div class="box note"><span class="tag">美國的數字</span><p>每公頃土壤可吸存 0.5–7.5 t CO₂e；2020 年每噸農業碳權約 US$15；土壤有機質平均 58% 是碳（CSA News 2021）。增強岩石風化（把岩石磨粉撒進農田）也在研究中（CSA News 2023）。</p></div>
+<p>其他面向：土壤安全性（Soil Security）包括能力、狀態、本錢、網絡、立法五個面向；歐盟 2023 年提出首部「土壤監測法」，目標 2050 年恢復所有土壤健康（歐盟 60–70% 土壤不健康、每年流失約 10 億噸、退化成本每年超過 500 億歐元）。</p>
+</section>
+
+<section id="trial">
+<h2><span class="no">06</span>土壤碳匯怎麼量：龍潭田間試驗</h2>
+<h3>土壤碳匯公式</h3>
+<div class="formula">土壤碳匯（Mg C/ha）＝ SOC（%）× 土層厚度（cm）× 容積密度（Mg/m³）</div>
+<p>SOC 用總碳分析儀（TOC 儀）量；田區表土的 CO₂ 通量用氣體分析儀（LI-7810）監測。</p>
+<h3>練習：土壤碳存量計算器</h3>
+<div class="calc">
+  <div class="row">
+    <label for="soc7">SOC（%）<input id="soc7" type="number" step="0.1" value="1.5"></label>
+    <label for="dep7">土層厚度（cm）<input id="dep7" type="number" step="1" value="30"></label>
+    <label for="bd7">容積密度（Mg/m³）<input id="bd7" type="number" step="0.05" value="1.3"></label>
+    <label for="ha7">面積（ha）<input id="ha7" type="number" step="0.1" value="1"></label>
+  </div>
+  <div class="out" id="out7" aria-live="polite"></div>
+</div>
+<p style="font-size:14px;color:var(--muted)">預設值是假設的例子（臺灣農田 SOC 平均低於 2%）。公式中 % 和 cm 的單位剛好互相抵銷，所以直接相乘就是 Mg C/ha。</p>
+
+<h3>試驗設計（桃園龍潭，與食品公司合作）</h3>
+<p>種植狼尾草，25.5 m × 12.5 m 田區，每小區 2 × 3 ＝ 6 m²，七種處理各三重複、隨機排列：</p>
+<div class="tbl"><table>
+<tr><th>處理</th><th>每小區施用量</th></tr>
+<tr><td>T1 空白對照</td><td>—</td></tr>
+<tr><td>T2 尿素化肥</td><td>0.48 kg N ÷ 46% ＝ 1.0 kg</td></tr>
+<tr><td>T3 尿素＋生物炭</td><td>尿素 1.0 kg；生物炭 12 kg</td></tr>
+<tr><td>T4 黑水虻</td><td>0.48 ÷ 1.5% ＝ 32 kg</td></tr>
+<tr><td>T5 黑水虻＋生物炭</td><td>黑水虻 32 kg；生物炭 12 kg</td></tr>
+<tr><td>T6 堆肥</td><td>0.48 ÷ 3% ＝ 16 kg</td></tr>
+<tr><td>T7 堆肥＋生物炭</td><td>堆肥 16 kg；生物炭 12 kg</td></tr>
+</table></div>
+<p style="font-size:14px;color:var(--muted)">氮量依狼尾草推薦量平均 800 kg N/ha/年 × 0.0006 ha ＝ 0.48 kg N。生物炭 ＝ 2,000 t/ha × 0.0006 ha × 1%（施用率）＝ 12 kg（相當於每公頃 20 噸）。施肥方式：現場秤取 → 均勻撒在表面 → 與 30 cm 表土混拌。</p>
+
+<h3>結果</h3>
+<ul>
+  <li><b>團粒穩定度</b>：施肥處理（T2–T7）都比種植前高，黑水虻與堆肥效果較好（但統計上無顯著差異）。有機肥加生物炭（T5、T7）讓大團粒（2–0.25 mm）和小團粒（0.25–0.053 mm）比例上升，有利於碳的穩定。</li>
+  <li><b>產量</b>：施肥區的狼尾草地上部生物量明顯高於不施肥的 T1。生物炭對生長的影響、哪種肥料配生物炭增匯最多，要等土壤有機碳數據。</li>
+</ul>
+<p><b>有機碳型態怎麼分</b>（Zimmermann 等 2007）：風乾土 10 g 經超音波分散與濕篩 → 大於 53 μm（砂粒）用重液分成輕密度（LF）、重密度（HF），合稱顆粒有機碳 POC；小於 53 μm（坋粒、黏粒）用次氯酸鈉氧化分成可氧化（OxF）、非可氧化（NOxF），合稱礦物結合有機碳 MAOC。</p>
+<figure class="fig"><svg viewBox="0 0 1000 230" width="1000" role="img" aria-label="不同施肥處理下土壤有機碳四種型態的比例圓環圖"><path class="hit g-mut" d="M90.0,22.0A78,78 0 0 1 167.5,108.5L137.7,105.2A48,48 0 0 0 90.0,52.0Z" stroke="var(--paper)" stroke-width="1.5"><title>對照組 LF 輕密度：27%</title></path><path class="hit g-soil" d="M167.5,108.5A78,78 0 0 1 54.9,169.7L68.4,142.9A48,48 0 0 0 137.7,105.2Z" stroke="var(--paper)" stroke-width="1.5"><title>對照組 HF 重密度：31%</title></path><path class="hit g-acc" d="M54.9,169.7A78,78 0 0 1 61.6,27.4L72.5,55.3A48,48 0 0 0 68.4,142.9Z" stroke="var(--paper)" stroke-width="1.5"><title>對照組 OxF 可氧化：37%</title></path><path class="hit g-ink" d="M61.6,27.4A78,78 0 0 1 90.0,22.0L90.0,52.0A48,48 0 0 0 72.5,55.3Z" stroke="var(--paper)" stroke-width="1.5"><title>對照組 NOxF 非可氧化：6%</title></path><text x="90" y="102" text-anchor="middle" class="n" style="font-size:20px">43%</text><text x="90" y="120" text-anchor="middle" class="m">穩定</text><text x="90" y="206" text-anchor="middle" class="t">對照組</text><path class="hit g-mut" d="M280.0,22.0A78,78 0 0 1 356.8,86.5L327.3,91.7A48,48 0 0 0 280.0,52.0Z" stroke="var(--paper)" stroke-width="1.5"><title>堆肥 LF 輕密度：22%</title></path><path class="hit g-soil" d="M356.8,86.5A78,78 0 0 1 302.0,174.8L293.5,146.1A48,48 0 0 0 327.3,91.7Z" stroke="var(--paper)" stroke-width="1.5"><title>堆肥 HF 重密度：23%</title></path><path class="hit g-acc" d="M302.0,174.8A78,78 0 0 1 246.5,29.6L259.4,56.7A48,48 0 0 0 293.5,146.1Z" stroke="var(--paper)" stroke-width="1.5"><title>堆肥 OxF 可氧化：47%</title></path><path class="hit g-ink" d="M246.5,29.6A78,78 0 0 1 280.0,22.0L280.0,52.0A48,48 0 0 0 259.4,56.7Z" stroke="var(--paper)" stroke-width="1.5"><title>堆肥 NOxF 非可氧化：7%</title></path><text x="280" y="102" text-anchor="middle" class="n" style="font-size:20px">54%</text><text x="280" y="120" text-anchor="middle" class="m">穩定</text><text x="280" y="206" text-anchor="middle" class="t">堆肥</text><path class="hit g-mut" d="M470.0,22.0A78,78 0 0 1 523.4,43.1L502.9,65.0A48,48 0 0 0 470.0,52.0Z" stroke="var(--paper)" stroke-width="1.5"><title>化肥 LF 輕密度：12%</title></path><path class="hit g-soil" d="M523.4,43.1A78,78 0 0 1 535.9,141.8L510.5,125.7A48,48 0 0 0 502.9,65.0Z" stroke="var(--paper)" stroke-width="1.5"><title>化肥 HF 重密度：22%</title></path><path class="hit g-acc" d="M535.9,141.8A78,78 0 1 1 420.3,39.9L439.4,63.0A48,48 0 1 0 510.5,125.7Z" stroke="var(--paper)" stroke-width="1.5"><title>化肥 OxF 可氧化：55%</title></path><path class="hit g-ink" d="M420.3,39.9A78,78 0 0 1 470.0,22.0L470.0,52.0A48,48 0 0 0 439.4,63.0Z" stroke="var(--paper)" stroke-width="1.5"><title>化肥 NOxF 非可氧化：11%</title></path><text x="470" y="102" text-anchor="middle" class="n" style="font-size:20px">66%</text><text x="470" y="120" text-anchor="middle" class="m">穩定</text><text x="470" y="206" text-anchor="middle" class="t">化肥</text><path class="hit g-mut" d="M660.0,22.0A78,78 0 0 1 713.4,43.1L692.9,65.0A48,48 0 0 0 660.0,52.0Z" stroke="var(--paper)" stroke-width="1.5"><title>堆肥＋化肥 LF 輕密度：12%</title></path><path class="hit g-soil" d="M713.4,43.1A78,78 0 0 1 709.7,160.1L690.6,137.0A48,48 0 0 0 692.9,65.0Z" stroke="var(--paper)" stroke-width="1.5"><title>堆肥＋化肥 HF 重密度：27%</title></path><path class="hit g-acc" d="M709.7,160.1A78,78 0 1 1 614.2,36.9L631.8,61.2A48,48 0 1 0 690.6,137.0Z" stroke="var(--paper)" stroke-width="1.5"><title>堆肥＋化肥 OxF 可氧化：51%</title></path><path class="hit g-ink" d="M614.2,36.9A78,78 0 0 1 660.0,22.0L660.0,52.0A48,48 0 0 0 631.8,61.2Z" stroke="var(--paper)" stroke-width="1.5"><title>堆肥＋化肥 NOxF 非可氧化：10%</title></path><text x="660" y="102" text-anchor="middle" class="n" style="font-size:20px">61%</text><text x="660" y="120" text-anchor="middle" class="m">穩定</text><text x="660" y="206" text-anchor="middle" class="t">堆肥＋化肥</text><rect x="790" y="39" width="12" height="12" rx="2" class="g-mut"/><text x="808" y="50" class="m">LF 輕密度</text><rect x="790" y="73" width="12" height="12" rx="2" class="g-soil"/><text x="808" y="84" class="m">HF 重密度</text><rect x="790" y="107" width="12" height="12" rx="2" class="g-acc"/><text x="808" y="118" class="m">OxF 可氧化</text><rect x="790" y="141" width="12" height="12" rx="2" class="g-ink"/><text x="808" y="152" class="m">NOxF 非可氧化</text><text x="136.9" y="61.9" text-anchor="middle" class="n" style="font-size:11px;fill:var(--bg);pointer-events:none">27</text><text x="120.1" y="159.4" text-anchor="middle" class="n" style="font-size:11px;fill:var(--bg);pointer-events:none">31</text><text x="27.1" y="101.1" text-anchor="middle" class="n" style="font-size:11px;fill:var(--bg);pointer-events:none">37</text><text x="320.5" y="55.7" text-anchor="middle" class="n" style="font-size:11px;fill:var(--bg);pointer-events:none">22</text><text x="333.5" y="137.2" text-anchor="middle" class="n" style="font-size:11px;fill:var(--bg);pointer-events:none">23</text><text x="221.1" y="126.5" text-anchor="middle" class="n" style="font-size:11px;fill:var(--bg);pointer-events:none">47</text><text x="493.2" y="45.4" text-anchor="middle" class="n" style="font-size:11px;fill:var(--bg);pointer-events:none">12</text><text x="532.5" y="96.1" text-anchor="middle" class="n" style="font-size:11px;fill:var(--bg);pointer-events:none">22</text><text x="428.3" y="151.3" text-anchor="middle" class="n" style="font-size:11px;fill:var(--bg);pointer-events:none">55</text><text x="448.7" y="44.7" text-anchor="middle" class="n" style="font-size:11px;fill:var(--bg);pointer-events:none">11</text><text x="683.2" y="45.4" text-anchor="middle" class="n" style="font-size:11px;fill:var(--bg);pointer-events:none">12</text><text x="723.0" y="106.0" text-anchor="middle" class="n" style="font-size:11px;fill:var(--bg);pointer-events:none">27</text><text x="610.2" y="142.6" text-anchor="middle" class="n" style="font-size:11px;fill:var(--bg);pointer-events:none">51</text><text x="640.5" y="44.1" text-anchor="middle" class="n" style="font-size:11px;fill:var(--bg);pointer-events:none">10</text><text x="790" y="196" class="m">中央：OxF＋NOxF（MAOC）</text></svg><figcaption>龍潭試驗的 SOC 型態比例（%）。LF＋HF 是顆粒有機碳（POC，較易分解）；OxF＋NOxF 是礦物結合有機碳（MAOC，較穩定）。施肥處理後有 5–15% 的 SOC 轉成穩定型態。圓環中央是穩定型態（MAOC）的合計比例：對照組 43%，化肥 66% 最高。</figcaption></figure>
+<p>近紅外光譜可以快速預測：MAOC 中等準確（R² 0.67），POC 較弱（R² 0.65），主要靠羧基與黏土礦物的波段。快速量測是把土壤碳變成碳權的關鍵。</p>
+</section>
+
+<section id="mrv">
+<h2><span class="no">07</span>土壤碳的 MRV 與資料庫</h2>
+<h3>FAO 土壤碳專案六階段</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3 3 6v15l6-3 6 3 6-3V3l-6 3z"/><path d="M9 3v15M15 6v15"/></svg><em class="tx">1 邊界情境評估<br><small>適用條件</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3 3 6v15l6-3 6 3 6-3V3l-6 3z"/><path d="M9 3v15M15 6v15"/></svg><em class="tx">2 邊界描述<br><small>時空條件</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.4-4.4"/></svg><em class="tx">3 基線與干擾<br><small>基線至少 5 年</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 16v-4M12 16V8M17 16v-7"/></svg><em class="tx">4 初評<br><small>示範操作與模組化</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 16v-4M12 16V8M17 16v-7"/></svg><em class="tx">5 監測<br><small>採樣、SOC 模式、GHG 預測</small></em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 22l-2.4-1.8-3 .2-.9-2.9L3.2 15.8l1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><em class="tx">6 報告與驗證<br><small>獨立機關；起始報告、三次雙年報</small></em></span></div>
+<p>監測上，第 0 年做完整採樣（SOC、容積密度、POC），之後每兩年採樣一次，搭配管理活動資料跑 SOC 模式（FAO 2020）。</p>
+<div class="box iso"><span class="tag">連結講義 5</span><p>基線、外加性、MRV 三條件＋五原則，和碳權申請的要求一致；永久性對土壤碳特別重要，因為耕犁一次就可能把碳放回去。<a class="xref" href="05-carbon-pricing.html#apply">講義 5〈碳權申請、審查與核發〉↗</a></p></div>
+<h3>國家級土壤碳匯資料庫</h3>
+<p>用資通訊與遙測技術做土壤調查，建立數位化的土壤有機碳圖資，從國家尺度一路縮到縣市、鄉鎮、村里甚至單一農場，並能依土地利用、植被、地形萃取資料，接上 MRV、與國際接軌。</p>
+<div class="tbl"><table>
+<tr><th>MRV 組件（Smith 等 2020）</th><th>角色</th></tr>
+<tr><td>長期試驗（基準樣點）</td><td>不同土地利用與處理下數十年的 SOC 變化（M）</td></tr>
+<tr><td>短期試驗</td><td>量通量、研究機制、開發新工具、校正模式（M）</td></tr>
+<tr><td>SOC／GHG 模式</td><td>推導 Tier 2 係數、用空間資料做 Tier 3（M/R）</td></tr>
+<tr><td>空間資料、活動資料</td><td>氣候、土壤、土地覆蓋；農場管理紀錄（M/R）</td></tr>
+<tr><td>遙測</td><td>驗證活動資料、提供模式輸入（M/R/V）</td></tr>
+<tr><td>再採樣調查網格</td><td>同樣點位每十年重採，地面校驗 SOC 變化（M/V）</td></tr>
+</table></div>
+<div class="box key"><span class="tag">結語</span><p>土壤能容納、並<b>長久穩存</b>多少碳，決定能取得多少碳權。碳以什麼形態的有機質進入土壤、環境條件與管理方式，決定它停留多久。臺灣在背景土壤碳資料、耕作處理的影響、人才培育與社會認知上都還有進步空間。</p></div>
+</section>
+
+<section id="supp">
+<h2><span class="no">08</span>補充：改進農業土壤管理方法學</h2>
+
+<p>環境部於 2025 年 3 月 20 日審議通過的「改進農業土壤管理方法學」，是<b>移除型</b>的小規模減量方法：靠改變耕作方式增加土壤有機碳（SOC），取得減量額度。它<b>只核算「移除」額度</b>，耕作方式改變帶來的排放減少（例如少用肥料）不另發額度。</p>
+<h3>三類措施</h3>
+<div class="tbl"><table><tr><th>類別</th><th>措施例</th></tr><tr><td>施用有機資材</td><td>有機肥（糞肥、堆肥）取代化肥；加入微生物製劑</td></tr><tr><td>減少耕作、改善殘體管理</td><td>保護性耕犁、少耕、不耕；帶狀條耕、覆蓋耕作；作物殘體回田</td></tr><tr><td>改善作物制度</td><td>輪作或改種牧草；休耕期轉種綠肥；果園草生栽培</td></tr></table></div>
+<p>清單不是全部，提出新措施也可以，但要證明比原本的作法更能增加土壤碳。</p>
+<h3>適用條件</h3>
+<div class="tbl"><table><tr><th>條件</th><th>門檻</th></tr><tr><td>合法農地</td><td>土地與管理措施符合土地法、農業發展條例等農地相關法規</td></tr><tr><td>措施真的有改變</td><td>任何定量調整（例如有機肥取代化肥的比例）都要超過基線期平均值的 <b>5%</b></td></tr><tr><td>長期穩定農用</td><td>專案開始前 <b>10 年</b>內持續農業使用（可用歷史航照佐證）</td></tr><tr><td>不能減產</td><td>產量持續下降不超過 <b>5%</b></td></tr><tr><td>其他碳庫與排放源</td><td>變化超過 <b>5%</b> 就要計入（例如肥料、燃料用量變化）</td></tr><tr><td>規模</td><td>每年淨移除量 ≤ <b>20,000</b> tCO₂e；這個規模的外加性只需分析「法規外加性」</td></tr><tr><td>地塊</td><td>可以是多塊分散農地，每塊 > <b>0.1 公頃</b>，且要有管理權</td></tr><tr><td>不適用</td><td>濕地；施用<b>生物炭</b>（生物炭要考慮生命週期排放，需另用其他方法學）</td></tr></table></div>
+<div class="box key"><span class="tag">重點</span><p>「5%」在這個方法學出現很多次：措施要改變超過 5%、減產不能超過 5%、排放源或碳庫的變化低於總淨移除量 5% 時可視為微量而忽略。</p></div>
+<h3>碳庫與排放源</h3>
+<ul>
+<li><b>碳庫</b>：土壤有機碳一定要算；地上、地下木本植物量可選（例如果樹）；非木本植物、枯死木、枯落物不計。</li>
+<li><b>排放源</b>（五類都可選）：化石燃料 CO₂、土壤產甲烷 CH₄、石灰 CO₂、氮肥 N₂O、固氮物種 N₂O。</li>
+<li><b>量化方法</b>：① 量測＋模式、② 直接量測、③ 預設係數（國家清冊或 IPCC）。同一個碳庫或排放源，基線和專案必須用同一種方法。</li>
+</ul>
+<h3>基線、減量與洩漏</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.4-4.4"/></svg><em class="tx">基線<br><small>專案開始前 3 年的作法</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21v-9"/><path d="M12 12C12 7 9 5 4 5c0 5 3 7 8 7z"/><path d="M12 14c0-4 2.5-6 7-6 0 4-2.5 6-7 6z"/><path d="M6 21h12"/></svg><em class="tx">實施新措施<br><small>改變超過 5%</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h18M3 14h18M3 19h18"/><path d="M12 9V3m0 0-2 2m2-2 2 2"/></svg><em class="tx">監測採樣<br><small>至少 30 公分深</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5z"/></svg><em class="tx">扣不確定性與洩漏</em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 22l-2.4-1.8-3 .2-.9-2.9L3.2 15.8l1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><em class="tx">移除額度</em></span></div>
+<ul>
+<li><b>基線</b>＝專案開始前 3 年的管理措施（至少涵蓋一個完整輪作週期）。要記錄：作物種植與收穫日期、氮肥與有機資材用量、耕犁深度與次數、殘體移除比例、灌溉量。每個計入期結束時要重新評估基線。</li>
+<li><b>土壤碳儲量</b>以<b>等效土壤質量</b>（ESM）為基礎計算，各深度層加總至少到 30 公分；用模式時，至少每 5 年要用實測值校正一次。</li>
+<li><b>減量</b>＝淨移除量＋淨減排量－洩漏量。淨移除量要扣掉土壤碳變化的不確定性，不確定性超過 50% 就必須重新採樣。</li>
+<li><b>洩漏</b>：從專案外運來的有機肥（造成別處土壤碳下降）；原本拿去當能源的殘體或糞肥被轉用；減產（每 10 年與基線或區域產量比對，排除前 3 年的短期變化）。</li>
+</ul>
+<h3>監測採樣</h3>
+<p>依氣候、地形、土壤質地、歷史土地利用等影響土壤碳的因素分區；沒有現成土壤資料時，每區先採 5–10 個樣本估計變異。採樣點要用 GPS 定位，之後每次在同一位置採，依環境部「土壤採樣方法」（NIEA S102.64B）採 30 公分深。</p>
+<h3>三個範例專案（計入期都是 30 年）</h3>
+<div class="tbl"><table><tr><th>專案</th><th>地點</th><th>面積</th><th>做法</th><th>30 年移除</th><th>每公頃每年</th></tr><tr><td>豬糞尿水施灌取代化肥</td><td>雲林水林</td><td>8.3 ha</td><td>水稻、硬質玉米改用豬糞尿水當肥料</td><td class="r num">1,542</td><td class="r num">約 6.2</td></tr><tr><td>水旱輪作殘體回田</td><td>嘉義溪口</td><td>3.6 ha</td><td>一期稻、二期落花生；稻稈由移除改為回田</td><td class="r num">246</td><td class="r num">約 2.3</td></tr><tr><td>有機茶園草生栽培</td><td>南投名間</td><td>1.4 ha</td><td>自然草生取代中耕、刈草與除草劑</td><td class="r num">100</td><td class="r num">約 2.4</td></tr></table></div>
+<figure class="fig"><svg viewBox="0 0 820 150" width="820" role="img" aria-label="三個範例每公頃每年移除量"><text x="200" y="35" text-anchor="end" class="t">豬糞尿水施灌</text><rect class="hit g-acc" x="210" y="20" width="496.0" height="22" rx="3"><title>豬糞尿水施灌：6.2 tCO₂e／公頃／年</title></rect><text x="712.0" y="36" class="n">6.2</text><text x="200" y="75" text-anchor="end" class="t">殘體回田</text><rect class="hit g-soil" x="210" y="60" width="184.0" height="22" rx="3"><title>殘體回田：2.3 tCO₂e／公頃／年</title></rect><text x="400.0" y="76" class="n">2.3</text><text x="200" y="115" text-anchor="end" class="t">茶園草生栽培</text><rect class="hit g-ink" x="210" y="100" width="192.0" height="22" rx="3"><title>茶園草生栽培：2.4 tCO₂e／公頃／年</title></rect><text x="408.0" y="116" class="n">2.4</text><text x="820" y="146" text-anchor="end" class="m">單位：tCO₂e／公頃／年</text></svg><figcaption>把 30 年總移除量除以面積和年數，比較單位面積的效果。豬糞尿水施灌每公頃每年約 6 公噸，是另外兩案的 2.5 倍以上。</figcaption></figure>
+<div class="box note"><span class="tag">細節</span><p>範例 1 只計入氮肥 N₂O：運輸槽車汽油每年 1.86 tCO₂e、豬糞尿水的碳投入低於作物殘體的 5%，都依微量原則排除。N₂O 反而增加（30 年淨減排 −33），但淨移除 1,578，合計 1,542。範例 2、3 的摘要頁寫 247、99，逐年表合計是 246、100。</p></div>
+<h3>114 年業界參與計畫（核定三案）</h3>
+<div class="tbl"><table><tr><th>申請單位</th><th>面積</th><th>做法</th></tr><tr><td>糧豐國際</td><td>9.4 ha</td><td>胡麻與硬質玉米輪作：減化肥、減耕犁、休耕期種綠肥（太陽麻）、增加玉米殘體回田</td></tr><tr><td>地天泰農業生技</td><td>10 ha</td><td>每年施用 40 噸有機質肥料取代化肥；預期每公頃每年增匯 3 公噸</td></tr><tr><td>正瀚生技</td><td>35 ha</td><td>水田施用胜肽製劑增產，讓回田殘體變多；預估 30 年移除 1,170 公噸</td></tr></table></div>
+
+</section>
+
+<section id="quiz">
+<h2><span class="no">09</span>自我測驗</h2>
+<details class="q"><summary>1. 千分之四倡議的「千分之四」是怎麼算出來的？</summary><div class="a">全球表層土壤碳約 860 Gt，乘以 0.004 ＝ 3.44 Gt C，接近大氣每年增加的 4.3 Gt C，所以土壤碳每年增加千分之四就能大致抵銷。</div></details>
+<details class="q"><summary>2. 把別處的堆肥運來施用，這塊地的土壤碳增加了，可以全部算吸存嗎？</summary><div class="a">不一定。這是「儲存」增加，但碳可能只是從別處搬過來，不一定是從大氣新移除的。專案要看相較基線、並考慮碳的來源。</div></details>
+<details class="q"><summary>3. 為什麼黏粒多的土壤固碳潛力高？</summary><div class="a">黏土礦物能和有機碳結合（黏粒-腐植質錯合物），形成不易分解的惰性碳；飽和曲線也隨黏粒增加而升高。</div></details>
+<details class="q"><summary>4. 某農地 SOC 在下降，採用永續管理後仍在下降，只是降得比較慢，有減碳效益嗎？</summary><div class="a">有。效益是相對照舊情境（BAU）少流失的部分（FAO 情境 c），不是相對起始存量。</div></details>
+<details class="q"><summary>5. SOC 2%、厚度 30 cm、容積密度 1.2，每公頃存多少碳？相當多少 CO₂？</summary><div class="a">2 × 30 × 1.2 ＝ 72 Mg C/ha，× 44/12 ≈ 264 t CO₂/ha。</div></details>
+<details class="q"><summary>6. 傳統全面翻土為什麼會讓土壤碳越來越少？</summary><div class="a">翻土加速通氣、破壞團粒讓碳被分解；機械壓實形成犁底層，表土遇雨膠結流失有機質，又得再翻土，惡性循環。</div></details>
+<details class="q"><summary>7. POC 和 MAOC 哪個比較穩定？</summary><div class="a">MAOC（礦物結合有機碳）較穩定；POC（顆粒有機碳）較易分解。試驗顯示施肥處理後 5–15% 的 SOC 轉為穩定型態。</div></details>
+</section>
+
+<section id="gloss">
+<h2><span class="no">10</span>名詞表</h2>
+<dl class="gloss">
+<dt>SOC／SIC</dt><dd>土壤有機碳／土壤無機碳（碳酸鹽）</dd>
+<dt>Active／Slow／Passive SOC</dt><dd>活性、慢性、惰性土壤有機碳</dd>
+<dt>Labile C</dt><dd>易分解碳</dd>
+<dt>Humus</dt><dd>腐植質，受保護的穩定有機質</dd>
+<dt>Priming effect</dt><dd>觸發效應：加入新鮮殘體後微生物活性暴增</dd>
+<dt>C/N</dt><dd>碳氮比，越高分解越慢</dd>
+<dt>4 per 1000</dt><dd>千分之四倡議</dd>
+<dt>Storage／Sequestration</dt><dd>儲存（不一定來自大氣）／吸存（來自大氣光合作用）</dd>
+<dt>SSM／BAU</dt><dd>永續土壤管理／照舊情境</dd>
+<dt>BMP／GAP</dt><dd>最佳管理措施／良好農業規範</dd>
+<dt>犁底層</dt><dd>機械壓實形成的緻密土層，阻礙通氣排水</dd>
+<dt>POC／MAOC</dt><dd>顆粒有機碳／礦物結合有機碳</dd>
+<dt>容積密度（BD）</dt><dd>單位體積土壤的乾重（Mg/m³）</dd>
+<dt>Biochar</dt><dd>生物炭</dd>
+<dt>Soil Security</dt><dd>土壤安全性：能力、狀態、本錢、網絡、立法</dd>
+</dl>
+</section>
+
+<nav class="pager" aria-label="上一講／下一講"><a class="prev" href="06-emission-reduction.html"><small>← 上一講</small>6. 農林漁畜牧減排策略</a><a class="next" href="08-carbon-footprint.html"><small>下一講 →</small>8. 農畜產品碳足跡</a></nav>
+</main>
+</div>
+<script>
+(function(){
+  var b=document.body,K='tocOff';
+  function set(off){b.classList.toggle('toc-off',off);try{localStorage.setItem(K,off?'1':'0')}catch(e){}}
+  try{if(localStorage.getItem(K)==='1')b.classList.add('toc-off')}catch(e){}
+  document.getElementById('tocHide').addEventListener('click',function(){set(true)});
+  document.getElementById('tocShow').addEventListener('click',function(){set(false)});
+})();
+</script>
+<script>
+(function(){
+  var NS='http://www.w3.org/2000/svg',n=0;
+  function rp(p,r){var d='M'+p[0][0]+','+p[0][1];for(var i=1;i<p.length-1;i++){var a=p[i-1],b=p[i],c=p[i+1];
+    var l1=Math.hypot(b[0]-a[0],b[1]-a[1]),l2=Math.hypot(c[0]-b[0],c[1]-b[1]),k=Math.min(r,l1/2,l2/2);
+    var x1=b[0]-(b[0]-a[0])/l1*k,y1=b[1]-(b[1]-a[1])/l1*k,x2=b[0]+(c[0]-b[0])/l2*k,y2=b[1]+(c[1]-b[1])/l2*k;
+    d+=' L'+x1+','+y1+' Q'+b[0]+','+b[1]+' '+x2+','+y2}
+    var e=p[p.length-1];return d+' L'+e[0]+','+e[1]}
+  function draw(c){
+    var old=c.querySelector(':scope>.loop-svg'); if(old) old.remove();
+    var spans=[].slice.call(c.querySelectorAll(':scope>span'));
+    var to=c.querySelector('[data-loop-to]')||spans[0], from=c.querySelector('[data-loop-from]')||spans[spans.length-1];
+    if(!to||!from) return;
+    var cr=c.getBoundingClientRect();
+    function R(el){var b=el.getBoundingClientRect();return{l:b.left-cr.left,r:b.right-cr.left,t:b.top-cr.top,b:b.bottom-cr.top,cx:(b.left+b.right)/2-cr.left,cy:(b.top+b.bottom)/2-cr.top}}
+    var a=R(to),z=R(from),maxB=0,minL=1e9,rowFirst=true;
+    spans.forEach(function(k){var r=R(k);if(r.l<minL)minL=r.l;if(k!==to&&Math.abs(r.t-a.t)<6&&r.l<a.l)rowFirst=false});
+    Array.prototype.forEach.call(c.children,function(k){if(k.classList.contains('loop-svg'))return;var b=k.getBoundingClientRect().bottom-cr.top;if(b>maxB)maxB=b});
+    var y=maxB+16,x=minL-18,d,lx;
+    if(Math.abs(a.t-z.t)<6){d=rp([[z.cx,z.b],[z.cx,y],[a.cx,y],[a.cx,a.b+4]],10);lx=(a.cx+z.cx)/2}
+    else if(rowFirst){d=rp([[z.cx,z.b],[z.cx,y],[x,y],[x,a.cy],[a.l-4,a.cy]],10);lx=(x+z.cx)/2}
+    else{var top=a.t-14;d=rp([[z.cx,z.b],[z.cx,y],[x,y],[x,top],[a.cx,top],[a.cx,a.t-4]],10);lx=(x+z.cx)/2}
+    var id='lh'+(++n),s=document.createElementNS(NS,'svg');
+    s.setAttribute('class','loop-svg');s.setAttribute('width',cr.width);s.setAttribute('height',y+24);s.setAttribute('aria-hidden','true');
+    s.innerHTML='<defs><marker id="'+id+'" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0L10,5L0,10z" fill="currentColor"/></marker></defs>'+
+      '<path d="'+d+'" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#'+id+')"/>'+
+      '<text x="'+Math.max(lx,60)+'" y="'+(y+18)+'" text-anchor="middle"></text>';
+    s.querySelector('text').textContent='↺ '+(c.getAttribute('data-loop-label')||'');
+    c.appendChild(s);
+  }
+  var els=document.querySelectorAll('.loop');
+  function all(){els.forEach(draw)}
+  all(); window.addEventListener('resize',all);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(all);
+  if(window.ResizeObserver){var w={};var ro=new ResizeObserver(function(es){es.forEach(function(e){var c=e.target,k=Math.round(e.contentRect.width);if(c._w!==k){c._w=k;draw(c)}})});els.forEach(function(c){ro.observe(c)})}
+})();
+</script>
+<script>
+(function(){
+  var ids=['soc7','dep7','bd7','ha7'],el={},o=document.getElementById('out7');
+  ids.forEach(function(i){el[i]=document.getElementById(i)});
+  function v(i){return parseFloat(el[i].value)||0}
+  function f(n,d){return n.toLocaleString('zh-TW',{maximumFractionDigits:d===undefined?1:d})}
+  function run(){
+    var c=v('soc7')*v('dep7')*v('bd7'), co2=c*44/12, tot=c*v('ha7');
+    o.innerHTML='碳存量 ＝ '+f(v('soc7'),2)+' × '+f(v('dep7'))+' × '+f(v('bd7'),2)+' ＝ <b>'+f(c)+' Mg C/ha</b><br>換成 CO₂ ＝ '+f(c)+' × 44/12 ＝ '+f(co2)+' t CO₂/ha<br>'+f(v('ha7'))+' 公頃合計 '+f(tot)+' Mg C；每年增加千分之四 ＝ '+f(tot*0.004,2)+' Mg C（'+f(tot*0.004*44/12,2)+' t CO₂）';
+  }
+  ids.forEach(function(i){el[i].addEventListener('input',run)});
+  run();
+})();
+</script>
+<!--gm-js--><script>
+/* 跳出式小遊戲引擎：右下角按鈕 → 對話框；題目、解釋、計分；場景由各頁提供 */
+window.GMRUN=function(C){
+  var NS='http://www.w3.org/2000/svg',D=document;
+  var reduce=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
+  function el(tag,a,html,par){var e=D.createElementNS(NS,tag);if(a)for(var k in a)e.setAttribute(k,a[k]);if(html)e.innerHTML=html;if(par)par.appendChild(e);return e}
+  function h(tag,cls,html,par){var e=D.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;if(par)par.appendChild(e);return e}
+
+  /* ---------- 介面 ---------- */
+  var ICON='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.2" r=".6" fill="currentColor"/><circle cx="17.6" cy="13.6" r=".6" fill="currentColor"/></svg>';
+  var fab=h('button','gm-fab',ICON+'<span>小遊戲</span>',D.body);fab.type='button';fab.setAttribute('aria-haspopup','dialog');
+  var tip=h('div','gm-tip','<button type="button" class="gm-tipx" aria-label="關閉提示">×</button><b>考考你</b><span></span>',D.body);
+  tip.querySelector('span').textContent=C.teaser;
+  var ov=h('div','gm-ov',null,D.body);ov.hidden=true;
+  var dlg=h('div','gm-dlg','<div class="gm-hd"><b id="gmTitle"></b><button type="button" class="gm-x" aria-label="關閉小遊戲">×</button></div>'+
+    '<svg class="gm-stage" viewBox="'+(C.vb||'0 0 880 260')+'" role="img"></svg>'+
+    '<div class="gm-card"><div class="gm-prog"></div><p class="gm-q"></p><div class="gm-opts"></div><div class="gm-fb" aria-live="polite"></div></div>',ov);
+  dlg.setAttribute('role','dialog');dlg.setAttribute('aria-modal','true');dlg.setAttribute('aria-labelledby','gmTitle');
+  dlg.querySelector('#gmTitle').textContent='小遊戲：'+C.title;
+  var st=dlg.querySelector('svg'),qEl=dlg.querySelector('.gm-q'),oEl=dlg.querySelector('.gm-opts'),fEl=dlg.querySelector('.gm-fb'),pEl=dlg.querySelector('.gm-prog');
+  st.setAttribute('aria-label',C.alt||C.title);
+
+  /* ---------- 動畫工具 ---------- */
+  var loops=[],touts=[],fx;
+  function stopAll(){loops.forEach(clearInterval);touts.forEach(clearTimeout);loops=[];touts=[]}
+  var api={svg:st,reduce:reduce,el:el,
+    C:{co2:'#86a8e6',ch4:'#c9a66b',n2o:'#d28bb4',gas:'#8fae9a',smoke:'#9aa0a6'},
+    loop:function(fn,ms){fn();loops.push(setInterval(fn,reduce?ms*1.6:ms))},
+    later:function(fn,ms){touts.push(setTimeout(fn,reduce?0:ms))},
+    A:function(e,fr,ms,o){o=o||{};if(!e||!e.animate)return null;if(reduce&&o.iter===Infinity)return null;
+      var an=e.animate(fr,{duration:reduce?1:ms,delay:reduce?0:(o.delay||0),easing:o.ease||'ease-out',fill:o.fill||'forwards',iterations:o.iter||1,direction:o.dir||'normal'});
+      if(o.done)an.onfinish=o.done;return an},
+    /* 放一個物件：外層定位，內層可動（原點在底部中央） */
+    put:function(par,x,y,s,html,origin){var g=el('g',{transform:'translate('+x+' '+y+')'+(s&&s!==1?' scale('+s+')':'')},null,par||st);
+      var i=el('g',{},html,g);i.style.transformBox='fill-box';i.style.transformOrigin=origin||'50% 100%';i.outer=g;i.x=x;i.y=y;i.s=s||1;return i},
+    top:function(){if(!fx)fx=el('g',{});st.appendChild(fx);return fx},
+    puff:function(x,y,o){o=o||{};var g=el('g',{class:'gas'},null,api.top()),n=o.n||3,r=o.r||11;
+      for(var i=0;i<n;i++)el('circle',{cx:x+(i-(n-1)/2)*r*.9,cy:y+(i%2?-r*.55:0),r:r+(i===1?3:0),fill:o.color||api.C.gas,opacity:.6},null,g);
+      if(o.label){var t=el('text',{x:x,y:y-1},null,g);t.textContent=o.label}
+      g.style.transformBox='fill-box';g.style.transformOrigin='50% 50%';
+      var dx=o.dx==null?0:o.dx,dy=o.dy==null?-60:o.dy;
+      api.A(g,[{transform:'translate(0,0) scale(.35)',opacity:0},{opacity:.95,offset:.15},{transform:'translate('+dx+'px,'+dy+'px) scale('+(o.grow||1.5)+')',opacity:0}],o.ms||2400,{done:function(){g.remove()},fill:'none'});
+      if(reduce)api.later(function(){g.remove()},1200);return g},
+    pop:function(x,y,txt,o){o=o||{};var t=el('text',{class:'pop',x:x,y:y},null,api.top());t.textContent=txt;if(o.color)t.style.fill=o.color;if(o.size)t.style.fontSize=o.size+'px';
+      t.style.transformBox='fill-box';t.style.transformOrigin='50% 100%';
+      api.A(t,[{opacity:0,transform:'scale(.4)'},{opacity:1,transform:'scale(1.15)',offset:.2},{opacity:1,transform:'scale(1)',offset:.7},{opacity:0,transform:'translateY(-10px)'}],o.ms||1300,{done:function(){t.remove()},fill:'none'});
+      if(reduce)api.later(function(){t.remove()},1200);return t},
+    pulse:function(e){return api.A(e,[{transform:'scale(1)'},{transform:'scale(1.12)'},{transform:'scale(1)'}],700,{fill:'none'})},
+    /* 背景：地面、草、圍籬、太陽 */
+    bg:function(o){o=o||{};var gy=o.ground==null?200:o.ground,W=880,s='';
+      if(o.sun)s+='<circle cx="'+(o.sun[0])+'" cy="'+(o.sun[1])+'" r="22" fill="#f2c94c" opacity=".85"/>';
+      if(o.hills)s+='<path d="M0 '+(gy-10)+' Q140 '+(gy-70)+' 300 '+(gy-24)+' T600 '+(gy-30)+' T880 '+(gy-40)+' V'+gy+' H0Z" fill="var(--accent-soft)" opacity=".7"/>';
+      if(o.fence){s+='<g stroke="var(--line)" stroke-width="4" stroke-linecap="round"><line x1="0" y1="'+(gy-48)+'" x2="'+W+'" y2="'+(gy-48)+'"/><line x1="0" y1="'+(gy-28)+'" x2="'+W+'" y2="'+(gy-28)+'"/>';
+        for(var x=60;x<W;x+=140)s+='<line x1="'+x+'" y1="'+(gy-62)+'" x2="'+x+'" y2="'+(gy+4)+'"/>';s+='</g>'}
+      s+='<rect x="0" y="'+gy+'" width="'+W+'" height="'+(400-gy)+'" fill="'+(o.color||'var(--accent-soft)')+'"/>';
+      (o.grass||[]).forEach(function(x,i){var y=gy+14+(i%3)*12;s+='<path d="M'+(x-5)+' '+y+' q0 -6 -4 -10 M'+x+' '+y+' q0 -8 2 -13 M'+(x+5)+' '+y+' q1 -6 5 -10" stroke="var(--accent)" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/>'});
+      return el('g',{},s,st)},
+    text:function(x,y,txt,cls,par){var t=el('text',{x:x,y:y,class:cls||'lbl'},null,par||st);t.textContent=txt;return t}
+  };
+
+  /* ---------- 共用圖形（原點在底部中央，面向右） ---------- */
+  var K='#2b2b2b';
+  api.SH={
+    conifer:function(c){c=c||'#3f7d58';return '<rect x="-5" y="-24" width="10" height="24" fill="#7a5a3a"/><path d="M0 -112 L-24 -66 L24 -66Z" fill="'+c+'"/><path d="M0 -92 L-31 -44 L31 -44Z" fill="'+c+'"/><path d="M0 -70 L-38 -20 L38 -20Z" fill="'+c+'"/>'},
+    broad:function(c){c=c||'#4f8f5f';return '<rect x="-6" y="-44" width="12" height="44" fill="#7a5a3a"/><circle cx="-20" cy="-56" r="22" fill="'+c+'"/><circle cx="20" cy="-56" r="22" fill="'+c+'"/><circle cx="0" cy="-74" r="30" fill="'+c+'"/>'},
+    cabbage:'<ellipse cx="0" cy="-13" rx="24" ry="14" fill="#6fae5c"/><ellipse cx="-10" cy="-16" rx="12" ry="10" fill="#86c46f"/><ellipse cx="10" cy="-16" rx="12" ry="10" fill="#86c46f"/><ellipse cx="0" cy="-19" rx="12" ry="10" fill="#b4e09a"/><path d="M-5 -22 q5 -5 10 0" stroke="#6fae5c" stroke-width="2" fill="none"/>',
+    bamboo:function(hh){var s='<rect x="-4" y="-'+hh+'" width="8" height="'+hh+'" rx="3" fill="#7fae4f"/>';for(var y=22;y<hh;y+=22)s+='<rect x="-5" y="-'+y+'" width="10" height="3" fill="#5f8f3a"/>';
+      s+='<path d="M0 -'+(hh-6)+' q16 -6 26 2 q-14 4 -26 -2z M0 -'+(hh-18)+' q-16 -6 -26 2 q14 4 26 -2z M0 -'+(hh-30)+' q16 -4 24 4 q-14 2 -24 -4z" fill="#5f9f4f"/>';return s},
+    rice:function(grain){return '<path d="M0 0 q-5 -28 -16 -44 M0 0 q0 -34 2 -56 M0 0 q5 -28 15 -42 M0 0 q-2 -20 -9 -30" stroke="#5f9f4f" stroke-width="3" fill="none" stroke-linecap="round"/>'+(grain?'<path d="M2 -56 q10 4 12 18" stroke="#d9b44a" stroke-width="4" fill="none" stroke-linecap="round" stroke-dasharray="3 2"/>':'')},
+    mangrove:'<path d="M-24 0 q4 -26 22 -34 M24 0 q-4 -26 -22 -34 M-10 0 q2 -18 8 -34 M10 0 q-2 -18 -8 -34" stroke="#6b4e34" stroke-width="3" fill="none"/><rect x="-3" y="-62" width="6" height="30" fill="#6b4e34"/><ellipse cx="-18" cy="-62" rx="20" ry="13" fill="#4f8f5f"/><ellipse cx="18" cy="-62" rx="20" ry="13" fill="#4f8f5f"/><ellipse cx="0" cy="-74" rx="32" ry="18" fill="#3f7d58"/>',
+    spoonbill:'<line x1="-4" y1="-20" x2="-6" y2="0" stroke="'+K+'" stroke-width="2"/><line x1="5" y1="-20" x2="7" y2="0" stroke="'+K+'" stroke-width="2"/><ellipse cx="2" cy="-28" rx="17" ry="10" fill="#fafafa" stroke="'+K+'" stroke-width="1.5"/><path d="M-11 -33 Q-18 -44 -14 -50" stroke="#fafafa" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M-11 -33 Q-18 -44 -14 -50" stroke="'+K+'" stroke-width="1" fill="none" opacity=".4"/><circle cx="-15" cy="-52" r="6" fill="#fafafa" stroke="'+K+'" stroke-width="1.5"/><path d="M-20 -52 L-36 -45" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/><ellipse cx="-37" cy="-44" rx="4.5" ry="3.2" fill="'+K+'"/><circle cx="-16" cy="-53" r="1.3" fill="'+K+'"/>',
+    pig:'<rect x="-30" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="-16" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="12" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="26" y="-24" width="9" height="24" rx="3" fill="#e993a6"/>'+
+      '<path d="M-44 -42 q-10 -2 -8 -10 q2 -6 8 -2" stroke="'+K+'" stroke-width="2" fill="none"/><ellipse cx="0" cy="-38" rx="46" ry="26" fill="#f4b6c2" stroke="'+K+'" stroke-width="2"/>'+
+      '<circle cx="40" cy="-46" r="19" fill="#f4b6c2" stroke="'+K+'" stroke-width="2"/><path d="M30 -62 l4 -12 l8 9z" fill="#e993a6" stroke="'+K+'" stroke-width="1.5"/><ellipse cx="57" cy="-42" rx="8" ry="7" fill="#e993a6" stroke="'+K+'" stroke-width="2"/><circle cx="55" cy="-42" r="1.5" fill="'+K+'"/><circle cx="60" cy="-42" r="1.5" fill="'+K+'"/><circle cx="44" cy="-52" r="2.4" fill="'+K+'"/>',
+    tractor:'<rect x="-40" y="-42" width="58" height="22" rx="4" fill="#c0503a"/><rect x="-36" y="-74" width="30" height="34" rx="3" fill="none" stroke="'+K+'" stroke-width="3"/><rect x="10" y="-32" width="32" height="15" rx="3" fill="#c0503a"/><rect x="24" y="-56" width="5" height="26" fill="#555"/>'+
+      '<circle cx="-24" cy="-19" r="19" fill="#333"/><circle cx="-24" cy="-19" r="7" fill="#bbb"/><circle cx="32" cy="-12" r="12" fill="#333"/><circle cx="32" cy="-12" r="4.5" fill="#bbb"/>',
+    plow:'<path d="M-44 -26 L-64 -8 L-58 4 L-52 -6 M-58 -18 L-76 -2 L-70 8" stroke="#666" stroke-width="3.5" fill="none" stroke-linecap="round"/>',
+    pole:'<rect x="-3" y="-124" width="6" height="124" fill="#7a5a3a"/><rect x="-24" y="-116" width="48" height="5" fill="#7a5a3a"/><circle cx="-18" cy="-118" r="3" fill="#ccc"/><circle cx="18" cy="-118" r="3" fill="#ccc"/><path d="M4 -86 l-8 14 h7 l-5 14 l12 -18 h-7 l5 -10z" fill="#f2c94c" stroke="'+K+'" stroke-width="1"/>',
+    pond:'<ellipse cx="0" cy="-8" rx="52" ry="13" fill="#6b4e34"/><ellipse cx="0" cy="-10" rx="45" ry="8" fill="#9b7650"/>',
+    factory:'<rect x="30" y="-122" width="16" height="70" fill="#6f777f"/><rect x="-56" y="-60" width="112" height="60" fill="#8a929a"/><path d="M-56 -60 l28 -18 v18 l28 -18 v18 l28 -18 v18" fill="#8a929a"/>'+
+      '<rect x="-44" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="-18" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="8" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="-10" y="-20" width="20" height="20" fill="#5b636b"/>',
+    coin:function(t){return '<circle cx="0" cy="-13" r="13" fill="#e2b84a" stroke="#a7822a" stroke-width="2"/><text x="0" y="-8.5" text-anchor="middle" style="font:700 13px var(--font-num);fill:#7a5a1a">'+(t||'$')+'</text>'},
+    jar:'<path d="M-30 0 h60 v-58 q0 -8 -8 -8 h-44 q-8 0 -8 8z" fill="var(--paper)" stroke="var(--muted)" stroke-width="2.5"/><rect x="-24" y="-74" width="48" height="8" rx="3" fill="var(--muted)"/>',
+    bento:'<rect x="-62" y="-50" width="124" height="50" rx="6" fill="#b5764a" stroke="'+K+'" stroke-width="2"/><rect x="-56" y="-44" width="62" height="38" rx="3" fill="#fbf8ef"/><rect x="10" y="-44" width="46" height="18" rx="3" fill="#7fbf6a"/><rect x="10" y="-24" width="46" height="18" rx="3" fill="#f2d16b"/>'+
+      '<ellipse cx="-24" cy="-30" rx="26" ry="11" fill="#a0612f" stroke="#7a4520" stroke-width="2"/><path d="M-40 -32 h30 M-38 -27 h26" stroke="#7a4520" stroke-width="1.5"/>',
+    train:'<rect x="-110" y="-62" width="220" height="50" rx="10" fill="#e1e5ea" stroke="'+K+'" stroke-width="2"/><rect x="-110" y="-30" width="220" height="8" fill="#d0602f"/>'+
+      '<rect x="-96" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="-52" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="-8" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="36" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="80" y="-54" width="22" height="18" rx="3" fill="#7ea6c9"/>'+
+      '<circle cx="-74" cy="-8" r="8" fill="#333"/><circle cx="-50" cy="-8" r="8" fill="#333"/><circle cx="50" cy="-8" r="8" fill="#333"/><circle cx="74" cy="-8" r="8" fill="#333"/>',
+    dome:'<path d="M-56 0 v-30 a56 44 0 0 1 112 0 v30z" fill="#a7adb3" stroke="'+K+'" stroke-width="2"/><path d="M-56 -30 h112" stroke="'+K+'" stroke-width="1.5" opacity=".5"/><rect x="-6" y="-84" width="12" height="12" fill="#6f777f"/>',
+    bee:'<g><ellipse cx="-2" cy="-10" rx="5" ry="4" fill="#fff" opacity=".85"/><ellipse cx="4" cy="-10" rx="5" ry="4" fill="#fff" opacity=".85"/><ellipse cx="0" cy="-3" rx="9" ry="6.5" fill="#f2c230" stroke="'+K+'" stroke-width="1.2"/><path d="M-2 -9 v12 M3 -8.5 v11" stroke="'+K+'" stroke-width="2"/><circle cx="8" cy="-4" r="1.3" fill="'+K+'"/></g>',
+    flower:function(c){return '<path d="M0 0 v-30" stroke="#5f9f4f" stroke-width="3"/><path d="M0 -14 q-10 -4 -12 -12 q8 0 12 8" fill="#5f9f4f"/><g fill="'+(c||'#e98fa3')+'"><circle cx="0" cy="-40" r="6"/><circle cx="-8" cy="-33" r="6"/><circle cx="8" cy="-33" r="6"/><circle cx="-5" cy="-25" r="6"/><circle cx="5" cy="-25" r="6"/></g><circle cx="0" cy="-32" r="4.5" fill="#f2c94c"/>'},
+    larva:'<ellipse cx="0" cy="-4" rx="11" ry="4.5" fill="#efe6c8" stroke="#8a7a50" stroke-width="1"/><path d="M-5 -8 v8 M0 -8.5 v9 M5 -8 v8" stroke="#8a7a50" stroke-width=".8"/>',
+    truck:'<rect x="-50" y="-48" width="64" height="36" rx="3" fill="#7fa7c9" stroke="'+K+'" stroke-width="2"/><path d="M14 -40 h20 l12 14 v14 h-32z" fill="#d0602f" stroke="'+K+'" stroke-width="2"/><rect x="20" y="-36" width="12" height="10" fill="#cfe3f2"/><circle cx="-30" cy="-10" r="9" fill="#333"/><circle cx="30" cy="-10" r="9" fill="#333"/>',
+    shop:'<rect x="-50" y="-70" width="100" height="70" fill="#e9e4d6" stroke="'+K+'" stroke-width="2"/><path d="M-56 -70 h112 l-8 -18 h-96z" fill="#d0602f" stroke="'+K+'" stroke-width="2"/><rect x="-36" y="-50" width="30" height="24" fill="#cfe3f2" stroke="'+K+'" stroke-width="1.5"/><rect x="10" y="-44" width="24" height="44" fill="#8a6a4a"/>',
+    log:'<rect x="-26" y="-14" width="52" height="14" rx="7" fill="#9b7650" stroke="#6b4e34" stroke-width="2"/><ellipse cx="26" cy="-7" rx="5" ry="7" fill="#d9b98a" stroke="#6b4e34" stroke-width="1.5"/>',
+    seagrass:'<path d="M-10 0 q-6 -20 2 -40 M-3 0 q4 -24 -2 -48 M4 0 q-4 -18 4 -38 M11 0 q6 -16 0 -32" stroke="#3f8f6a" stroke-width="3.5" fill="none" stroke-linecap="round"/>'
+  };
+  /* 牛、羊（左上原點畫，包一層移到底部中央） */
+  var COW='<path d="M14 30 q-14 12 -8 34" fill="none" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/>'+
+    [22,38,80,96].map(function(x,i){return '<g class="leg" data-b="'+(i==1||i==2?1:0)+'"><rect x="'+x+'" y="50" width="10" height="32" rx="3" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/><rect x="'+x+'" y="76" width="10" height="7" fill="'+K+'"/></g>'}).join('')+
+    '<rect x="12" y="20" width="100" height="42" rx="19" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/>'+
+    '<path d="M30 21 q10 12 26 6 q4 -4 2 -7z" fill="'+K+'"/><ellipse cx="82" cy="44" rx="12" ry="8" fill="'+K+'"/><ellipse cx="44" cy="50" rx="6" ry="4" fill="'+K+'"/>'+
+    '<path d="M108 10 q-6 -9 0 -12 M126 9 q6 -9 0 -12" fill="none" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/><ellipse cx="102" cy="16" rx="8" ry="4" fill="#fbfaf6" stroke="'+K+'" stroke-width="2" transform="rotate(-20 102 16)"/>'+
+    '<rect x="102" y="6" width="34" height="32" rx="13" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/><rect x="118" y="23" width="24" height="17" rx="8" fill="#f0b8ad" stroke="'+K+'" stroke-width="2"/>'+
+    '<circle cx="114" cy="17" r="2.6" fill="'+K+'"/><circle cx="129" cy="30" r="1.8" fill="'+K+'"/><circle cx="137" cy="30" r="1.8" fill="'+K+'"/>';
+  var SHEEP=[24,36,66,78].map(function(x,i){return '<g class="leg" data-b="'+(i==1||i==2?1:0)+'"><rect x="'+x+'" y="50" width="7" height="30" rx="2" fill="#3b3631"/></g>'}).join('')+
+    [[24,38,14],[40,27,14],[60,25,14],[78,32,14],[32,52,12],[52,54,12],[72,50,12],[84,44,10]].map(function(c){return '<circle cx="'+c[0]+'" cy="'+c[1]+'" r="'+c[2]+'" fill="#f4f1e8" stroke="'+K+'" stroke-width="2"/>'}).join('')+
+    '<rect x="22" y="28" width="62" height="28" rx="14" fill="#f4f1e8"/><ellipse cx="92" cy="22" rx="8" ry="4" fill="#3b3631" transform="rotate(-25 92 22)"/>'+
+    '<ellipse cx="100" cy="32" rx="12" ry="14" fill="#3b3631"/><circle cx="96" cy="20" r="7" fill="#f4f1e8" stroke="'+K+'" stroke-width="2"/><circle cx="104" cy="28" r="2.6" fill="#fff"/><circle cx="104.5" cy="28.5" r="1.3" fill="'+K+'"/>';
+  api.SH.cow='<g transform="translate(-70 -83)">'+COW+'</g>';
+  api.SH.sheep='<g transform="translate(-56 -80)">'+SHEEP+'</g>';
+  api.SH.cowPts={mouth:[72,-47],nose:[74,-53],rear:[-62,-45]};
+  api.SH.sheepPts={mouth:[54,-40],nose:[56,-44],rear:[-44,-38]};
+  /* 跑步：腳擺動，回傳停止函式 */
+  api.legs=function(g){var a=[];g.querySelectorAll('.leg').forEach(function(l){l.style.transformBox='fill-box';l.style.transformOrigin='50% 0';
+      var an=api.A(l,[{transform:'rotate(20deg)'},{transform:'rotate(-20deg)'}],260,{iter:Infinity,dir:'alternate',ease:'ease-in-out',delay:l.getAttribute('data-b')==='1'?0:0,fill:'none'});
+      if(an&&l.getAttribute('data-b')==='1')an.currentTime=260;if(an)a.push(an)});
+    return function(){a.forEach(function(x){x.cancel()})}};
+
+  /* ---------- 遊戲流程 ---------- */
+  var Q=C.questions,idx=0,score=0,phase='idle',S=C.scene(api);
+  function act(n){if(n&&S.acts&&S.acts[n])S.acts[n]()}
+  function btn(t,cls,fn){var b=D.createElement('button');b.type='button';b.textContent=t;if(cls)b.className=cls;b.addEventListener('click',fn);return b}
+  function show(){phase='q';var q=Q[idx];pEl.textContent='第 '+(idx+1)+' 題／共 '+Q.length+' 題';qEl.textContent=q.q;oEl.innerHTML='';fEl.innerHTML='';
+    q.opts.forEach(function(o,i){oEl.appendChild(btn(o,'',function(){answer(i)}))});stopAll();act(q.act)}
+  function answer(i){phase='a';var q=Q[idx],right=i===q.ans;
+    oEl.querySelectorAll('button').forEach(function(b,j){b.disabled=true;b.classList.add(j===q.ans?'ok':j===i?'bad':'dim')});
+    if(right)score++;
+    if(q.after){stopAll();act(q.after)}
+    var why=typeof q.why==='object'?(q.why[i]||q.why.d):q.why;
+    var box=h('div','res '+(right?'ok':'bad'),'<b>'+(right?'答對了！':'答錯了')+'</b><p></p>',fEl);box.querySelector('p').textContent=right?q.ok:why;
+    var last=idx===Q.length-1,nx=btn(last?'看結果':(right?'下一題 →':'懂了，下一題 →'),'gm-next',function(){if(last)end();else{idx++;show()}});
+    fEl.appendChild(nx);try{nx.focus({preventScroll:true})}catch(e){}}
+  function end(){phase='end';stopAll();act('end');pEl.textContent='完成';
+    qEl.innerHTML='答對 <span class="gm-score">'+score+'／'+Q.length+'</span> 題';oEl.innerHTML='';fEl.innerHTML='';
+    var box=h('div','res ok','<b>重點</b><p></p>',fEl);box.querySelector('p').textContent=C.summary;
+    fEl.appendChild(btn('再玩一次','gm-next',function(){start()}))}
+  function start(){stopAll();idx=0;score=0;phase='enter';oEl.innerHTML='';fEl.innerHTML='';pEl.textContent='　';qEl.textContent=C.intro||'準備開始…';
+    S.enter(function(){if(phase==='enter')show()})}
+  var lastF=null;
+  function open(){hideTip();lastF=D.activeElement;ov.hidden=false;D.documentElement.classList.add('gm-lock');dlg.querySelector('.gm-x').focus();
+    if(phase==='idle'||phase==='enter')start();else if(phase==='q'||phase==='a')act(Q[idx].act)}
+  function close(){stopAll();ov.hidden=true;D.documentElement.classList.remove('gm-lock');if(phase==='enter')phase='idle';try{(lastF||fab).focus()}catch(e){}}
+  fab.addEventListener('click',open);
+  dlg.querySelector('.gm-x').addEventListener('click',close);
+  ov.addEventListener('click',function(e){if(e.target===ov)close()});
+  D.addEventListener('keydown',function(e){if(ov.hidden)return;
+    if(e.key==='Escape'){close();return}
+    if(e.key==='Tab'){var f=[].slice.call(dlg.querySelectorAll('button:not(:disabled)'));if(!f.length)return;var a=f[0],z=f[f.length-1];
+      if(e.shiftKey&&D.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&D.activeElement===z){e.preventDefault();a.focus()}}});
+
+  /* ---------- 提示泡泡：往下讀一段或停留 15 秒後出現一次 ---------- */
+  var tipDone=false,tipT;
+  function hideTip(){tip.classList.remove('on');clearTimeout(tipT)}
+  function showTip(){if(tipDone||!ov.hidden)return;tipDone=true;tip.classList.add('on');fab.classList.add('wig');tipT=setTimeout(hideTip,12000)}
+  tip.addEventListener('click',function(e){if(e.target.classList.contains('gm-tipx')){hideTip();return}open()});
+  setTimeout(showTip,15000);
+  window.addEventListener('scroll',function(){var m=D.scrollingElement||D.documentElement,max=m.scrollHeight-window.innerHeight;if(max>0&&(window.scrollY||m.scrollTop)>max*.25)showTip()},{passive:true});
+  api.open=open;return api;
+};
+GMRUN({title:'翻土的代價',teaser:'翻土會讓土壤裡的碳變多還是變少？點我玩玩看',alt:'農地土壤剖面與耕耘機',intro:'土壤剖面準備中…',vb:'0 30 880 230',
+summary:'翻土會破壞團粒、讓碳被分解成 CO₂；少翻土、加有機質、讓根系留在土裡，碳才存得住。穩定的碳是和黏土礦物結合的 MAOC。全球土壤碳每年增加千分之四，大約能抵銷大氣每年增加的碳。',
+scene:function(G){
+  var SH=G.SH,SY=118,svg=G.svg;
+  G.bg({ground:SY,color:'#5a4130',sun:[820,40]});
+  G.el('rect',{x:0,y:SY,width:880,height:70,fill:'#3d2b1e',opacity:.55},null,svg);
+  G.el('rect',{x:0,y:SY+70,width:880,height:80,fill:'#7a6650',opacity:.5},null,svg);
+  G.text(40,SY+30,'表土','sub').style.textAnchor='start';G.text(40,SY+120,'下層（黏土礦物）','sub').style.textAnchor='start';
+  var clay=[],dots=[],roots=[],crops=[];
+  for(var i=0;i<14;i++)clay.push({x:70+i*58+Math.random()*20,y:SY+92+Math.random()*40});
+  clay.forEach(function(c){G.el('ellipse',{cx:c.x,cy:c.y,rx:12,ry:5,fill:'#a8a29a',opacity:.9},null,svg)});
+  for(i=0;i<46;i++){var d={x:30+Math.random()*820,y:SY+10+Math.random()*58};d.e=G.put(null,d.x,d.y,1,'<circle cx="0" cy="-4" r="4.5" fill="#1d140d"/>','50% 50%');dots.push(d)}
+  [120,260,400,540,680,800].forEach(function(x){roots.push(G.put(null,x,SY,1,'<path d="M0 0 v60 M0 18 l-16 22 M0 30 l14 24 M0 46 l-10 18" stroke="#c9a77a" stroke-width="2.5" fill="none" stroke-linecap="round"/>','50% 0'));
+    crops.push(G.put(null,x,SY,1,SH.rice(false)))});
+  var tr=G.put(null,0,SY,1,SH.tractor+SH.plow);
+  function show(e,on,ms){G.A(e,[{opacity:on?0:1},{opacity:on?1:0}],ms||400)}
+  function hideAll(){roots.forEach(function(r){G.A(r,[{transform:'scaleY(0)'}],1)});crops.forEach(function(c){G.A(c,[{transform:'scale(0)'}],1)})}
+  function resetDots(){dots.forEach(function(d){d.gone=false;G.A(d.e,[{transform:'translate(0,0)',opacity:1}],1)})}
+  function pass(){resetDots();G.A(tr,[{transform:'translateX(-120px)',opacity:1},{transform:'translateX(1000px)',opacity:1}],5200,{ease:'linear'});
+    dots.forEach(function(d){if(d.y>SY+42||Math.random()<.35)return;G.later(function(){d.gone=true;G.A(d.e,[{opacity:1},{opacity:0}],400);
+      if(Math.random()<.5)G.puff(d.x,SY-6,{dy:-70,n:2,r:8,color:G.C.co2,label:'CO₂',ms:2000})},(d.x+120)/1120*5200+200)});
+    G.later(function(){G.pop(440,50,'翻土 → 團粒破壞 → 碳被分解',{size:16})},1800)}
+  return {
+    enter:function(done){hideAll();resetDots();G.A(tr,[{transform:'translateX(-200px)',opacity:0}],1);
+      dots.forEach(function(d,i){G.A(d.e,[{transform:'scale(0)'},{transform:'scale(1)'}],400,{delay:i*20})});G.later(done,1200)},
+    acts:{
+      plow:function(){hideAll();G.loop(pass,6200)},
+      notill:function(){G.A(tr,[{opacity:0}],300);
+        roots.forEach(function(r,i){G.A(r,[{transform:'scaleY(0)'},{transform:'scaleY(1)'}],1600,{delay:i*150})});
+        crops.forEach(function(c,i){G.A(c,[{transform:'scale(0)'},{transform:'scale(1)'}],900,{delay:i*150,ease:'cubic-bezier(.3,1.4,.5,1)'})});
+        dots.forEach(function(d,i){if(d.gone)G.A(d.e,[{opacity:0,transform:'scale(0)'},{opacity:1,transform:'scale(1)'}],700,{delay:1200+i*40});d.gone=false});
+        G.later(function(){G.pop(440,50,'少翻土、根留在土裡 → 碳慢慢回來',{size:16})},1400);
+        G.loop(function(){var c=crops[Math.floor(Math.random()*crops.length)];G.puff(c.x,10,{dy:50,n:2,r:8,color:G.C.co2,label:'CO₂',grow:1.1,ms:1500})},1300)},
+      maoc:function(){G.A(tr,[{opacity:0}],1);
+        dots.forEach(function(d,i){if(i%2){var c=clay[i%clay.length];G.A(d.e,[{transform:'translate(0,0)',opacity:1},{transform:'translate('+(c.x-d.x+(i%3-1)*6)+'px,'+(c.y-d.y+2)+'px)',opacity:1}],1800,{delay:i*25,ease:'ease-in-out'})}});
+        G.later(function(){G.pop(470,SY+70,'黏住礦物 → MAOC，很穩定',{size:16})},2000);
+        G.loop(function(){var d=dots[2*Math.floor(Math.random()*dots.length/2)];G.A(d.e,[{opacity:1},{opacity:.2},{opacity:1}],1400,{fill:'none'});
+          G.puff(d.x,SY-6,{dy:-60,n:2,r:7,color:G.C.co2,label:'CO₂',ms:1800});G.pop(d.x,SY-30,'POC',{size:13})},1100)}
+    }}},
+questions:[
+  {act:'plow',q:'傳統全面翻土，土壤裡的碳會？',opts:['變多','變少','不變'],ans:1,
+   ok:'翻土加速通氣、破壞團粒，碳被分解成 CO₂ 跑掉。',
+   why:'變少。講義 7：翻土加速通氣、破壞團粒，讓碳被分解；機械壓實又形成犁底層，表土遇雨膠結、流失有機質，只好再翻土，變成惡性循環。'},
+  {act:'notill',q:'某塊地的 SOC 原本一直下降。改用永續管理後還是在降，只是降得比較慢。這樣有減碳效益嗎？',opts:['有','沒有'],ans:0,
+   ok:'效益是相對「照舊做法（BAU）」少流失的部分。',
+   why:'有。講義 7（FAO 情境 c）：效益要跟照舊情境（BAU）比，少流失的部分就是效益，不是跟起始存量比。'},
+  {act:'maoc',q:'顆粒有機碳 POC 和礦物結合有機碳 MAOC，哪一個比較穩定？',opts:['POC','MAOC'],ans:1,
+   ok:'MAOC 和黏土礦物結合，不容易被分解。',
+   why:'MAOC。它和黏土礦物結合（黏粒-腐植質錯合物），不容易分解；POC 比較容易被分解。所以黏粒多的土壤固碳潛力比較高。'},
+  {act:'notill',q:'「千分之四倡議」：全球土壤碳每年增加千分之四，大約能抵銷什麼？',opts:['大氣每年增加的碳','全球交通的排放','全球農業的排放'],ans:0,
+   ok:'860 Gt × 0.004 ≈ 3.44 Gt C，接近大氣每年增加的 4.3 Gt C。',
+   why:'大氣每年增加的碳。講義 7：全球表層土壤碳約 860 Gt，× 0.004 ＝ 3.44 Gt C，接近大氣每年增加的 4.3 Gt C。'}
+]});
+</script><!--/gm-js-->
+
+</body>
+</html>

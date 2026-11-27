@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>農業ESG概論</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: 單欄閱讀講義，桌機左側固定目錄；筆記、ISO 連結、重點用不同框區分 */
+:root{
+  --bg:#f4f6f1; --paper:#ffffff; --fg:#1c231f; --muted:#5b6660; --line:#d9ded6;
+  --accent:#2f6a4c; --accent-soft:#e3eee6;
+  --ink:#2a4a9a; --ink-soft:#e8edf8;
+  --hl:#f3e27a; --soil:#9a6a22; --soil-soft:#f5ecdc;
+  --font-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --font-head:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --font-num:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141a17; --paper:#1b2320; --fg:#e4ebe6; --muted:#9aa8a0; --line:#2e3a35;
+  --accent:#7cc39b; --accent-soft:#1f3329; --ink:#9db4f0; --ink-soft:#1f2740;
+  --hl:#6b5d14; --soil:#d9a85a; --soil-soft:#30281a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141a17; --paper:#1b2320; --fg:#e4ebe6; --muted:#9aa8a0; --line:#2e3a35;
+  --accent:#7cc39b; --accent-soft:#1f3329; --ink:#9db4f0; --ink-soft:#1f2740;
+  --hl:#6b5d14; --soil:#d9a85a; --soil-soft:#30281a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.8;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1480px;margin:0 auto;display:grid;grid-template-columns:190px minmax(0,1fr);gap:36px;padding-block:32px 80px}
+@media (max-width:860px){.wrap{grid-template-columns:minmax(0,1fr)} nav.toc{position:static!important;max-height:none!important}}
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);align-self:start;max-height:calc(100vh - 32px);overflow:auto;font-size:14px}
+nav.toc h2{font-size:13px;letter-spacing:.12em;color:var(--muted);margin:0 0 8px;font-family:var(--font-body)}
+nav.toc ol{margin:0;padding-left:32px;display:grid;gap:4px}
+nav.toc a{color:var(--fg);text-decoration:none}
+nav.toc a:hover,nav.toc a:focus-visible{color:var(--accent);text-decoration:underline}
+main{min-width:0}
+.toc-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px}
+.toc-head h2{margin:0!important}
+.toc-btn{font:inherit;font-size:13px;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:6px;padding:2px 8px;cursor:pointer;line-height:1.6}
+.toc-btn:hover,.toc-btn:focus-visible{color:var(--accent);border-color:var(--accent)}
+.toc-open{display:none;white-space:nowrap}
+body.toc-off .wrap{grid-template-columns:76px minmax(0,1fr)}
+body.toc-off nav.toc>*:not(.toc-open){display:none}
+body.toc-off .toc-open{display:inline-block}
+@media (max-width:860px){body.toc-off .wrap{grid-template-columns:minmax(0,1fr)}}
+header.hero{border-bottom:3px solid var(--accent);padding-bottom:20px;margin-bottom:28px}
+.eyebrow{font-size:13px;letter-spacing:.14em;color:var(--accent);font-weight:700}
+h1{font-family:var(--font-head);font-weight:900;font-size:clamp(28px,5vw,42px);line-height:1.3;margin:6px 0 10px;text-wrap:balance}
+.meta{color:var(--muted);font-size:14px}
+h2{font-family:var(--font-head);font-size:26px;line-height:1.35;margin:56px 0 14px;text-wrap:balance;scroll-margin-top:16px}
+h2 .no{font-family:var(--font-num);color:var(--accent);font-size:18px;margin-right:10px}
+h3{font-size:19px;margin:30px 0 8px;color:var(--accent)}
+p{margin:10px 0}
+ul,ol{padding-left:22px;margin:8px 0}
+li{margin:3px 0}
+mark{background:linear-gradient(transparent 55%,var(--hl) 55%);color:inherit;padding:0 1px}
+.num{font-family:var(--font-num);font-variant-numeric:tabular-nums}
+.box{border-radius:10px;padding:14px 18px;margin:16px 0}
+.box>.tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.08em;padding:1px 8px;border-radius:999px;margin-bottom:4px}
+.box p,.box ul{margin:6px 0}
+.guide{background:var(--paper);border:1px solid var(--line)}
+.guide .tag{background:var(--accent);color:var(--paper)}
+.note{background:var(--ink-soft);border-left:4px solid var(--ink)}
+.note .tag{background:var(--ink);color:var(--paper)}
+.note .hand{color:var(--ink);font-weight:500}
+.iso{background:var(--soil-soft);border-left:4px solid var(--soil)}
+.iso .tag{background:var(--soil);color:var(--paper)}
+.key{background:var(--accent-soft);border-left:4px solid var(--accent)}
+.key .tag{background:var(--accent);color:var(--paper)}
+.unclear{color:var(--muted);font-size:13px;border-bottom:1px dotted var(--muted)}
+.tbl{overflow-x:auto;width:fit-content;max-width:100%;margin:14px 0;border:1px solid var(--line);border-radius:8px;background:var(--paper)}
+table{border-collapse:collapse;width:auto;font-size:15px;min-width:480px}
+th,td{padding:8px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--accent-soft);font-weight:700;white-space:nowrap}
+td.r,th.r{text-align:right}
+td:first-child,th:first-child{white-space:nowrap}
+tr:last-child td{border-bottom:none}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:16px 0}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.stat b{display:block;font-family:var(--font-num);font-size:22px;color:var(--accent);line-height:1.3}
+.stat span{font-size:13px;color:var(--muted)}
+.axes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:16px 0}
+.axis{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:8px;padding:12px 14px}
+.axis h4{margin:0 0 4px;font-size:17px}
+.axis .goal{font-family:var(--font-num);color:var(--accent);font-weight:700}
+.fig{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0;width:fit-content;max-width:100%}
+.fig svg{display:block;max-width:100%;height:auto}
+.fig figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.fig .t{fill:var(--fg);font-size:14px;font-family:var(--font-body)}
+.fig .tb{fill:var(--fg);font-size:14px;font-weight:700;font-family:var(--font-body)}
+.fig .m{fill:var(--muted);font-size:12.5px;font-family:var(--font-body)}
+.fig .n{fill:var(--fg);font-size:13px;font-family:var(--font-num)}
+.fig .ax{stroke:var(--line);stroke-width:1}
+.fig .g-acc{fill:var(--accent)} .fig .s-acc{stroke:var(--accent)}
+.fig .g-soil{fill:var(--soil)} .fig .s-soil{stroke:var(--soil)}
+.fig .g-ink{fill:var(--ink)} .fig .s-ink{stroke:var(--ink)}
+.fig .g-mut{fill:var(--muted)} .fig .s-mut{stroke:var(--muted)}
+.fig .g-accs{fill:var(--accent-soft)} .fig .g-soils{fill:var(--soil-soft)} .fig .g-inks{fill:var(--ink-soft)}
+.fig .hit:hover{opacity:.8}
+.calc{width:fit-content;max-width:100%}
+.loop{position:relative;margin-top:22px!important;margin-bottom:48px!important;padding-left:26px}
+.loop-svg{position:absolute;left:0;top:0;overflow:visible;pointer-events:none;color:var(--accent)}
+.loop-svg text{fill:var(--accent);font-size:13px;font-family:var(--font-body)}
+.flow span.ok{background:var(--accent-soft);border-color:var(--accent);font-weight:700}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0;font-size:14px}
+.flow span{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:4px 10px}
+.flow i{font-style:normal;color:var(--muted)}
+details.q{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0}
+details.q summary{cursor:pointer;font-weight:500}
+details.q summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+details.q[open] summary{color:var(--accent)}
+details.q .a{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+dl.gloss{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 18px;margin:12px 0}
+dl.gloss dt{font-weight:700;color:var(--accent)}
+dl.gloss dd{margin:0}
+@media (max-width:560px){dl.gloss{grid-template-columns:minmax(0,1fr)} dl.gloss dd{margin-bottom:8px}}
+footer{margin-top:60px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+a.xref{display:block;width:fit-content;margin-top:6px}
+.steps{width:fit-content;max-width:100%}
+.box{width:fit-content;max-width:100%}
+.flow span{display:inline-flex;align-items:center;gap:8px}
+.flow span .fi{width:22px;height:22px;flex:none;fill:none;stroke:var(--accent);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.flow span .tx{font-style:normal}
+</style>
+<style>
+.formula{font-family:var(--font-num);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px;overflow-x:auto;white-space:nowrap;font-size:15px;margin:8px 0}
+.calc{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:16px 0;display:grid;gap:12px}
+.calc .row{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:end}
+.calc label{display:grid;gap:4px;font-size:14px;color:var(--muted)}
+.calc input{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 10px;width:160px;max-width:100%}
+.calc input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.calc .out{font-family:var(--font-num);font-size:15px;line-height:1.9;border-top:1px dashed var(--line);padding-top:10px}
+.calc .out b{color:var(--accent);font-size:20px}
+.steps{counter-reset:s;list-style:none;padding:0;display:grid;gap:8px;margin:12px 0}
+.steps li{counter-increment:s;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px 12px 8px 44px;position:relative}
+.steps li::before{content:counter(s);position:absolute;left:12px;top:8px;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--paper);font-family:var(--font-num);font-size:13px;display:grid;place-items:center}
+</style>
+<!--gm-css--><style>
+/* 跳出式小遊戲 */
+.gm-fab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));z-index:60;display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:15px;font-weight:700;color:var(--paper);background:var(--accent);border:0;border-radius:999px;padding:10px 18px 10px 14px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.22)}
+.gm-fab svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.gm-fab:hover,.gm-fab:focus-visible{filter:brightness(1.08);outline:2px solid var(--fg);outline-offset:2px}
+.gm-fab.wig{animation:gmWig .9s ease-in-out 2}
+@keyframes gmWig{0%,100%{transform:rotate(0)}20%{transform:rotate(-8deg) scale(1.06)}40%{transform:rotate(7deg) scale(1.06)}60%{transform:rotate(-4deg)}80%{transform:rotate(3deg)}}
+.gm-tip{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(max(16px,env(safe-area-inset-bottom,0px)) + 58px);z-index:60;max-width:min(300px,calc(100vw - 32px));background:var(--paper);color:var(--fg);border:2px solid var(--accent);border-radius:14px;padding:10px 34px 10px 14px;font-size:15px;line-height:1.55;box-shadow:0 6px 20px rgba(0,0,0,.2);cursor:pointer;opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .3s,transform .3s}
+.gm-tip.on{opacity:1;transform:none;pointer-events:auto}
+.gm-tip::after{content:"";position:absolute;right:34px;bottom:-9px;width:14px;height:14px;background:var(--paper);border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(45deg)}
+.gm-tip b{display:block;font-size:12px;letter-spacing:.1em;color:var(--accent)}
+.gm-tipx{position:absolute;top:4px;right:6px;font:inherit;font-size:18px;line-height:1;color:var(--muted);background:none;border:0;cursor:pointer;padding:4px}
+html.gm-lock,html.gm-lock body{overflow:hidden}
+.gm-ov{position:fixed;inset:0;z-index:70;background:rgba(10,16,13,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.gm-ov[hidden]{display:none}
+.gm-dlg{background:var(--paper);color:var(--fg);border-radius:14px;width:100%;max-width:780px;max-height:calc(100vh - 32px);overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.gm-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px 10px 18px;border-bottom:1px solid var(--line)}
+.gm-hd b{font-family:var(--font-head);font-size:18px}
+.gm-x{font:inherit;font-size:22px;line-height:1;color:var(--muted);background:none;border:1px solid var(--line);border-radius:8px;width:36px;height:36px;cursor:pointer}
+.gm-x:hover,.gm-x:focus-visible{color:var(--accent);border-color:var(--accent)}
+.gm-stage{display:block;width:100%;height:auto;background:linear-gradient(var(--bg),var(--paper))}
+.gm-stage text{font-family:var(--font-body)}
+.gm-stage .lbl{fill:var(--fg);font-size:14px;font-weight:700;text-anchor:middle}
+.gm-stage .sub{fill:var(--muted);font-size:12px;text-anchor:middle}
+.gm-stage .pop{fill:var(--fg);font:900 19px var(--font-head);text-anchor:middle}
+.gm-stage .gas text{fill:var(--fg);font:700 13px var(--font-num);text-anchor:middle;dominant-baseline:middle}
+.gm-card{padding:14px 20px 20px}
+.gm-prog{font-size:13px;color:var(--muted);letter-spacing:.06em;min-height:1.4em}
+.gm-q{font-family:var(--font-head);font-size:21px;font-weight:700;margin:4px 0 12px;line-height:1.45}
+.gm-opts{display:flex;flex-wrap:wrap;gap:10px}
+.gm-opts button,.gm-next{font:inherit;font-size:16px;font-weight:700;color:var(--fg);background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:8px 18px;cursor:pointer;min-width:90px;text-align:left;line-height:1.5}
+.gm-opts button:hover:not(:disabled),.gm-opts button:focus-visible{border-color:var(--accent);color:var(--accent)}
+.gm-opts button:disabled{cursor:default}
+.gm-opts button.ok{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.gm-opts button.bad{background:var(--soil);border-color:var(--soil);color:var(--paper)}
+.gm-opts button.dim{opacity:.45}
+.gm-fb{margin-top:12px}
+.gm-fb .res{border-radius:10px;padding:12px 16px;margin:0 0 10px}
+.gm-fb .res.ok{background:var(--accent-soft);border-left:4px solid var(--accent)}
+.gm-fb .res.bad{background:var(--soil-soft);border-left:4px solid var(--soil)}
+.gm-fb .res b{display:block;font-size:17px;margin-bottom:2px}
+.gm-fb .res.ok b{color:var(--accent)}
+.gm-fb .res.bad b{color:var(--soil)}
+.gm-fb .res p{margin:4px 0}
+.gm-next{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.gm-next:hover,.gm-next:focus-visible{filter:brightness(1.08)}
+.gm-score{font-family:var(--font-num);font-size:28px;color:var(--accent);font-weight:700}
+@media (max-width:560px){.gm-q{font-size:18px}.gm-card{padding:12px 14px 16px}.gm-opts button{flex:1 1 100%}.gm-ov{padding:8px}.gm-dlg{max-height:calc(100vh - 16px)}}
+@media (prefers-reduced-motion:reduce){.gm-fab.wig{animation:none}.gm-tip{transition:none}}
+</style><!--/gm-css-->
+
+<style>
+.site-nav{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px;max-width:1480px;margin:0 auto;padding-top:20px}
+.site-nav+.wrap{padding-top:16px}
+.site-nav a{color:var(--muted);text-decoration:none}
+.site-nav a:hover,.site-nav a:focus-visible{color:var(--accent);text-decoration:underline}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:56px 0 0;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{display:block;padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--fg);text-decoration:none;font-size:15px}
+.pager a:hover,.pager a:focus-visible{border-color:var(--accent)}
+.pager small{display:block;color:var(--muted);font-size:12px}
+.pager .next{text-align:right;grid-column:2}
+@media (max-width:560px){.pager{grid-template-columns:1fr}.pager .next{grid-column:1}}
+</style>
+</head>
+<body>
+<nav class="site-nav" aria-label="網站導覽"><a href="index.html">← 回課程目錄</a><a href="../index.html">學習筆記首頁</a></nav>
+<div class="wrap">
+<nav class="toc" aria-label="目錄">
+  <button type="button" class="toc-btn toc-open" id="tocShow" aria-label="展開目錄">目錄 »</button>
+  <div class="toc-head"><h2>目錄</h2><button type="button" class="toc-btn" id="tocHide" aria-label="收起目錄">« 收起</button></div>
+  <p style="margin:0 0 6px"><a href="#guide">導讀</a></p>
+  <ol>
+    <li><a href="#origin">ESG 從哪裡來</a></li>
+    <li><a href="#forces">ESG 從報告走向企業經營制度</a></li>
+    <li><a href="#disclose">國際與臺灣的揭露制度</a></li>
+    <li><a href="#climate">Climate：最早進入企業核心的環境議題</a></li>
+    <li><a href="#nature">Nature：自然資本與生態系統服務</a></li>
+    <li><a href="#tnfd">TNFD：依賴、影響、風險、機會</a></li>
+    <li><a href="#cross">Climate × Nature × Agriculture</a></li>
+    <li><a href="#agesg">農業 ESG 的完整架構</a></li>
+    <li><a href="#cases">企業如何透過農業擴大影響力</a></li>
+    <li><a href="#future">成熟度、整合模型與綠領人才</a></li>
+    <li><a href="#quiz">自我測驗</a></li>
+    <li><a href="#gloss">名詞表</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="hero">
+  <h1>農業ESG概論</h1>
+</header>
+
+<section id="guide">
+  <div class="box guide">
+    <span class="tag">導讀</span>
+    <p>這份講義回答五個問題：ESG 從哪裡來？為什麼變成企業經營議題？企業為什麼從 Climate 走向 Nature？農業為何是 Climate × Nature 的核心？企業如何透過農業擴大永續影響力？</p>
+    <p>全課最重要的一張圖是<mark>依賴（Dependence）與影響（Impact）的雙向關係</mark>：企業依賴自然，又會改變自然；負面影響最後會回頭侵蝕自己依賴的基礎。</p>
+    <ul>
+      <li>ESG 的演進與揭露制度（ISSB、CSRD、臺灣時程），見 <a href="#origin">第 1 節</a>、<a href="#disclose">第 3 節</a>。</li>
+      <li>從氣候到自然：自然資本、生態系統服務、TNFD 四概念與 LEAP，見 <a href="#climate">第 4 節</a>到 <a href="#tnfd">第 6 節</a>。</li>
+      <li>農業 ESG 的 E、S、G 與企業案例，見 <a href="#agesg">第 8 節</a>、<a href="#cases">第 9 節</a>。</li>
+    </ul>
+    <p style="font-size:14px;color:var(--muted)">框的顏色：<span style="color:var(--ink)">藍色＝上課手寫筆記</span>、<span style="color:var(--soil)">棕色＝跟 ISO 或其他講義的連結</span>、綠色＝重點。</p>
+  </div>
+</section>
+
+<section id="origin">
+<h2><span class="no">01</span>ESG 從哪裡來</h2>
+<div class="tbl"><table>
+<tr><th>企業邏輯</th><th>內容</th></tr>
+<tr><td>傳統</td><td>核心任務是<mark>為股東創造利潤（Shareholder Value）</mark>；環境與社會責任是額外成本或公關，和核心決策分開</td></tr>
+<tr><td>當代</td><td>獲利條件納入環境、社會與長期風險；投資人、監管機構、消費者、社區的期待超越短期財務績效</td></tr>
+</table></div>
+<p>重點不是「企業不再追求獲利」，而是<b>獲利的條件與評估方式正在根本改變</b>。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">ESG：Environmental 環境、Social 社會、Governance 治理。合規 → 成本 → 競爭力。<br>EE ⇒ ESG ＋ EPS。</p></div>
+
+<h3>CSR、Sustainability、ESG 不是同義詞</h3>
+<div class="tbl"><table>
+<tr><th>概念</th><th>問的是什麼</th><th>形式</th></tr>
+<tr><td>CSR 企業社會責任</td><td>企業作為社會成員應承擔的責任；「我們為社會做了什麼？」</td><td>多為自願行動與捐贈</td></tr>
+<tr><td>Sustainability 永續性</td><td>商業模式與資源使用能否長期持續？</td><td>範圍涵蓋整個供應鏈與生態承載力</td></tr>
+<tr><td>ESG</td><td>把 E、S、G 帶進治理、風險管理、資本配置與投資決策</td><td><mark>最接近財務語言</mark>的框架</td></tr>
+</table></div>
+<p>三者不是新制度取代舊制度，而是<b>相互滲透、層層深化</b>。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">不只有碳。</p></div>
+
+<figure class="fig"><svg viewBox="0 0 920 210" width="920" role="img" aria-label="ESG 演進時間軸"><line x1="50" x2="870" y1="110" y2="110" class="ax" stroke-width="2"/><line x1="88" x2="88" y1="54" y2="102" class="s-mut" stroke-dasharray="2 3"/><circle cx="88" cy="110" r="7" style="fill:var(--ink)"/><text x="88" y="32" text-anchor="middle" class="n">1987</text><text x="88" y="50" text-anchor="middle" class="tb">布倫特蘭報告</text><text x="88" y="66" text-anchor="middle" class="m">永續發展定義</text><line x1="412" x2="412" y1="118" y2="142" class="s-mut" stroke-dasharray="2 3"/><circle cx="412" cy="110" r="7" style="fill:var(--ink)"/><text x="412" y="160" text-anchor="middle" class="n">2004</text><text x="412" y="178" text-anchor="middle" class="tb">Who Cares Wins</text><text x="412" y="194" text-anchor="middle" class="m">ESG 進入投資語言</text><line x1="450" x2="450" y1="54" y2="102" class="s-mut" stroke-dasharray="2 3"/><circle cx="450" cy="110" r="7" style="fill:var(--ink)"/><text x="450" y="32" text-anchor="middle" class="n">2006</text><text x="450" y="50" text-anchor="middle" class="tb">PRI 成立</text><text x="450" y="66" text-anchor="middle" class="m">ESG 進入投資決策</text><line x1="660" x2="660" y1="118" y2="142" class="s-mut" stroke-dasharray="2 3"/><circle cx="660" cy="110" r="7" style="fill:var(--soil)"/><text x="660" y="160" text-anchor="middle" class="n">2017</text><text x="660" y="178" text-anchor="middle" class="tb">TCFD 建議</text><text x="660" y="194" text-anchor="middle" class="m">氣候相關財務揭露</text><line x1="775" x2="775" y1="54" y2="102" class="s-mut" stroke-dasharray="2 3"/><circle cx="775" cy="110" r="7" style="fill:var(--soil)"/><text x="775" y="32" text-anchor="middle" class="n">2023</text><text x="775" y="50" text-anchor="middle" class="tb">IFRS S1、S2</text><text x="775" y="66" text-anchor="middle" class="m">ISSB 全球基準</text><line x1="832" x2="832" y1="118" y2="142" class="s-mut" stroke-dasharray="2 3"/><circle cx="832" cy="110" r="7" style="fill:var(--accent)"/><text x="832" y="160" text-anchor="middle" class="n">2026</text><text x="832" y="178" text-anchor="middle" class="tb">臺灣導入 IFRS</text><text x="832" y="194" text-anchor="middle" class="m">自然揭露進入制定</text></svg><figcaption>ESG 的演進：先有永續概念，再進入金融語言，最後成為強制揭露。2017 TCFD、2023 IFRS S1／S2 的年份為補充（TCFD 2017 年發布建議、2023 年解散並移交 IFRS 基金會；ISSB 2023 年 6 月發布 S1、S2）。</figcaption></figure>
+<div class="tbl"><table>
+<tr><th>里程碑</th><th>意義</th></tr>
+<tr><td>1987 布倫特蘭報告</td><td>《Our Common Future》：「滿足當代人的需要，同時不損害後代人滿足其自身需要的能力。」現在績效 vs 長期能力，奠定<mark>代際責任</mark>思維</td></tr>
+<tr><td>2004 Who Cares Wins</td><td>UN Global Compact 與 UNEP FI 首次論證 E、S、G 對競爭力與長期投資價值的重要性。ESG 從「企業責任」進入<mark>投資分析</mark></td></tr>
+<tr><td>2006 PRI</td><td>負責任投資原則，機構投資人承諾把 ESG 納入投資決策；目前超過 5,000 個簽署機構、管理資產超過百兆美元。ESG 從「倡議語言」變成<mark>資本市場語言</mark></td></tr>
+</table></div>
+<p>PRI 對市場的影響：ESG 評級成為主流；機構投資人要求揭露非財務資訊；ESG 績效開始影響融資成本與資本取得。</p>
+
+<h3>真正的轉變：從「企業做好事」到「如何創造長期價值」</h3>
+<div class="tbl"><table>
+<tr><th>思維</th><th>核心問題</th><th>企業角色</th></tr>
+<tr><td>CSR</td><td>「我們為社會做了什麼？」</td><td>主動的給予者，社會是被動受益者（<mark>單向慈善</mark>）</td></tr>
+<tr><td>ESG</td><td>「環境與社會問題如何影響企業？企業又如何影響環境與社會？」</td><td>同時是風險承受者與影響施加者（<mark>雙向關係</mark>）</td></tr>
+</table></div>
+<p>這個轉變，是後面理解企業對自然的<b>依賴（Dependence）</b>與<b>影響（Impact）</b>的基礎。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">例如：種作物依賴天氣。國際上是從企業本身談起。</p></div>
+<div class="box key"><span class="tag">一句話</span><p>ESG 不是企業賺錢以後做什麼，而是<mark>企業如何賺錢、如何承擔風險、又創造什麼影響</mark>。</p></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">競爭力。</p></div>
+<div class="box iso"><span class="tag">連結講義 1</span><p>ESG 在農業淨零策略中的位置。<a class="xref" href="01-net-zero.html#esg">講義 1〈ESG〉↗</a></p></div>
+</section>
+
+<section id="forces">
+<h2><span class="no">02</span>ESG 從報告走向企業經營制度</h2>
+<figure class="fig"><svg viewBox="0 0 880 310" width="880" role="img" aria-label="推動 ESG 的五股力量"><defs><marker id="fa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--accent)"/></marker></defs><rect x="370" y="118" width="180" height="64" rx="12" class="g-accs" stroke="var(--accent)"/><text x="460" y="146" text-anchor="middle" class="tb">企業轉型</text><text x="460" y="166" text-anchor="middle" class="m">策略・治理・創新・績效</text><rect x="330" y="20" width="200" height="50" rx="8" class="g-inks" stroke="var(--ink)"/><text x="430.0" y="41" text-anchor="middle" class="tb">法規政策</text><text x="430.0" y="59" text-anchor="middle" class="m">上市櫃揭露、碳定價</text><line x1="437" y1="70" x2="450" y2="115" class="s-acc" stroke-width="2" marker-end="url(#fa)"/><rect x="590" y="20" width="200" height="50" rx="8" class="g-inks" stroke="var(--ink)"/><text x="690.0" y="41" text-anchor="middle" class="tb">機構投資人</text><text x="690.0" y="59" text-anchor="middle" class="m">納入投資分析</text><line x1="635" y1="70" x2="537" y2="115" class="s-acc" stroke-width="2" marker-end="url(#fa)"/><rect x="650" y="150" width="200" height="50" rx="8" class="g-inks" stroke="var(--ink)"/><text x="750.0" y="171" text-anchor="middle" class="tb">供應鏈要求</text><text x="750.0" y="189" text-anchor="middle" class="m">客戶要碳、環境數據</text><line x1="650" y1="166" x2="559" y2="159" class="s-acc" stroke-width="2" marker-end="url(#fa)"/><rect x="460" y="250" width="200" height="50" rx="8" class="g-inks" stroke="var(--ink)"/><text x="560.0" y="271" text-anchor="middle" class="tb">消費者期待</text><text x="560.0" y="289" text-anchor="middle" class="m">低碳、透明、誠信</text><line x1="540" y1="250" x2="489" y2="186" class="s-acc" stroke-width="2" marker-end="url(#fa)"/><rect x="30" y="150" width="200" height="50" rx="8" class="g-inks" stroke="var(--ink)"/><text x="130.0" y="171" text-anchor="middle" class="tb">金融市場</text><text x="130.0" y="189" text-anchor="middle" class="m">綠色金融、授信條件</text><line x1="230" y1="167" x2="360" y2="158" class="s-acc" stroke-width="2" marker-end="url(#fa)"/></svg><figcaption>五股力量同時壓向企業。沒有任何企業可以忽視其中一股力量，還能真正完成 ESG 轉型。</figcaption></figure>
+<div class="tbl"><table>
+<tr><th>力量</th><th>內容</th></tr>
+<tr><td>法規政策</td><td>法規趨嚴、永續揭露要求、碳定價與管理制度、公平轉型與社會規範</td></tr>
+<tr><td>機構投資人</td><td>把 ESG 納入投資分析、關注長期風險、要求提升揭露品質、影響資本配置</td></tr>
+<tr><td>供應鏈要求</td><td>客戶與品牌的 ESG 要求、供應商管理與稽核、原物料永續標準、要求碳／環境／社會數據</td></tr>
+<tr><td>消費者期待</td><td>更健康安全的產品、低碳與公平、企業透明誠信、支持永續品牌</td></tr>
+<tr><td>金融市場</td><td>綠色金融與永續投資、降低資本成本、金融機構風險管理、連結授信與融資條件</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">法規政策：上市櫃。<br>供應鏈要求：歐盟數位產品護照 DPP（環境足跡）。</p></div>
+<div class="box iso"><span class="tag">連結講義 5、8</span><p>碳定價是法規力量的一環；供應鏈要的碳數據常以產品碳足跡呈現。<a class="xref" href="05-carbon-pricing.html#concept">講義 5〈碳定價〉↗</a><a class="xref" href="08-carbon-footprint.html#cfp">講義 8〈產品碳足跡〉↗</a></p></div>
+
+<h3>揭露不是終點</h3>
+<ol class="steps">
+  <li><b>自願 CSR</b>：企業自行決定揭露範圍與內容，缺乏標準與可比性。</li>
+  <li><b>永續報告</b>：GRI 等框架建立系統化格式，但仍是自願。</li>
+  <li><b>氣候揭露</b>：TCFD 提出<mark>氣候相關財務揭露</mark>建議，開始連結財務風險。</li>
+  <li><b>永續揭露</b>：ISSB、CSRD 等法規強制要求，ESG 進入主流資本市場。</li>
+  <li><b>轉型 × 自然</b>：揭露擴展到企業轉型路徑與自然相關風險。</li>
+</ol>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">第 1 階段對應 GRI。國際會計制度 → ISSB（IFRS S1、S2）；歐洲 → CSRD。</p></div>
+<p>核心訊息：揭露是<b>治理與轉型的起點</b>。每次制度演進，都在要求企業把永續更深地整合進核心管理。</p>
+
+<h3>投資人要的是 Decision-useful Information</h3>
+<p>投資人要的不只是「企業做了什麼好事」，而是能支持投資決策的資訊：與企業前景（Prospects）直接相關、反映真實財務風險與機會、跨企業可比、可靠且即時。</p>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h7M9 17h7"/></svg><em class="tx">善意描述</em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15 9.5c-.5-1-1.6-1.5-3-1.5-1.7 0-3 .8-3 2s1.3 1.7 3 2 3 .8 3 2-1.3 2-3 2c-1.4 0-2.6-.6-3-1.6M12 6v2M12 16v2"/></svg><em class="tx">財務相關性</em></span></div>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h7M9 17h7"/></svg><em class="tx">自願揭露</em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 18h14M4 9h16L12 3z"/><path d="M6 9v9M10 9v9M14 9v9M18 9v9"/></svg><em class="tx">標準化要求</em></span></div>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h7M9 17h7"/></svg><em class="tx">單一報告</em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15 9.5c-.5-1-1.6-1.5-3-1.5-1.7 0-3 .8-3 2s1.3 1.7 3 2 3 .8 3 2-1.3 2-3 2c-1.4 0-2.6-.6-3-1.6M12 6v2M12 16v2"/></svg><em class="tx">資本配置整合</em></span></div>
+</section>
+
+<section id="disclose">
+<h2><span class="no">03</span>國際與臺灣的揭露制度</h2>
+<div class="tbl"><table>
+<tr><th>準則</th><th>內容</th></tr>
+<tr><td>IFRS S1</td><td>一般永續相關財務資訊揭露：所有可能影響財務前景的<b>重大永續相關風險與機會</b></td></tr>
+<tr><td>IFRS S2</td><td>氣候相關揭露：以 TCFD 為基礎，揭露氣候相關的<mark>治理、策略、風險管理、指標與目標</mark></td></tr>
+<tr><td>核心受眾</td><td>投資人與資本市場，以「投資人決策有用性」為導向，而不是廣義利害關係人</td></tr>
+</table></div>
+<p>ISSB 由 IFRS 基金會監管，目標是全球一致、可比較的永續揭露基準，降低資訊不對稱、提升資本市場效率。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">TCFD 已取消。生物多樣性：IFRS「S3」自然相關揭露延後。</p></div>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 18h14M4 9h16L12 3z"/><path d="M6 9v9M10 9v9M14 9v9M18 9v9"/></svg><em class="tx">1. 治理</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5z"/></svg><em class="tx">2. 風險</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><em class="tx">3. 策略</em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/></svg><em class="tx">4. 指標與目標</em></span></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">利害關係人、風險、策略、治理、指標、目標。看國外評比；例如大學減碳目標。</p></div>
+
+<h3>歐盟 CSRD：雙重重大性</h3>
+<p>歐盟企業永續報告指令（CSRD）與執行標準 ESRS，比 ISSB 更廣：除了投資人視角的財務重大性，更強調企業本身造成的影響同等重要。</p>
+<figure class="fig"><svg viewBox="0 0 800 250" width="800" role="img" aria-label="雙重重大性"><defs><marker id="dma" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--accent)"/></marker><marker id="dms" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--soil)"/></marker></defs><rect x="20" y="90" width="200" height="70" rx="12" class="g-accs" stroke="var(--accent)"/><text x="120" y="131" text-anchor="middle" class="tb">外部永續議題</text><rect x="580" y="90" width="200" height="70" rx="12" class="g-inks" stroke="var(--ink)"/><text x="680" y="131" text-anchor="middle" class="tb">企業</text><path d="M220,105 C330,55 470,55 580,105" fill="none" class="s-acc" stroke-width="2.5" marker-end="url(#dma)"/><text x="400" y="22" text-anchor="middle" class="tb">財務重大性</text><text x="400" y="42" text-anchor="middle" class="m">外部永續議題如何影響企業</text><path d="M580,145 C470,195 330,195 220,145" fill="none" class="s-soil" stroke-width="2.5" marker-end="url(#dms)"/><text x="400" y="216" text-anchor="middle" class="tb">影響重大性</text><text x="400" y="236" text-anchor="middle" class="m">企業如何影響環境與社會</text></svg><figcaption>雙重重大性（Double Materiality）：ISSB 主要看上面那條箭頭；CSRD 兩條都要看。</figcaption></figure>
+<p>ESRS 涵蓋氣候變遷、生物多樣性與生態系統、水資源、循環經濟、人權、工人權益。2026 年修訂版做了一定程度簡化，但核心架構不變。</p>
+
+<h3>臺灣：2026 正式進入 IFRS 永續揭露時代</h3>
+<div class="tbl"><table>
+<tr><th>階段</th><th>適用對象</th></tr>
+<tr><td>第一階段 2026 年</td><td>實收資本額 <mark>100 億元以上</mark>上市櫃公司率先適用 IFRS S1、S2</td></tr>
+<tr><td>第二階段 2027 年</td><td>擴大到資本額 50 億以上、未達 100 億的上市櫃公司</td></tr>
+<tr><td>第三階段 2028 年</td><td>其餘上市櫃公司，建立全面揭露生態</td></tr>
+</table></div>
+<p style="font-size:14px;color:var(--muted)">講義寫「資本額較小」「更廣泛的上市公司」；50 億的分級依金管會〈我國接軌 IFRS 永續揭露準則藍圖〉補充。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">2027 年報與財報同時揭露。資本額分級：100 億以上、50～100 億、50 億以下。2012 以下政府放寬。</p></div>
+<p>分階段導入給企業準備時間，但也表示<b>供應鏈上下游的要求會在幾年內快速傳遞</b>，農業相關企業必須提前部署。</p>
+
+<h3>為什麼農民也會受到企業 ESG 影響</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V3h11v18M15 9h5v12"/><path d="M2 21h20M8 7h3M8 11h3M8 15h3"/></svg><em class="tx">上市公司 ESG 要求<br><small>目標、揭露、供應鏈稽核</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V3h11v18M15 9h5v12"/><path d="M2 21h20M8 7h3M8 11h3M8 15h3"/></svg><em class="tx">品牌商採購標準<br><small>供應商行為準則、ESG 符合度</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21V10l5 3V10l5 3V5h4v16z"/><path d="M3 21h18"/><path d="M7 17h2M12 17h2"/></svg><em class="tx">食品企業規格<br><small>食安品質、可追溯數據</small></em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2 20a7 7 0 0 1 14 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 13.5a7 7 0 0 1 4 6.5"/></svg><em class="tx">農民生產實踐<br><small>調整生產方式、提供數據與紀錄</small></em></span></div>
+<p>小農不一定直接適用揭露規範，但<mark>生產行為、數據與永續績效</mark>正在成為供應鏈資格審核的核心條件。</p>
+
+<h3>ESG 管理閉環</h3>
+<div class="flow loop" data-loop-label="持續改善，回到策略"><span data-loop-to><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><em class="tx">永續策略制定</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5z"/></svg><em class="tx">風險辨識評估</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/></svg><em class="tx">目標設定</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15 9.5c-.5-1-1.6-1.5-3-1.5-1.7 0-3 .8-3 2s1.3 1.7 3 2 3 .8 3 2-1.3 2-3 2c-1.4 0-2.6-.6-3-1.6M12 6v2M12 16v2"/></svg><em class="tx">資本配置</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><em class="tx">執行落實</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 16v-4M12 16V8M17 16v-7"/></svg><em class="tx">數據收集</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h7M9 17h7"/></svg><em class="tx">對外揭露</em></span><i>→</i><span class="ok" data-loop-from><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 0 1-14 5.3M4 12A8 8 0 0 1 18 6.7"/><path d="M18 2v5h-5M6 22v-5h5"/></svg><em class="tx">檢討回饋</em></span></div>
+<p>永續不再是每年寫一本報告書，而是嵌入策略、風險、財務與營運的管理循環，<b>每一環都依賴前一環</b>。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">閉環中心是願景。ESG 正從「揭露我們做了什麼」走向「證明企業如何轉型」：公司真正在意什麼（例如台泥、亞泥）。</p></div>
+</section>
+
+<section id="climate">
+<h2><span class="no">04</span>Climate：最早進入企業核心的環境議題</h2>
+<div class="tbl"><table>
+<tr><th>層次</th><th>範圍</th></tr>
+<tr><td>最外層 ESG</td><td>環境（E）、社會（S）、治理（G）的完整框架</td></tr>
+<tr><td>中層 E</td><td>水資源、生物多樣性、污染防治、資源循環……氣候只是其中一部分</td></tr>
+<tr><td>最內層 Climate</td><td>溫度上升、極端天氣、實體風險與轉型風險</td></tr>
+</table></div>
+<p>氣候是 E 之中<b>最早進入企業治理、制度最完整</b>的議題，但它不代表整個 E。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">組織架構：風險管理功能、董事會。</p></div>
+
+<figure class="fig"><svg viewBox="0 0 800 250" width="800" role="img" aria-label="企業與氣候的雙向關係"><defs><marker id="bca" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--accent)"/></marker><marker id="bcs" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--soil)"/></marker></defs><rect x="20" y="90" width="200" height="70" rx="12" class="g-accs" stroke="var(--accent)"/><text x="120" y="131" text-anchor="middle" class="tb">企業 Business</text><rect x="580" y="90" width="200" height="70" rx="12" class="g-inks" stroke="var(--ink)"/><text x="680" y="131" text-anchor="middle" class="tb">氣候 Climate</text><path d="M220,105 C330,55 470,55 580,105" fill="none" class="s-acc" stroke-width="2.5" marker-end="url(#bca)"/><text x="400" y="22" text-anchor="middle" class="tb">Impact：企業影響氣候</text><text x="400" y="42" text-anchor="middle" class="m">能源、製造、運輸、土地利用排放溫室氣體</text><path d="M580,145 C470,195 330,195 220,145" fill="none" class="s-soil" stroke-width="2.5" marker-end="url(#bcs)"/><text x="400" y="216" text-anchor="middle" class="tb">Dependence：氣候影響企業</text><text x="400" y="236" text-anchor="middle" class="m">實體風險與轉型風險影響收入、成本、資產</text></svg><figcaption>企業與氣候是雙向關係（手寫：雙重重大性）。這個邏輯是理解 Nature 框架的前提：Dependence（自然給企業什麼）× Impact（企業對自然做了什麼）。</figcaption></figure>
+
+<h3>Business → Climate：企業如何影響氣候</h3>
+<div class="tbl"><table>
+<tr><th>範疇</th><th>內容</th><th>農業例子</th></tr>
+<tr><td>Scope 1 直接排放</td><td>自有設施與車輛</td><td>耕作機具、農場能源、畜牧腸道發酵</td></tr>
+<tr><td>Scope 2 間接能源排放</td><td>購買電力、熱能</td><td>農業加工設施、灌溉電力</td></tr>
+<tr><td>Scope 3 價值鏈排放</td><td>上下游供應鏈的全部間接排放</td><td>食品企業 Scope 3 常占 <mark>70–90%</mark>，農業生產是最大來源</td></tr>
+</table></div>
+<figure class="fig"><svg viewBox="0 0 740 96" width="740" role="img" aria-label="食品企業的 Scope 3 往往占總排放 70 到 90%"><rect class="hit g-ink" x="20" y="20" width="138" height="40" rx="4"><title>Scope 1、2</title></rect><rect class="hit g-acc" x="160" y="20" width="558" height="40" rx="4"><title>Scope 3（農業原料為最大來源）</title></rect><text x="90" y="84" text-anchor="middle" class="t">Scope 1、2：10–30%</text><text x="440" y="84" text-anchor="middle" class="t">Scope 3：70–90%（農業生產是最大來源）</text></svg><figcaption>食品企業的排放結構示意：Scope 3 往往占 70–90%（圖中以 80% 示意）。碳管理的邊界最後一定會延伸到農業供應鏈。</figcaption></figure>
+<div class="box iso"><span class="tag">連結 ISO 14064-1</span><p>手寫：ISO 14064-1 用類別 1–6 取代 Scope 1–3。<a class="xref" href="04-iso-standards.html#o-rep">講義 4〈報告邊界與類別〉↗</a></p></div>
+
+<h3>Climate → Business：氣候如何影響企業</h3>
+<div class="tbl"><table>
+<tr><th>風險</th><th>內容</th></tr>
+<tr><td>實體風險 Physical</td><td>急性：極端天氣、洪水、乾旱、颱風；慢性：氣溫上升、海平面上升、降雨型態改變。直接衝擊收入、資產、供應鏈、生產基地</td></tr>
+<tr><td>轉型風險 Transition</td><td>政策（碳稅、排放法規、土地使用規範）、技術（低碳替代、高碳資產擱置）、市場（偏好改變）、聲譽（永續落後的品牌風險）</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">轉型風險不一定跟碳有關，例如耗水費。<br>實體風險對原有農業的適栽性有很大的影響。</p></div>
+<div class="tbl"><table>
+<tr><th>實體風險</th><th>對農業的影響</th></tr>
+<tr><td>高溫熱浪</td><td>超過耐熱閾值，授粉失敗、品質下降、減產（手寫：還有寒害）</td></tr>
+<tr><td>乾旱缺水</td><td>土壤水分不足，影響生長週期，灌溉需求與成本增加</td></tr>
+<tr><td>洪水與澇害</td><td>農田淹沒、設施損毀、養分流失，影響短期產量與長期地力</td></tr>
+<tr><td>極端降雨</td><td>土壤侵蝕，農藥與肥料徑流污染水源</td></tr>
+<tr><td>海平面上升／鹽化</td><td>沿海農地海水入侵、土壤鹽分上升</td></tr>
+</table></div>
+<p>IPCC AR6：氣候變遷已透過氣溫上升、水文循環改變、極端事件增加，顯著影響全球農業生產力、糧食品質與供應穩定。<b>自 1960 年代以來，全球農業全要素生產力（TFP）成長減緩約 21%</b>，熱帶與亞熱帶受衝擊最大，而這些地區也是糧食安全最脆弱的地方。</p>
+
+<h3>Mitigation 與 Adaptation：兩條必須並行的路</h3>
+<div class="tbl"><table>
+<tr><th>路徑</th><th>方向</th><th>目標</th></tr>
+<tr><td>Mitigation 減緩</td><td>Business → Climate</td><td>減少溫室氣體排放或增加碳匯，改變氣候變遷的速度與幅度</td></tr>
+<tr><td>Adaptation 調適</td><td>Climate → Business</td><td>降低脆弱性、提升韌性，在氣候改變下維持生產能力</td></tr>
+</table></div>
+<p>減緩不力會加重調適負擔；只調適不減緩，最終會超過自然系統的承載極限。</p>
+<h3>農業更難把兩者分開：共同效益</h3>
+<div class="tbl"><table>
+<tr><th>措施</th><th>減緩</th><th>調適與其他</th></tr>
+<tr><td>土壤有機質提升</td><td>增加碳封存</td><td>保水、抗旱韌性、生產力</td></tr>
+<tr><td>農林複合系統</td><td>樹木固碳</td><td>遮蔭、調節微氣候、棲地</td></tr>
+<tr><td>水資源管理</td><td>灌溉耗能也涉及排放（需權衡）</td><td>提升用水效率是調適</td></tr>
+</table></div>
+<p>共同效益（Co-benefits）不表示所有措施都只有正面效應，要依情境評估。</p>
+<div class="box iso"><span class="tag">連結講義 6、7</span><p><a class="xref" href="06-emission-reduction.html#logic">講義 6〈減排策略的邏輯〉↗</a><a class="xref" href="07-soil-carbon.html#practice">講義 7〈土壤碳匯的管理措施〉↗</a></p></div>
+<div class="box key"><span class="tag">第三章結論</span><p>只管理碳，仍不足以管理農業永續。氣候是重要的入口，但<mark>自然系統才是完整圖像</mark>。</p></div>
+</section>
+
+<section id="nature">
+<h2><span class="no">05</span>Nature：自然資本與生態系統服務</h2>
+<p>「一家企業如果沒有自然，還能營運嗎？」</p>
+<div class="tbl"><table>
+<tr><th>產業</th><th>對自然的依賴</th></tr>
+<tr><td>製造業</td><td>金屬礦物、淡水、空氣品質、穩定氣候</td></tr>
+<tr><td>科技業</td><td>晶片需要超純水；資料中心耗能與冷卻用水</td></tr>
+<tr><td>食品業</td><td>授粉、土壤肥力、淡水、生物多樣性</td></tr>
+<tr><td>金融業</td><td>投資與貸款組合裡的企業依賴自然，自然風險成為<mark>金融系統性風險</mark></td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">Sustainable Development 永續發展 ⇒ 生態環境要維持可持續性：承載力 ≥ 負荷（loading）；發展 ⇒ 社會＋經濟。要可量化。「可持續」是中國用詞。</p></div>
+<figure class="fig"><svg viewBox="0 0 460 300" width="460" role="img" aria-label="經濟包含在社會之中，社會包含在自然之中"><circle cx="230" cy="150" r="140" class="g-accs" stroke="var(--accent)"/><circle cx="230" cy="180" r="100" class="g-inks" stroke="var(--ink)"/><circle cx="230" cy="210" r="58" class="g-soils" stroke="var(--soil)"/><text x="230" y="38" text-anchor="middle" class="tb">自然系統</text><text x="230" y="56" text-anchor="middle" class="m">生物多樣性、水、土壤</text><text x="230" y="105" text-anchor="middle" class="tb">人類社會</text><text x="230" y="123" text-anchor="middle" class="m">文化、制度、社群</text><text x="230" y="206" text-anchor="middle" class="tb">經濟活動</text><text x="230" y="224" text-anchor="middle" class="m">企業、產業、金融</text></svg><figcaption>嵌套關係：經濟在社會之中，社會在自然之中。經濟活動要在自然的承載力之內運作，Natural Capital 是支撐一切經濟活動的根本資產。</figcaption></figure>
+<figure class="fig"><svg viewBox="0 0 704 186" width="704" role="img" aria-label="自然資本是存量，生態系統服務是流量"><defs><marker id="sfa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--accent)"/></marker></defs><rect x="20" y="30" width="240" height="110" rx="12" class="g-inks" stroke="var(--ink)"/><text x="140" y="70" text-anchor="middle" class="tb">Natural Capital（存量）</text><text x="140" y="92" text-anchor="middle" class="m">水、土壤、空氣、動植物、礦物</text><text x="140" y="112" text-anchor="middle" class="m">≈ 銀行本金</text><line x1="262" x2="420" y1="85" y2="85" class="s-acc" stroke-width="3" marker-end="url(#sfa)"/><text x="340" y="74" text-anchor="middle" class="m">產生</text><rect x="424" y="30" width="260" height="110" rx="12" class="g-accs" stroke="var(--accent)"/><text x="554" y="70" text-anchor="middle" class="tb">Ecosystem Services（流量）</text><text x="554" y="92" text-anchor="middle" class="m">乾淨的水、授粉、洪水調節</text><text x="554" y="112" text-anchor="middle" class="m">≈ 利息</text><text x="352" y="170" text-anchor="middle" class="t">存量的健康狀態（Condition）決定能持續產生多少流量；過度提取本金，利息也會消失。</text></svg></figure>
+
+<h3>環境資產：自然資本的組成單元</h3>
+<div class="tbl"><table>
+<tr><th>資產</th><th>內容</th></tr>
+<tr><td>土地</td><td>農地、森林、草原、濕地等陸域生態系</td></tr>
+<tr><td>淡水</td><td>河流、湖泊、地下水，是農業最關鍵的自然資產之一</td></tr>
+<tr><td>海洋</td><td>海岸帶、珊瑚礁、海洋生態系，調節氣候、提供漁業資源</td></tr>
+<tr><td>大氣</td><td>空氣品質與組成，影響氣候與生產條件</td></tr>
+<tr><td>生物資源</td><td>動植物物種與遺傳多樣性，是育種與生態服務的基礎</td></tr>
+</table></div>
+<p>資產是基礎，服務是產出；要分層理解，才能準確評估自然風險。</p>
+
+<h3>TNFD 的三類生態系統服務</h3>
+<p>生態系統服務是「生態系統對經濟活動與人類福祉所提供的貢獻」（TNFD）。很多服務沒有市場價格，但一旦消失，成本會急劇上升，甚至生產無法持續。</p>
+<div class="tbl"><table>
+<tr><th>類別</th><th>內容</th><th>農業連結</th></tr>
+<tr><td>供給服務 Provisioning</td><td>食物、淡水、木材、生物質能、遺傳資源等有形產出</td><td>最直接、最容易量化，也<mark>最容易被過度提取</mark>；生產規模受制於生態系的實際供給能力</td></tr>
+<tr><td>調節與維護服務 Regulating &amp; Maintenance</td><td>授粉、洪水調節、水質淨化、生物防治、氣候調節</td><td><mark>最容易被低估</mark>，卻是最根本的依賴；沒有市場定價，替代成本極高甚至無法替代</td></tr>
+<tr><td>文化服務 Cultural</td><td>農村景觀、地方文化認同、教育研究、生態旅遊</td><td>影響農村凝聚力、人口留存與青農培育，是農業 ESG 的 S</td></tr>
+</table></div>
+<p>注意：早期千禧年生態系評估（MA）框架的「支持服務（Supporting Services）」，在 TNFD 中不作為獨立類別。</p>
+<div class="tbl"><table>
+<tr><th>調節服務</th><th>為什麼重要</th></tr>
+<tr><td>授粉</td><td>全球 75% 的主要農作物依賴動物授粉</td></tr>
+<tr><td>水流調節與淨化</td><td>濕地與森林調節逕流、補注地下水、過濾污染物</td></tr>
+<tr><td>土壤品質調節</td><td>微生物分解有機質、固氮，維持土壤結構與養分循環</td></tr>
+<tr><td>生物防治</td><td>天敵昆蟲與捕食者控制害蟲，減少農藥依賴</td></tr>
+</table></div>
+<h3>從自然狀態到企業價值的因果鏈</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21c0-9 6-16 16-17-1 10-8 16-16 17z"/><path d="M5 21 14 12"/></svg><em class="tx">核心：生態系統狀態<br><small>基礎自然條件與健康</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21c0-9 6-16 16-17-1 10-8 16-16 17z"/><path d="M5 21 14 12"/></svg><em class="tx">環境資產<br><small>生物多樣性與資源品質</small></em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21V10l5 3V10l5 3V5h4v16z"/><path d="M3 21h18"/><path d="M7 17h2M12 17h2"/></svg><em class="tx">企業影響<br><small>服務流量 → 財務與韌性</small></em></span></div>
+<p>生態系統一退化，每一層的惠益都會縮減，最後傳到企業的財務績效。理解這條因果鏈是識別自然相關財務風險的起點。</p>
+<div class="box key"><span class="tag">第四章結論</span><p>企業不是在「使用環境」，而是在<mark>依賴自然系統運作</mark>。這不是環保倡議，而是風險管理的基本邏輯。</p></div>
+</section>
+
+<section id="tnfd">
+<h2><span class="no">06</span>TNFD：依賴、影響、風險、機會</h2>
+<p><b>為什麼需要 TNFD？</b>TCFD／IFRS S2 聚焦氣候，但授粉崩潰、土壤退化、水資源枯竭都不是純粹的氣候問題。TNFD 提供辨識、評估、管理與揭露<mark>自然相關議題（Nature-related Issues）</mark>的整合框架；它不是另一套報告書格式，而是思考「企業與自然之間關係」的管理工具。</p>
+<div class="tbl"><table>
+<tr><th>概念</th><th>問題</th></tr>
+<tr><td>Dependencies 依賴</td><td>企業依賴自然提供哪些服務？沒有它們能否持續營運？</td></tr>
+<tr><td>Impacts 影響</td><td>企業活動如何改變自然？正面、負面還是混合？</td></tr>
+<tr><td>Risks 風險</td><td>依賴與影響如何轉成財務風險？實體、轉型、系統性風險</td></tr>
+<tr><td>Opportunities 機會</td><td>積極應對能創造哪些商機、競爭優勢、長期價值？</td></tr>
+</table></div>
+<p>前兩個描述<b>企業與自然的關係</b>；後兩個是這些關係帶來的<b>商業後果</b>。</p>
+
+<h3>全課最重要的雙向關係圖</h3>
+<figure class="fig"><svg viewBox="0 0 800 250" width="800" role="img" aria-label="自然與企業的雙向關係"><defs><marker id="nia" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--accent)"/></marker><marker id="nis" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--soil)"/></marker></defs><rect x="20" y="90" width="200" height="70" rx="12" class="g-accs" stroke="var(--accent)"/><text x="120" y="131" text-anchor="middle" class="tb">自然系統 Nature</text><rect x="580" y="90" width="200" height="70" rx="12" class="g-inks" stroke="var(--ink)"/><text x="680" y="131" text-anchor="middle" class="tb">企業 Business</text><path d="M220,105 C330,55 470,55 580,105" fill="none" class="s-acc" stroke-width="2.5" marker-end="url(#nia)"/><text x="400" y="22" text-anchor="middle" class="tb">依賴 Dependence</text><text x="400" y="42" text-anchor="middle" class="m">生態系統服務：水、授粉、土壤、氣候調節</text><path d="M580,145 C470,195 330,195 220,145" fill="none" class="s-soil" stroke-width="2.5" marker-end="url(#nis)"/><text x="400" y="216" text-anchor="middle" class="tb">影響 Impact</text><text x="400" y="236" text-anchor="middle" class="m">影響驅動因素：土地利用、取水、污染、排放</text></svg><figcaption>依賴說明企業為何需要健康的自然；影響說明企業行為如何反過來威脅自己依賴的基礎。</figcaption></figure>
+<div class="tbl"><table>
+<tr><th>方向</th><th>項目</th></tr>
+<tr><td>Dependence：Nature → Business<br>企業需要自然提供什麼？</td><td>水資源（灌溉、加工、冷卻）；授粉（多數水果、蔬菜、堅果）；土壤肥力（微生物、有機質、礦物質）；氣候調節（森林、濕地、植被維持溫濕度與降雨）</td></tr>
+<tr><td>Impact：Business → Nature<br>企業活動如何改變自然？</td><td>土地利用變化（生物多樣性喪失的最主要驅動力）；水資源提取；養分與農藥污染；溫室氣體排放；土壤退化與生境擾動</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">依賴就是生態系統服務項目。</p></div>
+
+<h3>Dependence Pathway：依賴怎麼變成財務風險</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 20h20z"/><path d="M12 9v5M12 17h.01"/></svg><em class="tx">自然系統退化</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21c0-9 6-16 16-17-1 10-8 16-16 17z"/><path d="M5 21 14 12"/></svg><em class="tx">農業生產受限</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 6h11v10H2zM13 10h4l4 3v3h-8"/><circle cx="6" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg><em class="tx">供應鏈中斷</em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15 9.5c-.5-1-1.6-1.5-3-1.5-1.7 0-3 .8-3 2s1.3 1.7 3 2 3 .8 3 2-1.3 2-3 2c-1.4 0-2.6-.6-3-1.6M12 6v2M12 16v2"/></svg><em class="tx">企業財務衝擊</em></span></div>
+<p>水資源案例：水短缺不是「環保問題」，而是農業企業的核心商業風險。</p>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="14" rx="4" ry="6"/><path d="M8.3 12h7.4M8.3 16h7.4"/><path d="M10 8C8 4 4 4 4 7s4 3 6 2M14 8c2-4 6-4 6-1s-4 3-6 2"/></svg><em class="tx">授粉者族群衰退</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="14" rx="4" ry="6"/><path d="M8.3 12h7.4M8.3 16h7.4"/><path d="M10 8C8 4 4 4 4 7s4 3 6 2M14 8c2-4 6-4 6-1s-4 3-6 2"/></svg><em class="tx">授粉服務降低</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 20h20z"/><path d="M12 9v5M12 17h.01"/></svg><em class="tx">產量與品質下滑</em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5z"/></svg><em class="tx">食品企業供應風險</em></span></div>
+<p>授粉是典型的「隱形基礎設施」：不在財務報表中，但一崩潰就立刻反映在產量、品質與採購成本。</p>
+
+<h3>Impact Pathway：影響如何回頭變成風險</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21c0-9 6-16 16-17-1 10-8 16-16 17z"/><path d="M5 21 14 12"/></svg><em class="tx">農業生產</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 20h20z"/><path d="M12 9v5M12 17h.01"/></svg><em class="tx">養分流失</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21c0-9 6-16 16-17-1 10-8 16-16 17z"/><path d="M5 21 14 12"/></svg><em class="tx">生態退化</em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5z"/></svg><em class="tx">企業風險<br><small>法規回應、社區衝突、生態退化</small></em></span></div>
+<p>影響管理不只是道德責任，也是商業自利。</p>
+<h3>惡性循環：Impact 最後變成自己的 Dependence Risk</h3>
+<div class="flow loop" data-loop-label="風險升高後，又回到同樣的農業活動"><span data-loop-to><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21V10l5 3V10l5 3V5h4v16z"/><path d="M3 21h18"/><path d="M7 17h2M12 17h2"/></svg><em class="tx">① 企業農業活動</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 20h20z"/><path d="M12 9v5M12 17h.01"/></svg><em class="tx">② 負面環境影響</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 20h20z"/><path d="M12 9v5M12 17h.01"/></svg><em class="tx">③ 自然系統退化</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21c0-9 6-16 16-17-1 10-8 16-16 17z"/><path d="M5 21 14 12"/></svg><em class="tx">④ 生態系統服務下降</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 20h20z"/><path d="M12 9v5M12 17h.01"/></svg><em class="tx">⑤ 依賴基礎受損</em></span><i>→</i><span class="ok" data-loop-from><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5z"/></svg><em class="tx">⑥ 企業風險升高</em></span></div>
+<div class="box key"><span class="tag">本課最重要的循環</span><p>負面影響最終侵蝕自己依賴的自然基礎，形成<mark>自我加速的風險螺旋</mark>。打斷這個循環，正是農業永續轉型的核心任務。</p></div>
+
+<h3>不只有 Risk，也有 Opportunity</h3>
+<div class="tbl"><table>
+<tr><th>機會</th><th>內容</th></tr>
+<tr><td>資源效率提升</td><td>少用水、土地與投入品，同時降低成本與環境影響</td></tr>
+<tr><td>韌性採購來源</td><td>和採永續實踐的供應商合作，降低供應鏈中斷風險</td></tr>
+<tr><td>生態系統修復</td><td>農地生態修復、造林、濕地保護，可對應碳信用或 ESG 指標</td></tr>
+<tr><td>自然正向解決方案</td><td>再生農業、農林複合等產品與服務，進入新興永續市場</td></tr>
+</table></div>
+<p>並非所有自然相關行動都能立即帶來財務報酬，機會評估同樣要嚴謹，不應過度樂觀。</p>
+
+<h3>LEAP：把概念變成管理流程</h3>
+<ol class="steps">
+  <li><b>L — Locate 定位</b>：企業在哪裡和自然系統交會？找出敏感地區與業務活動的地理重疊。</li>
+  <li><b>E — Evaluate 評估</b>：對自然的依賴與影響是什麼？評估實質性程度。</li>
+  <li><b>A — Assess 評量</b>：依賴與影響帶來哪些風險與機會？連結財務重大性。</li>
+  <li><b>P — Prepare 準備</b>：如何回應？設定目標、管理措施與揭露策略，融入治理架構。</li>
+</ol>
+<div class="box iso"><span class="tag">連結 ISO 14064-1</span><p>LEAP 的 Locate、Evaluate 和清冊先定邊界、再鑑別重大排放源的邏輯很像。<a class="xref" href="04-iso-standards.html#o-sig">講義 4〈顯著性評估〉↗</a></p></div>
+<h3>TNFD 不是農業專用，但農業非常關鍵</h3>
+<p>TNFD 跨產業通用，但農食系統和自然直接連結，被列為優先行業，也是最早有專屬 Sector Guidance 的行業之一。農食業指引提供：典型環境資產清單、關鍵生態系統服務、核心依賴案例、主要影響類型、農食業特定風險與機會。</p>
+</section>
+
+<section id="cross">
+<h2><span class="no">07</span>Climate × Nature × Agriculture</h2>
+<figure class="fig"><svg viewBox="0 0 580 330" width="580" role="img" aria-label="農業位於氣候、自然、人類社會三個系統的交會點"><circle cx="200" cy="120" r="100" class="g-inks" stroke="var(--ink)" fill-opacity=".7"/><circle cx="330" cy="120" r="100" class="g-accs" stroke="var(--accent)" fill-opacity=".7"/><circle cx="265" cy="220" r="100" class="g-soils" stroke="var(--soil)" fill-opacity=".7"/><text x="175" y="90" text-anchor="middle" class="tb">氣候系統</text><text x="175" y="108" text-anchor="middle" class="m">溫度、降雨</text><text x="360" y="90" text-anchor="middle" class="tb">自然系統</text><text x="360" y="108" text-anchor="middle" class="m">生物多樣性、水土</text><text x="265" y="280" text-anchor="middle" class="tb">人類社會</text><text x="265" y="298" text-anchor="middle" class="m">人口、文化、政策</text><text x="265" y="165" text-anchor="middle" class="tb">農業與</text><text x="265" y="183" text-anchor="middle" class="tb">食物系統</text><line x1="330" x2="470" y1="176" y2="176" class="s-mut" stroke-dasharray="4 3"/><text x="450" y="168" text-anchor="middle" class="m">供應鏈</text><rect x="470" y="156" width="90" height="40" rx="20" class="g-inks" stroke="var(--ink)"/><text x="515" y="181" text-anchor="middle" class="tb">企業</text></svg><figcaption>農業是氣候、自然、人類社會三個系統的交會介面；企業透過供應鏈連到這個交會點。</figcaption></figure>
+<h3>Climate 如何改變 Nature：間接傳導</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 14.8V4a2 2 0 0 0-4 0v10.8a4 4 0 1 0 4 0z"/><path d="M12 9v8"/></svg><em class="tx">氣候驅動力<br><small>升溫、降水改變、極端事件</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21c0-9 6-16 16-17-1 10-8 16-16 17z"/><path d="M5 21 14 12"/></svg><em class="tx">自然系統改變<br><small>水文、土壤、物種棲地移動</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21c0-9 6-16 16-17-1 10-8 16-16 17z"/><path d="M5 21 14 12"/></svg><em class="tx">生態服務退化<br><small>水、授粉、土壤肥力衰退</small></em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21c0-9 6-16 16-17-1 10-8 16-16 17z"/><path d="M5 21 14 12"/></svg><em class="tx">農業生產影響<br><small>產量、成本、供應穩定</small></em></span></div>
+<p>氣候常常不是直接打擊農業，而是<mark>先改變自然系統，再經由生態系統服務傳到農業</mark>。這個「間接傳導」是 Climate × Nature 分析的核心。</p>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 14.8V4a2 2 0 0 0-4 0v10.8a4 4 0 1 0 4 0z"/><path d="M12 9v8"/></svg><em class="tx">① 乾旱氣候事件</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3.5 4.5 6 7.7 6 10.8A6 6 0 0 1 6 13.8C6 10.7 8.5 7.5 12 3z"/></svg><em class="tx">② 土壤水分下降</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3.5 4.5 6 7.7 6 10.8A6 6 0 0 1 6 13.8C6 10.7 8.5 7.5 12 3z"/></svg><em class="tx">③ 灌溉需求上升</em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15 9.5c-.5-1-1.6-1.5-3-1.5-1.7 0-3 .8-3 2s1.3 1.7 3 2 3 .8 3 2-1.3 2-3 2c-1.4 0-2.6-.6-3-1.6M12 6v2M12 16v2"/></svg><em class="tx">④ 產量與收入下滑</em></span></div>
+<p>食品公司的氣候風險，大多是透過這條路徑實現，而不是直接影響工廠運作。</p>
+
+<h3>Nature 又如何影響 Climate</h3>
+<div class="tbl"><table>
+<tr><th>機制</th><th>內容</th></tr>
+<tr><td>森林碳儲存</td><td>陸地生態系儲存大量碳，砍伐直接釋放</td></tr>
+<tr><td>土壤碳池</td><td>土壤有機碳是最大的陸地碳庫，退化就變成排放源</td></tr>
+<tr><td>濕地甲烷調節</td><td>濕地既是碳匯也是甲烷源，狀態決定其氣候角色</td></tr>
+<tr><td>區域氣候調節</td><td>植被蒸散調節區域溫度與降雨</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">維持好特性。</p></div>
+<p>自然碳匯（Nature-based Solutions）是重要的氣候工具，但<b>不應簡單等同於「碳抵換」</b>，有效性需要嚴格的科學驗證與長期監測。</p>
+<div class="box iso"><span class="tag">連結講義 3、7、10</span><p><a class="xref" href="10-forest-carbon.html#carbon">講義 10〈森林中的碳〉↗</a><a class="xref" href="07-soil-carbon.html#soc">講義 7〈土壤有機碳〉↗</a><a class="xref" href="03-blue-carbon.html#blue">講義 3〈藍碳〉↗</a></p></div>
+
+<h3>高溫：不只是作物問題</h3>
+<div class="tbl"><table>
+<tr><th>層面</th><th>影響</th></tr>
+<tr><td>作物</td><td>花粉活性下降、授粉失敗、澱粉積累受阻；病蟲害加速、農藥需求增加</td></tr>
+<tr><td>畜牧</td><td>熱逆境降低採食、生長、繁殖率與乳產量，疾病風險增加</td></tr>
+<tr><td>農業勞動</td><td>戶外勞動的職業健康風險上升，影響勞動供給與安全成本</td></tr>
+<tr><td>供應鏈</td><td>儲存、運輸、加工條件受影響，食安風險與冷鏈成本上升</td></tr>
+</table></div>
+<p>講義附的〈高溫作業勞工作息時間標準〉：用綜合溫度熱指數（WBGT，手寫）決定作業與休息比例。</p>
+<div class="tbl"><table>
+<tr><th>作業與休息比例</th><th class="r">輕工作</th><th class="r">中度工作</th><th class="r">重工作</th></tr>
+<tr><td>連續作業</td><td class="r num">30.6 ℃</td><td class="r num">28.0 ℃</td><td class="r num">25.9 ℃</td></tr>
+<tr><td>75% 作業、25% 休息</td><td class="r num">31.4 ℃</td><td class="r num">29.4 ℃</td><td class="r num">27.9 ℃</td></tr>
+<tr><td>50% 作業、50% 休息</td><td class="r num">32.2 ℃</td><td class="r num">31.1 ℃</td><td class="r num">30.0 ℃</td></tr>
+<tr><td>25% 作業、75% 休息</td><td class="r num">33.0 ℃</td><td class="r num">32.6 ℃</td><td class="r num">32.1 ℃</td></tr>
+</table></div>
+<p style="font-size:14px;color:var(--muted)">輕工作：坐姿或立姿用手臂操作機器；中度工作：走動中提舉或推動一般重量物體；重工作：鏟、掘、推等全身運動。</p>
+
+<h3>水：最典型的 Climate × Nature 依賴</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 14.8V4a2 2 0 0 0-4 0v10.8a4 4 0 1 0 4 0z"/><path d="M12 9v8"/></svg><em class="tx">氣候驅動水文改變</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3.5 4.5 6 7.7 6 10.8A6 6 0 0 1 6 13.8C6 10.7 8.5 7.5 12 3z"/></svg><em class="tx">淡水系統壓力</em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21c0-9 6-16 16-17-1 10-8 16-16 17z"/><path d="M5 21 14 12"/></svg><em class="tx">農業生產衝擊</em></span></div>
+<div class="stats">
+  <div class="stat"><b>≈70%</b><span>農業用水占全球淡水提取量</span></div>
+  <div class="stat"><b>75%</b><span>主要農作物依賴動物授粉</span></div>
+  <div class="stat"><b>21%</b><span>1960 年代以來全球農業 TFP 成長減緩</span></div>
+</div>
+<p>水既是自然資本，也是生態系統服務；水資源短缺是農業最直接的自然風險。</p>
+
+<h3>生物多樣性：從「保育議題」變成「生產條件」</h3>
+<div class="tbl"><table>
+<tr><th>功能</th><th>內容</th></tr>
+<tr><td>授粉</td><td>授粉昆蟲多樣性影響授粉效率與產量穩定</td></tr>
+<tr><td>生物防治</td><td>天敵昆蟲、寄生蜂自然控制害蟲</td></tr>
+<tr><td>遺傳多樣性</td><td>抗病、抗旱、高產品種的基因庫</td></tr>
+<tr><td>生態系統韌性</td><td>多樣化農業對氣候衝擊、病蟲害、土地退化更能抵抗與恢復</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">生物多樣性 → 動植物、棲地、資源，多方面；與企業經營高度相關：水資源、土壤、原料、授粉、供應鏈、品牌信任、風險。三個層次：基因、物種、生態系多樣性。</p></div>
+<h3>土壤：交會介面</h3>
+<figure class="fig"><svg viewBox="0 0 800 300" width="800" role="img" aria-label="土壤連結碳、水、養分、生物多樣性、生產力與韌性"><circle cx="400" cy="170" r="62" class="g-soils" stroke="var(--soil)"/><text x="400" y="176" text-anchor="middle" class="tb" style="font-size:20px">土壤</text><line x1="400" y1="170" x2="120" y2="40" class="s-mut" stroke-width="1.2"/><line x1="400" y1="170" x2="560" y2="40" class="s-mut" stroke-width="1.2"/><line x1="400" y1="170" x2="100" y2="150" class="s-mut" stroke-width="1.2"/><line x1="400" y1="170" x2="700" y2="150" class="s-mut" stroke-width="1.2"/><line x1="400" y1="170" x2="120" y2="260" class="s-mut" stroke-width="1.2"/><line x1="400" y1="170" x2="560" y2="260" class="s-mut" stroke-width="1.2"/><circle cx="400" cy="170" r="62" class="g-soils" stroke="var(--soil)"/><text x="400" y="176" text-anchor="middle" class="tb" style="font-size:20px">土壤</text><rect x="40" y="16" width="160" height="48" rx="10" class="g-inks" stroke="var(--ink)"/><text x="120" y="37" text-anchor="middle" class="tb">Carbon</text><text x="120" y="55" text-anchor="middle" class="m">碳儲存與碳排放</text><rect x="480" y="16" width="160" height="48" rx="10" class="g-inks" stroke="var(--ink)"/><text x="560" y="37" text-anchor="middle" class="tb">Water</text><text x="560" y="55" text-anchor="middle" class="m">保水與水調節</text><rect x="20" y="126" width="160" height="48" rx="10" class="g-inks" stroke="var(--ink)"/><text x="100" y="147" text-anchor="middle" class="tb">Resilience</text><text x="100" y="165" text-anchor="middle" class="m">氣候與病害韌性</text><rect x="620" y="126" width="160" height="48" rx="10" class="g-inks" stroke="var(--ink)"/><text x="700" y="147" text-anchor="middle" class="tb">Nutrients</text><text x="700" y="165" text-anchor="middle" class="m">養分循環</text><rect x="40" y="236" width="160" height="48" rx="10" class="g-inks" stroke="var(--ink)"/><text x="120" y="257" text-anchor="middle" class="tb">Productivity</text><text x="120" y="275" text-anchor="middle" class="m">生產力基礎</text><rect x="480" y="236" width="160" height="48" rx="10" class="g-inks" stroke="var(--ink)"/><text x="560" y="257" text-anchor="middle" class="tb">Biodiversity</text><text x="560" y="275" text-anchor="middle" class="m">土壤微生物多樣性</text></svg><figcaption>土壤同時是碳庫（氣候）、棲地（自然）、生產基礎（農業）和水的調節器。提升土壤健康，等於同時提升多個永續維度。</figcaption></figure>
+
+<h3>為什麼「Carbon-only」不夠</h3>
+<div class="tbl"><table>
+<tr><th>面向</th><th>方案 A：高強度免耕種植</th><th>方案 B：農林複合再生農業</th></tr>
+<tr><td>碳封存</td><td>✔ 高</td><td>✔ 高（相當）</td></tr>
+<tr><td>水資源</td><td>⚠ 大量灌溉依賴</td><td>✔ 保水、減少灌溉</td></tr>
+<tr><td>土壤</td><td>⚠ 單一作物</td><td>✔ 有機質豐富、結構改善</td></tr>
+<tr><td>生物多樣性</td><td>✖ 棲息地破壞未改善</td><td>✔ 多層植被、物種豐富</td></tr>
+<tr><td>農民生計</td><td>⚠ 依賴農化品投入</td><td>✔ 多元收入、降低風險</td></tr>
+</table></div>
+<div class="box key"><span class="tag">核心結論</span><p>同樣的 Carbon Performance，不代表同樣的 Sustainability Performance。農業 ESG 要從碳管理升級為 <mark>Climate × Nature × People</mark> 的系統管理。</p></div>
+</section>
+
+<section id="agesg">
+<h2><span class="no">08</span>農業 ESG 的完整架構</h2>
+<p>農業不只是製造業或服務業，而是<b>自然—經濟—社會的複合系統</b>：氣候雙向影響、糧食安全與營養、農食品健康、農業經濟基礎、農民生計、農村社區、全球食品供應鏈、自然資源直接依賴，都交會在農業上。</p>
+<h3>E：絕對不只是 Carbon</h3>
+<div class="tbl"><table>
+<tr><th>面向</th><th>內容</th></tr>
+<tr><td>Climate</td><td>溫室氣體減排、碳匯管理、氣候風險調適</td></tr>
+<tr><td>Water</td><td>用水效率、水質管理、水文系統保護</td></tr>
+<tr><td>Soil</td><td>土壤健康、有機質、侵蝕防治、碳封存</td></tr>
+<tr><td>Biodiversity／Nature</td><td>生物多樣性保護、棲地管理、生態系統服務維護</td></tr>
+<tr><td>Circularity</td><td>農業廢棄物循環利用、養分閉環、減少化學品依賴</td></tr>
+</table></div>
+<div class="formula">Agricultural E ≠ Carbon</div>
+<div class="box iso"><span class="tag">連結講義 9</span><p><a class="xref" href="09-circular-agriculture.html#why">講義 9〈為什麼要循環農業〉↗</a></p></div>
+<div class="tbl"><table>
+<tr><th>農業的</th><th>項目</th></tr>
+<tr><td>Nature Dependencies</td><td>水資源供給（灌溉、雨水入滲、地下水補注）；土壤品質調節；授粉；生物防治；氣候調節與遺傳資源（野生近緣種）</td></tr>
+<tr><td>Nature Impacts</td><td>土地利用變化（森林與棲地喪失的首要原因）；水資源提取；養分逕流與農藥污染（優養化、傷害授粉昆蟲）；稻作與畜牧甲烷、肥料氧化亞氮等<mark>非 CO₂ 溫室氣體</mark>；土壤退化與棲地破碎</td></tr>
+</table></div>
+
+<h3>S：農民不是供應鏈末端的一個數字</h3>
+<p>S 是企業採購部門最容易忽略、卻是供應鏈最核心的人文基礎（People-centered Food System）。</p>
+<div class="tbl"><table>
+<tr><th>議題</th><th>內容</th></tr>
+<tr><td>農民收入與生計</td><td>公平價格、收入穩定、長期經濟可行性</td></tr>
+<tr><td>勞動條件與職業健康</td><td>農場工人（含移工）的安全、工時、薪資、農藥暴露</td></tr>
+<tr><td>農村社區與世代更新</td><td>社區凝聚力、在地文化、青農培育</td></tr>
+<tr><td>食物安全與營養</td><td>生產端食安標準、在地營養可及性</td></tr>
+</table></div>
+
+<h3>G：沒有 Governance，很難 Scale</h3>
+<div class="tbl"><table>
+<tr><th>治理要素</th><th>內容</th></tr>
+<tr><td>溯源系統</td><td>農場到餐桌的數位化追蹤</td></tr>
+<tr><td>採購標準</td><td>明確的永續採購政策與門檻</td></tr>
+<tr><td>供應商管理</td><td>系統性輔導與稽核</td></tr>
+<tr><td>資料品質</td><td>現場數據的收集、驗證與管理</td></tr>
+<tr><td>認證與驗證</td><td>第三方認證的設計與執行</td></tr>
+<tr><td>風險管理</td><td>供應鏈風險的識別與回應</td></tr>
+<tr><td>申訴機制</td><td>利害關係人的申訴管道</td></tr>
+<tr><td>問責機制</td><td>高層對永續績效的責任歸屬</td></tr>
+</table></div>
+<div class="box key"><span class="tag">核心邏輯</span><p>E 與 S 是成果；<mark>G 是讓成果可持續、可驗證、可擴大的制度基礎</mark>。沒有治理，永續承諾很難超越個別農場或單一計畫。</p></div>
+
+<h3>企業 ESG 如何傳導到農業現場</h3>
+<div class="flow loop" data-loop-label="數據向上匯聚成揭露，再修正 ESG 目標"><span data-loop-to><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21V10l5 3V10l5 3V5h4v16z"/><path d="M3 21h18"/><path d="M7 17h2M12 17h2"/></svg><em class="tx">企業 ESG 目標</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 6h11v10H2zM13 10h4l4 3v3h-8"/><circle cx="6" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg><em class="tx">採購標準與要求</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21V10l5 3V10l5 3V5h4v16z"/><path d="M3 21h18"/><path d="M7 17h2M12 17h2"/></svg><em class="tx">食品加工商與貿易商</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21V10l5 3V10l5 3V5h4v16z"/><path d="M3 21h18"/><path d="M7 17h2M12 17h2"/></svg><em class="tx">農企業</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2 20a7 7 0 0 1 14 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 13.5a7 7 0 0 1 4 6.5"/></svg><em class="tx">農民生產實踐</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 16v-4M12 16V8M17 16v-7"/></svg><em class="tx">農場數據收集</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 16v-4M12 16V8M17 16v-7"/></svg><em class="tx">自然與碳排數據</em></span><i>→</i><span class="ok" data-loop-from><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h7M9 17h7"/></svg><em class="tx">企業永續報告</em></span></div>
+<p>目標透過採購要求<b>向下傳遞</b>，農場數據再<b>向上匯聚</b>成揭露資訊。這是一個需要雙向設計、雙向投資的系統。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">社會議題與企業有關。</p></div>
+<h3>臺灣：企業資源 × 農業場域</h3>
+<p>農業部 <b>ESG STORE</b> 平台媒合企業 ESG 需求與農業永續專案，企業可投入資源支持農業環境保育、社會責任或供應鏈改善計畫。意義在於一種新治理邏輯：讓企業的 ESG 資源有效率地進入農業場域。</p>
+<ul>
+  <li>企業找到農業領域的 ESG 出口；農業場域獲得資源挹注。</li>
+  <li>媒合機制降低雙方的搜尋與交易成本；跨界資源進入農業，形成新治理生態。</li>
+</ul>
+</section>
+
+<section id="cases">
+<h2><span class="no">09</span>企業如何透過農業擴大影響力</h2>
+<div class="tbl"><table>
+<tr><th>範圍</th><th>永續議題</th></tr>
+<tr><td>工廠圍牆內</td><td>能源效率與再生能源、廢水與廢棄物、Scope 1、2、員工安全</td></tr>
+<tr><td>農業價值鏈</td><td>Scope 3 農業排放（占總碳足跡 70–90%）；水、土壤、授粉、生物多樣性；農民生計與勞動；土地利用變化；供應來源的長期穩定</td></tr>
+</table></div>
+<p>食品公司最大的永續風險與影響，<mark>絕大多數發生在農業供應鏈，而不是公司圍牆以內</mark>。</p>
+
+<h3>PepsiCo（百事）</h3>
+<div class="tbl"><table>
+<tr><th>年份</th><th>策略</th><th>重點</th></tr>
+<tr><td>2006</td><td>Performance with Purpose（PwP）</td><td>「永續不是賺錢之後額外做的事，而是長期商業績效的組成部分。」把水、能源、農業、員工、社區整合進商業策略</td></tr>
+<tr><td>2015</td><td>Sustainable Farming Initiative（SFI）</td><td>不只要求供應商符合標準，而是<b>主動提供資源、培訓與財務支持</b>；擴展到農民生計、人權、技術投資、農村發展，成為整合 E＋S＋G 的工具</td></tr>
+<tr><td>2016</td><td>PwP 2025 Agenda</td><td>Products 產品（營養與環境足跡）、Planet 地球（農業、水、能源、包裝的 2025 量化目標）、People 人（員工、社區、人權）</td></tr>
+<tr><td>今日</td><td>pep+（PepsiCo Positive）</td><td>Positive Agriculture 成為核心支柱：從合規管理升級為<mark>再生農業轉型</mark>，推動再生農業、永續原料、農場自然修復、農民能力建構</td></tr>
+</table></div>
+<p>SFI 的三個維度：Environmental（土壤健康、水資源、農藥減量、碳足跡；手寫補充：生物多樣性）、Social（農民生計、勞動條件、人權）、Economic（技術投資、培訓、長期合夥）。</p>
+<p>PwP 的戰略意涵：永續是競爭力不是公益；風險管理延伸到供應鏈；長期價值超越季度績效；外部壓力轉化為內部策略。</p>
+<div class="box key"><span class="tag">核心轉變</span><p>從「向農民買農產品」，轉型為「<mark>管理農業生產系統，共同創造永續價值</mark>」。</p></div>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21V10l5 3V10l5 3V5h4v16z"/><path d="M3 21h18"/><path d="M7 17h2M12 17h2"/></svg><em class="tx">Company</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 6h11v10H2zM13 10h4l4 3v3h-8"/><circle cx="6" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg><em class="tx">Procurement</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 6h11v10H2zM13 10h4l4 3v3h-8"/><circle cx="6" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg><em class="tx">Supplier</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2 20a7 7 0 0 1 14 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 13.5a7 7 0 0 1 4 6.5"/></svg><em class="tx">Farmers</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 20 9 8l4 6 3-4 6 10z"/></svg><em class="tx">Landscape／Nature</em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2 20a7 7 0 0 1 14 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 13.5a7 7 0 0 1 4 6.5"/></svg><em class="tx">Community</em></span></div>
+<p>企業的 ESG 影響力透過農業供應鏈延伸到自然。終極挑戰：讓承諾真正轉化為農場現場的自然修復、農民生計改善與生態的正向影響。</p>
+
+<h3>Nestlé（雀巢）：2030 年 50% 主要原料來自再生農業</h3>
+<div class="tbl"><table>
+<tr><th>面向</th><th>作法</th></tr>
+<tr><td>土壤健康</td><td>多樣化種植、覆蓋作物，改善結構與有機質</td></tr>
+<tr><td>水資源管理</td><td>精準灌溉、雨水收集、地表逕流管理</td></tr>
+<tr><td>生物多樣性</td><td>保護農田周邊棲地、混農林業、鼓勵益蟲與授粉者</td></tr>
+<tr><td>碳管理</td><td>增加土壤碳匯、減少農事排放，追求供應鏈淨零或負碳</td></tr>
+<tr><td>農民生計</td><td>收入穩定、技術培訓、市場連結</td></tr>
+</table></div>
+<p>目的不只是碳足跡減量，而是建立更有韌性、更能適應氣候變遷的供應鏈，確保長期穩定的原料。</p>
+
+<h3>成功要素</h3>
+<div class="tbl"><table>
+<tr><th>要素</th><th>內容</th></tr>
+<tr><td>供應鏈深度整合</td><td>永續目標融入採購到農場每個環節，長期夥伴而非單純買賣</td></tr>
+<tr><td>超越碳的系統視角</td><td>把水、土壤、生物多樣性等自然資本納入管理</td></tr>
+<tr><td>以人為本的社會投資</td><td>農民生計、勞動權益、農村發展，確保轉型公平包容</td></tr>
+<tr><td>透明的數據與治理</td><td>可追溯、可驗證的數據與報告機制</td></tr>
+</table></div>
+<h3>真正的 Scale Impact：六大關鍵槓桿</h3>
+<div class="tbl"><table>
+<tr><th>槓桿</th><th>內容</th></tr>
+<tr><td>1 採購</td><td>永續採購標準、長期穩定訂單、價格與溢價機制</td></tr>
+<tr><td>2 金融</td><td>綠色金融與信貸、風險共擔與保險</td></tr>
+<tr><td>3 數據</td><td>農場數據收集、環境監測、ESG 績效追蹤與揭露</td></tr>
+<tr><td>4 科技</td><td>智慧農業、低碳與資源效率技術、數位工具</td></tr>
+<tr><td>5 培訓</td><td>農民能力建構、永續農業知識、經營管理</td></tr>
+<tr><td>6 夥伴關係</td><td>公私協力、供應鏈協同轉型、政策與倡議支持</td></tr>
+</table></div>
+<p>以<b>農民</b>為中心，影響延伸到供應鏈、景觀生態系、農村社區、消費者與市場，創造環境、社會、經濟價值，並連到企業 ESG 目標、國家淨零與 SDGs。從單點專案到系統轉型，從農場到餐桌。</p>
+<p style="font-size:14px;color:var(--muted)">槓桿的細項在講義圖中字很小，部分是依圖意整理。</p>
+</section>
+
+<section id="future">
+<h2><span class="no">10</span>成熟度、整合模型與綠領人才</h2>
+<figure class="fig"><svg viewBox="0 0 880 270" width="880" role="img" aria-label="農業 ESG 成熟度三個階梯"><rect x="20" y="190" width="840" height="70" rx="8" class="g-inks" stroke="var(--ink)"/><text x="36" y="220" class="n" style="font-size:22px">L1</text><text x="80" y="219" class="tb">減少環境危害</text><text x="80" y="242" class="m">碳排減量、水資源節約、化學品污染防治</text><rect x="220" y="110" width="640" height="70" rx="8" class="g-soils" stroke="var(--soil)"/><text x="236" y="140" class="n" style="font-size:22px">L2</text><text x="280" y="139" class="tb">修復與建立韌性</text><text x="280" y="162" class="m">土壤修復、流域保護、生物多樣性、氣候調適</text><rect x="420" y="30" width="440" height="70" rx="8" class="g-accs" stroke="var(--accent)"/><text x="436" y="60" class="n" style="font-size:22px">L3</text><text x="480" y="59" class="tb">再生與規模化正向影響</text><text x="480" y="82" class="m">農民生計、地景恢復、供應鏈轉型、農村韌性</text></svg><figcaption>農業 ESG 的成熟度階梯。「Nature Positive」不是一張認證標章，而是要持續投入的長期目標。</figcaption></figure>
+<figure class="fig"><svg viewBox="0 0 880 310" width="880" role="img" aria-label="農業 ESG 整合模型"><defs><marker id="mda" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--accent)"/></marker><marker id="mds" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--soil)"/></marker><marker id="mdm" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--muted)"/></marker></defs><rect x="330" y="10" width="220" height="38" rx="8" class="g-inks" stroke="var(--ink)"/><text x="440.0" y="34.0" text-anchor="middle" class="tb">自然</text><line x1="440" y1="48" x2="440" y2="62" class="s-mut" stroke-width="2" marker-end="url(#mdm)"/><rect x="330" y="64" width="220" height="38" rx="8" class="g-inks" stroke="var(--ink)"/><text x="440.0" y="88.0" text-anchor="middle" class="tb">環境資產</text><line x1="440" y1="102" x2="440" y2="116" class="s-mut" stroke-width="2" marker-end="url(#mdm)"/><rect x="330" y="118" width="220" height="38" rx="8" class="g-inks" stroke="var(--ink)"/><text x="440.0" y="142.0" text-anchor="middle" class="tb">生態系統服務</text><line x1="440" y1="156" x2="440" y2="178" class="s-acc" stroke-width="2" marker-end="url(#mda)"/><text x="452" y="173" class="m">依賴</text><rect x="330" y="180" width="220" height="50" rx="8" class="g-accs" stroke="var(--accent)"/><text x="440.0" y="210.0" text-anchor="middle" class="tb">農業（企業）</text><rect x="20" y="60" width="200" height="38" rx="8" class="g-inks" stroke="var(--ink)"/><text x="120.0" y="84.0" text-anchor="middle" class="tb">氣候變遷</text><line x1="120" y1="98" x2="120" y2="140" class="s-mut" stroke-width="2" marker-end="url(#mdm)"/><rect x="20" y="142" width="200" height="38" rx="8" class="g-inks" stroke="var(--ink)"/><text x="120.0" y="166.0" text-anchor="middle" class="tb">實體／轉型風險</text><line x1="220" y1="175" x2="326" y2="200" class="s-mut" stroke-width="2" marker-end="url(#mdm)"/><path d="M554,205 C620,205 620,80 554,80" fill="none" class="s-soil" stroke-width="2.2" marker-end="url(#mds)"/><text x="626" y="146" class="m">影響</text><rect x="680" y="40" width="180" height="38" rx="8" class="g-inks" stroke="var(--ink)"/><text x="770.0" y="64.0" text-anchor="middle" class="tb">風險與機會</text><line x1="770" y1="78" x2="770" y2="100" class="s-mut" stroke-width="2" marker-end="url(#mdm)"/><rect x="680" y="102" width="180" height="38" rx="8" class="g-inks" stroke="var(--ink)"/><text x="770.0" y="126.0" text-anchor="middle" class="tb">ESG 策略</text><line x1="770" y1="140" x2="770" y2="162" class="s-mut" stroke-width="2" marker-end="url(#mdm)"/><rect x="680" y="164" width="180" height="38" rx="8" class="g-inks" stroke="var(--ink)"/><text x="770.0" y="188.0" text-anchor="middle" class="tb">價值鏈轉型</text><rect x="20" y="260" width="270" height="38" rx="8" class="g-soils" stroke="var(--soil)"/><text x="155.0" y="284.0" text-anchor="middle" class="tb">E：氣候＋自然</text><rect x="305" y="260" width="270" height="38" rx="8" class="g-soils" stroke="var(--soil)"/><text x="440.0" y="284.0" text-anchor="middle" class="tb">S：人群＋社群</text><rect x="590" y="260" width="270" height="38" rx="8" class="g-soils" stroke="var(--soil)"/><text x="725.0" y="284.0" text-anchor="middle" class="tb">G：治理＋資料</text><line x1="440" y1="258" x2="440" y2="234" class="s-mut" stroke-width="2" marker-end="url(#mdm)"/></svg><figcaption>農業 ESG 整合模型：生態系統服務經「依賴」支撐農業；農業經「影響」改變自然；氣候變遷帶來實體與轉型風險；右側把風險與機會轉成策略與價值鏈轉型；底部由 E、S、G 撐起。</figcaption></figure>
+<h3>農業綠領人才的真正價值</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5M22 9v6"/></svg><em class="tx">農業專業知識</em></span><i>＋</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18a4 4 0 0 1-.6-8A5.5 5.5 0 0 1 17 9a4.5 4.5 0 0 1 .5 9z"/></svg><em class="tx">碳管理與氣候能力</em></span><i>＋</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21c0-9 6-16 16-17-1 10-8 16-16 17z"/><path d="M5 21 14 12"/></svg><em class="tx">自然與生態系統服務</em></span><i>＋</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 16v-4M12 16V8M17 16v-7"/></svg><em class="tx">ESG 治理與資料能力</em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2 20a7 7 0 0 1 14 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 13.5a7 7 0 0 1 4 6.5"/></svg><em class="tx">農業綠領人才</em></span></div>
+<ul>
+  <li>把<b>農業績效</b>轉化為<b>企業 ESG 價值</b>。</li>
+  <li>把企業的<b>資金、技術與市場力量</b>轉化為<b>農業永續影響力</b>。</li>
+</ul>
+<div class="box key"><span class="tag">結語</span><p>未來的農業綠領人才，不只是懂碳的人，而是<mark>能連結企業、農業、氣候、自然與社會價值的人</mark>。農業的永續發展不只關乎糧食安全，也是應對氣候變遷、保護自然資本、確保農民生計的核心策略。</p></div>
+</section>
+
+<section id="quiz">
+<h2><span class="no">11</span>自我測驗</h2>
+<details class="q"><summary>1. CSR 和 ESG 的核心問題差在哪？</summary><div class="a">CSR 問「我們為社會做了什麼」，是單向的善意行動；ESG 問「環境與社會如何影響企業、企業又如何影響環境與社會」，是雙向關係，並和風險、資本配置連在一起。</div></details>
+<details class="q"><summary>2. 2004 年和 2006 年各發生了什麼，為什麼重要？</summary><div class="a">2004 年 Who Cares Wins 報告讓 ESG 進入投資分析語言；2006 年 PRI 成立，機構投資人承諾把 ESG 納入投資決策，ESG 變成資本市場語言。</div></details>
+<details class="q"><summary>3. ISSB 和 CSRD 的重大性觀點有什麼不同？</summary><div class="a">ISSB 以投資人決策有用性為主，看財務重大性（外部議題如何影響企業）；CSRD 採雙重重大性，同時看企業如何影響環境與社會（影響重大性）。</div></details>
+<details class="q"><summary>4. 為什麼小農不適用揭露規範，仍會受 ESG 影響？</summary><div class="a">上市公司的 ESG 要求透過品牌商採購標準、食品企業規格層層傳到農場，農民的生產方式、數據與紀錄成為供應鏈資格審核的條件。</div></details>
+<details class="q"><summary>5. 自然資本和生態系統服務是什麼關係？</summary><div class="a">自然資本是存量（本金），生態系統服務是它產生的流量（利息）。存量退化，流量也跟著下降；過度提取本金，利息會消失。</div></details>
+<details class="q"><summary>6. TNFD 的三類生態系統服務中，哪一類最容易被低估？為什麼？</summary><div class="a">調節與維護服務（授粉、水質淨化、生物防治、氣候調節）。它們沒有市場價格，但一旦喪失，替代成本極高甚至無法替代。</div></details>
+<details class="q"><summary>7. 說明「Impact 最後變成 Dependence Risk」的循環。</summary><div class="a">農業活動 → 負面環境影響 → 自然系統退化 → 生態系統服務下降 → 企業依賴的基礎受損 → 企業風險升高，又回到原本的農業活動，形成自我加速的風險螺旋。</div></details>
+<details class="q"><summary>8. LEAP 四個步驟各做什麼？</summary><div class="a">Locate 定位企業與自然的交會處；Evaluate 評估依賴與影響；Assess 評量風險與機會並連結財務重大性；Prepare 設定目標、管理措施與揭露策略。</div></details>
+<details class="q"><summary>9. 為什麼「Carbon-only」不夠？</summary><div class="a">兩個方案碳封存相當，但水、土壤、生物多樣性與農民生計的表現可能完全不同。同樣的碳績效不代表同樣的永續績效。</div></details>
+<details class="q"><summary>10. 為什麼說 G 決定能否 Scale？</summary><div class="a">E 與 S 是成果，G（溯源、採購標準、資料品質、認證、問責等）讓成果可持續、可驗證、可擴大到整個供應鏈。</div></details>
+</section>
+
+<section id="gloss">
+<h2><span class="no">12</span>名詞表</h2>
+<dl class="gloss">
+<dt>CSR</dt><dd>企業社會責任</dd>
+<dt>Who Cares Wins</dt><dd>2004 年 UN Global Compact 與 UNEP FI 的報告，ESG 一詞的起點</dd>
+<dt>PRI</dt><dd>負責任投資原則（2006）</dd>
+<dt>GRI</dt><dd>全球報告倡議組織的永續報告準則</dd>
+<dt>TCFD</dt><dd>氣候相關財務揭露工作小組（2023 年解散，監督移交 IFRS 基金會）</dd>
+<dt>ISSB／IFRS S1、S2</dt><dd>國際永續準則理事會／一般永續揭露、氣候相關揭露準則</dd>
+<dt>CSRD／ESRS</dt><dd>歐盟企業永續報告指令／歐洲永續報告準則</dd>
+<dt>雙重重大性</dt><dd>財務重大性＋影響重大性</dd>
+<dt>DPP</dt><dd>歐盟數位產品護照</dd>
+<dt>Scope 1／2／3</dt><dd>直接排放／能源間接排放／價值鏈排放</dd>
+<dt>Mitigation／Adaptation</dt><dd>減緩／調適</dd>
+<dt>Co-benefits</dt><dd>共同效益</dd>
+<dt>TFP</dt><dd>全要素生產力</dd>
+<dt>Natural Capital</dt><dd>自然資本（存量）</dd>
+<dt>Ecosystem Services</dt><dd>生態系統服務（流量）：供給、調節與維護、文化</dd>
+<dt>Environmental Assets</dt><dd>環境資產：土地、淡水、海洋、大氣、生物資源</dd>
+<dt>TNFD</dt><dd>自然相關財務揭露工作小組</dd>
+<dt>Dependence／Impact</dt><dd>依賴（自然給企業什麼）／影響（企業對自然做了什麼）</dd>
+<dt>Impact Drivers</dt><dd>影響驅動因素</dd>
+<dt>LEAP</dt><dd>Locate、Evaluate、Assess、Prepare</dd>
+<dt>NbS</dt><dd>自然解方（Nature-based Solutions）</dd>
+<dt>WBGT</dt><dd>綜合溫度熱指數</dd>
+<dt>Nature Positive</dt><dd>自然正成長，長期目標而非單一認證</dd>
+<dt>PwP／SFI／pep+</dt><dd>PepsiCo 的 Performance with Purpose／Sustainable Farming Initiative／PepsiCo Positive</dd>
+<dt>ESG STORE</dt><dd>農業部媒合企業 ESG 資源與農業永續專案的平台</dd>
+</dl>
+</section>
+
+<nav class="pager" aria-label="上一講／下一講"><a class="prev" href="10-forest-carbon.html"><small>← 上一講</small>10. 森林碳匯策略</a></nav>
+</main>
+</div>
+<script>
+(function(){
+  var b=document.body,K='tocOff';
+  function set(off){b.classList.toggle('toc-off',off);try{localStorage.setItem(K,off?'1':'0')}catch(e){}}
+  try{if(localStorage.getItem(K)==='1')b.classList.add('toc-off')}catch(e){}
+  document.getElementById('tocHide').addEventListener('click',function(){set(true)});
+  document.getElementById('tocShow').addEventListener('click',function(){set(false)});
+})();
+</script>
+<script>
+(function(){
+  var NS='http://www.w3.org/2000/svg',n=0;
+  function rp(p,r){var d='M'+p[0][0]+','+p[0][1];for(var i=1;i<p.length-1;i++){var a=p[i-1],b=p[i],c=p[i+1];
+    var l1=Math.hypot(b[0]-a[0],b[1]-a[1]),l2=Math.hypot(c[0]-b[0],c[1]-b[1]),k=Math.min(r,l1/2,l2/2);
+    var x1=b[0]-(b[0]-a[0])/l1*k,y1=b[1]-(b[1]-a[1])/l1*k,x2=b[0]+(c[0]-b[0])/l2*k,y2=b[1]+(c[1]-b[1])/l2*k;
+    d+=' L'+x1+','+y1+' Q'+b[0]+','+b[1]+' '+x2+','+y2}
+    var e=p[p.length-1];return d+' L'+e[0]+','+e[1]}
+  function draw(c){
+    var old=c.querySelector(':scope>.loop-svg'); if(old) old.remove();
+    var spans=[].slice.call(c.querySelectorAll(':scope>span'));
+    var to=c.querySelector('[data-loop-to]')||spans[0], from=c.querySelector('[data-loop-from]')||spans[spans.length-1];
+    if(!to||!from) return;
+    var cr=c.getBoundingClientRect();
+    function R(el){var b=el.getBoundingClientRect();return{l:b.left-cr.left,r:b.right-cr.left,t:b.top-cr.top,b:b.bottom-cr.top,cx:(b.left+b.right)/2-cr.left,cy:(b.top+b.bottom)/2-cr.top}}
+    var a=R(to),z=R(from),maxB=0,minL=1e9,rowFirst=true;
+    spans.forEach(function(k){var r=R(k);if(r.l<minL)minL=r.l;if(k!==to&&Math.abs(r.t-a.t)<6&&r.l<a.l)rowFirst=false});
+    Array.prototype.forEach.call(c.children,function(k){if(k.classList.contains('loop-svg'))return;var b=k.getBoundingClientRect().bottom-cr.top;if(b>maxB)maxB=b});
+    var y=maxB+16,x=minL-18,d,lx;
+    if(Math.abs(a.t-z.t)<6){d=rp([[z.cx,z.b],[z.cx,y],[a.cx,y],[a.cx,a.b+4]],10);lx=(a.cx+z.cx)/2}
+    else if(rowFirst){d=rp([[z.cx,z.b],[z.cx,y],[x,y],[x,a.cy],[a.l-4,a.cy]],10);lx=(x+z.cx)/2}
+    else{var top=a.t-14;d=rp([[z.cx,z.b],[z.cx,y],[x,y],[x,top],[a.cx,top],[a.cx,a.t-4]],10);lx=(x+z.cx)/2}
+    var id='lh'+(++n),s=document.createElementNS(NS,'svg');
+    s.setAttribute('class','loop-svg');s.setAttribute('width',cr.width);s.setAttribute('height',y+24);s.setAttribute('aria-hidden','true');
+    s.innerHTML='<defs><marker id="'+id+'" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0L10,5L0,10z" fill="currentColor"/></marker></defs>'+
+      '<path d="'+d+'" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#'+id+')"/>'+
+      '<text x="'+Math.max(lx,60)+'" y="'+(y+18)+'" text-anchor="middle"></text>';
+    s.querySelector('text').textContent='↺ '+(c.getAttribute('data-loop-label')||'');
+    c.appendChild(s);
+  }
+  var els=document.querySelectorAll('.loop');
+  function all(){els.forEach(draw)}
+  all(); window.addEventListener('resize',all);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(all);
+  if(window.ResizeObserver){var w={};var ro=new ResizeObserver(function(es){es.forEach(function(e){var c=e.target,k=Math.round(e.contentRect.width);if(c._w!==k){c._w=k;draw(c)}})});els.forEach(function(c){ro.observe(c)})}
+})();
+</script>
+<!--gm-js--><script>
+/* 跳出式小遊戲引擎：右下角按鈕 → 對話框；題目、解釋、計分；場景由各頁提供 */
+window.GMRUN=function(C){
+  var NS='http://www.w3.org/2000/svg',D=document;
+  var reduce=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
+  function el(tag,a,html,par){var e=D.createElementNS(NS,tag);if(a)for(var k in a)e.setAttribute(k,a[k]);if(html)e.innerHTML=html;if(par)par.appendChild(e);return e}
+  function h(tag,cls,html,par){var e=D.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;if(par)par.appendChild(e);return e}
+
+  /* ---------- 介面 ---------- */
+  var ICON='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.2" r=".6" fill="currentColor"/><circle cx="17.6" cy="13.6" r=".6" fill="currentColor"/></svg>';
+  var fab=h('button','gm-fab',ICON+'<span>小遊戲</span>',D.body);fab.type='button';fab.setAttribute('aria-haspopup','dialog');
+  var tip=h('div','gm-tip','<button type="button" class="gm-tipx" aria-label="關閉提示">×</button><b>考考你</b><span></span>',D.body);
+  tip.querySelector('span').textContent=C.teaser;
+  var ov=h('div','gm-ov',null,D.body);ov.hidden=true;
+  var dlg=h('div','gm-dlg','<div class="gm-hd"><b id="gmTitle"></b><button type="button" class="gm-x" aria-label="關閉小遊戲">×</button></div>'+
+    '<svg class="gm-stage" viewBox="'+(C.vb||'0 0 880 260')+'" role="img"></svg>'+
+    '<div class="gm-card"><div class="gm-prog"></div><p class="gm-q"></p><div class="gm-opts"></div><div class="gm-fb" aria-live="polite"></div></div>',ov);
+  dlg.setAttribute('role','dialog');dlg.setAttribute('aria-modal','true');dlg.setAttribute('aria-labelledby','gmTitle');
+  dlg.querySelector('#gmTitle').textContent='小遊戲：'+C.title;
+  var st=dlg.querySelector('svg'),qEl=dlg.querySelector('.gm-q'),oEl=dlg.querySelector('.gm-opts'),fEl=dlg.querySelector('.gm-fb'),pEl=dlg.querySelector('.gm-prog');
+  st.setAttribute('aria-label',C.alt||C.title);
+
+  /* ---------- 動畫工具 ---------- */
+  var loops=[],touts=[],fx;
+  function stopAll(){loops.forEach(clearInterval);touts.forEach(clearTimeout);loops=[];touts=[]}
+  var api={svg:st,reduce:reduce,el:el,
+    C:{co2:'#86a8e6',ch4:'#c9a66b',n2o:'#d28bb4',gas:'#8fae9a',smoke:'#9aa0a6'},
+    loop:function(fn,ms){fn();loops.push(setInterval(fn,reduce?ms*1.6:ms))},
+    later:function(fn,ms){touts.push(setTimeout(fn,reduce?0:ms))},
+    A:function(e,fr,ms,o){o=o||{};if(!e||!e.animate)return null;if(reduce&&o.iter===Infinity)return null;
+      var an=e.animate(fr,{duration:reduce?1:ms,delay:reduce?0:(o.delay||0),easing:o.ease||'ease-out',fill:o.fill||'forwards',iterations:o.iter||1,direction:o.dir||'normal'});
+      if(o.done)an.onfinish=o.done;return an},
+    /* 放一個物件：外層定位，內層可動（原點在底部中央） */
+    put:function(par,x,y,s,html,origin){var g=el('g',{transform:'translate('+x+' '+y+')'+(s&&s!==1?' scale('+s+')':'')},null,par||st);
+      var i=el('g',{},html,g);i.style.transformBox='fill-box';i.style.transformOrigin=origin||'50% 100%';i.outer=g;i.x=x;i.y=y;i.s=s||1;return i},
+    top:function(){if(!fx)fx=el('g',{});st.appendChild(fx);return fx},
+    puff:function(x,y,o){o=o||{};var g=el('g',{class:'gas'},null,api.top()),n=o.n||3,r=o.r||11;
+      for(var i=0;i<n;i++)el('circle',{cx:x+(i-(n-1)/2)*r*.9,cy:y+(i%2?-r*.55:0),r:r+(i===1?3:0),fill:o.color||api.C.gas,opacity:.6},null,g);
+      if(o.label){var t=el('text',{x:x,y:y-1},null,g);t.textContent=o.label}
+      g.style.transformBox='fill-box';g.style.transformOrigin='50% 50%';
+      var dx=o.dx==null?0:o.dx,dy=o.dy==null?-60:o.dy;
+      api.A(g,[{transform:'translate(0,0) scale(.35)',opacity:0},{opacity:.95,offset:.15},{transform:'translate('+dx+'px,'+dy+'px) scale('+(o.grow||1.5)+')',opacity:0}],o.ms||2400,{done:function(){g.remove()},fill:'none'});
+      if(reduce)api.later(function(){g.remove()},1200);return g},
+    pop:function(x,y,txt,o){o=o||{};var t=el('text',{class:'pop',x:x,y:y},null,api.top());t.textContent=txt;if(o.color)t.style.fill=o.color;if(o.size)t.style.fontSize=o.size+'px';
+      t.style.transformBox='fill-box';t.style.transformOrigin='50% 100%';
+      api.A(t,[{opacity:0,transform:'scale(.4)'},{opacity:1,transform:'scale(1.15)',offset:.2},{opacity:1,transform:'scale(1)',offset:.7},{opacity:0,transform:'translateY(-10px)'}],o.ms||1300,{done:function(){t.remove()},fill:'none'});
+      if(reduce)api.later(function(){t.remove()},1200);return t},
+    pulse:function(e){return api.A(e,[{transform:'scale(1)'},{transform:'scale(1.12)'},{transform:'scale(1)'}],700,{fill:'none'})},
+    /* 背景：地面、草、圍籬、太陽 */
+    bg:function(o){o=o||{};var gy=o.ground==null?200:o.ground,W=880,s='';
+      if(o.sun)s+='<circle cx="'+(o.sun[0])+'" cy="'+(o.sun[1])+'" r="22" fill="#f2c94c" opacity=".85"/>';
+      if(o.hills)s+='<path d="M0 '+(gy-10)+' Q140 '+(gy-70)+' 300 '+(gy-24)+' T600 '+(gy-30)+' T880 '+(gy-40)+' V'+gy+' H0Z" fill="var(--accent-soft)" opacity=".7"/>';
+      if(o.fence){s+='<g stroke="var(--line)" stroke-width="4" stroke-linecap="round"><line x1="0" y1="'+(gy-48)+'" x2="'+W+'" y2="'+(gy-48)+'"/><line x1="0" y1="'+(gy-28)+'" x2="'+W+'" y2="'+(gy-28)+'"/>';
+        for(var x=60;x<W;x+=140)s+='<line x1="'+x+'" y1="'+(gy-62)+'" x2="'+x+'" y2="'+(gy+4)+'"/>';s+='</g>'}
+      s+='<rect x="0" y="'+gy+'" width="'+W+'" height="'+(400-gy)+'" fill="'+(o.color||'var(--accent-soft)')+'"/>';
+      (o.grass||[]).forEach(function(x,i){var y=gy+14+(i%3)*12;s+='<path d="M'+(x-5)+' '+y+' q0 -6 -4 -10 M'+x+' '+y+' q0 -8 2 -13 M'+(x+5)+' '+y+' q1 -6 5 -10" stroke="var(--accent)" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/>'});
+      return el('g',{},s,st)},
+    text:function(x,y,txt,cls,par){var t=el('text',{x:x,y:y,class:cls||'lbl'},null,par||st);t.textContent=txt;return t}
+  };
+
+  /* ---------- 共用圖形（原點在底部中央，面向右） ---------- */
+  var K='#2b2b2b';
+  api.SH={
+    conifer:function(c){c=c||'#3f7d58';return '<rect x="-5" y="-24" width="10" height="24" fill="#7a5a3a"/><path d="M0 -112 L-24 -66 L24 -66Z" fill="'+c+'"/><path d="M0 -92 L-31 -44 L31 -44Z" fill="'+c+'"/><path d="M0 -70 L-38 -20 L38 -20Z" fill="'+c+'"/>'},
+    broad:function(c){c=c||'#4f8f5f';return '<rect x="-6" y="-44" width="12" height="44" fill="#7a5a3a"/><circle cx="-20" cy="-56" r="22" fill="'+c+'"/><circle cx="20" cy="-56" r="22" fill="'+c+'"/><circle cx="0" cy="-74" r="30" fill="'+c+'"/>'},
+    cabbage:'<ellipse cx="0" cy="-13" rx="24" ry="14" fill="#6fae5c"/><ellipse cx="-10" cy="-16" rx="12" ry="10" fill="#86c46f"/><ellipse cx="10" cy="-16" rx="12" ry="10" fill="#86c46f"/><ellipse cx="0" cy="-19" rx="12" ry="10" fill="#b4e09a"/><path d="M-5 -22 q5 -5 10 0" stroke="#6fae5c" stroke-width="2" fill="none"/>',
+    bamboo:function(hh){var s='<rect x="-4" y="-'+hh+'" width="8" height="'+hh+'" rx="3" fill="#7fae4f"/>';for(var y=22;y<hh;y+=22)s+='<rect x="-5" y="-'+y+'" width="10" height="3" fill="#5f8f3a"/>';
+      s+='<path d="M0 -'+(hh-6)+' q16 -6 26 2 q-14 4 -26 -2z M0 -'+(hh-18)+' q-16 -6 -26 2 q14 4 26 -2z M0 -'+(hh-30)+' q16 -4 24 4 q-14 2 -24 -4z" fill="#5f9f4f"/>';return s},
+    rice:function(grain){return '<path d="M0 0 q-5 -28 -16 -44 M0 0 q0 -34 2 -56 M0 0 q5 -28 15 -42 M0 0 q-2 -20 -9 -30" stroke="#5f9f4f" stroke-width="3" fill="none" stroke-linecap="round"/>'+(grain?'<path d="M2 -56 q10 4 12 18" stroke="#d9b44a" stroke-width="4" fill="none" stroke-linecap="round" stroke-dasharray="3 2"/>':'')},
+    mangrove:'<path d="M-24 0 q4 -26 22 -34 M24 0 q-4 -26 -22 -34 M-10 0 q2 -18 8 -34 M10 0 q-2 -18 -8 -34" stroke="#6b4e34" stroke-width="3" fill="none"/><rect x="-3" y="-62" width="6" height="30" fill="#6b4e34"/><ellipse cx="-18" cy="-62" rx="20" ry="13" fill="#4f8f5f"/><ellipse cx="18" cy="-62" rx="20" ry="13" fill="#4f8f5f"/><ellipse cx="0" cy="-74" rx="32" ry="18" fill="#3f7d58"/>',
+    spoonbill:'<line x1="-4" y1="-20" x2="-6" y2="0" stroke="'+K+'" stroke-width="2"/><line x1="5" y1="-20" x2="7" y2="0" stroke="'+K+'" stroke-width="2"/><ellipse cx="2" cy="-28" rx="17" ry="10" fill="#fafafa" stroke="'+K+'" stroke-width="1.5"/><path d="M-11 -33 Q-18 -44 -14 -50" stroke="#fafafa" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M-11 -33 Q-18 -44 -14 -50" stroke="'+K+'" stroke-width="1" fill="none" opacity=".4"/><circle cx="-15" cy="-52" r="6" fill="#fafafa" stroke="'+K+'" stroke-width="1.5"/><path d="M-20 -52 L-36 -45" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/><ellipse cx="-37" cy="-44" rx="4.5" ry="3.2" fill="'+K+'"/><circle cx="-16" cy="-53" r="1.3" fill="'+K+'"/>',
+    pig:'<rect x="-30" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="-16" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="12" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="26" y="-24" width="9" height="24" rx="3" fill="#e993a6"/>'+
+      '<path d="M-44 -42 q-10 -2 -8 -10 q2 -6 8 -2" stroke="'+K+'" stroke-width="2" fill="none"/><ellipse cx="0" cy="-38" rx="46" ry="26" fill="#f4b6c2" stroke="'+K+'" stroke-width="2"/>'+
+      '<circle cx="40" cy="-46" r="19" fill="#f4b6c2" stroke="'+K+'" stroke-width="2"/><path d="M30 -62 l4 -12 l8 9z" fill="#e993a6" stroke="'+K+'" stroke-width="1.5"/><ellipse cx="57" cy="-42" rx="8" ry="7" fill="#e993a6" stroke="'+K+'" stroke-width="2"/><circle cx="55" cy="-42" r="1.5" fill="'+K+'"/><circle cx="60" cy="-42" r="1.5" fill="'+K+'"/><circle cx="44" cy="-52" r="2.4" fill="'+K+'"/>',
+    tractor:'<rect x="-40" y="-42" width="58" height="22" rx="4" fill="#c0503a"/><rect x="-36" y="-74" width="30" height="34" rx="3" fill="none" stroke="'+K+'" stroke-width="3"/><rect x="10" y="-32" width="32" height="15" rx="3" fill="#c0503a"/><rect x="24" y="-56" width="5" height="26" fill="#555"/>'+
+      '<circle cx="-24" cy="-19" r="19" fill="#333"/><circle cx="-24" cy="-19" r="7" fill="#bbb"/><circle cx="32" cy="-12" r="12" fill="#333"/><circle cx="32" cy="-12" r="4.5" fill="#bbb"/>',
+    plow:'<path d="M-44 -26 L-64 -8 L-58 4 L-52 -6 M-58 -18 L-76 -2 L-70 8" stroke="#666" stroke-width="3.5" fill="none" stroke-linecap="round"/>',
+    pole:'<rect x="-3" y="-124" width="6" height="124" fill="#7a5a3a"/><rect x="-24" y="-116" width="48" height="5" fill="#7a5a3a"/><circle cx="-18" cy="-118" r="3" fill="#ccc"/><circle cx="18" cy="-118" r="3" fill="#ccc"/><path d="M4 -86 l-8 14 h7 l-5 14 l12 -18 h-7 l5 -10z" fill="#f2c94c" stroke="'+K+'" stroke-width="1"/>',
+    pond:'<ellipse cx="0" cy="-8" rx="52" ry="13" fill="#6b4e34"/><ellipse cx="0" cy="-10" rx="45" ry="8" fill="#9b7650"/>',
+    factory:'<rect x="30" y="-122" width="16" height="70" fill="#6f777f"/><rect x="-56" y="-60" width="112" height="60" fill="#8a929a"/><path d="M-56 -60 l28 -18 v18 l28 -18 v18 l28 -18 v18" fill="#8a929a"/>'+
+      '<rect x="-44" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="-18" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="8" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="-10" y="-20" width="20" height="20" fill="#5b636b"/>',
+    coin:function(t){return '<circle cx="0" cy="-13" r="13" fill="#e2b84a" stroke="#a7822a" stroke-width="2"/><text x="0" y="-8.5" text-anchor="middle" style="font:700 13px var(--font-num);fill:#7a5a1a">'+(t||'$')+'</text>'},
+    jar:'<path d="M-30 0 h60 v-58 q0 -8 -8 -8 h-44 q-8 0 -8 8z" fill="var(--paper)" stroke="var(--muted)" stroke-width="2.5"/><rect x="-24" y="-74" width="48" height="8" rx="3" fill="var(--muted)"/>',
+    bento:'<rect x="-62" y="-50" width="124" height="50" rx="6" fill="#b5764a" stroke="'+K+'" stroke-width="2"/><rect x="-56" y="-44" width="62" height="38" rx="3" fill="#fbf8ef"/><rect x="10" y="-44" width="46" height="18" rx="3" fill="#7fbf6a"/><rect x="10" y="-24" width="46" height="18" rx="3" fill="#f2d16b"/>'+
+      '<ellipse cx="-24" cy="-30" rx="26" ry="11" fill="#a0612f" stroke="#7a4520" stroke-width="2"/><path d="M-40 -32 h30 M-38 -27 h26" stroke="#7a4520" stroke-width="1.5"/>',
+    train:'<rect x="-110" y="-62" width="220" height="50" rx="10" fill="#e1e5ea" stroke="'+K+'" stroke-width="2"/><rect x="-110" y="-30" width="220" height="8" fill="#d0602f"/>'+
+      '<rect x="-96" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="-52" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="-8" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="36" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="80" y="-54" width="22" height="18" rx="3" fill="#7ea6c9"/>'+
+      '<circle cx="-74" cy="-8" r="8" fill="#333"/><circle cx="-50" cy="-8" r="8" fill="#333"/><circle cx="50" cy="-8" r="8" fill="#333"/><circle cx="74" cy="-8" r="8" fill="#333"/>',
+    dome:'<path d="M-56 0 v-30 a56 44 0 0 1 112 0 v30z" fill="#a7adb3" stroke="'+K+'" stroke-width="2"/><path d="M-56 -30 h112" stroke="'+K+'" stroke-width="1.5" opacity=".5"/><rect x="-6" y="-84" width="12" height="12" fill="#6f777f"/>',
+    bee:'<g><ellipse cx="-2" cy="-10" rx="5" ry="4" fill="#fff" opacity=".85"/><ellipse cx="4" cy="-10" rx="5" ry="4" fill="#fff" opacity=".85"/><ellipse cx="0" cy="-3" rx="9" ry="6.5" fill="#f2c230" stroke="'+K+'" stroke-width="1.2"/><path d="M-2 -9 v12 M3 -8.5 v11" stroke="'+K+'" stroke-width="2"/><circle cx="8" cy="-4" r="1.3" fill="'+K+'"/></g>',
+    flower:function(c){return '<path d="M0 0 v-30" stroke="#5f9f4f" stroke-width="3"/><path d="M0 -14 q-10 -4 -12 -12 q8 0 12 8" fill="#5f9f4f"/><g fill="'+(c||'#e98fa3')+'"><circle cx="0" cy="-40" r="6"/><circle cx="-8" cy="-33" r="6"/><circle cx="8" cy="-33" r="6"/><circle cx="-5" cy="-25" r="6"/><circle cx="5" cy="-25" r="6"/></g><circle cx="0" cy="-32" r="4.5" fill="#f2c94c"/>'},
+    larva:'<ellipse cx="0" cy="-4" rx="11" ry="4.5" fill="#efe6c8" stroke="#8a7a50" stroke-width="1"/><path d="M-5 -8 v8 M0 -8.5 v9 M5 -8 v8" stroke="#8a7a50" stroke-width=".8"/>',
+    truck:'<rect x="-50" y="-48" width="64" height="36" rx="3" fill="#7fa7c9" stroke="'+K+'" stroke-width="2"/><path d="M14 -40 h20 l12 14 v14 h-32z" fill="#d0602f" stroke="'+K+'" stroke-width="2"/><rect x="20" y="-36" width="12" height="10" fill="#cfe3f2"/><circle cx="-30" cy="-10" r="9" fill="#333"/><circle cx="30" cy="-10" r="9" fill="#333"/>',
+    shop:'<rect x="-50" y="-70" width="100" height="70" fill="#e9e4d6" stroke="'+K+'" stroke-width="2"/><path d="M-56 -70 h112 l-8 -18 h-96z" fill="#d0602f" stroke="'+K+'" stroke-width="2"/><rect x="-36" y="-50" width="30" height="24" fill="#cfe3f2" stroke="'+K+'" stroke-width="1.5"/><rect x="10" y="-44" width="24" height="44" fill="#8a6a4a"/>',
+    log:'<rect x="-26" y="-14" width="52" height="14" rx="7" fill="#9b7650" stroke="#6b4e34" stroke-width="2"/><ellipse cx="26" cy="-7" rx="5" ry="7" fill="#d9b98a" stroke="#6b4e34" stroke-width="1.5"/>',
+    seagrass:'<path d="M-10 0 q-6 -20 2 -40 M-3 0 q4 -24 -2 -48 M4 0 q-4 -18 4 -38 M11 0 q6 -16 0 -32" stroke="#3f8f6a" stroke-width="3.5" fill="none" stroke-linecap="round"/>'
+  };
+  /* 牛、羊（左上原點畫，包一層移到底部中央） */
+  var COW='<path d="M14 30 q-14 12 -8 34" fill="none" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/>'+
+    [22,38,80,96].map(function(x,i){return '<g class="leg" data-b="'+(i==1||i==2?1:0)+'"><rect x="'+x+'" y="50" width="10" height="32" rx="3" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/><rect x="'+x+'" y="76" width="10" height="7" fill="'+K+'"/></g>'}).join('')+
+    '<rect x="12" y="20" width="100" height="42" rx="19" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/>'+
+    '<path d="M30 21 q10 12 26 6 q4 -4 2 -7z" fill="'+K+'"/><ellipse cx="82" cy="44" rx="12" ry="8" fill="'+K+'"/><ellipse cx="44" cy="50" rx="6" ry="4" fill="'+K+'"/>'+
+    '<path d="M108 10 q-6 -9 0 -12 M126 9 q6 -9 0 -12" fill="none" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/><ellipse cx="102" cy="16" rx="8" ry="4" fill="#fbfaf6" stroke="'+K+'" stroke-width="2" transform="rotate(-20 102 16)"/>'+
+    '<rect x="102" y="6" width="34" height="32" rx="13" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/><rect x="118" y="23" width="24" height="17" rx="8" fill="#f0b8ad" stroke="'+K+'" stroke-width="2"/>'+
+    '<circle cx="114" cy="17" r="2.6" fill="'+K+'"/><circle cx="129" cy="30" r="1.8" fill="'+K+'"/><circle cx="137" cy="30" r="1.8" fill="'+K+'"/>';
+  var SHEEP=[24,36,66,78].map(function(x,i){return '<g class="leg" data-b="'+(i==1||i==2?1:0)+'"><rect x="'+x+'" y="50" width="7" height="30" rx="2" fill="#3b3631"/></g>'}).join('')+
+    [[24,38,14],[40,27,14],[60,25,14],[78,32,14],[32,52,12],[52,54,12],[72,50,12],[84,44,10]].map(function(c){return '<circle cx="'+c[0]+'" cy="'+c[1]+'" r="'+c[2]+'" fill="#f4f1e8" stroke="'+K+'" stroke-width="2"/>'}).join('')+
+    '<rect x="22" y="28" width="62" height="28" rx="14" fill="#f4f1e8"/><ellipse cx="92" cy="22" rx="8" ry="4" fill="#3b3631" transform="rotate(-25 92 22)"/>'+
+    '<ellipse cx="100" cy="32" rx="12" ry="14" fill="#3b3631"/><circle cx="96" cy="20" r="7" fill="#f4f1e8" stroke="'+K+'" stroke-width="2"/><circle cx="104" cy="28" r="2.6" fill="#fff"/><circle cx="104.5" cy="28.5" r="1.3" fill="'+K+'"/>';
+  api.SH.cow='<g transform="translate(-70 -83)">'+COW+'</g>';
+  api.SH.sheep='<g transform="translate(-56 -80)">'+SHEEP+'</g>';
+  api.SH.cowPts={mouth:[72,-47],nose:[74,-53],rear:[-62,-45]};
+  api.SH.sheepPts={mouth:[54,-40],nose:[56,-44],rear:[-44,-38]};
+  /* 跑步：腳擺動，回傳停止函式 */
+  api.legs=function(g){var a=[];g.querySelectorAll('.leg').forEach(function(l){l.style.transformBox='fill-box';l.style.transformOrigin='50% 0';
+      var an=api.A(l,[{transform:'rotate(20deg)'},{transform:'rotate(-20deg)'}],260,{iter:Infinity,dir:'alternate',ease:'ease-in-out',delay:l.getAttribute('data-b')==='1'?0:0,fill:'none'});
+      if(an&&l.getAttribute('data-b')==='1')an.currentTime=260;if(an)a.push(an)});
+    return function(){a.forEach(function(x){x.cancel()})}};
+
+  /* ---------- 遊戲流程 ---------- */
+  var Q=C.questions,idx=0,score=0,phase='idle',S=C.scene(api);
+  function act(n){if(n&&S.acts&&S.acts[n])S.acts[n]()}
+  function btn(t,cls,fn){var b=D.createElement('button');b.type='button';b.textContent=t;if(cls)b.className=cls;b.addEventListener('click',fn);return b}
+  function show(){phase='q';var q=Q[idx];pEl.textContent='第 '+(idx+1)+' 題／共 '+Q.length+' 題';qEl.textContent=q.q;oEl.innerHTML='';fEl.innerHTML='';
+    q.opts.forEach(function(o,i){oEl.appendChild(btn(o,'',function(){answer(i)}))});stopAll();act(q.act)}
+  function answer(i){phase='a';var q=Q[idx],right=i===q.ans;
+    oEl.querySelectorAll('button').forEach(function(b,j){b.disabled=true;b.classList.add(j===q.ans?'ok':j===i?'bad':'dim')});
+    if(right)score++;
+    if(q.after){stopAll();act(q.after)}
+    var why=typeof q.why==='object'?(q.why[i]||q.why.d):q.why;
+    var box=h('div','res '+(right?'ok':'bad'),'<b>'+(right?'答對了！':'答錯了')+'</b><p></p>',fEl);box.querySelector('p').textContent=right?q.ok:why;
+    var last=idx===Q.length-1,nx=btn(last?'看結果':(right?'下一題 →':'懂了，下一題 →'),'gm-next',function(){if(last)end();else{idx++;show()}});
+    fEl.appendChild(nx);try{nx.focus({preventScroll:true})}catch(e){}}
+  function end(){phase='end';stopAll();act('end');pEl.textContent='完成';
+    qEl.innerHTML='答對 <span class="gm-score">'+score+'／'+Q.length+'</span> 題';oEl.innerHTML='';fEl.innerHTML='';
+    var box=h('div','res ok','<b>重點</b><p></p>',fEl);box.querySelector('p').textContent=C.summary;
+    fEl.appendChild(btn('再玩一次','gm-next',function(){start()}))}
+  function start(){stopAll();idx=0;score=0;phase='enter';oEl.innerHTML='';fEl.innerHTML='';pEl.textContent='　';qEl.textContent=C.intro||'準備開始…';
+    S.enter(function(){if(phase==='enter')show()})}
+  var lastF=null;
+  function open(){hideTip();lastF=D.activeElement;ov.hidden=false;D.documentElement.classList.add('gm-lock');dlg.querySelector('.gm-x').focus();
+    if(phase==='idle'||phase==='enter')start();else if(phase==='q'||phase==='a')act(Q[idx].act)}
+  function close(){stopAll();ov.hidden=true;D.documentElement.classList.remove('gm-lock');if(phase==='enter')phase='idle';try{(lastF||fab).focus()}catch(e){}}
+  fab.addEventListener('click',open);
+  dlg.querySelector('.gm-x').addEventListener('click',close);
+  ov.addEventListener('click',function(e){if(e.target===ov)close()});
+  D.addEventListener('keydown',function(e){if(ov.hidden)return;
+    if(e.key==='Escape'){close();return}
+    if(e.key==='Tab'){var f=[].slice.call(dlg.querySelectorAll('button:not(:disabled)'));if(!f.length)return;var a=f[0],z=f[f.length-1];
+      if(e.shiftKey&&D.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&D.activeElement===z){e.preventDefault();a.focus()}}});
+
+  /* ---------- 提示泡泡：往下讀一段或停留 15 秒後出現一次 ---------- */
+  var tipDone=false,tipT;
+  function hideTip(){tip.classList.remove('on');clearTimeout(tipT)}
+  function showTip(){if(tipDone||!ov.hidden)return;tipDone=true;tip.classList.add('on');fab.classList.add('wig');tipT=setTimeout(hideTip,12000)}
+  tip.addEventListener('click',function(e){if(e.target.classList.contains('gm-tipx')){hideTip();return}open()});
+  setTimeout(showTip,15000);
+  window.addEventListener('scroll',function(){var m=D.scrollingElement||D.documentElement,max=m.scrollHeight-window.innerHeight;if(max>0&&(window.scrollY||m.scrollTop)>max*.25)showTip()},{passive:true});
+  api.open=open;return api;
+};
+GMRUN({title:'自然的本金與利息',teaser:'自然資本跟生態系統服務，誰是本金、誰是利息？點我玩玩看',alt:'果樹、蜜蜂、卡車和商店',intro:'果園開張…',
+summary:'自然資本是本金，生態系統服務是利息，本金退化利息也會消失。授粉、水質淨化這類調節服務最容易被低估。小農也會透過供應鏈的採購標準受到 ESG 影響。只看碳不夠，水、土壤、生物多樣性和生計都要看。',
+scene:function(G){
+  var SH=G.SH,GY=210,svg=G.svg;
+  G.bg({ground:GY,sun:[840,40],grass:[30,260,470,620]});
+  var tree=G.put(null,110,GY,1.15,SH.broad('#4f8f5f'));G.text(110,GY+22,'自然資本','sub');
+  var fr=[[-30,-62],[22,-70],[-8,-92],[30,-48],[-22,-44]].map(function(p){return G.put(tree.outer,p[0],p[1],1,'<circle cx="0" cy="-6" r="6" fill="#d9534f"/>','50% 50%')});
+  var basket=G.put(null,220,GY,1,'<path d="M-28 -26 h56 l-8 26 h-40z" fill="#b5864a" stroke="#7a5a2a" stroke-width="2"/><path d="M-28 -26 q28 -26 56 0" stroke="#7a5a2a" stroke-width="2.5" fill="none"/>');G.text(220,GY+22,'服務','sub');
+  var fl=[310,350,390,430].map(function(x,i){return G.put(null,x,GY,1,SH.flower(['#e98fa3','#f2c94c','#c58fe0','#e98fa3'][i]))});
+  var bees=[0,1,2].map(function(i){return G.put(G.top(),330+i*40,GY-70-i*8,1,SH.bee,'50% 50%')});
+  var shop=G.put(null,780,GY,1,SH.shop);G.text(780,GY+22,'品牌商／通路','sub');
+  var truck=G.put(null,560,GY+2,.7,SH.truck);G.A(truck,[{opacity:0}],1);
+  function rnd(a){return a[Math.floor(Math.random()*a.length)]}
+  function buzz(){bees.forEach(function(b,i){var k=[];for(var j=0;j<5;j++)k.push({transform:'translate('+(Math.random()*100-50)+'px,'+(Math.random()*40-20)+'px)'});k.push({transform:'translate(0,0)'});
+    G.A(b,k,3200+i*300,{iter:Infinity,ease:'ease-in-out'})})}
+  return {
+    enter:function(done){G.A(truck,[{opacity:0}],1);G.A(tree,[{transform:'scale(0)'},{transform:'scale(1)'}],700,{ease:'cubic-bezier(.3,1.4,.5,1)'});
+      fr.forEach(function(f,i){G.A(f,[{transform:'scale(0)',opacity:1},{transform:'scale(1)',opacity:1}],400,{delay:500+i*100})});
+      fl.forEach(function(f,i){G.A(f,[{transform:'scaleY(0)'},{transform:'scaleY(1)'}],500,{delay:300+i*100})});
+      bees.forEach(function(b){G.A(b,[{opacity:0},{opacity:1}],400,{delay:800})});G.later(function(){buzz();done()},1100)},
+    acts:{
+      fruit:function(){G.loop(function(){var f=G.put(G.top(),110+(Math.random()*50-25),GY-80,1,'<circle cx="0" cy="-6" r="6" fill="#d9534f"/>','50% 50%');
+          G.A(f,[{transform:'translate(0,0)',opacity:1},{transform:'translate('+(220-f.x)/2+'px,-30px)',opacity:1,offset:.4},{transform:'translate('+(220-f.x)+'px,60px)',opacity:0}],1100,{ease:'ease-in',done:function(){f.outer.remove()}});
+          G.later(function(){G.pop(220,GY-50,'利息',{size:14,ms:900})},900)},1300);
+        G.later(function(){G.pop(110,GY-160,'本金',{size:16,ms:2000})},300)},
+      over:function(){G.A(tree,[{transform:'scale(1)'},{transform:'scale(.45)'}],1500,{ease:'ease-in'});fr.forEach(function(f){G.A(f,[{opacity:1},{opacity:0}],600)});
+        G.later(function(){G.pop(160,60,'本金挖光，利息也沒了',{size:16,ms:3000})},800)},
+      bees:function(){G.loop(function(){var f=rnd(fl);G.pulse(f);G.pop(f.x,GY-60,'授粉',{size:13,ms:900})},900)},
+      chain:function(){G.A(truck,[{transform:'translateX(-420px)',opacity:1},{transform:'translateX(120px)',opacity:1}],3600,{iter:Infinity,ease:'ease-in-out'});
+        G.loop(function(){G.pulse(shop);G.pop(780,GY-100,'採購標準',{size:15,ms:1600});G.later(function(){G.pop(170,GY-150,'要紀錄、要數據',{size:14,ms:1600})},1200)},3600)},
+      multi:function(){var t=['碳','水','土壤','生物多樣性','農民生計'],k=0;G.loop(function(){G.pop(250+(k%5)*110,70+(k%2)*28,t[k%5],{size:17,ms:2400});k++},600)},
+      end:function(){G.A(truck,[{opacity:0}],300);G.A(tree,[{transform:'scale(.45)'},{transform:'scale(1)'}],900);fr.forEach(function(f){G.A(f,[{opacity:0},{opacity:1}],600)})}
+    }}},
+questions:[
+  {act:'fruit',after:'over',q:'自然資本和生態系統服務是什麼關係？',opts:['自然資本是本金，服務是利息','自然資本是利息，服務是本金','兩個是同一件事'],ans:0,
+   ok:'存量（本金）產生流量（利息）；本金退化，利息就跟著下降。',
+   why:'自然資本是存量（本金），生態系統服務是它產生的流量（利息）。存量退化，流量也跟著下降；過度提取本金，利息會消失。'},
+  {act:'bees',q:'TNFD 的三類生態系統服務中，哪一類最容易被低估？',opts:['供給服務（糧食、木材）','調節與維護服務（授粉、水質淨化）','文化服務（觀光、休閒）'],ans:1,
+   ok:'調節與維護服務沒有市場價格，一旦喪失，替代成本極高。',
+   why:'調節與維護服務（授粉、水質淨化、生物防治、氣候調節）。它們沒有市場價格，但一旦喪失，替代成本極高甚至無法替代。'},
+  {act:'chain',q:'小農不適用 ESG 揭露規範，為什麼還是會受影響？',opts:['品牌商、食品企業的採購標準會一層層傳到農場','政府會直接罰小農','其實不會受影響'],ans:0,
+   ok:'上市公司的 ESG 要求透過供應鏈傳到農場，紀錄和數據變成供貨資格。',
+   why:'上市公司的 ESG 要求透過品牌商採購標準、食品企業規格層層傳到農場，農民的生產方式、數據與紀錄成為供應鏈資格審核的條件。'},
+  {act:'multi',q:'為什麼只看碳（Carbon-only）不夠？',opts:['碳一樣的方案，水、土壤、生物多樣性、生計可能差很多','因為碳不重要','因為碳太難算'],ans:0,
+   ok:'同樣的碳績效，不代表同樣的永續績效。',
+   why:'兩個方案碳封存相當，但水、土壤、生物多樣性與農民生計的表現可能完全不同。同樣的碳績效不代表同樣的永續績效。'}
+]});
+</script><!--/gm-js-->
+
+</body>
+</html>

@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>海洋碳匯策略概論</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: 單欄閱讀講義，桌機左側固定目錄；筆記、ISO 連結、重點用不同框區分 */
+:root{
+  --bg:#f4f6f1; --paper:#ffffff; --fg:#1c231f; --muted:#5b6660; --line:#d9ded6;
+  --accent:#2f6a4c; --accent-soft:#e3eee6;
+  --ink:#2a4a9a; --ink-soft:#e8edf8;
+  --hl:#f3e27a; --soil:#9a6a22; --soil-soft:#f5ecdc;
+  --font-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --font-head:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --font-num:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141a17; --paper:#1b2320; --fg:#e4ebe6; --muted:#9aa8a0; --line:#2e3a35;
+  --accent:#7cc39b; --accent-soft:#1f3329; --ink:#9db4f0; --ink-soft:#1f2740;
+  --hl:#6b5d14; --soil:#d9a85a; --soil-soft:#30281a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141a17; --paper:#1b2320; --fg:#e4ebe6; --muted:#9aa8a0; --line:#2e3a35;
+  --accent:#7cc39b; --accent-soft:#1f3329; --ink:#9db4f0; --ink-soft:#1f2740;
+  --hl:#6b5d14; --soil:#d9a85a; --soil-soft:#30281a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.8;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1480px;margin:0 auto;display:grid;grid-template-columns:190px minmax(0,1fr);gap:36px;padding-block:32px 80px}
+@media (max-width:860px){.wrap{grid-template-columns:minmax(0,1fr)} nav.toc{position:static!important;max-height:none!important}}
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);align-self:start;max-height:calc(100vh - 32px);overflow:auto;font-size:14px}
+nav.toc h2{font-size:13px;letter-spacing:.12em;color:var(--muted);margin:0 0 8px;font-family:var(--font-body)}
+nav.toc ol{margin:0;padding-left:32px;display:grid;gap:4px}
+nav.toc a{color:var(--fg);text-decoration:none}
+nav.toc a:hover,nav.toc a:focus-visible{color:var(--accent);text-decoration:underline}
+main{min-width:0}
+.toc-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px}
+.toc-head h2{margin:0!important}
+.toc-btn{font:inherit;font-size:13px;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:6px;padding:2px 8px;cursor:pointer;line-height:1.6}
+.toc-btn:hover,.toc-btn:focus-visible{color:var(--accent);border-color:var(--accent)}
+.toc-open{display:none;white-space:nowrap}
+body.toc-off .wrap{grid-template-columns:76px minmax(0,1fr)}
+body.toc-off nav.toc>*:not(.toc-open){display:none}
+body.toc-off .toc-open{display:inline-block}
+@media (max-width:860px){body.toc-off .wrap{grid-template-columns:minmax(0,1fr)}}
+header.hero{border-bottom:3px solid var(--accent);padding-bottom:20px;margin-bottom:28px}
+.eyebrow{font-size:13px;letter-spacing:.14em;color:var(--accent);font-weight:700}
+h1{font-family:var(--font-head);font-weight:900;font-size:clamp(28px,5vw,42px);line-height:1.3;margin:6px 0 10px;text-wrap:balance}
+.meta{color:var(--muted);font-size:14px}
+h2{font-family:var(--font-head);font-size:26px;line-height:1.35;margin:56px 0 14px;text-wrap:balance;scroll-margin-top:16px}
+h2 .no{font-family:var(--font-num);color:var(--accent);font-size:18px;margin-right:10px}
+h3{font-size:19px;margin:30px 0 8px;color:var(--accent)}
+p{margin:10px 0}
+ul,ol{padding-left:22px;margin:8px 0}
+li{margin:3px 0}
+mark{background:linear-gradient(transparent 55%,var(--hl) 55%);color:inherit;padding:0 1px}
+.num{font-family:var(--font-num);font-variant-numeric:tabular-nums}
+.box{border-radius:10px;padding:14px 18px;margin:16px 0}
+.box>.tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.08em;padding:1px 8px;border-radius:999px;margin-bottom:4px}
+.box p,.box ul{margin:6px 0}
+.guide{background:var(--paper);border:1px solid var(--line)}
+.guide .tag{background:var(--accent);color:var(--paper)}
+.note{background:var(--ink-soft);border-left:4px solid var(--ink)}
+.note .tag{background:var(--ink);color:var(--paper)}
+.note .hand{color:var(--ink);font-weight:500}
+.iso{background:var(--soil-soft);border-left:4px solid var(--soil)}
+.iso .tag{background:var(--soil);color:var(--paper)}
+.key{background:var(--accent-soft);border-left:4px solid var(--accent)}
+.key .tag{background:var(--accent);color:var(--paper)}
+.unclear{color:var(--muted);font-size:13px;border-bottom:1px dotted var(--muted)}
+.tbl{overflow-x:auto;width:fit-content;max-width:100%;margin:14px 0;border:1px solid var(--line);border-radius:8px;background:var(--paper)}
+table{border-collapse:collapse;width:auto;font-size:15px;min-width:480px}
+th,td{padding:8px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--accent-soft);font-weight:700;white-space:nowrap}
+td.r,th.r{text-align:right}
+td:first-child,th:first-child{white-space:nowrap}
+tr:last-child td{border-bottom:none}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:16px 0}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.stat b{display:block;font-family:var(--font-num);font-size:22px;color:var(--accent);line-height:1.3}
+.stat span{font-size:13px;color:var(--muted)}
+.axes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:16px 0}
+.axis{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:8px;padding:12px 14px}
+.axis h4{margin:0 0 4px;font-size:17px}
+.axis .goal{font-family:var(--font-num);color:var(--accent);font-weight:700}
+.fig{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0;width:fit-content;max-width:100%}
+.fig svg{display:block;max-width:100%;height:auto}
+.fig figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.fig .t{fill:var(--fg);font-size:14px;font-family:var(--font-body)}
+.fig .tb{fill:var(--fg);font-size:14px;font-weight:700;font-family:var(--font-body)}
+.fig .m{fill:var(--muted);font-size:12.5px;font-family:var(--font-body)}
+.fig .n{fill:var(--fg);font-size:13px;font-family:var(--font-num)}
+.fig .ax{stroke:var(--line);stroke-width:1}
+.fig .g-acc{fill:var(--accent)} .fig .s-acc{stroke:var(--accent)}
+.fig .g-soil{fill:var(--soil)} .fig .s-soil{stroke:var(--soil)}
+.fig .g-ink{fill:var(--ink)} .fig .s-ink{stroke:var(--ink)}
+.fig .g-mut{fill:var(--muted)} .fig .s-mut{stroke:var(--muted)}
+.fig .g-accs{fill:var(--accent-soft)} .fig .g-soils{fill:var(--soil-soft)} .fig .g-inks{fill:var(--ink-soft)}
+.fig .hit:hover{opacity:.8}
+.calc{width:fit-content;max-width:100%}
+.loop{position:relative;margin-top:22px!important;margin-bottom:48px!important;padding-left:26px}
+.loop-svg{position:absolute;left:0;top:0;overflow:visible;pointer-events:none;color:var(--accent)}
+.loop-svg text{fill:var(--accent);font-size:13px;font-family:var(--font-body)}
+.flow span.ok{background:var(--accent-soft);border-color:var(--accent);font-weight:700}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0;font-size:14px}
+.flow span{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:4px 10px}
+.flow i{font-style:normal;color:var(--muted)}
+details.q{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0}
+details.q summary{cursor:pointer;font-weight:500}
+details.q summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+details.q[open] summary{color:var(--accent)}
+details.q .a{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+dl.gloss{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 18px;margin:12px 0}
+dl.gloss dt{font-weight:700;color:var(--accent)}
+dl.gloss dd{margin:0}
+@media (max-width:560px){dl.gloss{grid-template-columns:minmax(0,1fr)} dl.gloss dd{margin-bottom:8px}}
+footer{margin-top:60px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+a.xref{display:block;width:fit-content;margin-top:6px}
+.steps{width:fit-content;max-width:100%}
+.box{width:fit-content;max-width:100%}
+.flow span{display:inline-flex;align-items:center;gap:8px}
+.flow span .fi{width:22px;height:22px;flex:none;fill:none;stroke:var(--accent);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.flow span .tx{font-style:normal}
+</style>
+<style>
+.formula{font-family:var(--font-num);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px;overflow-x:auto;white-space:nowrap;font-size:15px;margin:8px 0}
+.calc{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:16px 0;display:grid;gap:12px}
+.calc .row{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:end}
+.calc label{display:grid;gap:4px;font-size:14px;color:var(--muted)}
+.calc input{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 10px;width:160px;max-width:100%}
+.calc input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.calc .out{font-family:var(--font-num);font-size:15px;line-height:1.9;border-top:1px dashed var(--line);padding-top:10px}
+.calc .out b{color:var(--accent);font-size:20px}
+.steps{counter-reset:s;list-style:none;padding:0;display:grid;gap:8px;margin:12px 0}
+.steps li{counter-increment:s;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px 12px 8px 44px;position:relative}
+.steps li::before{content:counter(s);position:absolute;left:12px;top:8px;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--paper);font-family:var(--font-num);font-size:13px;display:grid;place-items:center}
+</style>
+<!--gm-css--><style>
+/* 跳出式小遊戲 */
+.gm-fab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));z-index:60;display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:15px;font-weight:700;color:var(--paper);background:var(--accent);border:0;border-radius:999px;padding:10px 18px 10px 14px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.22)}
+.gm-fab svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.gm-fab:hover,.gm-fab:focus-visible{filter:brightness(1.08);outline:2px solid var(--fg);outline-offset:2px}
+.gm-fab.wig{animation:gmWig .9s ease-in-out 2}
+@keyframes gmWig{0%,100%{transform:rotate(0)}20%{transform:rotate(-8deg) scale(1.06)}40%{transform:rotate(7deg) scale(1.06)}60%{transform:rotate(-4deg)}80%{transform:rotate(3deg)}}
+.gm-tip{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(max(16px,env(safe-area-inset-bottom,0px)) + 58px);z-index:60;max-width:min(300px,calc(100vw - 32px));background:var(--paper);color:var(--fg);border:2px solid var(--accent);border-radius:14px;padding:10px 34px 10px 14px;font-size:15px;line-height:1.55;box-shadow:0 6px 20px rgba(0,0,0,.2);cursor:pointer;opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .3s,transform .3s}
+.gm-tip.on{opacity:1;transform:none;pointer-events:auto}
+.gm-tip::after{content:"";position:absolute;right:34px;bottom:-9px;width:14px;height:14px;background:var(--paper);border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(45deg)}
+.gm-tip b{display:block;font-size:12px;letter-spacing:.1em;color:var(--accent)}
+.gm-tipx{position:absolute;top:4px;right:6px;font:inherit;font-size:18px;line-height:1;color:var(--muted);background:none;border:0;cursor:pointer;padding:4px}
+html.gm-lock,html.gm-lock body{overflow:hidden}
+.gm-ov{position:fixed;inset:0;z-index:70;background:rgba(10,16,13,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.gm-ov[hidden]{display:none}
+.gm-dlg{background:var(--paper);color:var(--fg);border-radius:14px;width:100%;max-width:780px;max-height:calc(100vh - 32px);overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.gm-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px 10px 18px;border-bottom:1px solid var(--line)}
+.gm-hd b{font-family:var(--font-head);font-size:18px}
+.gm-x{font:inherit;font-size:22px;line-height:1;color:var(--muted);background:none;border:1px solid var(--line);border-radius:8px;width:36px;height:36px;cursor:pointer}
+.gm-x:hover,.gm-x:focus-visible{color:var(--accent);border-color:var(--accent)}
+.gm-stage{display:block;width:100%;height:auto;background:linear-gradient(var(--bg),var(--paper))}
+.gm-stage text{font-family:var(--font-body)}
+.gm-stage .lbl{fill:var(--fg);font-size:14px;font-weight:700;text-anchor:middle}
+.gm-stage .sub{fill:var(--muted);font-size:12px;text-anchor:middle}
+.gm-stage .pop{fill:var(--fg);font:900 19px var(--font-head);text-anchor:middle}
+.gm-stage .gas text{fill:var(--fg);font:700 13px var(--font-num);text-anchor:middle;dominant-baseline:middle}
+.gm-card{padding:14px 20px 20px}
+.gm-prog{font-size:13px;color:var(--muted);letter-spacing:.06em;min-height:1.4em}
+.gm-q{font-family:var(--font-head);font-size:21px;font-weight:700;margin:4px 0 12px;line-height:1.45}
+.gm-opts{display:flex;flex-wrap:wrap;gap:10px}
+.gm-opts button,.gm-next{font:inherit;font-size:16px;font-weight:700;color:var(--fg);background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:8px 18px;cursor:pointer;min-width:90px;text-align:left;line-height:1.5}
+.gm-opts button:hover:not(:disabled),.gm-opts button:focus-visible{border-color:var(--accent);color:var(--accent)}
+.gm-opts button:disabled{cursor:default}
+.gm-opts button.ok{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.gm-opts button.bad{background:var(--soil);border-color:var(--soil);color:var(--paper)}
+.gm-opts button.dim{opacity:.45}
+.gm-fb{margin-top:12px}
+.gm-fb .res{border-radius:10px;padding:12px 16px;margin:0 0 10px}
+.gm-fb .res.ok{background:var(--accent-soft);border-left:4px solid var(--accent)}
+.gm-fb .res.bad{background:var(--soil-soft);border-left:4px solid var(--soil)}
+.gm-fb .res b{display:block;font-size:17px;margin-bottom:2px}
+.gm-fb .res.ok b{color:var(--accent)}
+.gm-fb .res.bad b{color:var(--soil)}
+.gm-fb .res p{margin:4px 0}
+.gm-next{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.gm-next:hover,.gm-next:focus-visible{filter:brightness(1.08)}
+.gm-score{font-family:var(--font-num);font-size:28px;color:var(--accent);font-weight:700}
+@media (max-width:560px){.gm-q{font-size:18px}.gm-card{padding:12px 14px 16px}.gm-opts button{flex:1 1 100%}.gm-ov{padding:8px}.gm-dlg{max-height:calc(100vh - 16px)}}
+@media (prefers-reduced-motion:reduce){.gm-fab.wig{animation:none}.gm-tip{transition:none}}
+</style><!--/gm-css-->
+
+<style>
+.site-nav{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px;max-width:1480px;margin:0 auto;padding-top:20px}
+.site-nav+.wrap{padding-top:16px}
+.site-nav a{color:var(--muted);text-decoration:none}
+.site-nav a:hover,.site-nav a:focus-visible{color:var(--accent);text-decoration:underline}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:56px 0 0;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{display:block;padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--fg);text-decoration:none;font-size:15px}
+.pager a:hover,.pager a:focus-visible{border-color:var(--accent)}
+.pager small{display:block;color:var(--muted);font-size:12px}
+.pager .next{text-align:right;grid-column:2}
+@media (max-width:560px){.pager{grid-template-columns:1fr}.pager .next{grid-column:1}}
+</style>
+</head>
+<body>
+<nav class="site-nav" aria-label="網站導覽"><a href="index.html">← 回課程目錄</a><a href="../index.html">學習筆記首頁</a></nav>
+<div class="wrap">
+<nav class="toc" aria-label="目錄">
+  <button type="button" class="toc-btn toc-open" id="tocShow" aria-label="展開目錄">目錄 »</button>
+  <div class="toc-head"><h2>目錄</h2><button type="button" class="toc-btn" id="tocHide" aria-label="收起目錄">« 收起</button></div>
+  <p style="margin:0 0 6px"><a href="#guide">導讀</a></p>
+  <ol>
+    <li><a href="#blue">海洋碳匯與藍碳</a></li>
+    <li><a href="#quant">碳匯怎麼量化</a></li>
+    <li><a href="#inv-vs-proj">清冊、盤查與碳權</a></li>
+    <li><a href="#principles">碳匯專案六大原則</a></li>
+    <li><a href="#ipcc">IPCC 清冊與沿岸濕地</a></li>
+    <li><a href="#intl">認證原則與國際方法學</a></li>
+    <li><a href="#tw">臺灣法規與藍碳方法學</a></li>
+    <li><a href="#mangrove">實務：紅樹林植林</a></li>
+    <li><a href="#feasible">專案值不值得做</a></li>
+    <li><a href="#process">認證流程與 MRV</a></li>
+    <li><a href="#cases">三個案例比較</a></li>
+    <li><a href="#future">臺灣限制與新興技術</a></li>
+    <li><a href="#core">五個核心觀念</a></li>
+    <li><a href="#quiz">自我測驗</a></li>
+    <li><a href="#gloss">名詞表</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="hero">
+  <h1>海洋碳匯策略概論</h1>
+</header>
+
+<section id="guide">
+  <div class="box guide">
+    <span class="tag">導讀</span>
+    <p>這份講義的主軸只有一句話：<mark>碳匯不等於碳權</mark>。紅樹林、海草床確實會吸碳，但要變成可以賣的碳權，必須有適用的方法學，證明「因為這個專案才多出來」的移除量，並通過監測、報告、查證。</p>
+    <p>三個閱讀重點：</p>
+    <ul>
+      <li>碳盤查、國家清冊、碳權專案三件事的差別，見 <a href="#inv-vs-proj">第 3 節</a>。</li>
+      <li>專案型核算的六大原則（基線、外加性、永久性、洩漏、重複計算、保守性），這是 ISO 14064-2 的核心，見 <a href="#principles">第 4 節</a>。</li>
+      <li>臺灣 2025 年通過的兩項藍碳方法學（海草復育 AL-TMS0002、紅樹林植林 AL-TMS0003）怎麼實際操作，見 <a href="#tw">第 7、8 節</a>。</li>
+    </ul>
+    <p style="font-size:14px;color:var(--muted)">框的顏色：<span style="color:var(--ink)">藍色＝上課手寫筆記</span>、<span style="color:var(--soil)">棕色＝跟 ISO 14064-1 / 14067 的連結</span>、綠色＝重點。</p>
+  </div>
+</section>
+
+<section id="blue">
+<h2><span class="no">01</span>海洋碳匯與藍碳</h2>
+<h3>淨零與自然碳匯</h3>
+<p>減緩氣候變遷有兩個方向：減少人為排放、增加移除。IPCC AR6 定義<b>淨零二氧化碳排放</b>：特定期間內，人為 CO₂ 排放量與人為 CO₂ 移除量達到平衡。</p>
+<p><b>自然碳匯</b>（森林、土壤、海洋）是碳循環中的吸收機制；<b>人為碳移除（CDR）</b>則是透過人為活動移除大氣 CO₂ 並持續儲存。兩者不同：<mark>既有生態系自然吸收的 CO₂，不能直接全部視為人為移除量</mark>。一片原本就存在的紅樹林持續吸碳，但要把某項復育或管理認列為專案移除量，還得確認它相對基線多產生了多少。</p>
+
+<h3>三個容易混的名詞</h3>
+<div class="tbl"><table>
+<tr><th>名詞</th><th>範圍與重點</th></tr>
+<tr><td>海洋碳匯（Ocean Carbon Sink）</td><td>海洋對大氣 CO₂ 的淨吸收，包括海氣交換、生物及其他碳循環</td></tr>
+<tr><td>藍碳（Blue Carbon）</td><td>海洋及海岸生態系吸收、儲存的碳；定義隨研究與政策脈絡而不同</td></tr>
+<tr><td>沿岸藍碳（Coastal Blue Carbon）</td><td>聚焦紅樹林、潮汐鹽沼、海草床，尤其是植被與沉積物中的碳</td></tr>
+</table></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">沿岸藍碳（紅樹林、鹽沼、海草床）→ 有方法學。</p></div>
+<p>科學上「有沒有吸碳」，和制度上「有沒有足夠的量化、監測與認證方法」，是兩個不同的問題。</p>
+
+<h3>三種沿岸藍碳生態系</h3>
+<div class="tbl"><table>
+<tr><th>生態系</th><th>特徵</th><th>主要碳庫</th></tr>
+<tr><td>紅樹林</td><td>熱帶亞熱帶潮間帶，耐鹽、耐淹水的木本植物；碳儲存潛力高，但受土地利用、潮汐、水文影響</td><td>地上部木質生物量、根系、沉積物有機碳</td></tr>
+<tr><td>海草床</td><td>適應海洋的開花植物，分布在光照充足的淺海；能減緩水流、促進懸浮顆粒沉降</td><td>葉片、地下莖、根系、沉積物</td></tr>
+<tr><td>潮汐鹽沼</td><td>受潮汐影響的濕地，以耐鹽草本植物為主</td><td>植物生產與沉積物有機碳累積</td></tr>
+</table></div>
+<p>共同特徵：初級生產力高，而且部分有機碳能在潮濕、低氧的沉積物中保存數百到數千年。所以沿岸藍碳評估<b>特別重視沉積物碳庫</b>。但三者植物類型、碳庫分布差很多，不能套用同一套係數或監測方法。</p>
+
+<h3>碳固定、碳儲存、淨氣候效益</h3>
+<div class="tbl"><table>
+<tr><th>層次</th><th>意思</th></tr>
+<tr><td>碳固定（Carbon Fixation）</td><td>生物吸收無機碳、形成有機物的過程</td></tr>
+<tr><td>碳儲存（Carbon Storage）</td><td>碳存在植物、沉積物或其他碳庫中的狀態</td></tr>
+<tr><td>淨氣候效益（Net Climate Benefit）</td><td>考慮碳儲存變化與相關排放（CH₄、N₂O）後，對減緩的整體影響</td></tr>
+</table></div>
+<p><mark>高初級生產力、高碳儲量、高淨碳移除效益，三者不能畫上等號。</mark>植物固定的碳不一定長期留存；沉積物中的碳可能是別處沖來的；濕地還會排 CH₄、N₂O；碳庫受擾動也會釋放。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">植物長得快於它死亡的速度才有碳匯。<br>儲存 ＝ 增加 − 離開：Mass(storage) ＝ Mass(in) − Mass(out)<br>Plant C ＋ Soil C ＝ CO₂-C(in) − CO₂-C(out) − CH₄-C ＞ 0<br>兩種量測方法：差分法（量碳庫前後差）、通量法（量進出氣體）。</p></div>
+<figure class="fig" style="width:100%">
+<svg viewBox="0 0 720 300" role="img" aria-label="碳收支示意：CO₂ 進入植物與土壤，呼吸分解與甲烷離開，留下的才是儲存">
+<defs><marker id="ah1a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--accent)"/></marker><marker id="ah1s" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--soil)"/></marker></defs>
+<rect x="0" y="0" width="720" height="70" rx="8" class="g-inks"/>
+<text x="16" y="28" class="tb">大氣</text>
+<text x="16" y="50" class="m">CO₂、CH₄</text>
+<rect x="90" y="160" width="540" height="110" rx="10" class="g-accs" stroke="var(--accent)"/>
+<text x="360" y="202" text-anchor="middle" class="tb">植物碳 ＋ 土壤碳（儲存）</text>
+<text x="360" y="240" text-anchor="middle" class="n">儲存變化 ＝ CO₂-C(in) − CO₂-C(out) − CH₄-C <tspan class="tb">＞ 0 才是碳匯</tspan></text>
+
+<line x1="210" y1="78" x2="210" y2="152" class="s-acc" stroke-width="3" marker-end="url(#ah1a)"/>
+<text x="222" y="108" class="t">CO₂-C(in)</text><text x="222" y="128" class="m">光合作用吸收</text>
+<line x1="400" y1="152" x2="400" y2="78" class="s-soil" stroke-width="3" marker-end="url(#ah1s)"/>
+<text x="412" y="108" class="t">CO₂-C(out)</text><text x="412" y="128" class="m">呼吸、分解</text>
+<line x1="540" y1="152" x2="540" y2="78" class="s-soil" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#ah1s)"/>
+<text x="552" y="108" class="t">CH₄-C</text><text x="552" y="128" class="m">濕地厭氧產生</text>
+</svg>
+<figcaption>儲存 ＝ 增加 − 離開。植物長得比死亡、分解快，碳才會留下來。</figcaption>
+</figure>
+</section>
+
+<section id="quant">
+<h2><span class="no">02</span>碳匯怎麼量化</h2>
+<p>量化不只是「這裡存了多少碳」，還要分清<b>存量、變化量、變化速率</b>，以及相關排放與移除。結果會受空間範圍、時間尺度、納入的碳庫和估算方法影響。</p>
+<h3>碳庫</h3>
+<div class="tbl"><table>
+<tr><th>碳庫</th><th>內容</th><th>藍碳例子</th></tr>
+<tr><td>地上部生物量</td><td>地表以上活體組織</td><td>紅樹林樹幹、枝葉；海草葉片</td></tr>
+<tr><td>地下部生物量</td><td>根系與地下活體組織</td><td>紅樹林根系；海草地下莖與根</td></tr>
+<tr><td>枯死有機物</td><td>枯木、枯落物</td><td>紅樹林枯枝、落葉</td></tr>
+<tr><td>土壤與沉積物碳</td><td>有機碳（必要時區分無機碳）</td><td>潮間帶沉積物、海草床沉積物</td></tr>
+</table></div>
+<figure class="fig" style="width:100%">
+<svg viewBox="0 0 760 360" role="img" aria-label="紅樹林剖面與四個碳庫：地上部生物量、地下部生物量、枯死有機物、土壤與沉積物碳">
+<rect x="0" y="196" width="760" height="164" class="g-soils"/>
+<path d="M0,182 Q40,174 80,182 T160,182 T240,182 T320,182 T400,182 T480,182 T560,182 T640,182 T720,182 T800,182 V196 H0Z" class="g-inks"/>
+<line x1="0" y1="196" x2="760" y2="196" class="s-soil" stroke-width="2"/>
+<text x="740" y="176" text-anchor="end" class="m">潮水</text>
+<!-- tree -->
+<g>
+<rect x="232" y="92" width="14" height="104" rx="3" class="g-soil"/>
+<circle cx="200" cy="80" r="40" class="g-acc" opacity=".85"/>
+<circle cx="250" cy="58" r="46" class="g-acc" opacity=".9"/>
+<circle cx="296" cy="84" r="38" class="g-acc" opacity=".85"/>
+<path d="M238,150 Q205,160 196,196 M240,160 Q220,175 216,196 M242,150 Q275,160 284,196 M242,160 Q262,175 266,196" fill="none" class="s-soil" stroke-width="3"/>
+<path d="M200,196 Q190,226 170,246 M216,196 Q214,236 206,262 M266,196 Q270,236 282,262 M284,196 Q296,226 318,244 M240,196 V270" fill="none" class="s-soil" stroke-width="2.5" opacity=".75"/>
+</g>
+<!-- litter -->
+<ellipse cx="350" cy="192" rx="9" ry="3.5" class="g-acc" opacity=".6"/>
+<ellipse cx="372" cy="194" rx="8" ry="3" class="g-soil" opacity=".8"/>
+<rect x="386" y="188" width="46" height="6" rx="3" class="g-soil" transform="rotate(-6 409 191)"/>
+<!-- sediment dots -->
+<g class="g-soil" opacity=".35">
+<circle cx="80" cy="300" r="3"/><circle cx="130" cy="330" r="2.5"/><circle cx="360" cy="310" r="3"/><circle cx="420" cy="340" r="2.5"/><circle cx="500" cy="300" r="3"/><circle cx="560" cy="335" r="2.5"/><circle cx="620" cy="310" r="3"/><circle cx="60" cy="345" r="2.5"/>
+</g>
+<!-- labels -->
+<g font-family="var(--font-body)">
+<line x1="300" y1="50" x2="470" y2="50" class="s-mut" stroke-dasharray="3 3"/>
+<text x="478" y="46" class="tb">① 地上部生物量</text><text x="478" y="66" class="m">樹幹、枝葉；海草葉片</text>
+<line x1="290" y1="250" x2="470" y2="236" class="s-mut" stroke-dasharray="3 3"/>
+<text x="478" y="232" class="tb">② 地下部生物量</text><text x="478" y="252" class="m">根系；海草地下莖</text>
+<line x1="432" y1="186" x2="478" y2="132" class="s-mut" stroke-dasharray="3 3"/>
+<text x="484" y="122" class="tb">③ 枯死有機物</text><text x="484" y="142" class="m">枯枝、落葉、枯木</text>
+<text x="478" y="300" class="tb">④ 土壤與沉積物碳</text><text x="478" y="320" class="m">潮濕低氧，可保存數百到數千年</text>
+<text x="478" y="340" class="m">藍碳評估最重視這一層</text>
+</g>
+</svg>
+<figcaption>紅樹林剖面示意：四個碳庫的位置。量化時要說清楚納入哪幾個碳庫。</figcaption>
+</figure>
+<p>IPCC 2006 AFOLU 把碳庫分成地上部、地下部、枯木、枯落物、土壤有機質；沿岸濕地再依 <b>2013 Wetlands Supplement</b> 處理。碳儲量高不代表現在還在增加；剛復育的海草床碳儲量低，但可能正快速累積。</p>
+
+<h3>單位</h3>
+<div class="tbl"><table>
+<tr><th>指標</th><th>單位</th><th>意義</th></tr>
+<tr><td>總碳儲量</td><td class="num">t C</td><td>整個場域儲存的碳</td></tr>
+<tr><td>單位面積碳儲量</td><td class="num">t C/ha</td><td>每公頃儲存的碳</td></tr>
+<tr><td>年度碳儲量變化</td><td class="num">t C/yr</td><td>整個場域每年變化</td></tr>
+<tr><td>單位面積年變化率</td><td class="num">t C/ha/yr</td><td>每公頃每年變化</td></tr>
+<tr><td>溫室氣體收支</td><td class="num">t CO₂e/yr</td><td>以二氧化碳當量表示的年度排放或移除</td></tr>
+</table></div>
+<div class="formula">1 t C ＝ 44/12 t CO₂ ≈ 3.667 t CO₂　　（C 原子量 12，CO₂ 分子量 44）</div>
+<p><b>碳埋藏速率</b>（有機碳進入沉積物的累積速率）和整個生態系的碳儲量變化率不一定相同，因為還有生物量變化、侵蝕、側向輸送。沉積物有機碳可能來自其他水域，不能不經核算就全部當成大氣 CO₂ 淨移除。</p>
+
+<h3>量測方法</h3>
+<div class="tbl"><table>
+<tr><th>對象</th><th>方法</th><th>目的</th></tr>
+<tr><td>生態系面積</td><td>衛星、航空影像、GIS、現地調查</td><td>分布與面積變化</td></tr>
+<tr><td>地上部生物量</td><td>植被樣區、胸徑與樹高、生物量推估式</td><td>植物碳儲量</td></tr>
+<tr><td>地下部生物量</td><td>根系採樣、根冠比、推估式</td><td>地下植物碳庫</td></tr>
+<tr><td>沉積物有機碳</td><td>柱狀採樣、容積密度與碳含量分析</td><td>沉積物碳儲量</td></tr>
+<tr><td>沉積物碳累積</td><td>沉積速率與年代測定、重複量測</td><td>累積速率</td></tr>
+<tr><td>溫室氣體通量</td><td>靜態箱、氣體分析儀</td><td>CO₂、CH₄、N₂O 排放或吸收</td></tr>
+</table></div>
+<ul>
+  <li>量一個時間點的碳儲量容易；要估「變化」需要兩個時間點、同樣碳庫、同樣採樣深度。固定深度採樣與等效土壤質量（Equivalent Soil Mass）各有適用情況。</li>
+  <li>1 m² 樣區可以換算 t C/ha，但推估整片紅樹林要確認樣區代表性（樹齡、潮位、沉積物、管理歷史）。</li>
+  <li>不同時間尺度不要混為一談：岩心推估的數十年平均累積速率，不能代替專案監測期間的實際減量。</li>
+</ul>
+
+<h3>整合案例：10 公頃紅樹林</h3>
+<div class="tbl"><table>
+<tr><th>碳庫</th><th class="r">第 1 年</th><th class="r">第 6 年</th></tr>
+<tr><td>地上部生物量碳</td><td class="r num">50 t C/ha</td><td class="r num">60 t C/ha</td></tr>
+<tr><td>地下部生物量碳</td><td class="r num">20 t C/ha</td><td class="r num">24 t C/ha</td></tr>
+<tr><td>沉積物有機碳</td><td class="r num">180 t C/ha</td><td class="r num">186 t C/ha</td></tr>
+<tr><td><b>合計</b></td><td class="r num">250 t C/ha</td><td class="r num">270 t C/ha</td></tr>
+</table></div>
+<ol class="steps">
+  <li>年度變化：(270 − 250) ÷ 5 ＝ 4 t C/ha/yr；× 10 ha ＝ 40 t C/yr</li>
+  <li>換算 CO₂：40 × 44/12 ＝ 146.7 t CO₂/yr</li>
+  <li>扣掉 CH₄、N₂O 排放 15 t CO₂e：146.7 − 15 ＝ <b>131.7 t CO₂e/yr</b>（淨溫室氣體效益）</li>
+</ol>
+<p>要分清：270 t C/ha 是碳儲量；4 t C/ha/yr 是變化率；146.7 t CO₂/yr 是換算的 CO₂ 質量；131.7 t CO₂e/yr 是特定假設下的淨效益。</p>
+</section>
+
+<section id="inv-vs-proj">
+<h2><span class="no">03</span>清冊、盤查與碳權</h2>
+<div class="tbl"><table>
+<tr><th>類型</th><th>目的</th><th>典型成果</th></tr>
+<tr><td>碳儲量清冊</td><td>了解特定區域儲存多少碳</td><td>t C、t C/ha、分布圖</td></tr>
+<tr><td>溫室氣體清冊</td><td>估算特定期間的排放與移除</td><td>t CO₂e/yr、年度趨勢</td></tr>
+<tr><td>碳匯專案量化</td><td>評估特定管理活動<b>相對基線</b>的效益</td><td>專案淨減量或移除量</td></tr>
+</table></div>
+<div class="tbl"><table>
+<tr><th>比較</th><th>碳匯清冊</th><th>碳匯專案</th></tr>
+<tr><td>目的</td><td>掌握碳儲量、排放與移除現況</td><td>量化特定活動的額外減量或移除</td></tr>
+<tr><td>範圍</td><td>國家、區域或場域</td><td>明確定義的專案邊界</td></tr>
+<tr><td>時間</td><td>盤查年度或長期時間序列</td><td>計入期與監測期間</td></tr>
+<tr><td>基線</td><td>不一定需要</td><td>必要</td></tr>
+<tr><td>外加性</td><td>通常不要求</td><td>重要要求</td></tr>
+<tr><td>直接產生碳權？</td><td>否</td><td>符合認證制度且經核發後才有</td></tr>
+</table></div>
+<p>例：政府調查全國紅樹林面積與碳儲量，不會因為量到很多碳就產生額度；在閒置養殖池推動符合條件的紅樹林植林，才進一步評估「相對沒有植林」是否多出移除量。</p>
+<div class="box key"><span class="tag">碳盤查 ≠ 碳權</span><p>企業做組織盤查是為了了解自己的排放與移除。即使企業同時做了復育專案，<b>碳權也不會因為寫進盤查報告就自動成立</b>。</p></div>
+<div class="box iso"><span class="tag">連結 ISO 14064-1</span><p>14064-1 的組織盤查會量化排放，也可以量化組織邊界內的移除（例如自有林地），但要和排放分開報告；外購或自有專案的碳權不能直接拿來扣減盤查排放量。專案的「額外移除」要走 ISO 14064-2 的邏輯，再經 14064-3 確證查證，才是碳權。</p></div>
+</section>
+
+<section id="principles">
+<h2><span class="no">04</span>碳匯專案六大原則</h2>
+<p>這些原則是國際自願碳權的共同基礎，也寫在臺灣《溫室氣體自願減量專案管理辦法》第 10 條。</p>
+<div class="box iso"><span class="tag">連結 ISO 14064-2</span><p>ISO 14064-2 的專案原則有相關性、完整性、一致性、準確性、透明度、<b>保守性</b>，並要求界定基線情境、評估外加性、處理洩漏。這一節就是把這些原則套到藍碳專案上。</p></div>
+
+<h3>① 基線情境 vs. 專案情境</h3>
+<p><b>基線情境</b>：沒有執行專案時，合理預期會發生的情況。<b>專案情境</b>：執行專案後的情況。</p>
+<div class="box key"><span class="tag">最容易誤解</span><p>基線<b>不一定是「什麼都不做、維持現狀」</b>。海草床沒有人工復育也可能因水質改善自然恢復，也可能因開發而退化。基線是反事實（Counterfactual），要依方法學用歷史資料、參考場域、預設參數或模型建立。</p></div>
+<p><b>海草復育例</b>：第 0 年 100 t C。基線十年後 120 t C；專案十年後 180 t C。</p>
+<figure class="fig">
+<svg viewBox="0 0 820 320" width="820" role="img" aria-label="海草復育例：基線十年由 100 增到 120 t C，專案由 100 增到 180 t C，差距 60 t C 是額外增量">
+<line x1="70" x2="570" y1="248" y2="248" class="ax"/><text x="62" y="252" text-anchor="end" class="m">100</text><line x1="70" x2="570" y1="204" y2="204" class="ax"/><text x="62" y="208" text-anchor="end" class="m">120</text><line x1="70" x2="570" y1="160" y2="160" class="ax"/><text x="62" y="164" text-anchor="end" class="m">140</text><line x1="70" x2="570" y1="116" y2="116" class="ax"/><text x="62" y="120" text-anchor="end" class="m">160</text><line x1="70" x2="570" y1="72" y2="72" class="ax"/><text x="62" y="76" text-anchor="end" class="m">180</text><text x="70" y="290" text-anchor="middle" class="m">0</text><text x="170" y="290" text-anchor="middle" class="m">2</text><text x="270" y="290" text-anchor="middle" class="m">4</text><text x="370" y="290" text-anchor="middle" class="m">6</text><text x="470" y="290" text-anchor="middle" class="m">8</text><text x="570" y="290" text-anchor="middle" class="m">10</text>
+<text x="320" y="312" text-anchor="middle" class="m">年</text>
+<text x="20" y="40" class="m">碳儲量（t C）</text>
+<polygon points="70,248.0 570,71.99999999999997 570,204.0" class="g-accs"/>
+<line x1="70" y1="248.0" x2="570" y2="204.0" class="s-mut" stroke-width="2" stroke-dasharray="6 4"/>
+<line x1="70" y1="248.0" x2="570" y2="71.99999999999997" class="s-acc" stroke-width="2.5"/>
+<circle cx="70" cy="248.0" r="5" class="g-mut" stroke="var(--paper)" stroke-width="2"><title>第 0 年：100 t C</title></circle>
+<circle class="hit g-acc" cx="570" cy="71.99999999999997" r="5" stroke="var(--paper)" stroke-width="2"><title>專案情境第 10 年：180 t C</title></circle>
+<circle class="hit g-mut" cx="570" cy="204.0" r="5" stroke="var(--paper)" stroke-width="2"><title>基線情境第 10 年：120 t C</title></circle>
+<text x="582" y="76.99999999999997" class="t">專案情境 180</text>
+<text x="582" y="209.0" class="t">基線情境 120</text>
+<path d="M670,71.99999999999997 h8 V204.0 h-8" fill="none" class="s-acc" stroke-width="1.5"/>
+<text x="684" y="134" class="tb">60 t C</text>
+<text x="684" y="152" class="m">額外增量</text>
+<path d="M670,204.0 h8 V248.0 h-8" fill="none" class="s-mut" stroke-width="1.5"/>
+<text x="684" y="225" class="m">20 t C</text><text x="684" y="243" class="m">基線本來就會增加</text>
+<line x1="70" x2="570" y1="248.0" y2="248.0" class="s-mut" stroke-width="1" stroke-dasharray="2 4"/>
+</svg>
+<figcaption>只有綠色區塊（專案比基線多出來的部分）能算專案效益；基線那 20 t C 就算不做專案也會發生。</figcaption>
+</figure>
+<div class="formula">額外增量 ＝ (180 − 100) − (120 − 100) ＝ 80 − 20 ＝ 60 t C → 60 × 44/12 ＝ 220 t CO₂</div>
+<p>專案效益有兩種：<b>減少或避免排放</b>（例：保護濕地、避免碳庫流失）和<b>增加碳移除</b>（例：海草床復育、紅樹林植林）。兩者可能同時出現，但核算處理不同。</p>
+
+<h3>② 外加性（Additionality）</h3>
+<p>確認減量是<b>因為專案才發生</b>，不是原本就會發生。</p>
+<div class="tbl"><table>
+<tr><th>分析面向</th><th>核心問題</th><th>碳匯專案例子</th></tr>
+<tr><td>法規外加性</td><td>是否為法規已強制要求？</td><td>某場域是否依法必須復育</td></tr>
+<tr><td>財務外加性</td><td>是否缺乏足夠財務誘因？</td><td>復育與長期監測成本高、缺乏直接收入</td></tr>
+<tr><td>普遍性分析</td><td>是否已是常規活動？</td><td>類似場域是否本來就普遍這樣做</td></tr>
+<tr><td>障礙分析</td><td>是否有阻礙推動的因素？</td><td>技術、資金或其他障礙</td></tr>
+</table></div>
+<p>例：開發商因環評承諾被要求復育海草床，這是既有義務，不能當成自願減量。注意「依法取得復育許可」不等於「依法必須復育」，前者是合法性，後者才涉及法規外加性。</p>
+
+<h3>③ 專案邊界與淨減量</h3>
+<div class="formula">ER ＝ BE − PE − LE</div>
+<p>ER：專案淨減量；BE：基線排放；PE：專案排放；LE：洩漏排放。碳移除專案可以想成：<b>淨額外移除 ＝ 專案淨移除 − 基線淨移除 − 洩漏及調整</b>。</p>
+<p>延續海草例：220 t CO₂ − 專案新增排放 15 − 洩漏 5 ＝ <b>200 t CO₂e</b>。有些制度還會把部分額度存進風險緩衝帳戶，不會全部核發。</p>
+
+<h3>④ 永久性（Permanence）與反轉</h3>
+<p>碳儲存效益能否在制度要求的期間內維持。紅樹林可能因開發、颱風、海岸侵蝕而釋放碳，原本的效益被抵銷叫<b>反轉（Reversal）</b>。制度不是要求生態系永遠不被破壞，而是要管理反轉風險（例：Verra VCS 的非永久性風險評估與緩衝機制）。</p>
+<p>三個時間不要混：碳在自然中可能儲存的時間、制度要求維持效益的期間、可申請額度的計入期。</p>
+
+<h3>⑤ 洩漏（Leakage）</h3>
+<p>專案造成邊界外排放增加。例：為保護濕地限制養殖，養殖轉移到另一處濕地造成破壞。洩漏的核心是「排放變化是否由專案引起」，要有合理因果關係。類型有<b>活動轉移洩漏</b>和<b>市場洩漏</b>。</p>
+<div class="tbl"><table>
+<tr><th>概念</th><th>問題</th><th>例子</th></tr>
+<tr><td>洩漏</td><td>專案是否造成邊界外額外排放？</td><td>養殖轉移到其他濕地</td></tr>
+<tr><td>反轉</td><td>原本認列的效益是否損失？</td><td>累積碳庫的紅樹林後來被破壞</td></tr>
+<tr><td>永久性</td><td>如何維持效益、管理反轉風險？</td><td>長期維護、監測與風險補償</td></tr>
+</table></div>
+
+<h3>⑥ 重複計算與保守性</h3>
+<p><b>重複計算</b>：同一筆減量被重複核發、使用或主張（向不同制度重複申請、同一額度重複使用、不同參與者互相衝突的主張）。注意：同一場域資料同時出現在國家清冊和專案監測報告中，<b>不必然</b>是重複計算違規；要避免的是額度核發、使用或主張上的重複。</p>
+<p><b>保守性</b>：資料不完整或不確定時，採合理且不致高估的假設（較保守數值、不確定性扣減、補充資料）。不是刻意低估，而是避免不合理高估。</p>
+
+<h3>MRV 與碳權的四個階段</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.4-4.4"/></svg><em class="tx">碳匯資源調查<br><small>碳儲量與潛力・不是碳權</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 16v-4M12 16V8M17 16v-7"/></svg><em class="tx">專案效益估算<br><small>相對基線的預估量・不是碳權</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 22l-2.4-1.8-3 .2-.9-2.9L3.2 15.8l1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><em class="tx">監測與查證<br><small>實際成果・還要走核發程序</small></em></span><i>→</i><span class="ok"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 18h14M4 9h16L12 3z"/><path d="M6 9v9M10 9v9M14 9v9M18 9v9"/></svg><em class="tx">主管機關核發<br><small>正式登錄的額度 ＝ 碳權</small></em></span></div>
+<p>MRV ＝ Measurement/Monitoring（量測／監測）、Reporting（報告）、Verification（查證）。目的是讓成果有可靠數據、外部人員能重現計算、能接受獨立查驗。MRV 不是要求精密儀器，而是整個過程<b>可追溯、可檢查、可驗證</b>。</p>
+<div class="tbl"><table>
+<tr><th>階段</th><th>產生的資訊</th><th>等於碳權？</th></tr>
+<tr><td>碳匯資源調查</td><td>碳儲量與碳匯潛力</td><td>否</td></tr>
+<tr><td>專案效益估算</td><td>相對基線的預估量</td><td>否</td></tr>
+<tr><td>監測與查證</td><td>依方法學確認的實際成果</td><td>尚須符合核發程序</td></tr>
+<tr><td>主管機關核發</td><td>正式登錄的額度</td><td><b>是</b></td></tr>
+</table></div>
+</section>
+
+<section id="ipcc">
+<h2><span class="no">05</span>IPCC 清冊與沿岸濕地</h2>
+<p>國家清冊分能源、IPPU、AFOLU、廢棄物，沿岸藍碳屬於 <b>AFOLU</b>。AFOLU 同時有排放源與碳匯：紅樹林生長是移除，被開發、挖掘、排水則是排放。</p>
+<div class="formula">例：100 ha 沿岸濕地 × 5 t CO₂/ha/yr ＝ 500 t CO₂/yr</div>
+<h3>三份 IPCC 文件</h3>
+<div class="tbl"><table>
+<tr><th>文件</th><th>角色</th></tr>
+<tr><td>2006 IPCC Guidelines</td><td>基本架構；Volume 4 處理 AFOLU</td></tr>
+<tr><td>2013 Wetlands Supplement</td><td>補充濕地核算；<mark>第 4 章「Coastal Wetlands」</mark>是紅樹林、鹽沼、海草床納入國家清冊的主要依據</td></tr>
+<tr><td>2019 Refinement</td><td>更新補充 2006，不取代</td></tr>
+</table></div>
+<p>土地分六類：森林地、農耕地、草地、濕地、聚落、其他土地。紅樹林若符合國家森林定義，可能歸「森林地」而不是「濕地」，要維持一致避免重複計算。</p>
+<p><b>Managed Land 原則</b>：國家清冊用「受人類管理的土地」上發生的排放與移除，代表人為影響；不是把地球上所有自然碳吸收都列入。</p>
+<h3>Wetlands Supplement Table 4.1：沿岸濕地管理活動</h3>
+<div class="tbl"><table>
+<tr><th>管理活動</th><th>核算重點</th></tr>
+<tr><td>紅樹林森林管理</td><td>植林、採伐造成的碳庫變化</td></tr>
+<tr><td>挖掘與土地開發</td><td>港口、填築、養殖池或鹽田建設造成的碳庫損失</td></tr>
+<tr><td>排水</td><td>濕地土壤排水後的碳庫變化與 CO₂ 排放</td></tr>
+<tr><td>復濕及植被恢復</td><td>水文與植被恢復造成的碳庫變化</td></tr>
+<tr><td>養殖活動</td><td>特定養殖利用的 N₂O 排放</td></tr>
+<tr><td>復濕後的 CH₄</td><td>水文恢復後特定濕地的甲烷</td></tr>
+</table></div>
+<h3>國家年度清冊示意</h3>
+<div class="tbl"><table>
+<tr><th>項目</th><th class="r">t CO₂e</th></tr>
+<tr><td>受管理紅樹林碳庫增加</td><td class="r num">−80,000</td></tr>
+<tr><td>沿岸濕地復育碳庫增加</td><td class="r num">−20,000</td></tr>
+<tr><td>土地利用轉換造成的排放</td><td class="r num">+45,000</td></tr>
+<tr><td>CH₄、N₂O 排放</td><td class="r num">+5,000</td></tr>
+<tr><td><b>合計（淨移除）</b></td><td class="r num"><b>−50,000</b></td></tr>
+</table></div>
+<p>建立國家藍碳清冊的四階段：土地與濕地資源調查 → 活動數據與係數建立 → 年度排放移除估算 → 彙整與品質管理。</p>
+<p><b>限制</b>：Wetlands Supplement 只涵蓋受管理的紅樹林、鹽沼、海草床與指定活動；海氣交換、生物幫浦、大型藻類碳輸送、深海碳儲存都不能直接套用。沿岸濕地空間差異大，Tier 1 預設係數不確定性高；潮汐造成的碳輸入輸出也還沒完全涵蓋。</p>
+</section>
+
+<section id="intl">
+<h2><span class="no">06</span>認證原則與國際方法學</h2>
+<p>碳權有經濟價值，所以認證要回答：賣出去的一噸 CO₂e，是否真的代表可信的氣候效益？國際自願碳市場誠信委員會（<b>ICVCM</b>）提出 Core Carbon Principles（CCPs），涵蓋量化、治理、透明、第三方查驗、避免重複計算、環境與社會保障。</p>
+<p><b>環境與社會保障</b>：減碳不是唯一標準。例：在天然泥灘地大量種紅樹林，碳變多了，但可能破壞原有潮間帶棲地。</p>
+<p><b>確證（Validation）</b>評估專案計畫與預期活動是否合理；<b>查證（Verification）</b>在執行後依實際監測資料確認成果。</p>
+
+<h3>時間與認證用語</h3>
+<div class="tbl"><table>
+<tr><th>用語</th><th>意思</th></tr>
+<tr><td>專案起始日</td><td>依制度認定開始執行的日期</td></tr>
+<tr><td>計入期（Crediting Period）</td><td>可申請額度的期間；不等於生態系壽命，也不等於碳儲存時間</td></tr>
+<tr><td>監測期間</td><td>一次報告涵蓋的區間；計入期內可分多個監測期間申請</td></tr>
+<tr><td>專案註冊</td><td>確認計畫符合要求，取得執行資格；<b>不代表額度已核發</b></td></tr>
+</table></div>
+<h3>臺灣計入期（管理辦法第 7 條）</h3>
+<div class="tbl"><table>
+<tr><th>類型</th><th>固定型</th><th>展延型</th></tr>
+<tr><td>移除類型</td><td>最長 30 年</td><td>初次最長 20 年，最多展延 2 次，每次最長 10 年（總計最長 40 年）</td></tr>
+<tr><td>減少或避免排放</td><td>最長 10 年</td><td>初次最長 5 年，最多展延 2 次，每次最長 5 年</td></tr>
+</table></div>
+<p>展延不是自動的，要在到期前 6 個月申請（第 15 條）。計入期屆滿不代表碳可以任意釋放。</p>
+<h3>預估量 ≠ 監測量 ≠ 核發額度</h3>
+<p>計畫預估十年 1,000 t CO₂e，實際成功率低，核准可能只有 600 t CO₂e。不能因計畫書預估就要求核發相同數量。</p>
+<h3>國際藍碳方法學</h3>
+<div class="tbl"><table>
+<tr><th>方法學</th><th>活動</th><th>特色</th></tr>
+<tr><td>CDM AR-AM0014</td><td>劣化紅樹林棲地造林及再造林</td><td>以植林形成碳移除</td></tr>
+<tr><td>Verra VM0033 v2.1</td><td>潮汐濕地與海草床復育</td><td>可涵蓋水文改善等復育活動；考慮海平面上升的非永久性風險（v3.0 為 2026 年修訂草案）</td></tr>
+</table></div>
+<p>Verra VCS、Gold Standard 是非政府的自願碳權制度，不是 IPCC 清冊，也不是各國政府的碳權。</p>
+</section>
+
+<section id="tw">
+<h2><span class="no">07</span>臺灣法規與兩項藍碳方法學</h2>
+<p>臺灣依《氣候變遷因應法》與《溫室氣體自願減量專案管理辦法》，由<b>環境部</b>審查核發額度。兩階段：專案註冊（活動、基線、外加性、預估量、監測方法）→ 額度核發（實際成果）。</p>
+<h3>外加性簡化（管理辦法第 8 條）</h3>
+<div class="tbl"><table>
+<tr><th>每年總減量</th><th>外加性分析</th></tr>
+<tr><td>≤ 20,000 t CO₂e</td><td>得僅分析法規外加性</td></tr>
+<tr><td>20,000 – 60,000 t CO₂e</td><td>法規外加性＋從財務、障礙、普遍性中擇一</td></tr>
+<tr><td>其他</td><td>依管理辦法及方法學辦理</td></tr>
+</table></div>
+<h3>2025 年 7 月 24 日通過的兩項方法學</h3>
+<div class="tbl"><table>
+<tr><th></th><th>AL-TMS0002 海草復育</th><th>AL-TMS0003 紅樹林植林</th></tr>
+<tr><td>國際參考</td><td>VM0033</td><td>CDM AR-AM0014</td></tr>
+<tr><td>主要活動</td><td>種植海草及相關復育</td><td>種植紅樹林及相關管理</td></tr>
+<tr><td>適用場域</td><td>符合規定的海洋或海岸型濕地、人為型濕地</td><td><b>只限</b>符合規定的人為型濕地</td></tr>
+<tr><td>代表場域</td><td>退化海草床、符合條件的復育場址</td><td>閒置鹽田、閒置養殖池、閒置埤塘</td></tr>
+<tr><td>額外限制</td><td>須符合海草復育目的</td><td>前兩年無產業活動，<b>或</b>不會導致產業外移</td></tr>
+<tr><td>環境管理</td><td>限制非必要的生物移除</td><td>防止紅樹林向邊界外擴散</td></tr>
+<tr><td>年度淨移除上限</td><td class="num">20,000 t CO₂e</td><td class="num">20,000 t CO₂e</td></tr>
+</table></div>
+<p>兩者都屬範疇別 12「農業及土地利用」、小規模、移除類型。分散場域每處面積須大於 <b>0.1 ha</b>；要證明土地使用權，且授權期間涵蓋計入期。</p>
+<h3>方法學細節</h3>
+<div class="formula">專案人為淨移除量 ＝ 實際淨移除量 − 基線淨移除量 − 洩漏排放量</div>
+<ul>
+  <li><b>碳庫</b>：海草（AL-TMS0002 第 5 節）納入地上部、地下部、沉積物有機碳，<b>排除碎屑</b>（保守、避免碳庫轉移重複認列）。紅樹林納入生物量與土壤有機碳。</li>
+  <li><b>CH₄／N₂O 門檻</b>：涉及鹽度改變時，水體鹽度低於 <b>18 psu</b> 的量測須納入 CH₄；涉及水質改變且達指定優養化程度須納入 N₂O。這是核算門檻，不代表高於 18 psu 就完全不排 CH₄。</li>
+  <li><b>化石燃料</b>：專案執行與量測使用的交通、機具排放也要算。</li>
+  <li><b>洩漏設為零</b>：兩項方法學第 9 節在符合適用條件（前兩年無產業活動或不導致產業外移）時，LK 可設為零。這是靠限制場域排除洩漏情境，不是說藍碳專案不會洩漏。</li>
+  <li><b>永久性</b>：v01.0 的碳庫監測不能直接等同 Verra 的緩衝帳戶機制；「已核發額度後發生反轉要不要補償」依主管機關規定個案判斷。</li>
+  <li>海保署 2025 年 12 月公布《臺灣紅樹林與海草床碳匯測量標準作業程序》。<b>量測 SOP 不等於碳權方法學</b>：SOP 管怎麼量，方法學還管場域資格、基線、外加性與計算。</li>
+</ul>
+<p>碳權制度不能替代環境管理制度：海草復育涉及海域使用、採苗、生態保育；紅樹林涉及土地權屬、濕地管理。</p>
+</section>
+
+<section id="mangrove">
+<h2><span class="no">08</span>實務：紅樹林植林（AL-TMS0003）</h2>
+<h3>場域資格：兩個假想案例</h3>
+<div class="tbl"><table>
+<tr><th>案例</th><th>判斷</th></tr>
+<tr><td>A. 閒置養殖池</td><td>已停止養殖，且符合人為型濕地、合法土地使用等條件 → 可能適用；仍要查水文、生態與外加性</td></tr>
+<tr><td>B. 天然潮間帶泥灘地</td><td>即使紅樹林長得起來，也<b>不符合</b>人為型濕地條件；植林還可能破壞泥灘地與鳥類棲地</td></tr>
+</table></div>
+<p>生態上能種、法規上允許種、方法學上符合認證，是三件要分別確認的事。</p>
+<p>「前兩年沒有產業活動<b>或</b>不導致產業外移」：原文是「或」不是「且」，所以不是一律要閒置滿兩年。仍在營運的養殖池改種紅樹林，業者可能轉往別處開新池，就是活動轉移洩漏。</p>
+<p>要防止紅樹林向邊界外擴散（例如在進出水口設措施攔繁殖體），讓影響受控、界線清楚；邊界外的擴散不能拿來算碳權。</p>
+
+<h3>碳庫選擇</h3>
+<div class="tbl"><table>
+<tr><th>碳庫</th><th>處理</th><th>原因</th></tr>
+<tr><td>地上部生物量</td><td>納入</td><td>紅樹林生長增加碳儲量</td></tr>
+<tr><td>地下部生物量</td><td>納入</td><td>根系是重要碳庫</td></tr>
+<tr><td>土壤有機碳</td><td>納入</td><td>可能因植林增加</td></tr>
+<tr><td>枯落物</td><td>排除</td><td>避免與後續土壤碳庫轉移重複認列</td></tr>
+<tr><td>枯木</td><td>排除</td><td>保守性</td></tr>
+</table></div>
+<p>閒置養殖池不能假設原本所有碳庫都是零，可能已有沉積物碳或少量植被。</p>
+
+<h3>十年核算示意（10 ha 閒置養殖池）</h3>
+<div class="tbl"><table>
+<tr><th>項目</th><th class="r">十年累計</th></tr>
+<tr><td>專案情境植物與土壤碳庫淨增加</td><td class="r num">500 t C</td></tr>
+<tr><td>基線情境原本預期增加</td><td class="r num">100 t C</td></tr>
+<tr><td>相對基線額外增加</td><td class="r num">400 t C</td></tr>
+<tr><td>換算 CO₂</td><td class="r num">約 1,467 t CO₂</td></tr>
+<tr><td>專案新增相關排放</td><td class="r num">約 66.7 t CO₂e</td></tr>
+<tr><td>符合條件下的洩漏</td><td class="r num">0 t CO₂e</td></tr>
+<tr><td><b>初步淨移除效益</b></td><td class="r num"><b>1,400 t CO₂e</b></td></tr>
+</table></div>
+
+<h3>練習：淨移除量計算器</h3>
+<div class="calc">
+  <div class="row">
+    <label for="pj">專案碳庫增加（t C）<input id="pj" type="number" step="1" value="500"></label>
+    <label for="bl">基線碳庫增加（t C）<input id="bl" type="number" step="1" value="100"></label>
+    <label for="pe">專案新增排放（t CO₂e）<input id="pe" type="number" step="0.1" value="66.7"></label>
+    <label for="lk">洩漏（t CO₂e）<input id="lk" type="number" step="0.1" value="0"></label>
+  </div>
+  <div class="out" id="out3" aria-live="polite"></div>
+</div>
+<figure class="fig"><div id="wf3"></div><figcaption>淨移除量的組成（t CO₂e）：綠色是碳庫增加與最後的淨移除，灰色扣基線，棕色扣排放與洩漏。改上面的數字，圖會跟著變。</figcaption></figure>
+
+<h3>監測要求與成本</h3>
+<ul>
+  <li>第 11 節要記錄種源、育苗、存活率、補植、病蟲害、颱風等災害。</li>
+  <li>基線樣區至少要有專案執行前一年完整的碳儲量年變化資料。</li>
+  <li>專案樣區<b>每三至五年一個量測年度</b>，每個量測年度涵蓋<b>四季採樣</b>。</li>
+  <li>固定樣區一般可採 <b>10 m × 10 m</b>，依場域分層；生物量用異速生長方程式估算。</li>
+  <li>成本不只苗木與種植，還有長期管理、植被調查、土壤採樣、實驗分析、資料保存、第三方查證。</li>
+</ul>
+
+<h3>哪些活動能用現行方法學？</h3>
+<div class="tbl"><table>
+<tr><th>活動</th><th>適用性</th></tr>
+<tr><td>符合資格的人為型濕地紅樹林植林</td><td>可能適用 AL-TMS0003</td></tr>
+<tr><td>符合資格的海草種植及復育</td><td>可能適用 AL-TMS0002</td></tr>
+<tr><td>保護既有藍碳棲地、鹽沼復育、大型藻類養殖</td><td><b>不能</b>直接套用，須另查其他核准方法學</td></tr>
+</table></div>
+<p>保護一片健康的天然紅樹林有很高的保育價值，但它不是 AL-TMS0003 所說的「新增植林」。</p>
+<h3>開發順序</h3>
+<ol class="steps">
+  <li>確認場域與預計活動（生態系類型、原有土地利用）</li>
+  <li>查詢現行核准方法學</li>
+  <li>確認方法學適用資格（場域、法規外加性、土地權利）</li>
+  <li>評估淨移除量與監測需求（基線、碳庫、排放、洩漏、資料品質）</li>
+  <li>評估執行與經濟可行性（復育、長期管理、查證成本、額度價值）</li>
+</ol>
+<p>不是所有有效的減碳行動都適合走碳權市場，有些更適合用生態保育、公共政策或企業環境投資推動。</p>
+</section>
+
+<section id="feasible">
+<h2><span class="no">09</span>專案值不值得做</h2>
+<div class="tbl"><table>
+<tr><th>可行性</th><th>問題</th></tr>
+<tr><td>技術可行性</td><td>場域適不適合復育？能否形成可量化的碳匯？</td></tr>
+<tr><td>制度可行性</td><td>有沒有適用的核准方法學？土地、活動、外加性符合嗎？</td></tr>
+<tr><td>經濟可行性</td><td>額度與其他效益能否支撐開發與長期管理成本？</td></tr>
+</table></div>
+<h3>生態復育 vs. 碳權專案</h3>
+<div class="tbl"><table>
+<tr><th></th><th>一般生態復育</th><th>自願減量碳權專案</th></tr>
+<tr><td>目標</td><td>生態系功能與棲地恢復</td><td>可認證的額外減量或移除</td></tr>
+<tr><td>指標</td><td>棲地品質、植被、生物多樣性</td><td>相對基線的淨移除量（t CO₂e）</td></tr>
+<tr><td>基線</td><td>可依復育目標設定</td><td>必須符合方法學</td></tr>
+<tr><td>監測</td><td>依工程或生態需求</td><td>須依方法學 MRV</td></tr>
+<tr><td>成果認定</td><td>生態、工程或政策績效</td><td>註冊、監測、查證、審查後核發</td></tr>
+<tr><td>經費</td><td>政府、企業、研究</td><td>可結合額度收益，但不能重複主張</td></tr>
+</table></div>
+<h3>四個評估階段</h3>
+<ol class="steps">
+  <li><b>場域與方法學資格</b>：土地類型、使用權（涵蓋計入期）、原有產業、水文鹽度底質、擴散管理、面積、資料取得</li>
+  <li><b>外加性與基線</b>：是否原本就有法定義務？有政府補助不代表一定沒有外加性，沒有補助也不代表一定有。規模小可簡化外加性，但不能省略基線調查與碳庫量測</li>
+  <li><b>碳移除潛力與監測可行性</b>：不能拿成熟天然紅樹林的碳儲量除以林齡當成新植林的年移除量；先做初期篩選（Pre-feasibility），再做正式專案設計（Project design）</li>
+  <li><b>經濟可行性</b>：成本與收益有時間落差</li>
+</ol>
+<h3>成本與規模</h3>
+<p>主要成本：前期場域調查、專案規劃、復育工程、長期維護、碳庫監測、認證相關費用。無論 2 ha 或 20 ha 都有固定成本。</p>
+<div class="tbl"><table>
+<tr><th>面積</th><th class="r">年度預估額度</th><th class="r">年收益（假設 NT$1,000/t）</th></tr>
+<tr><td>2 ha</td><td class="r num">10 t CO₂e</td><td class="r num">NT$10,000</td></tr>
+<tr><td>20 ha</td><td class="r num">100 t CO₂e</td><td class="r num">NT$100,000</td></tr>
+<tr><td>100 ha</td><td class="r num">500 t CO₂e</td><td class="r num">NT$500,000</td></tr>
+</table></div>
+<p style="font-size:14px;color:var(--muted)">假設每公頃每年 5 t CO₂e；數值僅說明規模與收益的關係，不代表實際行情。</p>
+<h3>收益敏感度（20 ha，年成本 NT$100,000）</h3>
+<div class="tbl"><table>
+<tr><th>情境</th><th class="r">額度（t CO₂e/年）</th><th class="r">年收益</th><th class="r">收益 − 成本</th></tr>
+<tr><td>保守（移除率 50%、單價 70%）</td><td class="r num">50</td><td class="r num">35,000</td><td class="r num">−65,000</td></tr>
+<tr><td>基準</td><td class="r num">100</td><td class="r num">100,000</td><td class="r num">0</td></tr>
+<tr><td>樂觀（兩者 130%）</td><td class="r num">130</td><td class="r num">169,000</td><td class="r num">+69,000</td></tr>
+</table></div>
+<figure class="fig">
+<svg viewBox="0 0 700 190" width="700" role="img" aria-label="收益減成本：保守 −65,000、基準 0、樂觀 +69,000 元/年"><g transform="translate(80,0)">
+<line x1="300" x2="300" y1="20" y2="180" class="s-mut" stroke-width="1.5"/>
+<text x="300" y="14" text-anchor="middle" class="m">打平</text>
+<rect class="hit g-soil" x="112" y="34" width="188" height="24" rx="4"><title>保守：收益 − 成本 −65,000 元/年</title></rect><text x="104" y="51" text-anchor="end" class="n">−65,000</text><text x="308" y="103" text-anchor="start" class="n">±0</text><rect class="hit g-acc" x="300" y="138" width="200" height="24" rx="4"><title>樂觀：收益 − 成本 +69,000 元/年</title></rect><text x="508" y="155" text-anchor="start" class="n">+69,000</text>
+</g><text x="20" y="50" class="t">保守</text><text x="20" y="102" class="t">基準</text><text x="20" y="154" class="t">樂觀</text></svg>
+<figcaption>20 ha 專案每年「收益 − 成本」（NT$）。保守情境下每年虧 65,000 元。</figcaption>
+</figure>
+<p>目的不是預測收入，而是看專案對碳匯量、碳價、監測成本有多敏感。如果只有在極樂觀條件下才打平，就要謹慎。若復育已有政府經費，碳權可以當作長期維護或監測的部分資金來源。</p>
+<p>短期管理權（例如三年示範計畫）不一定適合直接規劃二、三十年的碳權專案。</p>
+</section>
+
+<section id="process">
+<h2><span class="no">10</span>認證流程與 MRV</h2>
+<h3>臺灣自願減量專案認證程序</h3>
+<div class="flow loop" data-loop-label="核發後持續監測，下一期再報告、查證"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3 3 6v15l6-3 6 3 6-3V3l-6 3z"/><path d="M9 3v15M15 6v15"/></svg><em class="tx">① 前期準備<br><small>場域資格與可行性</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h7M9 17h7"/></svg><em class="tx">② 專案計畫書 PDD<br><small>基線、外加性、監測設計</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 22l-2.4-1.8-3 .2-.9-2.9L3.2 15.8l1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><em class="tx">③ 確證<br><small>依該方法學的指定</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 22l-2.4-1.8-3 .2-.9-2.9L3.2 15.8l1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><em class="tx">④ 註冊審查<br><small>確認符合要求</small></em></span><i>→</i><span data-loop-to><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 16v-4M12 16V8M17 16v-7"/></svg><em class="tx">⑤ 執行與監測<br><small>復育、管理、資料蒐集</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 22l-2.4-1.8-3 .2-.9-2.9L3.2 15.8l1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><em class="tx">⑥ 報告與查證<br><small>量化並查核成果</small></em></span><i>→</i><span class="ok" data-loop-from><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 22l-2.4-1.8-3 .2-.9-2.9L3.2 15.8l1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><em class="tx">⑦ 額度核發<br><small>環境部審查、編碼、入帳</small></em></span></div>
+<p>核發後仍要依計畫持續監測與管理。</p>
+<h3>PDD（專案計畫書）內容（管理辦法第 4 條）</h3>
+<div class="tbl"><table>
+<tr><th>項目</th><th>說明</th><th>紅樹林例</th></tr>
+<tr><td>減量方法應用說明</td><td>為何符合方法學適用條件</td><td>符合 AL-TMS0003 人為型濕地資格</td></tr>
+<tr><td>基線計算方法</td><td>沒有專案時的碳庫與排放變化</td><td>閒置養殖池未植林的碳庫變化</td></tr>
+<tr><td>外加性分析</td><td>是否符合額外減量條件</td><td>植林不是既有法規義務</td></tr>
+<tr><td>減量計算說明</td><td>預期淨移除量</td><td>植物、土壤碳庫變化與排放</td></tr>
+<tr><td>監測方法</td><td>如何持續取得可查證數據</td><td>固定樣區、土壤採樣、管理紀錄</td></tr>
+<tr><td>專案活動期程</td><td>實施與計入期安排</td><td>植林、補植、監測年度</td></tr>
+<tr><td>環境衝擊分析</td><td>可能的環境影響</td><td>水文、生態、邊界外擴散</td></tr>
+<tr><td>公眾意見</td><td>利害關係人意見</td><td>土地管理者、地方社區</td></tr>
+</table></div>
+<ul>
+  <li>專案邊界要具體：不能只寫「在某縣市推動紅樹林復育」。<b>地理邊界</b>回答哪片土地屬於專案；<b>核算邊界</b>回答哪些碳庫和排放要算。</li>
+  <li>實際監測成果高於 PDD 預估時，要提出合理說明（第 17 條），不能直接全部認列。PDD 是技術文件，不是越樂觀越好的募資計畫。</li>
+  <li>多單位共同申請要推派代表，附全體署名且公證的合約，在 PDD 載明額度分配（第 6 條）。</li>
+</ul>
+<h3>確證 vs. 查證</h3>
+<div class="tbl"><table>
+<tr><th></th><th>確證 Validation</th><th>查證 Verification</th></tr>
+<tr><td>對象</td><td>專案設計與未來預期</td><td>已執行的活動與實際成果</td></tr>
+<tr><td>確認</td><td>方法學適用性、基線、外加性、計算假設、監測設計</td><td>監測數據、計算程序、聲明的成果</td></tr>
+<tr><td>核心問題</td><td>設計是否可信？</td><td>宣稱的成果是否真的發生？</td></tr>
+<tr><td>臺灣規定</td><td>不一定需要，由環境部依方法學指定（第 4、12 條）</td><td>額度申請時須附查證總結報告（第 16 條）</td></tr>
+</table></div>
+<div class="box iso"><span class="tag">連結 ISO 14064-3</span><p>確證與查證的定義來自 ISO 14064-3。做 14064-1 組織盤查只會遇到查證；做專案才會同時遇到確證（事前）和查證（事後）。</p></div>
+<h3>紅樹林監測項目</h3>
+<div class="tbl"><table>
+<tr><th>項目</th><th>資料</th><th>用途</th></tr>
+<tr><td>專案面積</td><td>GPS、GIS、植林範圍</td><td>核算面積與邊界變化</td></tr>
+<tr><td>紅樹林植被</td><td>樹種、植株尺寸、樣區資料</td><td>地上部與地下部生物量碳</td></tr>
+<tr><td>土壤有機碳</td><td>採樣深度、碳含量、容積密度</td><td>土壤有機碳儲量</td></tr>
+<tr><td>環境條件</td><td>鹽度、水質</td><td>判定是否須納入特定溫室氣體</td></tr>
+<tr><td>專案活動</td><td>種植、補植、機具使用</td><td>實際執行與排放</td></tr>
+<tr><td>異常事件</td><td>颱風、火災、植株死亡、侵蝕</td><td>碳庫損失與持續性</td></tr>
+</table></div>
+<p>「每三至五年一個量測年度」不等於「每三至五年只採一次樣」；監測頻率也不等於額度申請頻率。QA/QC 包括固定樣區定位、量測一致性、生物量推估式、土壤分析品質、原始數據保存；喬木生物量相對誤差超過門檻時，可增加樣區或依規定做不確定性折減。</p>
+<h3>監測報告怎麼算成果</h3>
+<ol class="steps">
+  <li>依監測資料估算專案情境下植物與土壤碳庫變化</li>
+  <li>扣除基線（沒有專案也會發生的移除）</li>
+  <li>納入專案活動的適用排放（化石燃料等）</li>
+  <li>處理洩漏、保守性、不確定性</li>
+</ol>
+<p>算出 1,400 t CO₂e 不代表直接拿到 1,400 個額度。查證機構會檢查：是否依註冊計畫執行、紀錄是否完整、數據是否依核准方法取得、公式單位參數是否正確、是否漏算排放或碳庫損失、監測期間有無重大事件。<mark>好的 MRV 要從專案初期就建立。</mark></p>
+<h3>環境部審查</h3>
+<p>原則上 6 個月內完成，可延長 6 個月一次；補正日數不計入，補正總日數不超過 6 個月（第 9 條）。審定後換算額度、編碼、撥入申請者帳戶（第 22 條）；帳戶開立依第 18 條。</p>
+<h3>執行後的變更與長期責任</h3>
+<ul>
+  <li>專案活動或監測方法變更，要在變更前申請（第 14 條）。</li>
+  <li>選 30 年計入期不代表要等 30 年才申請，可分監測期間申請。</li>
+  <li>大量植株死亡後，監測要反映實際碳庫變化，不能沿用預估生長量。</li>
+  <li>重要資訊不符、成效未發生、違法、重複取得國際額度等，可撤銷註冊或註銷額度（第 20、21 條）。</li>
+</ul>
+<p>完整案例的五階段：場域準備與專案設計 → 註冊申請 → 植林與長期監測 → 監測報告與查證 → 額度核發及後續管理。需要三類專業：生態與工程、碳匯量測與數據分析、專案管理與認證。</p>
+</section>
+
+<section id="cases">
+<h2><span class="no">11</span>三個案例比較</h2>
+<h3>巴基斯坦 Delta Blue Carbon（DBC-1）</h3>
+<ul>
+  <li>信德省印度河三角洲，約 <b>226,000 ha</b> 退化潮汐土地植林、再造林。</li>
+  <li>使用 VM0033，專案編號 VCS 2250，2021 年 12 月註冊，計入期 2015–2075 年，同時參與 CCBS（氣候、社區、生物多樣性標準）。</li>
+  <li>約 60 年預估移除 <b>1.42 億 t CO₂e</b>，這是長期預估量，不是已核發額度。每個 VCU（Verified Carbon Unit）代表一噸經認證成果。</li>
+  <li>結合地方政府、民間開發者與社區；碳權是長期資金來源，不是取代復育工程。</li>
+</ul>
+<p>討論一個專案時要問：是否完成註冊？核發了哪些年份的額度？累計多少？多少已出售或註銷？</p>
+<h3>臺灣大藍碳紅樹林復育計畫（2025）</h3>
+<ul>
+  <li>臺南台江約 <b>2.7 ha</b> 閒置魚塭，企業與研究團隊合作：地形調整、水文改善、種紅樹林、碳匯研究。</li>
+  <li>2025 年 5 月首波種約 1,200 株欖李，三年內約 3,000 株；比較人工復育區與自然演替區。</li>
+  <li>公開資料描述的是研究與示範，不能據此認定已完成 AL-TMS0003 註冊或取得碳權。</li>
+</ul>
+<p>好的紅樹林碳匯專案不是「找一塊空地把樹種下去」，而是建立適宜的濕地環境，讓植被長期生長。</p>
+<h3>曾文溪口濕地：紅樹林增加，不一定代表生態成功</h3>
+<p>曾文溪口泥灘地是黑面琵鷺等水鳥的重要棲地。核心區紅樹林從 2020 年約 4 ha 擴張到 2025 年約 17 ha（台江國家公園，2026 年 9 月資料），壓縮水鳥棲地，管理單位每年做紅樹林幼苗抑制、植群管理、人工潮溝與潮池。</p>
+<div class="tbl"><table>
+<tr><th>場域條件</th><th>適當管理方向</th></tr>
+<tr><td>符合資格、適宜植林的閒置人為型濕地</td><td>評估紅樹林植林與碳匯認證</td></tr>
+<tr><td>已有健康紅樹林的天然濕地</td><td>優先維持既有碳庫與生態功能</td></tr>
+<tr><td>重要水鳥覓食泥灘地</td><td>維持開闊棲地與水文條件</td></tr>
+<tr><td>受污染或水文阻斷的濕地</td><td>先排除退化原因，再評估復育</td></tr>
+</table></div>
+<h3>比較</h3>
+<div class="tbl"><table>
+<tr><th></th><th>巴基斯坦 DBC-1</th><th>臺灣閒置魚塭</th><th>曾文溪口</th></tr>
+<tr><td>目標</td><td>大規模復育與碳權開發</td><td>復育示範、研究、技術建立</td><td>維護泥灘地與水鳥棲地</td></tr>
+<tr><td>核心活動</td><td>植林、再造林、長期管理</td><td>濕地改善與紅樹林種植</td><td>紅樹林植群管理、水文改善</td></tr>
+<tr><td>碳權狀態</td><td>已註冊且有核發額度</td><td>未確認已核發</td><td>非以碳權為目標</td></tr>
+<tr><td>主要價值</td><td>認證成果與長期資金</td><td>本土復育與量測經驗</td><td>生態保育與棲地多樣性</td></tr>
+<tr><td>挑戰</td><td>大規模監測、永久性</td><td>場域適用性、方法學、成本</td><td>碳匯與棲地目標的取捨</td></tr>
+</table></div>
+<p><b>先確認目的再選工具</b>：要減量額度 → 依制度建立外加性、基線、MRV；要生態復育 → 碳匯是共同效益，不必全轉成碳權；要保護既有碳庫 → 重點是避免土地利用改變。</p>
+</section>
+
+<section id="future">
+<h2><span class="no">12</span>臺灣限制與新興技術</h2>
+<h3>臺灣的四個限制</h3>
+<ol class="steps">
+  <li>現行方法學（截至 2026 年 11 月只有海草復育、紅樹林植林）尚未涵蓋保護天然紅樹林、鹽沼復育、大型藻類養殖</li>
+  <li>沿岸土地使用密集，大面積且同時符合方法學、土地、生態條件的場域不易取得；小場域可考慮共同申請、整合監測</li>
+  <li>長期監測成本可能讓小型專案沒有經濟誘因</li>
+  <li>碳匯效益要和生態保育目標整合</li>
+</ol>
+<h3>海洋碳移除新技術（mCDR）</h3>
+<div class="tbl"><table>
+<tr><th>路徑</th><th>機制</th><th>核算難題</th></tr>
+<tr><td>沿岸植被與大型藻類</td><td>光合作用 → 生物量與有機碳</td><td>辨識長期留存與分解回排</td></tr>
+<tr><td>海洋鹼度提升（OAE）</td><td>提高鹼度 → 促進大氣 CO₂ 吸收</td><td>海氣交換、生命週期排放</td></tr>
+<tr><td>生物碳幫浦增強</td><td>增加生產 → 顆粒沉向深海</td><td>再礦化、跨海域效應</td></tr>
+</table></div>
+<ul>
+  <li><b>日本 J-Blue Credit</b>：淡路島裙帶菜養殖 2025 年取得 12.4 t CO₂ 額度；只認列評估為長期留存的部分。日本 2024 財年國家清冊藍碳移除約 32 萬 t CO₂。</li>
+  <li><b>加拿大 Planetary（OAE）</b>：Nova Scotia 的 Tufts Cove 專案 2025 年 6 月經 Isometric 取得約 625 t CO₂ 額度；這是民間自願性額度，不是政府法定碳權。</li>
+  <li><b>海洋施肥、人工湧升流</b>：浮游植物增加不等於長期移除；湧升流可能把深層高濃度無機碳帶上來；美國國家科學院評為低信心。IMO 2026 年 10 月通過海洋地球工程研究評估框架，不等於核准商業化。</li>
+</ul>
+<div class="tbl"><table>
+<tr><th>共同挑戰</th><th>要回答的問題</th></tr>
+<tr><td>外加性與基線</td><td>增加的移除確實由專案造成嗎？</td></tr>
+<tr><td>長期儲存</td><td>碳真的進入能長期隔離大氣的碳庫嗎？</td></tr>
+<tr><td>MRV 與不確定性</td><td>開放海洋中怎麼可靠估算？</td></tr>
+<tr><td>碳洩漏</td><td>是否降低其他海域原本的吸收？</td></tr>
+<tr><td>法規與環境風險</td><td>海上添加物質是否符合規範？</td></tr>
+</table></div>
+</section>
+
+<section id="core">
+<h2><span class="no">13</span>五個核心觀念</h2>
+<ol class="steps">
+  <li><b>碳匯不等於碳權。</b>自然生態系的碳儲存要透過方法學與認證制度，才能變成正式額度。</li>
+  <li><b>碳固定量不等於長期淨碳移除量。</b>要區分生物生產力、碳庫淨增加、長期儲存效益。</li>
+  <li><b>方法學決定專案的適用範圍與核算規則。</b>國家清冊已認列的移除，也不能直接拿來做專案碳權。</li>
+  <li><b>MRV 是碳權品質的核心。</b>可靠的監測、報告與查證是證明外加性、處理基線、永久性、不確定性與洩漏的基礎；開放海洋的跨海域洩漏更是挑戰。</li>
+  <li><b>生態與環境永續應優先於碳權收益。</b>要考慮原有棲地、生物多樣性、海洋環境風險與長期管理，不能只追求最高的碳固定量或碳權數量。</li>
+</ol>
+</section>
+
+<section id="quiz">
+<h2><span class="no">14</span>自我測驗</h2>
+<details class="q"><summary>1. 一片原本就存在的健康紅樹林每年吸很多碳，可以申請 AL-TMS0003 碳權嗎？</summary><div class="a">不行。AL-TMS0003 是「紅樹林植林」，要在符合規定的人為型濕地新增植林，且要證明相對基線的額外移除。保護既有紅樹林有保育價值，但不是新增植林活動。</div></details>
+<details class="q"><summary>2. 海草床第 0 年 100 t C，基線十年後 120 t C，專案十年後 180 t C，額外移除多少 CO₂？</summary><div class="a">(180 − 100) − (120 − 100) ＝ 60 t C；60 × 44/12 ＝ 220 t CO₂。</div></details>
+<details class="q"><summary>3. 基線情境就是「維持現狀」嗎？</summary><div class="a">不一定。基線是沒有專案時合理預期會發生的情況，可能自然恢復，也可能退化。要依方法學用歷史資料、參考場域或模型建立。</div></details>
+<details class="q"><summary>4. 「依法取得復育許可」和「依法必須復育」差在哪？</summary><div class="a">前者是活動合法性；後者是法定義務，才涉及法規外加性。依法必須做的事不能當成自願減量。</div></details>
+<details class="q"><summary>5. 為什麼臺灣兩項藍碳方法學的洩漏可以設為零？</summary><div class="a">因為適用條件要求場域前兩年無產業活動或不會導致產業外移，用限制場域的方式排除主要的產業轉移洩漏情境。不是藍碳專案不會洩漏；場域實際有轉移風險就不能忽略。</div></details>
+<details class="q"><summary>6. 紅樹林植林方法學哪些碳庫納入、哪些排除？</summary><div class="a">納入地上部生物量、地下部生物量、土壤有機碳；排除枯落物（避免與土壤碳庫轉移重複認列）與枯木（保守）。</div></details>
+<details class="q"><summary>7. 臺灣每年淨移除 15,000 t CO₂e 的專案，外加性要分析什麼？</summary><div class="a">≤ 20,000 t CO₂e，得僅分析法規外加性（管理辦法第 8 條）。但仍要做基線調查、碳庫量測等方法學要求。</div></details>
+<details class="q"><summary>8. 確證和查證各回答什麼問題？</summary><div class="a">確證：這個專案的設計是否可信？（事前）查證：宣稱的成果是否真的發生？（事後）</div></details>
+<details class="q"><summary>9. 移除型專案用展延型計入期，最長可以多久？</summary><div class="a">初次 20 年＋最多展延 2 次、每次 10 年，總計最長 40 年；但每次展延都要在到期前 6 個月申請並通過審查。</div></details>
+<details class="q"><summary>10. DBC-1 的 1.42 億 t CO₂e 是已核發的碳權嗎？</summary><div class="a">不是，是約 60 年的長期預估移除量。已核發額度只包含完成監測與認證的部分，兩者不能相加。</div></details>
+<details class="q"><summary>11. 曾文溪口紅樹林從 4 ha 增加到 17 ha，為什麼管理單位要抑制？</summary><div class="a">紅樹林擴張壓縮了黑面琵鷺等水鳥覓食的開闊泥灘地。碳儲量增加不等於生態復育成功，管理目標是維持不同棲地類型與功能。</div></details>
+<details class="q"><summary>12. 企業把海草復育專案寫進自己的 ISO 14064-1 盤查報告，就有碳權了嗎？</summary><div class="a">沒有。碳權要依方法學註冊、監測、查證並由主管機關核發；盤查報告只是了解組織自身的排放與移除。</div></details>
+</section>
+
+<section id="gloss">
+<h2><span class="no">15</span>名詞表</h2>
+<dl class="gloss">
+  <dt>藍碳</dt><dd>海洋與海岸生態系吸收儲存的碳。</dd>
+  <dt>沿岸藍碳</dt><dd>紅樹林、潮汐鹽沼、海草床的碳，已有較成熟的量化架構。</dd>
+  <dt>CDR／mCDR</dt><dd>人為碳移除／海洋碳移除技術。</dd>
+  <dt>碳庫／碳儲量</dt><dd>能儲存碳的組成部分／某時間點碳庫中實際的碳量。</dd>
+  <dt>碳埋藏速率</dt><dd>有機碳進入沉積物並累積的速率。</dd>
+  <dt>基線情境</dt><dd>沒有專案時合理預期會發生的情況（反事實）。</dd>
+  <dt>外加性</dt><dd>減量是因專案才發生，不是原本就會發生。</dd>
+  <dt>洩漏</dt><dd>專案造成邊界外排放增加。</dd>
+  <dt>反轉</dt><dd>已認列的碳儲存效益後來損失。</dd>
+  <dt>永久性</dt><dd>效益能在制度要求期間內維持。</dd>
+  <dt>保守性</dt><dd>不確定時採不致高估的假設。</dd>
+  <dt>緩衝帳戶（Buffer Pool）</dt><dd>保留部分額度作為未來反轉的補償來源。</dd>
+  <dt>計入期／監測期間</dt><dd>可申請額度的期間／一次報告涵蓋的區間。</dd>
+  <dt>PDD</dt><dd>專案計畫書（Project Design Document）。</dd>
+  <dt>確證／查證</dt><dd>Validation 事前審設計／Verification 事後審成果。</dd>
+  <dt>ICVCM／CCPs</dt><dd>國際自願碳市場誠信委員會／核心碳原則。</dd>
+  <dt>VCS／VCU</dt><dd>Verra 的自願碳標準／經查證的碳單位。</dd>
+  <dt>VM0033</dt><dd>Verra 潮汐濕地與海草床復育方法學。</dd>
+  <dt>AR-AM0014</dt><dd>CDM 劣化紅樹林造林再造林方法學。</dd>
+  <dt>AL-TMS0002／0003</dt><dd>臺灣海草復育／紅樹林植林方法學（2025.7.24 通過）。</dd>
+  <dt>Managed Land</dt><dd>IPCC 以受人類管理的土地代表人為影響的原則。</dd>
+  <dt>psu</dt><dd>實用鹽度單位，約等於每千克海水含鹽克數。</dd>
+  <dt>OAE</dt><dd>海洋鹼度提升。</dd>
+  <dt>J-Blue Credit</dt><dd>日本藍碳額度制度，由 JBE 管理。</dd>
+</dl>
+</section>
+<nav class="pager" aria-label="上一講／下一講"><a class="prev" href="02-emission-inventory.html"><small>← 上一講</small>2. 農業部門排放清冊</a><a class="next" href="04-iso-standards.html"><small>下一講 →</small>4. ISO 14064 與 14067</a></nav>
+</main>
+</div>
+<script>
+(function(){
+  var b=document.body,K='tocOff';
+  function set(off){b.classList.toggle('toc-off',off);try{localStorage.setItem(K,off?'1':'0')}catch(e){}}
+  try{if(localStorage.getItem(K)==='1')b.classList.add('toc-off')}catch(e){}
+  document.getElementById('tocHide').addEventListener('click',function(){set(true)});
+  document.getElementById('tocShow').addEventListener('click',function(){set(false)});
+})();
+</script>
+
+
+<script>
+(function(){
+  var ids=['pj','bl','pe','lk'],el={},o=document.getElementById('out3');
+  ids.forEach(function(i){el[i]=document.getElementById(i)});
+  function v(i){return parseFloat(el[i].value)||0}
+  function f(n,d){return n.toLocaleString('zh-TW',{maximumFractionDigits:d===undefined?1:d})}
+  function run(){
+    var add=v('pj')-v('bl'),co2=add*44/12,net=co2-v('pe')-v('lk');
+    o.innerHTML='額外碳庫增加 ＝ '+f(v('pj'))+' − '+f(v('bl'))+' ＝ '+f(add)+' t C<br>換算 CO₂ ＝ '+f(add)+' × 44/12 ＝ '+f(co2)+' t CO₂<br>淨移除 ＝ '+f(co2)+' − '+f(v('pe'))+' − '+f(v('lk'))+' ＝ <b>'+f(net,0)+' t CO₂e</b>';
+  }
+
+  var W=document.getElementById('wf3');
+  function wf(){
+    var a=v('pj')*44/12,b=v('bl')*44/12,pe=v('pe'),lk=v('lk'),net=a-b-pe-lk;
+    var items=[['專案碳庫增加',a,'acc',0],['扣基線',-b,'mut',a],['扣專案排放',-pe,'soil',a-b],['扣洩漏',-lk,'soil',a-b-pe],['淨移除',net,'accn',0]];
+    var mx=Math.max(a,net,1),mn=Math.min(0,net),H=220,top=30,bw=84,gap=40,left=20;
+    function y(t){return top+(mx-t)/(mx-mn)*H}
+    var h='<svg viewBox="0 0 '+(left+items.length*(bw+gap))+' 300" width="'+(left+items.length*(bw+gap))+'" role="img" aria-label="淨移除量瀑布圖">';
+    h+='<line x1="0" x2="'+(left+items.length*(bw+gap))+'" y1="'+y(0)+'" y2="'+y(0)+'" class="ax"/>';
+    items.forEach(function(it,i){
+      var x=left+i*(bw+gap),v0=it[3],v1=it[3]+it[1],yt=y(Math.max(v0,v1)),yb=y(Math.min(v0,v1)),hh=Math.max(yb-yt,1.5);
+      var cls=it[2]==='accn'?'g-acc':'g-'+it[2];
+      h+='<rect class="hit '+cls+'" x="'+x+'" y="'+yt+'" width="'+bw+'" height="'+hh+'" rx="4"><title>'+it[0]+'：'+f(it[1])+' t CO₂e</title></rect>';
+      if(i<items.length-1){var nx=x+bw,ny=y(it[3]+it[1]);if(i===0)ny=y(it[1]);h+='<line x1="'+nx+'" x2="'+(nx+gap)+'" y1="'+ny+'" y2="'+ny+'" class="s-mut" stroke-dasharray="3 3"/>'}
+      h+='<text x="'+(x+bw/2)+'" y="'+(yt-8)+'" text-anchor="middle" class="n">'+(i>0&&i<4&&it[1]!==0?'−'+f(Math.abs(it[1])):f(Math.abs(it[1])===0?0:it[1]))+'</text>';
+      h+='<text x="'+(x+bw/2)+'" y="290" text-anchor="middle" class="m">'+it[0]+'</text>';
+    });
+    W.innerHTML=h+'</svg>';
+  }
+  ids.forEach(function(i){el[i].addEventListener('input',function(){run();wf()})});
+  run();wf();
+})();
+</script>
+<script>
+(function(){
+  var NS='http://www.w3.org/2000/svg',n=0;
+  function rp(p,r){var d='M'+p[0][0]+','+p[0][1];for(var i=1;i<p.length-1;i++){var a=p[i-1],b=p[i],c=p[i+1];
+    var l1=Math.hypot(b[0]-a[0],b[1]-a[1]),l2=Math.hypot(c[0]-b[0],c[1]-b[1]),k=Math.min(r,l1/2,l2/2);
+    var x1=b[0]-(b[0]-a[0])/l1*k,y1=b[1]-(b[1]-a[1])/l1*k,x2=b[0]+(c[0]-b[0])/l2*k,y2=b[1]+(c[1]-b[1])/l2*k;
+    d+=' L'+x1+','+y1+' Q'+b[0]+','+b[1]+' '+x2+','+y2}
+    var e=p[p.length-1];return d+' L'+e[0]+','+e[1]}
+  function draw(c){
+    var old=c.querySelector(':scope>.loop-svg'); if(old) old.remove();
+    var spans=[].slice.call(c.querySelectorAll(':scope>span'));
+    var to=c.querySelector('[data-loop-to]')||spans[0], from=c.querySelector('[data-loop-from]')||spans[spans.length-1];
+    if(!to||!from) return;
+    var cr=c.getBoundingClientRect();
+    function R(el){var b=el.getBoundingClientRect();return{l:b.left-cr.left,r:b.right-cr.left,t:b.top-cr.top,b:b.bottom-cr.top,cx:(b.left+b.right)/2-cr.left,cy:(b.top+b.bottom)/2-cr.top}}
+    var a=R(to),z=R(from),maxB=0,minL=1e9,rowFirst=true;
+    spans.forEach(function(k){var r=R(k);if(r.l<minL)minL=r.l;if(k!==to&&Math.abs(r.t-a.t)<6&&r.l<a.l)rowFirst=false});
+    Array.prototype.forEach.call(c.children,function(k){if(k.classList.contains('loop-svg'))return;var b=k.getBoundingClientRect().bottom-cr.top;if(b>maxB)maxB=b});
+    var y=maxB+16,x=minL-18,d,lx;
+    if(Math.abs(a.t-z.t)<6){d=rp([[z.cx,z.b],[z.cx,y],[a.cx,y],[a.cx,a.b+4]],10);lx=(a.cx+z.cx)/2}
+    else if(rowFirst){d=rp([[z.cx,z.b],[z.cx,y],[x,y],[x,a.cy],[a.l-4,a.cy]],10);lx=(x+z.cx)/2}
+    else{var top=a.t-14;d=rp([[z.cx,z.b],[z.cx,y],[x,y],[x,top],[a.cx,top],[a.cx,a.t-4]],10);lx=(x+z.cx)/2}
+    var id='lh'+(++n),s=document.createElementNS(NS,'svg');
+    s.setAttribute('class','loop-svg');s.setAttribute('width',cr.width);s.setAttribute('height',y+24);s.setAttribute('aria-hidden','true');
+    s.innerHTML='<defs><marker id="'+id+'" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0L10,5L0,10z" fill="currentColor"/></marker></defs>'+
+      '<path d="'+d+'" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#'+id+')"/>'+
+      '<text x="'+Math.max(lx,60)+'" y="'+(y+18)+'" text-anchor="middle"></text>';
+    s.querySelector('text').textContent='↺ '+(c.getAttribute('data-loop-label')||'');
+    c.appendChild(s);
+  }
+  var els=document.querySelectorAll('.loop');
+  function all(){els.forEach(draw)}
+  all(); window.addEventListener('resize',all);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(all);
+  if(window.ResizeObserver){var w={};var ro=new ResizeObserver(function(es){es.forEach(function(e){var c=e.target,k=Math.round(e.contentRect.width);if(c._w!==k){c._w=k;draw(c)}})});els.forEach(function(c){ro.observe(c)})}
+})();
+</script>
+<!--gm-js--><script>
+/* 跳出式小遊戲引擎：右下角按鈕 → 對話框；題目、解釋、計分；場景由各頁提供 */
+window.GMRUN=function(C){
+  var NS='http://www.w3.org/2000/svg',D=document;
+  var reduce=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
+  function el(tag,a,html,par){var e=D.createElementNS(NS,tag);if(a)for(var k in a)e.setAttribute(k,a[k]);if(html)e.innerHTML=html;if(par)par.appendChild(e);return e}
+  function h(tag,cls,html,par){var e=D.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;if(par)par.appendChild(e);return e}
+
+  /* ---------- 介面 ---------- */
+  var ICON='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.2" r=".6" fill="currentColor"/><circle cx="17.6" cy="13.6" r=".6" fill="currentColor"/></svg>';
+  var fab=h('button','gm-fab',ICON+'<span>小遊戲</span>',D.body);fab.type='button';fab.setAttribute('aria-haspopup','dialog');
+  var tip=h('div','gm-tip','<button type="button" class="gm-tipx" aria-label="關閉提示">×</button><b>考考你</b><span></span>',D.body);
+  tip.querySelector('span').textContent=C.teaser;
+  var ov=h('div','gm-ov',null,D.body);ov.hidden=true;
+  var dlg=h('div','gm-dlg','<div class="gm-hd"><b id="gmTitle"></b><button type="button" class="gm-x" aria-label="關閉小遊戲">×</button></div>'+
+    '<svg class="gm-stage" viewBox="'+(C.vb||'0 0 880 260')+'" role="img"></svg>'+
+    '<div class="gm-card"><div class="gm-prog"></div><p class="gm-q"></p><div class="gm-opts"></div><div class="gm-fb" aria-live="polite"></div></div>',ov);
+  dlg.setAttribute('role','dialog');dlg.setAttribute('aria-modal','true');dlg.setAttribute('aria-labelledby','gmTitle');
+  dlg.querySelector('#gmTitle').textContent='小遊戲：'+C.title;
+  var st=dlg.querySelector('svg'),qEl=dlg.querySelector('.gm-q'),oEl=dlg.querySelector('.gm-opts'),fEl=dlg.querySelector('.gm-fb'),pEl=dlg.querySelector('.gm-prog');
+  st.setAttribute('aria-label',C.alt||C.title);
+
+  /* ---------- 動畫工具 ---------- */
+  var loops=[],touts=[],fx;
+  function stopAll(){loops.forEach(clearInterval);touts.forEach(clearTimeout);loops=[];touts=[]}
+  var api={svg:st,reduce:reduce,el:el,
+    C:{co2:'#86a8e6',ch4:'#c9a66b',n2o:'#d28bb4',gas:'#8fae9a',smoke:'#9aa0a6'},
+    loop:function(fn,ms){fn();loops.push(setInterval(fn,reduce?ms*1.6:ms))},
+    later:function(fn,ms){touts.push(setTimeout(fn,reduce?0:ms))},
+    A:function(e,fr,ms,o){o=o||{};if(!e||!e.animate)return null;if(reduce&&o.iter===Infinity)return null;
+      var an=e.animate(fr,{duration:reduce?1:ms,delay:reduce?0:(o.delay||0),easing:o.ease||'ease-out',fill:o.fill||'forwards',iterations:o.iter||1,direction:o.dir||'normal'});
+      if(o.done)an.onfinish=o.done;return an},
+    /* 放一個物件：外層定位，內層可動（原點在底部中央） */
+    put:function(par,x,y,s,html,origin){var g=el('g',{transform:'translate('+x+' '+y+')'+(s&&s!==1?' scale('+s+')':'')},null,par||st);
+      var i=el('g',{},html,g);i.style.transformBox='fill-box';i.style.transformOrigin=origin||'50% 100%';i.outer=g;i.x=x;i.y=y;i.s=s||1;return i},
+    top:function(){if(!fx)fx=el('g',{});st.appendChild(fx);return fx},
+    puff:function(x,y,o){o=o||{};var g=el('g',{class:'gas'},null,api.top()),n=o.n||3,r=o.r||11;
+      for(var i=0;i<n;i++)el('circle',{cx:x+(i-(n-1)/2)*r*.9,cy:y+(i%2?-r*.55:0),r:r+(i===1?3:0),fill:o.color||api.C.gas,opacity:.6},null,g);
+      if(o.label){var t=el('text',{x:x,y:y-1},null,g);t.textContent=o.label}
+      g.style.transformBox='fill-box';g.style.transformOrigin='50% 50%';
+      var dx=o.dx==null?0:o.dx,dy=o.dy==null?-60:o.dy;
+      api.A(g,[{transform:'translate(0,0) scale(.35)',opacity:0},{opacity:.95,offset:.15},{transform:'translate('+dx+'px,'+dy+'px) scale('+(o.grow||1.5)+')',opacity:0}],o.ms||2400,{done:function(){g.remove()},fill:'none'});
+      if(reduce)api.later(function(){g.remove()},1200);return g},
+    pop:function(x,y,txt,o){o=o||{};var t=el('text',{class:'pop',x:x,y:y},null,api.top());t.textContent=txt;if(o.color)t.style.fill=o.color;if(o.size)t.style.fontSize=o.size+'px';
+      t.style.transformBox='fill-box';t.style.transformOrigin='50% 100%';
+      api.A(t,[{opacity:0,transform:'scale(.4)'},{opacity:1,transform:'scale(1.15)',offset:.2},{opacity:1,transform:'scale(1)',offset:.7},{opacity:0,transform:'translateY(-10px)'}],o.ms||1300,{done:function(){t.remove()},fill:'none'});
+      if(reduce)api.later(function(){t.remove()},1200);return t},
+    pulse:function(e){return api.A(e,[{transform:'scale(1)'},{transform:'scale(1.12)'},{transform:'scale(1)'}],700,{fill:'none'})},
+    /* 背景：地面、草、圍籬、太陽 */
+    bg:function(o){o=o||{};var gy=o.ground==null?200:o.ground,W=880,s='';
+      if(o.sun)s+='<circle cx="'+(o.sun[0])+'" cy="'+(o.sun[1])+'" r="22" fill="#f2c94c" opacity=".85"/>';
+      if(o.hills)s+='<path d="M0 '+(gy-10)+' Q140 '+(gy-70)+' 300 '+(gy-24)+' T600 '+(gy-30)+' T880 '+(gy-40)+' V'+gy+' H0Z" fill="var(--accent-soft)" opacity=".7"/>';
+      if(o.fence){s+='<g stroke="var(--line)" stroke-width="4" stroke-linecap="round"><line x1="0" y1="'+(gy-48)+'" x2="'+W+'" y2="'+(gy-48)+'"/><line x1="0" y1="'+(gy-28)+'" x2="'+W+'" y2="'+(gy-28)+'"/>';
+        for(var x=60;x<W;x+=140)s+='<line x1="'+x+'" y1="'+(gy-62)+'" x2="'+x+'" y2="'+(gy+4)+'"/>';s+='</g>'}
+      s+='<rect x="0" y="'+gy+'" width="'+W+'" height="'+(400-gy)+'" fill="'+(o.color||'var(--accent-soft)')+'"/>';
+      (o.grass||[]).forEach(function(x,i){var y=gy+14+(i%3)*12;s+='<path d="M'+(x-5)+' '+y+' q0 -6 -4 -10 M'+x+' '+y+' q0 -8 2 -13 M'+(x+5)+' '+y+' q1 -6 5 -10" stroke="var(--accent)" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/>'});
+      return el('g',{},s,st)},
+    text:function(x,y,txt,cls,par){var t=el('text',{x:x,y:y,class:cls||'lbl'},null,par||st);t.textContent=txt;return t}
+  };
+
+  /* ---------- 共用圖形（原點在底部中央，面向右） ---------- */
+  var K='#2b2b2b';
+  api.SH={
+    conifer:function(c){c=c||'#3f7d58';return '<rect x="-5" y="-24" width="10" height="24" fill="#7a5a3a"/><path d="M0 -112 L-24 -66 L24 -66Z" fill="'+c+'"/><path d="M0 -92 L-31 -44 L31 -44Z" fill="'+c+'"/><path d="M0 -70 L-38 -20 L38 -20Z" fill="'+c+'"/>'},
+    broad:function(c){c=c||'#4f8f5f';return '<rect x="-6" y="-44" width="12" height="44" fill="#7a5a3a"/><circle cx="-20" cy="-56" r="22" fill="'+c+'"/><circle cx="20" cy="-56" r="22" fill="'+c+'"/><circle cx="0" cy="-74" r="30" fill="'+c+'"/>'},
+    cabbage:'<ellipse cx="0" cy="-13" rx="24" ry="14" fill="#6fae5c"/><ellipse cx="-10" cy="-16" rx="12" ry="10" fill="#86c46f"/><ellipse cx="10" cy="-16" rx="12" ry="10" fill="#86c46f"/><ellipse cx="0" cy="-19" rx="12" ry="10" fill="#b4e09a"/><path d="M-5 -22 q5 -5 10 0" stroke="#6fae5c" stroke-width="2" fill="none"/>',
+    bamboo:function(hh){var s='<rect x="-4" y="-'+hh+'" width="8" height="'+hh+'" rx="3" fill="#7fae4f"/>';for(var y=22;y<hh;y+=22)s+='<rect x="-5" y="-'+y+'" width="10" height="3" fill="#5f8f3a"/>';
+      s+='<path d="M0 -'+(hh-6)+' q16 -6 26 2 q-14 4 -26 -2z M0 -'+(hh-18)+' q-16 -6 -26 2 q14 4 26 -2z M0 -'+(hh-30)+' q16 -4 24 4 q-14 2 -24 -4z" fill="#5f9f4f"/>';return s},
+    rice:function(grain){return '<path d="M0 0 q-5 -28 -16 -44 M0 0 q0 -34 2 -56 M0 0 q5 -28 15 -42 M0 0 q-2 -20 -9 -30" stroke="#5f9f4f" stroke-width="3" fill="none" stroke-linecap="round"/>'+(grain?'<path d="M2 -56 q10 4 12 18" stroke="#d9b44a" stroke-width="4" fill="none" stroke-linecap="round" stroke-dasharray="3 2"/>':'')},
+    mangrove:'<path d="M-24 0 q4 -26 22 -34 M24 0 q-4 -26 -22 -34 M-10 0 q2 -18 8 -34 M10 0 q-2 -18 -8 -34" stroke="#6b4e34" stroke-width="3" fill="none"/><rect x="-3" y="-62" width="6" height="30" fill="#6b4e34"/><ellipse cx="-18" cy="-62" rx="20" ry="13" fill="#4f8f5f"/><ellipse cx="18" cy="-62" rx="20" ry="13" fill="#4f8f5f"/><ellipse cx="0" cy="-74" rx="32" ry="18" fill="#3f7d58"/>',
+    spoonbill:'<line x1="-4" y1="-20" x2="-6" y2="0" stroke="'+K+'" stroke-width="2"/><line x1="5" y1="-20" x2="7" y2="0" stroke="'+K+'" stroke-width="2"/><ellipse cx="2" cy="-28" rx="17" ry="10" fill="#fafafa" stroke="'+K+'" stroke-width="1.5"/><path d="M-11 -33 Q-18 -44 -14 -50" stroke="#fafafa" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M-11 -33 Q-18 -44 -14 -50" stroke="'+K+'" stroke-width="1" fill="none" opacity=".4"/><circle cx="-15" cy="-52" r="6" fill="#fafafa" stroke="'+K+'" stroke-width="1.5"/><path d="M-20 -52 L-36 -45" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/><ellipse cx="-37" cy="-44" rx="4.5" ry="3.2" fill="'+K+'"/><circle cx="-16" cy="-53" r="1.3" fill="'+K+'"/>',
+    pig:'<rect x="-30" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="-16" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="12" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="26" y="-24" width="9" height="24" rx="3" fill="#e993a6"/>'+
+      '<path d="M-44 -42 q-10 -2 -8 -10 q2 -6 8 -2" stroke="'+K+'" stroke-width="2" fill="none"/><ellipse cx="0" cy="-38" rx="46" ry="26" fill="#f4b6c2" stroke="'+K+'" stroke-width="2"/>'+
+      '<circle cx="40" cy="-46" r="19" fill="#f4b6c2" stroke="'+K+'" stroke-width="2"/><path d="M30 -62 l4 -12 l8 9z" fill="#e993a6" stroke="'+K+'" stroke-width="1.5"/><ellipse cx="57" cy="-42" rx="8" ry="7" fill="#e993a6" stroke="'+K+'" stroke-width="2"/><circle cx="55" cy="-42" r="1.5" fill="'+K+'"/><circle cx="60" cy="-42" r="1.5" fill="'+K+'"/><circle cx="44" cy="-52" r="2.4" fill="'+K+'"/>',
+    tractor:'<rect x="-40" y="-42" width="58" height="22" rx="4" fill="#c0503a"/><rect x="-36" y="-74" width="30" height="34" rx="3" fill="none" stroke="'+K+'" stroke-width="3"/><rect x="10" y="-32" width="32" height="15" rx="3" fill="#c0503a"/><rect x="24" y="-56" width="5" height="26" fill="#555"/>'+
+      '<circle cx="-24" cy="-19" r="19" fill="#333"/><circle cx="-24" cy="-19" r="7" fill="#bbb"/><circle cx="32" cy="-12" r="12" fill="#333"/><circle cx="32" cy="-12" r="4.5" fill="#bbb"/>',
+    plow:'<path d="M-44 -26 L-64 -8 L-58 4 L-52 -6 M-58 -18 L-76 -2 L-70 8" stroke="#666" stroke-width="3.5" fill="none" stroke-linecap="round"/>',
+    pole:'<rect x="-3" y="-124" width="6" height="124" fill="#7a5a3a"/><rect x="-24" y="-116" width="48" height="5" fill="#7a5a3a"/><circle cx="-18" cy="-118" r="3" fill="#ccc"/><circle cx="18" cy="-118" r="3" fill="#ccc"/><path d="M4 -86 l-8 14 h7 l-5 14 l12 -18 h-7 l5 -10z" fill="#f2c94c" stroke="'+K+'" stroke-width="1"/>',
+    pond:'<ellipse cx="0" cy="-8" rx="52" ry="13" fill="#6b4e34"/><ellipse cx="0" cy="-10" rx="45" ry="8" fill="#9b7650"/>',
+    factory:'<rect x="30" y="-122" width="16" height="70" fill="#6f777f"/><rect x="-56" y="-60" width="112" height="60" fill="#8a929a"/><path d="M-56 -60 l28 -18 v18 l28 -18 v18 l28 -18 v18" fill="#8a929a"/>'+
+      '<rect x="-44" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="-18" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="8" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="-10" y="-20" width="20" height="20" fill="#5b636b"/>',
+    coin:function(t){return '<circle cx="0" cy="-13" r="13" fill="#e2b84a" stroke="#a7822a" stroke-width="2"/><text x="0" y="-8.5" text-anchor="middle" style="font:700 13px var(--font-num);fill:#7a5a1a">'+(t||'$')+'</text>'},
+    jar:'<path d="M-30 0 h60 v-58 q0 -8 -8 -8 h-44 q-8 0 -8 8z" fill="var(--paper)" stroke="var(--muted)" stroke-width="2.5"/><rect x="-24" y="-74" width="48" height="8" rx="3" fill="var(--muted)"/>',
+    bento:'<rect x="-62" y="-50" width="124" height="50" rx="6" fill="#b5764a" stroke="'+K+'" stroke-width="2"/><rect x="-56" y="-44" width="62" height="38" rx="3" fill="#fbf8ef"/><rect x="10" y="-44" width="46" height="18" rx="3" fill="#7fbf6a"/><rect x="10" y="-24" width="46" height="18" rx="3" fill="#f2d16b"/>'+
+      '<ellipse cx="-24" cy="-30" rx="26" ry="11" fill="#a0612f" stroke="#7a4520" stroke-width="2"/><path d="M-40 -32 h30 M-38 -27 h26" stroke="#7a4520" stroke-width="1.5"/>',
+    train:'<rect x="-110" y="-62" width="220" height="50" rx="10" fill="#e1e5ea" stroke="'+K+'" stroke-width="2"/><rect x="-110" y="-30" width="220" height="8" fill="#d0602f"/>'+
+      '<rect x="-96" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="-52" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="-8" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="36" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="80" y="-54" width="22" height="18" rx="3" fill="#7ea6c9"/>'+
+      '<circle cx="-74" cy="-8" r="8" fill="#333"/><circle cx="-50" cy="-8" r="8" fill="#333"/><circle cx="50" cy="-8" r="8" fill="#333"/><circle cx="74" cy="-8" r="8" fill="#333"/>',
+    dome:'<path d="M-56 0 v-30 a56 44 0 0 1 112 0 v30z" fill="#a7adb3" stroke="'+K+'" stroke-width="2"/><path d="M-56 -30 h112" stroke="'+K+'" stroke-width="1.5" opacity=".5"/><rect x="-6" y="-84" width="12" height="12" fill="#6f777f"/>',
+    bee:'<g><ellipse cx="-2" cy="-10" rx="5" ry="4" fill="#fff" opacity=".85"/><ellipse cx="4" cy="-10" rx="5" ry="4" fill="#fff" opacity=".85"/><ellipse cx="0" cy="-3" rx="9" ry="6.5" fill="#f2c230" stroke="'+K+'" stroke-width="1.2"/><path d="M-2 -9 v12 M3 -8.5 v11" stroke="'+K+'" stroke-width="2"/><circle cx="8" cy="-4" r="1.3" fill="'+K+'"/></g>',
+    flower:function(c){return '<path d="M0 0 v-30" stroke="#5f9f4f" stroke-width="3"/><path d="M0 -14 q-10 -4 -12 -12 q8 0 12 8" fill="#5f9f4f"/><g fill="'+(c||'#e98fa3')+'"><circle cx="0" cy="-40" r="6"/><circle cx="-8" cy="-33" r="6"/><circle cx="8" cy="-33" r="6"/><circle cx="-5" cy="-25" r="6"/><circle cx="5" cy="-25" r="6"/></g><circle cx="0" cy="-32" r="4.5" fill="#f2c94c"/>'},
+    larva:'<ellipse cx="0" cy="-4" rx="11" ry="4.5" fill="#efe6c8" stroke="#8a7a50" stroke-width="1"/><path d="M-5 -8 v8 M0 -8.5 v9 M5 -8 v8" stroke="#8a7a50" stroke-width=".8"/>',
+    truck:'<rect x="-50" y="-48" width="64" height="36" rx="3" fill="#7fa7c9" stroke="'+K+'" stroke-width="2"/><path d="M14 -40 h20 l12 14 v14 h-32z" fill="#d0602f" stroke="'+K+'" stroke-width="2"/><rect x="20" y="-36" width="12" height="10" fill="#cfe3f2"/><circle cx="-30" cy="-10" r="9" fill="#333"/><circle cx="30" cy="-10" r="9" fill="#333"/>',
+    shop:'<rect x="-50" y="-70" width="100" height="70" fill="#e9e4d6" stroke="'+K+'" stroke-width="2"/><path d="M-56 -70 h112 l-8 -18 h-96z" fill="#d0602f" stroke="'+K+'" stroke-width="2"/><rect x="-36" y="-50" width="30" height="24" fill="#cfe3f2" stroke="'+K+'" stroke-width="1.5"/><rect x="10" y="-44" width="24" height="44" fill="#8a6a4a"/>',
+    log:'<rect x="-26" y="-14" width="52" height="14" rx="7" fill="#9b7650" stroke="#6b4e34" stroke-width="2"/><ellipse cx="26" cy="-7" rx="5" ry="7" fill="#d9b98a" stroke="#6b4e34" stroke-width="1.5"/>',
+    seagrass:'<path d="M-10 0 q-6 -20 2 -40 M-3 0 q4 -24 -2 -48 M4 0 q-4 -18 4 -38 M11 0 q6 -16 0 -32" stroke="#3f8f6a" stroke-width="3.5" fill="none" stroke-linecap="round"/>'
+  };
+  /* 牛、羊（左上原點畫，包一層移到底部中央） */
+  var COW='<path d="M14 30 q-14 12 -8 34" fill="none" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/>'+
+    [22,38,80,96].map(function(x,i){return '<g class="leg" data-b="'+(i==1||i==2?1:0)+'"><rect x="'+x+'" y="50" width="10" height="32" rx="3" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/><rect x="'+x+'" y="76" width="10" height="7" fill="'+K+'"/></g>'}).join('')+
+    '<rect x="12" y="20" width="100" height="42" rx="19" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/>'+
+    '<path d="M30 21 q10 12 26 6 q4 -4 2 -7z" fill="'+K+'"/><ellipse cx="82" cy="44" rx="12" ry="8" fill="'+K+'"/><ellipse cx="44" cy="50" rx="6" ry="4" fill="'+K+'"/>'+
+    '<path d="M108 10 q-6 -9 0 -12 M126 9 q6 -9 0 -12" fill="none" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/><ellipse cx="102" cy="16" rx="8" ry="4" fill="#fbfaf6" stroke="'+K+'" stroke-width="2" transform="rotate(-20 102 16)"/>'+
+    '<rect x="102" y="6" width="34" height="32" rx="13" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/><rect x="118" y="23" width="24" height="17" rx="8" fill="#f0b8ad" stroke="'+K+'" stroke-width="2"/>'+
+    '<circle cx="114" cy="17" r="2.6" fill="'+K+'"/><circle cx="129" cy="30" r="1.8" fill="'+K+'"/><circle cx="137" cy="30" r="1.8" fill="'+K+'"/>';
+  var SHEEP=[24,36,66,78].map(function(x,i){return '<g class="leg" data-b="'+(i==1||i==2?1:0)+'"><rect x="'+x+'" y="50" width="7" height="30" rx="2" fill="#3b3631"/></g>'}).join('')+
+    [[24,38,14],[40,27,14],[60,25,14],[78,32,14],[32,52,12],[52,54,12],[72,50,12],[84,44,10]].map(function(c){return '<circle cx="'+c[0]+'" cy="'+c[1]+'" r="'+c[2]+'" fill="#f4f1e8" stroke="'+K+'" stroke-width="2"/>'}).join('')+
+    '<rect x="22" y="28" width="62" height="28" rx="14" fill="#f4f1e8"/><ellipse cx="92" cy="22" rx="8" ry="4" fill="#3b3631" transform="rotate(-25 92 22)"/>'+
+    '<ellipse cx="100" cy="32" rx="12" ry="14" fill="#3b3631"/><circle cx="96" cy="20" r="7" fill="#f4f1e8" stroke="'+K+'" stroke-width="2"/><circle cx="104" cy="28" r="2.6" fill="#fff"/><circle cx="104.5" cy="28.5" r="1.3" fill="'+K+'"/>';
+  api.SH.cow='<g transform="translate(-70 -83)">'+COW+'</g>';
+  api.SH.sheep='<g transform="translate(-56 -80)">'+SHEEP+'</g>';
+  api.SH.cowPts={mouth:[72,-47],nose:[74,-53],rear:[-62,-45]};
+  api.SH.sheepPts={mouth:[54,-40],nose:[56,-44],rear:[-44,-38]};
+  /* 跑步：腳擺動，回傳停止函式 */
+  api.legs=function(g){var a=[];g.querySelectorAll('.leg').forEach(function(l){l.style.transformBox='fill-box';l.style.transformOrigin='50% 0';
+      var an=api.A(l,[{transform:'rotate(20deg)'},{transform:'rotate(-20deg)'}],260,{iter:Infinity,dir:'alternate',ease:'ease-in-out',delay:l.getAttribute('data-b')==='1'?0:0,fill:'none'});
+      if(an&&l.getAttribute('data-b')==='1')an.currentTime=260;if(an)a.push(an)});
+    return function(){a.forEach(function(x){x.cancel()})}};
+
+  /* ---------- 遊戲流程 ---------- */
+  var Q=C.questions,idx=0,score=0,phase='idle',S=C.scene(api);
+  function act(n){if(n&&S.acts&&S.acts[n])S.acts[n]()}
+  function btn(t,cls,fn){var b=D.createElement('button');b.type='button';b.textContent=t;if(cls)b.className=cls;b.addEventListener('click',fn);return b}
+  function show(){phase='q';var q=Q[idx];pEl.textContent='第 '+(idx+1)+' 題／共 '+Q.length+' 題';qEl.textContent=q.q;oEl.innerHTML='';fEl.innerHTML='';
+    q.opts.forEach(function(o,i){oEl.appendChild(btn(o,'',function(){answer(i)}))});stopAll();act(q.act)}
+  function answer(i){phase='a';var q=Q[idx],right=i===q.ans;
+    oEl.querySelectorAll('button').forEach(function(b,j){b.disabled=true;b.classList.add(j===q.ans?'ok':j===i?'bad':'dim')});
+    if(right)score++;
+    if(q.after){stopAll();act(q.after)}
+    var why=typeof q.why==='object'?(q.why[i]||q.why.d):q.why;
+    var box=h('div','res '+(right?'ok':'bad'),'<b>'+(right?'答對了！':'答錯了')+'</b><p></p>',fEl);box.querySelector('p').textContent=right?q.ok:why;
+    var last=idx===Q.length-1,nx=btn(last?'看結果':(right?'下一題 →':'懂了，下一題 →'),'gm-next',function(){if(last)end();else{idx++;show()}});
+    fEl.appendChild(nx);try{nx.focus({preventScroll:true})}catch(e){}}
+  function end(){phase='end';stopAll();act('end');pEl.textContent='完成';
+    qEl.innerHTML='答對 <span class="gm-score">'+score+'／'+Q.length+'</span> 題';oEl.innerHTML='';fEl.innerHTML='';
+    var box=h('div','res ok','<b>重點</b><p></p>',fEl);box.querySelector('p').textContent=C.summary;
+    fEl.appendChild(btn('再玩一次','gm-next',function(){start()}))}
+  function start(){stopAll();idx=0;score=0;phase='enter';oEl.innerHTML='';fEl.innerHTML='';pEl.textContent='　';qEl.textContent=C.intro||'準備開始…';
+    S.enter(function(){if(phase==='enter')show()})}
+  var lastF=null;
+  function open(){hideTip();lastF=D.activeElement;ov.hidden=false;D.documentElement.classList.add('gm-lock');dlg.querySelector('.gm-x').focus();
+    if(phase==='idle'||phase==='enter')start();else if(phase==='q'||phase==='a')act(Q[idx].act)}
+  function close(){stopAll();ov.hidden=true;D.documentElement.classList.remove('gm-lock');if(phase==='enter')phase='idle';try{(lastF||fab).focus()}catch(e){}}
+  fab.addEventListener('click',open);
+  dlg.querySelector('.gm-x').addEventListener('click',close);
+  ov.addEventListener('click',function(e){if(e.target===ov)close()});
+  D.addEventListener('keydown',function(e){if(ov.hidden)return;
+    if(e.key==='Escape'){close();return}
+    if(e.key==='Tab'){var f=[].slice.call(dlg.querySelectorAll('button:not(:disabled)'));if(!f.length)return;var a=f[0],z=f[f.length-1];
+      if(e.shiftKey&&D.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&D.activeElement===z){e.preventDefault();a.focus()}}});
+
+  /* ---------- 提示泡泡：往下讀一段或停留 15 秒後出現一次 ---------- */
+  var tipDone=false,tipT;
+  function hideTip(){tip.classList.remove('on');clearTimeout(tipT)}
+  function showTip(){if(tipDone||!ov.hidden)return;tipDone=true;tip.classList.add('on');fab.classList.add('wig');tipT=setTimeout(hideTip,12000)}
+  tip.addEventListener('click',function(e){if(e.target.classList.contains('gm-tipx')){hideTip();return}open()});
+  setTimeout(showTip,15000);
+  window.addEventListener('scroll',function(){var m=D.scrollingElement||D.documentElement,max=m.scrollHeight-window.innerHeight;if(max>0&&(window.scrollY||m.scrollTop)>max*.25)showTip()},{passive:true});
+  api.open=open;return api;
+};
+GMRUN({title:'藍碳海岸',teaser:'原本就有的紅樹林，可以申請紅樹林植林碳權嗎？點我玩玩看',alt:'紅樹林、泥灘地與海草床',intro:'潮水退去，海岸出現了…',
+summary:'碳權要「新增」且「相對基線額外」：既有紅樹林不能申請植林碳權。額外移除＝專案增量－基線增量。碳儲量增加不等於生態復育成功，盤查報告也不等於碳權。',
+scene:function(G){
+  var SH=G.SH,GY=200,svg=G.svg;
+  G.bg({ground:GY,color:'#8a7a64',sun:[60,40]});
+  var sea=G.el('g',{},'<path d="M560 '+(GY-8)+' Q600 '+(GY-12)+' 640 '+(GY-8)+' T720 '+(GY-8)+' T800 '+(GY-8)+' T880 '+(GY-8)+' V262 H520 Q540 '+(GY+20)+' 560 '+(GY-8)+'Z" fill="#4d86b3" opacity=".75"/>',svg);
+  var wave=G.put(null,720,GY-6,1,'<path d="M-160 0 q10 -6 20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0" stroke="#bcd8ee" stroke-width="2.5" fill="none"/>','50% 50%');
+  var grass=[600,650,700,750,800,850].map(function(x){return G.put(null,x,258,.9,SH.seagrass)});
+  var mg=[60,135,210].map(function(x){return G.put(null,x,GY+4,1,SH.mangrove)});
+  var nm=[290,360,430,500].map(function(x){return G.put(null,x,GY+4,.95,SH.mangrove)});
+  var birds=[[310,GY+10,1],[395,GY+16,1.1],[470,GY+8,.95]].map(function(b){return G.put(null,b[0],b[1],b[2],SH.spoonbill)});
+  G.text(400,GY+50,'泥灘地','sub');G.text(720,GY+50,'海草床','sub');
+  function rnd(a){return a[Math.floor(Math.random()*a.length)]}
+  function into(x,y){G.puff(x,y,{dy:50,n:2,r:9,color:G.C.co2,label:'CO₂',grow:1.1,ms:1500})}
+  function waves(){G.A(wave,[{transform:'translateX(-12px)'},{transform:'translateX(12px)'}],1800,{iter:Infinity,dir:'alternate',ease:'ease-in-out'})}
+  function sway(){grass.forEach(function(g,i){G.A(g,[{transform:'rotate(-6deg)'},{transform:'rotate(6deg)'}],1600+i*90,{iter:Infinity,dir:'alternate',ease:'ease-in-out'})})}
+  function peck(){birds.forEach(function(b,i){G.A(b,[{transform:'rotate(0)'},{transform:'rotate(-14deg)'},{transform:'rotate(0)'}],900,{delay:i*400,iter:Infinity,ease:'ease-in-out'})})}
+  return {
+    enter:function(done){nm.forEach(function(m){G.A(m,[{transform:'scale(0)',opacity:0}],1)});
+      birds.forEach(function(b){G.A(b,[{transform:'translate(0,0)',opacity:1}],1)});
+      mg.forEach(function(m,i){G.A(m,[{transform:'scale(0)'},{transform:'scale(1)'}],800,{delay:i*160,ease:'cubic-bezier(.3,1.4,.5,1)'})});
+      grass.forEach(function(g,i){G.A(g,[{transform:'scaleY(0)'},{transform:'scaleY(1)'}],700,{delay:300+i*80})});
+      waves();G.later(function(){sway();peck();done()},1300)},
+    acts:{
+      tide:function(){G.loop(function(){into(rnd(mg).x,30)},1200);G.later(function(){G.pop(135,60,'原本就在',{size:16})},500)},
+      spread:function(){G.later(function(){G.pop(400,60,'紅樹林擴張！',{size:18})},100);
+        nm.forEach(function(m,i){G.A(m,[{transform:'scale(0)',opacity:1},{transform:'scale(1)',opacity:1}],800,{delay:600+i*700,ease:'cubic-bezier(.3,1.4,.5,1)'})});
+        birds.forEach(function(b,i){G.A(b,[{transform:'translate(0,0)',opacity:1},{transform:'translate('+(260-i*40)+'px,-190px) rotate(-10deg)',opacity:0}],1600,{delay:900+i*700,ease:'ease-in'})});
+        G.later(function(){G.pop(470,110,'黑面琵鷺沒地方覓食了…',{size:16})},3200)},
+      seagrass:function(){G.loop(function(){into(rnd(grass).x,120)},1100);
+        var t=['第 0 年：100 t C','沒專案十年後：120 t C','有專案十年後：180 t C'],k=0;G.loop(function(){G.pop(720,92,t[k++%3],{size:15,ms:1800})},1900)},
+      report:function(){G.loop(function(){into(rnd(grass).x,120)},1300);G.later(function(){G.pop(440,70,'盤查報告 ≠ 碳權',{size:18})},400)}
+    }}},
+questions:[
+  {act:'tide',q:'一片原本就存在、很健康的紅樹林，每年吸很多碳。可以申請「紅樹林植林」碳權（AL-TMS0003）嗎？',opts:['可以','不行'],ans:1,
+   ok:'AL-TMS0003 要在符合規定的人為型濕地「新增」植林，並證明相對基線的額外移除。',
+   why:'不行。AL-TMS0003 是「紅樹林植林」，要在符合規定的人為型濕地新增植林，並證明相對基線的額外移除。保護既有紅樹林有保育價值，但不是新增植林活動。'},
+  {act:'spread',q:'曾文溪口的紅樹林從 4 公頃長到 17 公頃，管理單位反而要抑制。為什麼？',opts:['壓縮了黑面琵鷺等水鳥覓食的泥灘地','紅樹林其實不會吸碳','紅樹林長太多會讓海水變淡'],ans:0,
+   ok:'碳儲量增加不等於生態復育成功；要維持不同棲地的功能。',
+   why:'紅樹林擴張壓縮了黑面琵鷺等水鳥覓食的開闊泥灘地。講義 3 的重點：碳儲量增加不等於生態復育成功，管理目標是維持不同棲地類型與功能。'},
+  {act:'seagrass',q:'海草床第 0 年 100 t C；沒做專案，十年後 120 t C；有做專案，十年後 180 t C。額外移除多少 CO₂？',opts:['約 293 t CO₂','220 t CO₂','660 t CO₂'],ans:1,
+   ok:'(180 − 100) − (120 − 100) ＝ 60 t C；× 44/12 ＝ 220 t CO₂。',
+   why:{0:'293 是把專案增加的 80 t C 全部算進去（80 × 44/12），忘了扣掉基線本來就會增加的 20 t C。正確：(180 − 100) − (120 − 100) ＝ 60 t C，× 44/12 ＝ 220 t CO₂。',
+        2:'660 是把 180 t C 整個存量換成 CO₂（180 × 44/12）。要算的是相對基線的增量：(180 − 100) − (120 − 100) ＝ 60 t C，× 44/12 ＝ 220 t CO₂。'}},
+  {act:'report',q:'企業把海草復育寫進自己的 ISO 14064-1 盤查報告，這樣就有碳權了嗎？',opts:['有','沒有'],ans:1,
+   ok:'碳權要依方法學註冊、監測、查證，再由主管機關核發。',
+   why:'沒有。碳權要依方法學註冊、監測、查證，並由主管機關核發；盤查報告只是了解組織自身的排放與移除。'}
+]});
+</script><!--/gm-js-->
+
+</body>
+</html>

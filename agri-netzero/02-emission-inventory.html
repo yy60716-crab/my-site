@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>農業部門排放清冊</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: 單欄閱讀講義，桌機左側固定目錄；筆記、ISO 連結、重點用不同框區分 */
+:root{
+  --bg:#f4f6f1; --paper:#ffffff; --fg:#1c231f; --muted:#5b6660; --line:#d9ded6;
+  --accent:#2f6a4c; --accent-soft:#e3eee6;
+  --ink:#2a4a9a; --ink-soft:#e8edf8;
+  --hl:#f3e27a; --soil:#9a6a22; --soil-soft:#f5ecdc;
+  --font-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --font-head:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --font-num:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141a17; --paper:#1b2320; --fg:#e4ebe6; --muted:#9aa8a0; --line:#2e3a35;
+  --accent:#7cc39b; --accent-soft:#1f3329; --ink:#9db4f0; --ink-soft:#1f2740;
+  --hl:#6b5d14; --soil:#d9a85a; --soil-soft:#30281a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141a17; --paper:#1b2320; --fg:#e4ebe6; --muted:#9aa8a0; --line:#2e3a35;
+  --accent:#7cc39b; --accent-soft:#1f3329; --ink:#9db4f0; --ink-soft:#1f2740;
+  --hl:#6b5d14; --soil:#d9a85a; --soil-soft:#30281a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.8;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1480px;margin:0 auto;display:grid;grid-template-columns:190px minmax(0,1fr);gap:36px;padding-block:32px 80px}
+@media (max-width:860px){.wrap{grid-template-columns:minmax(0,1fr)} nav.toc{position:static!important;max-height:none!important}}
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);align-self:start;max-height:calc(100vh - 32px);overflow:auto;font-size:14px}
+nav.toc h2{font-size:13px;letter-spacing:.12em;color:var(--muted);margin:0 0 8px;font-family:var(--font-body)}
+nav.toc ol{margin:0;padding-left:32px;display:grid;gap:4px}
+nav.toc a{color:var(--fg);text-decoration:none}
+nav.toc a:hover,nav.toc a:focus-visible{color:var(--accent);text-decoration:underline}
+main{min-width:0}
+.toc-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px}
+.toc-head h2{margin:0!important}
+.toc-btn{font:inherit;font-size:13px;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:6px;padding:2px 8px;cursor:pointer;line-height:1.6}
+.toc-btn:hover,.toc-btn:focus-visible{color:var(--accent);border-color:var(--accent)}
+.toc-open{display:none;white-space:nowrap}
+body.toc-off .wrap{grid-template-columns:76px minmax(0,1fr)}
+body.toc-off nav.toc>*:not(.toc-open){display:none}
+body.toc-off .toc-open{display:inline-block}
+@media (max-width:860px){body.toc-off .wrap{grid-template-columns:minmax(0,1fr)}}
+header.hero{border-bottom:3px solid var(--accent);padding-bottom:20px;margin-bottom:28px}
+.eyebrow{font-size:13px;letter-spacing:.14em;color:var(--accent);font-weight:700}
+h1{font-family:var(--font-head);font-weight:900;font-size:clamp(28px,5vw,42px);line-height:1.3;margin:6px 0 10px;text-wrap:balance}
+.meta{color:var(--muted);font-size:14px}
+h2{font-family:var(--font-head);font-size:26px;line-height:1.35;margin:56px 0 14px;text-wrap:balance;scroll-margin-top:16px}
+h2 .no{font-family:var(--font-num);color:var(--accent);font-size:18px;margin-right:10px}
+h3{font-size:19px;margin:30px 0 8px;color:var(--accent)}
+p{margin:10px 0}
+ul,ol{padding-left:22px;margin:8px 0}
+li{margin:3px 0}
+mark{background:linear-gradient(transparent 55%,var(--hl) 55%);color:inherit;padding:0 1px}
+.num{font-family:var(--font-num);font-variant-numeric:tabular-nums}
+.box{border-radius:10px;padding:14px 18px;margin:16px 0}
+.box>.tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.08em;padding:1px 8px;border-radius:999px;margin-bottom:4px}
+.box p,.box ul{margin:6px 0}
+.guide{background:var(--paper);border:1px solid var(--line)}
+.guide .tag{background:var(--accent);color:var(--paper)}
+.note{background:var(--ink-soft);border-left:4px solid var(--ink)}
+.note .tag{background:var(--ink);color:var(--paper)}
+.note .hand{color:var(--ink);font-weight:500}
+.iso{background:var(--soil-soft);border-left:4px solid var(--soil)}
+.iso .tag{background:var(--soil);color:var(--paper)}
+.key{background:var(--accent-soft);border-left:4px solid var(--accent)}
+.key .tag{background:var(--accent);color:var(--paper)}
+.unclear{color:var(--muted);font-size:13px;border-bottom:1px dotted var(--muted)}
+.tbl{overflow-x:auto;width:fit-content;max-width:100%;margin:14px 0;border:1px solid var(--line);border-radius:8px;background:var(--paper)}
+table{border-collapse:collapse;width:auto;font-size:15px;min-width:480px}
+th,td{padding:8px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--accent-soft);font-weight:700;white-space:nowrap}
+td.r,th.r{text-align:right}
+td:first-child,th:first-child{white-space:nowrap}
+tr:last-child td{border-bottom:none}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:16px 0}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.stat b{display:block;font-family:var(--font-num);font-size:22px;color:var(--accent);line-height:1.3}
+.stat span{font-size:13px;color:var(--muted)}
+.axes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:16px 0}
+.axis{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:8px;padding:12px 14px}
+.axis h4{margin:0 0 4px;font-size:17px}
+.axis .goal{font-family:var(--font-num);color:var(--accent);font-weight:700}
+.loop{position:relative;margin-top:22px!important;margin-bottom:48px!important;padding-left:26px}
+.loop-svg{position:absolute;left:0;top:0;overflow:visible;pointer-events:none;color:var(--accent)}
+.loop-svg text{fill:var(--accent);font-size:13px;font-family:var(--font-body)}
+.calc{width:fit-content;max-width:100%}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0;font-size:14px}
+.flow span{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:4px 10px}
+.flow i{font-style:normal;color:var(--muted)}
+details.q{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0}
+details.q summary{cursor:pointer;font-weight:500}
+details.q summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+details.q[open] summary{color:var(--accent)}
+details.q .a{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+dl.gloss{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 18px;margin:12px 0}
+dl.gloss dt{font-weight:700;color:var(--accent)}
+dl.gloss dd{margin:0}
+@media (max-width:560px){dl.gloss{grid-template-columns:minmax(0,1fr)} dl.gloss dd{margin-bottom:8px}}
+footer{margin-top:60px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+a.xref{display:block;width:fit-content;margin-top:6px}
+.steps{width:fit-content;max-width:100%}
+.box{width:fit-content;max-width:100%}
+.flow span{display:inline-flex;align-items:center;gap:8px}
+.flow span .fi{width:22px;height:22px;flex:none;fill:none;stroke:var(--accent);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.flow span .tx{font-style:normal}
+</style>
+<style>
+.formula{font-family:var(--font-num);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px;overflow-x:auto;white-space:nowrap;font-size:15px;margin:8px 0}
+.calc{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:16px 0;display:grid;gap:12px}
+.calc .row{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:end}
+.calc label{display:grid;gap:4px;font-size:14px;color:var(--muted)}
+.calc input,.calc select{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 10px;min-width:0;width:180px;max-width:100%}
+.calc input:focus-visible,.calc select:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.calc .out{font-family:var(--font-num);font-size:15px;line-height:1.9;border-top:1px dashed var(--line);padding-top:10px}
+.calc .out b{color:var(--accent);font-size:20px}
+.bars{display:grid;gap:6px;margin:12px 0}
+.bar{display:grid;grid-template-columns:120px minmax(0,1fr) 64px;gap:10px;align-items:center;font-size:14px}
+.bar .track{background:var(--accent-soft);border-radius:4px;height:14px;overflow:hidden}
+.bar .fill{background:var(--accent);height:100%}
+.bar .v{font-family:var(--font-num);text-align:right}
+</style>
+<!--gm-css--><style>
+/* 跳出式小遊戲 */
+.gm-fab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));z-index:60;display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:15px;font-weight:700;color:var(--paper);background:var(--accent);border:0;border-radius:999px;padding:10px 18px 10px 14px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.22)}
+.gm-fab svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.gm-fab:hover,.gm-fab:focus-visible{filter:brightness(1.08);outline:2px solid var(--fg);outline-offset:2px}
+.gm-fab.wig{animation:gmWig .9s ease-in-out 2}
+@keyframes gmWig{0%,100%{transform:rotate(0)}20%{transform:rotate(-8deg) scale(1.06)}40%{transform:rotate(7deg) scale(1.06)}60%{transform:rotate(-4deg)}80%{transform:rotate(3deg)}}
+.gm-tip{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(max(16px,env(safe-area-inset-bottom,0px)) + 58px);z-index:60;max-width:min(300px,calc(100vw - 32px));background:var(--paper);color:var(--fg);border:2px solid var(--accent);border-radius:14px;padding:10px 34px 10px 14px;font-size:15px;line-height:1.55;box-shadow:0 6px 20px rgba(0,0,0,.2);cursor:pointer;opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .3s,transform .3s}
+.gm-tip.on{opacity:1;transform:none;pointer-events:auto}
+.gm-tip::after{content:"";position:absolute;right:34px;bottom:-9px;width:14px;height:14px;background:var(--paper);border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(45deg)}
+.gm-tip b{display:block;font-size:12px;letter-spacing:.1em;color:var(--accent)}
+.gm-tipx{position:absolute;top:4px;right:6px;font:inherit;font-size:18px;line-height:1;color:var(--muted);background:none;border:0;cursor:pointer;padding:4px}
+html.gm-lock,html.gm-lock body{overflow:hidden}
+.gm-ov{position:fixed;inset:0;z-index:70;background:rgba(10,16,13,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.gm-ov[hidden]{display:none}
+.gm-dlg{background:var(--paper);color:var(--fg);border-radius:14px;width:100%;max-width:780px;max-height:calc(100vh - 32px);overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.gm-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px 10px 18px;border-bottom:1px solid var(--line)}
+.gm-hd b{font-family:var(--font-head);font-size:18px}
+.gm-x{font:inherit;font-size:22px;line-height:1;color:var(--muted);background:none;border:1px solid var(--line);border-radius:8px;width:36px;height:36px;cursor:pointer}
+.gm-x:hover,.gm-x:focus-visible{color:var(--accent);border-color:var(--accent)}
+.gm-stage{display:block;width:100%;height:auto;background:linear-gradient(var(--bg),var(--paper))}
+.gm-stage text{font-family:var(--font-body)}
+.gm-stage .lbl{fill:var(--fg);font-size:14px;font-weight:700;text-anchor:middle}
+.gm-stage .sub{fill:var(--muted);font-size:12px;text-anchor:middle}
+.gm-stage .pop{fill:var(--fg);font:900 19px var(--font-head);text-anchor:middle}
+.gm-stage .gas text{fill:var(--fg);font:700 13px var(--font-num);text-anchor:middle;dominant-baseline:middle}
+.gm-card{padding:14px 20px 20px}
+.gm-prog{font-size:13px;color:var(--muted);letter-spacing:.06em;min-height:1.4em}
+.gm-q{font-family:var(--font-head);font-size:21px;font-weight:700;margin:4px 0 12px;line-height:1.45}
+.gm-opts{display:flex;flex-wrap:wrap;gap:10px}
+.gm-opts button,.gm-next{font:inherit;font-size:16px;font-weight:700;color:var(--fg);background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:8px 18px;cursor:pointer;min-width:90px;text-align:left;line-height:1.5}
+.gm-opts button:hover:not(:disabled),.gm-opts button:focus-visible{border-color:var(--accent);color:var(--accent)}
+.gm-opts button:disabled{cursor:default}
+.gm-opts button.ok{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.gm-opts button.bad{background:var(--soil);border-color:var(--soil);color:var(--paper)}
+.gm-opts button.dim{opacity:.45}
+.gm-fb{margin-top:12px}
+.gm-fb .res{border-radius:10px;padding:12px 16px;margin:0 0 10px}
+.gm-fb .res.ok{background:var(--accent-soft);border-left:4px solid var(--accent)}
+.gm-fb .res.bad{background:var(--soil-soft);border-left:4px solid var(--soil)}
+.gm-fb .res b{display:block;font-size:17px;margin-bottom:2px}
+.gm-fb .res.ok b{color:var(--accent)}
+.gm-fb .res.bad b{color:var(--soil)}
+.gm-fb .res p{margin:4px 0}
+.gm-next{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.gm-next:hover,.gm-next:focus-visible{filter:brightness(1.08)}
+.gm-score{font-family:var(--font-num);font-size:28px;color:var(--accent);font-weight:700}
+@media (max-width:560px){.gm-q{font-size:18px}.gm-card{padding:12px 14px 16px}.gm-opts button{flex:1 1 100%}.gm-ov{padding:8px}.gm-dlg{max-height:calc(100vh - 16px)}}
+@media (prefers-reduced-motion:reduce){.gm-fab.wig{animation:none}.gm-tip{transition:none}}
+</style><!--/gm-css-->
+
+<style>
+.site-nav{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px;max-width:1480px;margin:0 auto;padding-top:20px}
+.site-nav+.wrap{padding-top:16px}
+.site-nav a{color:var(--muted);text-decoration:none}
+.site-nav a:hover,.site-nav a:focus-visible{color:var(--accent);text-decoration:underline}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:56px 0 0;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{display:block;padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--fg);text-decoration:none;font-size:15px}
+.pager a:hover,.pager a:focus-visible{border-color:var(--accent)}
+.pager small{display:block;color:var(--muted);font-size:12px}
+.pager .next{text-align:right;grid-column:2}
+@media (max-width:560px){.pager{grid-template-columns:1fr}.pager .next{grid-column:1}}
+</style>
+</head>
+<body>
+<nav class="site-nav" aria-label="網站導覽"><a href="index.html">← 回課程目錄</a><a href="../index.html">學習筆記首頁</a></nav>
+<div class="wrap">
+<nav class="toc" aria-label="目錄">
+  <button type="button" class="toc-btn toc-open" id="tocShow" aria-label="展開目錄">目錄 »</button>
+  <div class="toc-head"><h2>目錄</h2><button type="button" class="toc-btn" id="tocHide" aria-label="收起目錄">« 收起</button></div>
+  <p style="margin:0 0 6px"><a href="#guide">導讀</a></p>
+  <ol>
+    <li><a href="#why">為什麼要有清冊</a></li>
+    <li><a href="#report">清冊的目的與報告架構</a></li>
+    <li><a href="#compare">同樣叫盤查，差在哪</a></li>
+    <li><a href="#basic">部門、氣體與品質原則</a></li>
+    <li><a href="#method">IPCC 方法學與 Tier</a></li>
+    <li><a href="#afolu">AFOLU、LULUCF 與三種氣體</a></li>
+    <li><a href="#sources">五大農業排放源公式</a></li>
+    <li><a href="#taiwan">臺灣農業清冊現況</a></li>
+    <li><a href="#local">本土排放係數案例</a></li>
+    <li><a href="#qaqc">QA/QC 與改善閉環</a></li>
+    <li><a href="#policy">Tier 提升、MRV 與政策</a></li>
+    <li><a href="#quiz">自我測驗</a></li>
+    <li><a href="#gloss">名詞表</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="hero">
+  <h1>農業部門溫室氣體排放清冊之編製原理與實務</h1>
+</header>
+
+<section id="guide">
+  <div class="box guide">
+    <span class="tag">導讀</span>
+    <p>這堂課講的是<b>國家溫室氣體清冊</b>：一個國家怎麼算出「農業部門今年排了多少」。它用的是 IPCC 方法學，跟 ISO 14064-1 的組織盤查是不同的制度，但底層的計算邏輯幾乎一樣。</p>
+    <p>三個閱讀重點：</p>
+    <ul>
+      <li><b>計算公式相同</b>：都是「活動數據 × 排放係數 × GWP」，14064-1 的觀念可以直接套用，見 <a href="#method">第 5 節</a>。</li>
+      <li><b>邊界不同</b>：國家清冊裡，農場的用電、柴油<b>不算農業部門</b>，算能源部門。所以講義 1 說農業占 2.38%，這份講義說 1.21%，兩個數字都對，見 <a href="#compare">第 3 節</a>和 <a href="#taiwan">第 8 節</a>。</li>
+      <li><b>新東西</b>：稻田、施肥、腸胃發酵、糞尿的 IPCC 公式（<a href="#sources">第 7 節</a>），以及臺灣怎麼用田間量測建立本土係數（<a href="#local">第 9 節</a>）。</li>
+    </ul>
+    <p style="font-size:14px;color:var(--muted)">框的顏色：<span style="color:var(--ink)">藍色＝上課手寫筆記</span>、<span style="color:var(--soil)">棕色＝跟 ISO 14064-1 / 14067 的連結</span>、綠色＝重點。</p>
+  </div>
+  <div class="box key"><span class="tag">本單元目標</span>
+  <ul>
+    <li>了解農業部門在全球與臺灣淨零政策中的角色</li>
+    <li>理解農業部門排放清冊的目的與架構</li>
+    <li>熟悉 IPCC 2006 Guidelines 與 2019 Refinement 的農業方法學</li>
+    <li>了解臺灣農業清冊的建置方式與未來精進方向</li>
+    <li>認識排放係數（Emission Factor）建立與本土化的重要性</li>
+  </ul></div>
+</section>
+
+<section id="why">
+<h2><span class="no">01</span>為什麼要有清冊</h2>
+<h3>極端天氣正在放大農業風險</h3>
+<p>代表性極端天氣事件的農業災損（新臺幣億元，農業部災損速報最末報）：</p>
+<div class="bars" role="img" aria-label="農業災損：2019 年 1.75 億、2021 年 8.75 億、2023 年 14.16 億、2024 年 36.03 億">
+  <div class="bar"><span>2019 0812 豪雨</span><div class="track"><div class="fill" style="width:4.9%"></div></div><span class="v">1.75</span></div>
+  <div class="bar"><span>2021 高溫乾旱</span><div class="track"><div class="fill" style="width:24.3%"></div></div><span class="v">8.75</span></div>
+  <div class="bar"><span>2023 海葵颱風</span><div class="track"><div class="fill" style="width:39.3%"></div></div><span class="v">14.16</span></div>
+  <div class="bar"><span>2024 凱米颱風</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="v">36.03</span></div>
+</div>
+<p>衝擊是複合的：豪雨淹水（倒伏、落果、農田流失）、高溫乾旱（著果不良、品質受損）、颱風強風（植株折損、棚架損壞）。損失由連續事件、區域暴露與作物生育期共同決定。</p>
+
+<h3>國際制度：三次轉變</h3>
+<div class="tbl"><table>
+<tr><th>年份</th><th>制度</th><th>意義</th><th>重點</th></tr>
+<tr><td class="num">1992</td><td>UNFCCC</td><td>建立共同規範</td><td>1994 年生效；穩定大氣溫室氣體濃度；「共同但有區別」原則；建立<b>國家清冊</b>與定期報告的基礎</td></tr>
+<tr><td class="num">1997</td><td>京都議定書</td><td>量化特定國家目標</td><td>2005 年生效；已開發國家有法律約束的目標；第一期 2008–2012 平均較 1990 年減 5%；排放市場與 CDM</td></tr>
+<tr><td class="num">2015</td><td>巴黎協定</td><td>擴大為全球參與</td><td>2016 年生效；各國提出並每 5 年更新 NDC，力道只能提高；升溫明顯低於 2 °C，努力限制在 1.5 °C</td></tr>
+</table></div>
+
+<h3>臺灣 2050 淨零：12 項關鍵戰略</h3>
+<p>國發會（2022）：① 風電／光電 ② 氫能 ③ 前瞻能源 ④ 電力系統與儲能 ⑤ 節能 ⑥ 碳捕捉利用及封存 ⑦ 運具電動化及無碳化 ⑧ 資源循環零廢棄 ⑨ 自然碳匯 ⑩ 淨零綠生活 ⑪ 綠色金融 ⑫ 公正轉型。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">⑨ 自然碳匯（增匯）→ 農業部；⑧ 資源循環（循環）→ 環境部。</p></div>
+
+<h3>碳成本走進國際貿易</h3>
+<p>2026 年歐盟 CBAM 進入正式期：進口商要申報產品內含排放並購買 CBAM 憑證，碳成本向歐盟境內看齊，供應鏈必須提供可查核的排放資料。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">臺灣外銷歐洲的產品會受影響。</p></div>
+<p>對農業的啟示：<mark>肥料</mark>屬於 CBAM 目前納管的部門；一般農產品多是供應鏈間接影響，但能源、資材、加工與出口供應體系對碳資料的需求都會提高。</p>
+</section>
+
+<section id="report">
+<h2><span class="no">02</span>清冊的目的與報告架構</h2>
+<h3>四大核心目的</h3>
+<div class="tbl"><table>
+<tr><th>目的</th><th>產出</th><th>用途</th></tr>
+<tr><td>量化排放、移除與歷年趨勢</td><td>全國排放與移除量及一致的時間序列</td><td>掌握排放結構、主要來源與變化</td></tr>
+<tr><td>支援政策追蹤與評估</td><td>基準年與各年度可比較的結果</td><td>檢視減量進展</td></tr>
+<tr><td>履行國際透明度義務</td><td>符合國際規範的報告與共同格式</td><td>提升透明、完整、一致、可比、準確</td></tr>
+<tr><td>支援科學化資源配置</td><td>關鍵類別、主要排放源與移除熱點</td><td>優先投入高減量潛力領域</td></tr>
+</table></div>
+<p>核心價值：<mark>將排放與移除事實，轉化為政策決策依據</mark>。</p>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">反饋</p></div>
+
+<h3>清冊是治理循環，不是一次性盤點</h3>
+<div class="flow loop" data-loop-label="回到 ①：每年更新、必要時重算"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 16v-4M12 16V8M17 16v-7"/></svg><em class="tx">① 官方活動數據<br><small>面積、頭數、肥料、燃料、用電</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 16v-4M12 16V8M17 16v-7"/></svg><em class="tx">② 部門估算<br><small>AD × EF、方法層級、不確定性</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 18h14M4 9h16L12 3z"/><path d="M6 9v9M10 9v9M14 9v9M18 9v9"/></svg><em class="tx">③ 國家彙整<br><small>跨部門整合、關鍵類別、QA/QC</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 22l-2.4-1.8-3 .2-.9-2.9L3.2 15.8l1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><em class="tx">④ 揭露與審查<br><small>NID＋CRT → NIR → BTR、TER</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 0 1-14 5.3M4 12A8 8 0 0 1 18 6.7"/><path d="M18 2v5h-5M6 22v-5h5"/></svg><em class="tx">⑤ 政策回饋<br><small>改進資料、係數、方法</small></em></span></div>
+
+<h3>巴黎協定的報告文件：一次搞懂縮寫</h3>
+<div class="tbl"><table>
+<tr><th>縮寫</th><th>全名</th><th>回答的問題</th><th>內容</th></tr>
+<tr><td><b>BTR</b></td><td>雙年透明度報告</td><td>國家如何履行巴黎協定？</td><td>NIR＋NDC 進展＋調適資訊＋資金技術與能力建構支援；每 2 年</td></tr>
+<tr><td><b>NIR</b></td><td>國家溫室氣體清冊</td><td>排放了多少、移除了多少？</td><td><b>NIR ＝ NID ＋ CRT</b>；涵蓋能源、工業製程、農業、LULUCF、廢棄物</td></tr>
+<tr><td><b>NID</b></td><td>國家清冊文件</td><td>這些數字如何產生？</td><td>制度安排、方法與參數、關鍵類別分析、品質與一致性、部門別說明</td></tr>
+<tr><td><b>CRT</b></td><td>共同報告表格</td><td>數據如何用共同格式比較？</td><td>總表與趨勢、部門別表格、背景資料表、符號註記（NO、NE、NA、IE、C）</td></tr>
+<tr><td><b>CTF</b></td><td>共同表格格式</td><td>NDC 進展與支援</td><td>屬於 BTR；目標追蹤、政策措施、預估、資金與能力建構</td></tr>
+<tr><td><b>TER</b></td><td>技術專家審查</td><td>—</td><td>BTR 提交後的國際審查</td></tr>
+<tr><td><b>FMCP</b></td><td>促進性多邊進展審議</td><td>—</td><td>技術審查之後的多邊審議</td></tr>
+</table></div>
+<div class="box key"><span class="tag">快速記法</span><p>NID 解釋數字，CRT 統一數字的呈現方式，兩者內容必須完全一致。<br>CRT ＝ 清冊數據表；CTF ＝ 進展與支援格式。</p></div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">NIR：統一格式。NID：解釋怎麼算。CRT：呈現算出的數據。</p></div>
+<div class="box iso"><span class="tag">連結 ISO 14064-1</span><p>NID 很像 14064-1 盤查報告書裡的「方法說明」：邊界、量化方法、係數來源、不確定性、重算政策。CRT 則像盤查清冊的數據表。差別在國家清冊有國際統一格式，而且每年要接受國際審查。</p></div>
+</section>
+
+<section id="compare">
+<h2><span class="no">03</span>同樣叫盤查，邊界、目的與結果不能互換</h2>
+<p>四種制度並排比較：</p>
+<div class="tbl"><table>
+<tr><th>制度</th><th>回答的問題</th><th>主要邊界／單位</th><th>典型結果</th></tr>
+<tr><td><b>國家清冊</b></td><td>全國各部門排放與移除多少？</td><td>領土＋IPCC 部門／年度</td><td>NIR、CRT、BTR</td></tr>
+<tr><td><b>組織盤查</b>（ISO 14064-1）</td><td>一個組織營運排放多少？</td><td>組織／營運邊界、範疇類別</td><td>tCO₂e／組織年</td></tr>
+<tr><td><b>產品碳足跡</b>（ISO 14067）</td><td>產品生命週期排放多少？</td><td>功能單位、生命週期階段</td><td>kgCO₂e／功能單位</td></tr>
+<tr><td><b>減量專案</b>（ISO 14064-2）</td><td>介入相對基線減多少？</td><td>專案邊界、基線、計入期</td><td>減量／移除額度</td></tr>
+</table></div>
+<div class="box key"><span class="tag">最常見錯誤</span><p>把農場用電、柴油直接放進農業部門。<b>在國家清冊中，它們歸入能源部門。</b></p></div>
+<div class="box iso"><span class="tag">連結 ISO 14064-1</span><p>在 14064-1 裡，一座養豬場的盤查會把柴油（範疇一移動源）、外購電力（範疇二）、豬隻腸胃發酵和糞尿處理（範疇一）全部算進同一個組織。但同樣的排放在國家清冊裡會被拆到不同部門：柴油和電到「能源」，腸胃發酵和糞尿到「農業」部門。<b>組織盤查按「誰」切，國家清冊按「什麼活動」切。</b></p></div>
+</section>
+
+<section id="basic">
+<h2><span class="no">04</span>部門、氣體與品質原則</h2>
+<h3>五大部門</h3>
+<p>能源（Energy）、工業製程與產品使用（IPPU）、農業（Agriculture）、土地利用及林業（LULUCF）、廢棄物（Waste）。全球排放約 73% 來自能源，農林及土地利用約 18%（Our World in Data，2016）。</p>
+<h3>IPCC TACCC 五大品質原則</h3>
+<p><b>T</b>ransparency 透明性、<b>A</b>ccuracy 準確性、<b>C</b>ompleteness 完整性、<b>C</b>onsistency 一致性、<b>C</b>omparability 可比性。</p>
+<div class="box iso"><span class="tag">連結 ISO 14064-1</span><p>14064-1 的五個原則是相關性、完整性、一致性、準確性、透明度。IPCC 的版本把「相關性」換成「可比性」，因為國家清冊要跨國比較。</p></div>
+<h3>七種溫室氣體與 GWP</h3>
+<div class="tbl"><table>
+<tr><th>氣體</th><th>主要來源</th><th class="r">GWP AR4</th><th class="r">GWP AR5</th><th class="r">GWP AR6</th></tr>
+<tr><td>CO₂</td><td>化石燃料燃燒、土地利用變化</td><td class="r num">1</td><td class="r num">1</td><td class="r num">1</td></tr>
+<tr><td>CH₄</td><td>化石燃料、掩埋場、反芻動物、農業活動</td><td class="r num">25</td><td class="r num">28</td><td class="r num">27.0／化石 29.8</td></tr>
+<tr><td>N₂O</td><td>化石燃料、工業活動、使用肥料</td><td class="r num">298</td><td class="r num">265</td><td class="r num">273</td></tr>
+<tr><td>HFCs</td><td>冷媒、噴霧器</td><td class="r num">12–14,800</td><td class="r num">4–12,400</td><td class="r num">4.84–14,600</td></tr>
+<tr><td>PFCs</td><td>半導體製程、鋁製程</td><td class="r num">7,390–17,200</td><td class="r num">6,630–11,100</td><td class="r num">7,380–12,400</td></tr>
+<tr><td>SF₆</td><td>半導體製程、氣體斷路器</td><td class="r num">22,800</td><td class="r num">23,500</td><td class="r num">24,300</td></tr>
+<tr><td>NF₃</td><td>半導體製程</td><td class="r num">17,200</td><td class="r num">16,100</td><td class="r num">17,400</td></tr>
+</table></div>
+<p class="unclear">AR6 欄位的數字是依 IPCC AR6（GHG Protocol 2024 年整理的 GWP 表）補上的。AR6 把 CH₄ 分成非化石來源 27.0 與化石來源 29.8，農業的甲烷屬於非化石來源。HFCs 的範圍是 HFC-161（4.84）到 HFC-23（14,600），PFCs 是 CF₄（7,380）到 C₂F₆（12,400）。</p>
+<p>GWP 的作用是把不同氣體換算成 CO₂e 方便加總，但<b>不能取代對排放機制與原始氣體排放量的理解</b>。</p>
+</section>
+
+<section id="method">
+<h2><span class="no">05</span>IPCC 方法學與 Tier</h2>
+<h3>所有估算都可拆回三個核心構件</h3>
+<div class="formula">排放量（CO₂e）＝ 活動數據 AD（發生了多少？）× 排放係數 EF（每單位排多少？）× GWP</div>
+<div class="box note"><span class="tag">課堂筆記</span><p class="hand">AD 例如：公頃。清冊重視時間序列。</p></div>
+<p><b>單位檢核</b>：每期作面積（公頃）× kg CH₄/公頃 ＝ 每期作的 CH₄（kg）；kg CH₄ × 28 ÷ 1,000 ＝ tCO₂e。</p>
+<p><b>可追溯性檢核</b>：每一個 AD、EF、轉換係數都要有來源、年份、版本與計算檔位置。</p>
+
+<h3>2006 Guidelines：五卷架構</h3>
+<p>01 一般指引與報告、02 能源、03 工業製程與產品使用、<mark>04 農業、林業及其他土地利用（AFOLU）</mark>、05 廢棄物。</p>
+<p>清冊管理主線：關鍵類別分析 → 方法與資料選擇 → 不確定性評估 → QA/QC → 一致報告與重算。</p>
+<p>IPCC 有排放係數資料庫 <b>EFDB</b>（IPCC carbon emission factor database）可查預設值。</p>
+
+<h3>Tier 1、2、3 比較</h3>
+<div class="tbl"><table>
+<tr><th>比較項目</th><th>Tier 1</th><th>Tier 2</th><th>Tier 3</th></tr>
+<tr><td>方法</td><td>IPCC 預設方法</td><td>國家特定方法或係數</td><td>高階模型、直接量測或完整監測系統</td></tr>
+<tr><td>成本</td><td>低</td><td>中</td><td>高</td></tr>
+<tr><td>資料需求</td><td>基礎活動數據</td><td>細分活動數據與本國係數</td><td>高解析度、長期連續監測</td></tr>
+<tr><td>精確度</td><td>較低，代表一般條件</td><td>較能反映國內實況</td><td>理論最高，可呈現時空與管理差異</td></tr>
+<tr><td>不確定性</td><td>通常較高</td><td>通常較低</td><td>可最低，但高度依賴模型與資料品質</td></tr>
+<tr><td>適用情境</td><td>初次建置、非關鍵類別、資料不足</td><td>關鍵類別、有本土研究</td><td>重要排放源、政策成效評估</td></tr>
+<tr><td>農業案例</td><td>用 IPCC 預設水稻或土壤 N₂O 係數</td><td>建立臺灣水稻 CH₄、土壤 N₂O 或畜牧係數</td><td>田間連續監測、製程模型、空間化估算</td></tr>
+</table></div>
+<div class="box key"><span class="tag">注意</span>
+<ul>
+  <li>Tier 是估算方法的複雜度，<b>不是排放源重要性的分級</b>。</li>
+  <li>Tier 3 不一定比 Tier 2 準：模型沒校正、樣本代表性不足或活動數據不佳，反而會增加偏差。</li>
+  <li>方法升級後要維持時間序列一致，必要時回溯重算歷年排放。</li>
+</ul></div>
+<div class="box iso"><span class="tag">連結 ISO 14064-1</span><p>14064-1 做數據品質評分時，係數來源分「自廠發展／製造商提供／區域或國家／國際」幾級，概念跟 Tier 很像：越貼近實際的係數越好，但要有證據。14064-1 也要求基準年重算政策，這跟清冊的「回溯重算」是同一件事。</p></div>
+
+<h3>2019 Refinement：科學更新，不取代 2006 架構</h3>
+<p>與 2006 Guidelines 搭配使用，只在科學進展或方法缺口處更新。三個層次：參數更新、方法補強、品質強化。</p>
+<div class="tbl"><table>
+<tr><th>領域</th><th>主要更新</th></tr>
+<tr><td>畜牧</td><td>腸胃發酵與糞尿管理的方法、係數與參數</td></tr>
+<tr><td>農地土壤</td><td>直接與間接 N₂O 排放係數及投入量參數</td></tr>
+<tr><td>水稻</td><td>CH₄ 基準係數與水分、稻草／有機資材修正因子</td></tr>
+<tr><td>土地碳庫</td><td>生物量、枯死有機質與土壤碳的估算依據</td></tr>
+</table></div>
+<p>實務原則：<mark>先依 2006 建立完整清冊，再逐章套用 2019 更新</mark>；方法變更時要一致重算時間序列並完整留痕。</p>
+</section>
+
+<section id="afolu">
+<h2><span class="no">06</span>AFOLU、LULUCF 與三種氣體的產生機制</h2>
+<div class="tbl"><table>
+<tr><th></th><th>Agriculture 農業排放</th><th>LULUCF 土地利用及林業</th></tr>
+<tr><td>問題</td><td>生產活動排多少？</td><td>土地是排放源，還是碳匯？</td></tr>
+<tr><td>內容</td><td>畜牧（腸胃發酵、糞尿）、稻作（淹水甲烷）、土壤（施肥、殘體、氮循環 N₂O）</td><td>六類土地（林地、農地、草地、濕地、聚落、其他）；碳庫（生物量、枯死有機質、土壤、伐採木製品）</td></tr>
+<tr><td>氣體</td><td>CH₄、N₂O（另含石灰與尿素 CO₂）</td><td>同時記錄 CO₂ 排放與移除，淨值可正可負</td></tr>
+</table></div>
+<p><b>AFOLU</b> 是 IPCC 的整合方法學概念（農業＋土地利用）；<b>LULUCF</b> 是報告時的部門分類。兩者不能直接互換。</p>
+<div class="formula">國家淨排放 ＝ 各部門排放 ＋ LULUCF 淨排放／移除（移除量以負值呈現）</div>
+
+<h3>CO₂、CH₄、N₂O 怎麼產生</h3>
+<div class="tbl"><table>
+<tr><th>氣體</th><th>機制</th><th>控制因子</th></tr>
+<tr><td>CO₂</td><td>土壤－植物碳循環（光合、呼吸、分解）；石灰 CaCO₃ ＋ 2H⁺ → Ca²⁺ ＋ H₂O ＋ CO₂；尿素 CO(NH₂)₂ ＋ H₂O → 2NH₃ ＋ CO₂</td><td>光合作用、呼吸、分解與碳庫淨變化</td></tr>
+<tr><td>CH₄</td><td><b>缺氧</b>環境下產甲烷：有機物 → 發酵 → 乙酸、CO₂＋H₂ → 產甲烷古菌 → CH₄。來源：腸胃發酵（噯氣）、糞尿液態貯存、淹水稻田（經稻株通氣組織排出）</td><td>可分解碳、缺氧程度、溫度、停留時間、水分管理</td></tr>
+<tr><td>N₂O</td><td>硝化（有氧：NH₄⁺ → NO₂⁻ → NO₃⁻，副產 N₂O）、脫硝（缺氧：NO₃⁻ → NO → N₂O → N₂）、間接排放（NH₃ 揮發沉降、NO₃⁻ 淋洗逕流）</td><td>無機氮、土壤含水量／氧氣、可利用碳、溫度</td></tr>
+</table></div>
+<div class="box key"><span class="tag">清冊邊界</span><p>石灰與尿素 → 農業 CO₂；呼吸、殘體分解與土壤碳庫變化 → LULUCF；燃料燃燒 → 能源部門。</p></div>
+</section>
+
+<section id="sources">
+<h2><span class="no">07</span>五大農業排放源與 IPCC 公式</h2>
+<div class="formula">排放量 ＝ 活動數據 × 排放係數 × 修正係數</div>
+<p>下表「類別」欄前面的英文字母，是 IPCC 清冊給農業各排放源的分類代號，例如 A 是腸胃發酵、B 是糞尿管理、D 是農業土壤。</p>
+<div class="tbl"><table>
+<tr><th>類別</th><th>形成過程</th><th>氣體</th><th>關鍵活動數據</th></tr>
+<tr><td>A 腸胃發酵</td><td>反芻動物消化道內厭氧發酵</td><td>CH₄</td><td>動物數、畜種、總能攝取量</td></tr>
+<tr><td>B 糞尿管理</td><td>貯存處理中的厭氧分解；硝化與脫硝</td><td>CH₄、N₂O</td><td>糞尿量、管理系統、溫度、揮發性固體、氮排泄量</td></tr>
+<tr><td>C 水稻栽培</td><td>淹水土壤有機質厭氧分解</td><td>CH₄</td><td>收穫面積、栽培日數、水分管理、有機質投入</td></tr>
+<tr><td>D 農業土壤</td><td>土壤氮經硝化脫硝形成直接與間接排放</td><td>N₂O</td><td>肥料氮、糞肥、放牧、作物殘體、揮發與淋洗</td></tr>
+<tr><td>G/H 石灰與尿素</td><td>碳酸鹽溶解、尿素水解</td><td>CO₂</td><td>石灰種類與施用量、尿素施用量</td></tr>
+</table></div>
+<p style="font-size:14px;color:var(--muted)">IPCC 2006 第 4 卷章節：水稻在 Cropland 第 5 章；畜牧與糞尿第 10 章；農業土壤、石灰與尿素第 11 章。</p>
+
+<h3>A 腸胃發酵（CH₄）</h3>
+<div class="formula">CH₄ enteric ＝ Σ (N<sub>T,P</sub> × EF<sub>T,P</sub>) ÷ 10⁶　　單位：Gg CH₄/年</div>
+<ul>
+  <li>N：年平均飼養頭數；Tier 1 的 EF 用預設值（kg CH₄/頭/年）。</li>
+  <li>Tier 2：<span class="num">EF ＝ GE × (Ym/100) × 365 ÷ 55.65</span>。GE 是總能攝取量（MJ/頭/日），Ym 是飼料總能轉成 CH₄ 的比例（%），55.65 是 CH₄ 的能量含量（MJ/kg）。</li>
+  <li>Tier 2 應依畜種、體重、飼料品質、泌乳量與生產系統分群。</li>
+</ul>
+
+<h3>B 畜牧糞尿管理（CH₄、N₂O）</h3>
+<p>同一套畜群資料（N 頭數、MS 各處理系統使用比例），分別追蹤碳與氮。</p>
+<div class="formula">CH₄ ＝ Σ (N<sub>T</sub> × EF<sub>CH₄,T</sub>) ÷ 10⁶</div>
+<div class="formula">Tier 2：EF<sub>CH₄,T</sub> ＝ VS<sub>T</sub> × 365 × B<sub>0,T</sub> × 0.67 × Σ (MS<sub>T,S</sub> × MCF<sub>S</sub> / 100)</div>
+<p>VS：揮發性固體排泄量；B₀：最大甲烷生成潛勢；MCF：甲烷轉換係數；0.67 是 CH₄ 的密度（kg/m³）。</p>
+<div class="formula">直接 N₂O ＝ Σ (N<sub>T</sub> × Nex<sub>T</sub> × MS<sub>T,S</sub> × EF3<sub>S</sub>) × 44/28</div>
+<div class="formula">間接 N₂O ＝ (N<sub>揮發</sub> × EF4 ＋ N<sub>淋洗</sub> × EF5) × 44/28</div>
+<div class="box key"><span class="tag">邊界提醒</span><p>施入農地後的糞肥 N₂O 要列入<b>農業土壤</b>，不要和糞尿管理重複計算。</p></div>
+
+<h3>C 水稻栽培（CH₄）</h3>
+<div class="formula">CH₄ rice ＝ Σ (EF<sub>i,j,k</sub> × t<sub>i,j,k</sub> × A<sub>i,j,k</sub>) × 10⁻⁶　　單位：Gg CH₄/年</div>
+<p>A：年度收穫面積（ha）；t：栽培期間（日）；EF：每日排放係數（kg CH₄/ha/日）。</p>
+<div class="formula">Tier 1 修正：EF<sub>i</sub> ＝ EF<sub>c</sub> × SF<sub>w</sub> × SF<sub>p</sub> × SF<sub>o</sub></div>
+<p>EF<sub>c</sub>：持續淹水且無有機資材的基準係數；SF<sub>w</sub>：生育期水分管理；SF<sub>p</sub>：種植前水分管理；SF<sub>o</sub>：有機資材種類與施用量。流程：面積分層 → 套用管理修正係數 → 乘栽培日數 → 加總各期作。</p>
+
+<h3>D 農業土壤（N₂O）</h3>
+<p>先算 N₂O-N，再乘 44/28 換成 N₂O。</p>
+<div class="tbl"><table>
+<tr><th>代號</th><th>意思</th></tr>
+<tr><td>F<sub>SN</sub></td><td>化學肥料氮</td></tr>
+<tr><td>F<sub>ON</sub></td><td>糞肥、堆肥等有機氮</td></tr>
+<tr><td>F<sub>CR</sub></td><td>作物殘體氮</td></tr>
+<tr><td>F<sub>SOM</sub></td><td>土壤有機質礦化氮</td></tr>
+<tr><td>F<sub>PRP</sub></td><td>放牧尿液與糞便氮</td></tr>
+<tr><td>F<sub>OS</sub></td><td>管理有機土壤面積</td></tr>
+</table></div>
+<div class="formula">直接 N₂O-N ＝ (F<sub>SN</sub> ＋ F<sub>ON</sub> ＋ F<sub>CR</sub> ＋ F<sub>SOM</sub>) × EF1 ＋ F<sub>OS</sub> × EF2 ＋ F<sub>PRP</sub> × EF3<sub>PRP</sub></div>
+<div class="formula">間接 N₂O-N ＝ N<sub>揮發</sub> × EF4 ＋ N<sub>淋洗</sub> × EF5</div>
+<div class="formula">N₂O ＝ (直接 N₂O-N ＋ 間接 N₂O-N) × 44/28</div>
+
+<h3>石灰與尿素施用（CO₂）</h3>
+<div class="formula">CO₂-C lime ＝ M<sub>石灰石</sub> × 0.12 ＋ M<sub>白雲石</sub> × 0.13　→　× 44/12</div>
+<div class="formula">CO₂-C urea ＝ M<sub>尿素</sub> × 0.20　→　× 44/12</div>
+<p>M 是年施用量（公噸）。Tier 2 可依純度與化學組成調整。<b>只計施入土壤後的 CO₂</b>，製造階段由能源／工業部門盤點。</p>
+
+<h3>練習：稻田甲烷計算器</h3>
+<p>用講義的單位檢核公式自己算一次。係數預設為臺灣清冊代表值。</p>
+<div class="calc" id="calc">
+  <div class="row">
+    <label for="area">收穫面積（公頃）<input id="area" type="number" min="0" step="0.1" value="10"></label>
+    <label for="ef">排放係數（kg CH₄/ha/期）
+      <select id="ef">
+        <option value="64">臺灣一期作 64</option>
+        <option value="116">臺灣二期作 116</option>
+        <option value="147.84">2019 IPCC 東亞預設 147.84</option>
+      </select></label>
+    <label for="gwp">GWP（CH₄）
+      <select id="gwp">
+        <option value="28">AR5：28</option>
+        <option value="27">AR6：27.0（非化石）</option>
+        <option value="25">AR4：25</option>
+      </select></label>
+  </div>
+  <div class="out" id="out" aria-live="polite"></div>
+</div>
+<p style="font-size:14px;color:var(--muted)">講義的單位檢核：每期作面積（公頃）× kg CH₄/公頃 ＝ kg CH₄；kg CH₄ × 28 ÷ 1,000 ＝ tCO₂e。</p>
+</section>
+
+<section id="taiwan">
+<h2><span class="no">08</span>臺灣農業清冊現況</h2>
+<h3>跨部會分工、中央彙整</h3>
+<div class="tbl"><table>
+<tr><th>部門</th><th>負責機關</th></tr>
+<tr><td>彙整</td><td>環境部氣候變遷署（資料庫、QA/QC、跨部會研商、年度公布）</td></tr>
+<tr><td>能源</td><td>經濟部能源署</td></tr>
+<tr><td>工業製程及產品使用</td><td>經濟部產業發展署（部分含氟氣體由環境部提供）</td></tr>
+<tr><td>農業</td><td>農業部資源永續利用司</td></tr>
+<tr><td>LULUCF</td><td>農業部資源永續利用司</td></tr>
+<tr><td>廢棄物</td><td>環境部氣候變遷署</td></tr>
+</table></div>
+<p>流程：官方活動數據＋排放係數 → 部門估算 → 部門內部審議 → 國家清冊平臺 → 跨部會研商＋兩階段專家校閱 → 年度公布。2025 年報告涵蓋 1990–2023 年。<mark>清冊是跨部會的國家統計制度，不是單一機關自行估算。</mark></p>
+
+<h3>2024 年：農業占比僅 1.21%，但重點高度集中</h3>
+<div class="stats">
+  <div class="stat"><b>1.21%</b><span>全國占比；2024 年排放 329 萬 tCO₂e</span></div>
+  <div class="stat"><b>−41.56%</b><span>1990 → 2024：563 → 329 萬 tCO₂e</span></div>
+  <div class="stat"><b>99.45%</b><span>CH₄ 61.22% ＋ N₂O 38.23%</span></div>
+</div>
+<div class="bars" role="img" aria-label="2024 年農業排放結構">
+  <div class="bar"><span>D 農業土壤</span><div class="track"><div class="fill" style="width:34.25%"></div></div><span class="v">34.25%</span></div>
+  <div class="bar"><span>B 糞尿處理</span><div class="track"><div class="fill" style="width:28.48%"></div></div><span class="v">28.48%</span></div>
+  <div class="bar"><span>A 腸胃發酵</span><div class="track"><div class="fill" style="width:18.89%"></div></div><span class="v">18.89%</span></div>
+  <div class="bar"><span>C 水稻種植</span><div class="track"><div class="fill" style="width:17.81%"></div></div><span class="v">17.81%</span></div>
+  <div class="bar"><span>其他</span><div class="track"><div class="fill" style="width:0.57%"></div></div><span class="v">0.57%</span></div>
+</div>
+<p>四大排放源合計 99.43%，對應的管理手段：精準施肥與氮投入管理、糞尿處理系統與資源化、飼糧配方與飼養效率、稻田水分管理與有機物投入。對照 2005 年：農業土壤 38.73%、糞尿 27.44%、水稻 16.30%、腸胃發酵約 15.9%。</p>
+<div class="box key"><span class="tag">講者結論</span><p>低占比不等於低優先：鎖定肥料、糞尿、飼養與稻田水分管理，才能形成可追蹤的減量成果。長期降幅也受耕地、畜禽飼養與產業結構改變影響，措施成效仍要靠活動數據與本土係數辨識。</p></div>
+<div class="box iso"><span class="tag">兩份講義的數字對照</span>
+<p>講義 1：農業部門 651 萬公噸，占 <b>2.38%</b>。講義 2：農業部門 329 萬公噸，占 <b>1.21%</b>。差別是邊界：講義 1 是農業部自己的統計，<b>含燃料燃燒</b>（用電約 26.5%、用油約 25%）；講義 2 是國家清冊 CRT Sector 3，<b>只算生物性與農地管理排放</b>，用電用油歸能源部門。這跟 14064-1 裡「先定邊界再談數字」是同一個道理。<a class="xref" href="01-net-zero.html#status">講義 1〈農業部門排放現況〉↗</a></p></div>
+
+<h3>部門邊界：什麼算農業？</h3>
+<div class="tbl"><table>
+<tr><th>納入農業（CRT Sector 3）</th><th>歸入其他部門</th></tr>
+<tr><td>A 腸胃發酵 CH₄<br>B 糞尿管理 CH₄／N₂O<br>C 水稻種植 CH₄<br>D 農地土壤 N₂O<br>F 農業殘體田間燃燒 CH₄／N₂O<br>H 尿素施用 CO₂</td><td>農機與農業設施燃料燃燒 → 能源<br>肥料製造：製程 → IPPU；燃料／電力 → 能源<br>農地與森林碳庫變化、CO₂ 移除 → LULUCF<br>場外污水或廢棄物處理 → 廢棄物</td></tr>
+</table></div>
+<p>畜禽糞尿在場內儲存或處理通常歸糞尿管理；轉入其他處理系統時依實際活動重新判定。<mark>同一農業活動可能跨越多個清冊部門：先畫邊界，再選活動數據與排放係數。</mark></p>
+
+<h3>資料來源</h3>
+<p>原則：官方統計為主、本土係數優先；缺乏時採 IPCC 預設值。</p>
+<div class="tbl"><table>
+<tr><th>類別</th><th>活動數據</th><th>官方來源</th><th>係數／方法</th></tr>
+<tr><td>A 腸胃發酵</td><td>畜種、年齡／生產類別、飼養頭數</td><td>農業統計年報、畜牧類農情調查</td><td>乳牛、牛與家禽採本土研究；其餘依 IPCC</td></tr>
+<tr><td>B 糞尿管理</td><td>飼養頭數、處理系統、排泄量與氮含量</td><td>同上</td><td>本土畜牧研究＋IPCC 參數</td></tr>
+<tr><td>C 水稻</td><td>八分區、一期／二期作收穫面積</td><td>農業統計年報</td><td>本土 CH₄ 實測係數，Tier 2</td></tr>
+<tr><td>D 農業土壤</td><td>化肥氮、有機肥氮、放牧排泄、作物殘體</td><td>農業統計年報、農糧署肥料統計、綠色國民所得帳</td><td>IPCC 2006/2019 預設值＋本土參數</td></tr>
+<tr><td>F 殘體燃燒</td><td>作物產量、殘體量、露天燃燒比例</td><td>農業統計年報</td><td>Tier 1</td></tr>
+<tr><td>H 尿素</td><td>尿素施用量</td><td>農糧署肥料產銷統計</td><td>Tier 1</td></tr>
+</table></div>
+<p>資料品質檢核：時間序列一致、單位與邊界一致、異常值回查、版本可追溯。目前缺口：石灰處理與其他含碳肥料為 <b>NE（無法估算）</b>。</p>
+</section>
+
+<section id="local">
+<h2><span class="no">09</span>本土排放係數建立案例</h2>
+<h3>水稻田 CH₄：Tier 2</h3>
+<div class="tbl"><table>
+<tr><th>步驟</th><th>做法</th></tr>
+<tr><td>① 分層設計</td><td>八分區 × 一、二期作，反映氣候、土壤、灌溉與農法差異</td></tr>
+<tr><td>② 田間量測</td><td>密閉罩法；中部與雲嘉南以渦流協變法更新；取得 CH₄ 通量（mg/m²/h）</td></tr>
+<tr><td>③ 係數換算</td><td>期作 EF ＝ 通量 × 0.24 × 種植日數（一期作 136 天、二期作 124 天），單位 kg CH₄/ha/期</td></tr>
+<tr><td>④ 活動數據</td><td>農業統計年報：各區、各期作收穫面積</td></tr>
+<tr><td>⑤ 估算與審議</td><td>CH₄ ＝ Σ (EF<sub>區域,期作</sub> × 面積<sub>區域,期作</sub>)；專家審議、QA/QC、回溯重算</td></tr>
+</table></div>
+<div class="stats">
+  <div class="stat"><b>64（23–95）</b><span>一期作代表值 kg CH₄/ha/期</span></div>
+  <div class="stat"><b>116（88–144）</b><span>二期作代表值 kg CH₄/ha/期</span></div>
+  <div class="stat"><b>147.84</b><span>2019 IPCC 東亞預設值</span></div>
+  <div class="stat"><b>586 千公噸</b><span>2024 年水稻排放 CO₂e；不確定性 −20.29% ～ +18.46%</span></div>
+</div>
+<p>本土係數比 IPCC 東亞預設值低很多，因為它反映了臺灣的雙期作、區域差異與間歇灌溉。</p>
+<p style="font-size:14px;color:var(--muted)">係數換算的 0.24：通量單位 mg/m²/h 換成 kg/ha/日 時，× 24 小時 × 10,000 m² ÷ 1,000,000 mg ＝ × 0.24。</p>
+
+<h3>農地 N₂O：把田間通量轉為「每公斤氮投入」係數</h3>
+<div class="tbl"><table>
+<tr><th>步驟</th><th>做法</th></tr>
+<tr><td>① 試驗分層</td><td>水田／旱田 × 作物 × 土壤 × 氮源與施氮量，涵蓋一期、二期及不同水分管理</td></tr>
+<tr><td>② 田間量測</td><td>密閉罩法量測完整生育期；施肥、降雨與排水後加密採樣</td></tr>
+<tr><td>③ 累積排放</td><td>累積 N₂O-N ＝ ∫ 通量 dt，換算為 kg N₂O-N/ha</td></tr>
+<tr><td>④ 候選本土 EF</td><td>EF1,local ＝ (施氮處理 − 零氮對照) N₂O-N ÷ 氮投入量；分別建立水田與旱田</td></tr>
+<tr><td>⑤ 驗證納入</td><td>多場域、多年度驗證＋不確定性＋QA/QC，專家審議後回溯更新</td></tr>
+</table></div>
+<div class="tbl"><table>
+<tr><th>來源</th><th>水田</th><th>旱田</th></tr>
+<tr><td>2026 清冊（IPCC 預設，kg N₂O-N/kg N）</td><td class="num">0.005（多重排水）</td><td class="num">0.016（合成肥料）</td></tr>
+<tr><td>既有本土研究換算值</td><td class="num">一期 0.020、二期 0.007</td><td class="num">旱田 0.017、蔬菜 0.019</td></tr>
+</table></div>
+<p>國內研究多以面積排放表示，<b>尚不宜直接納入清冊</b>。採用門檻：零氮對照、實際氮投入、標準化量測、跨場域代表性與可量化不確定性，缺一不可。</p>
+<p>2024 年農業土壤排放 1,127 千公噸 CO₂e（直接 789、揮散 131、淋洗／逕流 208），總不確定性約 −20.34% ～ +40.94%。</p>
+<div class="box iso"><span class="tag">連結 ISO 14064-1</span><p>「施氮處理減零氮對照」就是在扣掉背景排放，只留下人為施肥造成的部分。農企業做 14064-1 盤查時，施肥 N₂O 通常直接引用清冊或 IPCC 係數；如果要用自己的試驗數據，也要符合同樣的門檻才站得住。</p></div>
+</section>
+
+<section id="qaqc">
+<h2><span class="no">10</span>QA/QC 與改善閉環</h2>
+<p><b>QC（品質管制）</b>：編製過程中的例行技術檢核。<b>QA（品質保證）</b>：由非直接編製者進行客觀審查。</p>
+<div class="tbl"><table>
+<tr><th>防線</th><th>做法</th></tr>
+<tr><td>① 各權責部會統計（QC＋部門 QA）</td><td>依 2006 IPCC 指南編製；檢查活動數據、係數來源、公式與單位；部門專家諮詢與同行審議</td></tr>
+<tr><td>② 國家清冊彙整（QC＋國家 QA）</td><td>氣候變遷署核校跨部會數據；研商會議；兩階段專家校稿（分章節 → 全冊）</td></tr>
+<tr><td>③ 定稿與公布（QA＋透明揭露）</td><td>版本鎖定、資料庫更新；依《氣候變遷因應法》逐年公布；保留方法、來源與變更紀錄</td></tr>
+</table></div>
+<p>發現問題不只改當年：修正資料或方法 → 回溯重算 → 更新不確定性 → 納入改善計畫，確保 1990–2024 年時間序列一致。</p>
+<h3>改善閉環</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 20h20z"/><path d="M12 9v5M12 17h.01"/></svg><em class="tx">① 識別缺口<br><small>關鍵類別、高不確定性、NE 項目、審查意見</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/></svg><em class="tx">② 設定優先<br><small>排放規模 × 政策需求 × 資料可行性 × 改善效益</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17 9 11l4 4 8-8"/><path d="M15 7h6v6"/></svg><em class="tx">③ 改善資料</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 22l-2.4-1.8-3 .2-.9-2.9L3.2 15.8l1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><em class="tx">④ 驗證重算</em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 0 1-14 5.3M4 12A8 8 0 0 1 18 6.7"/><path d="M18 2v5h-5M6 22v-5h5"/></svg><em class="tx">⑤ 公開回饋</em></span></div>
+<div class="tbl"><table>
+<tr><th>2026 年農業優先改善</th><th>內容</th></tr>
+<tr><td>A 腸胃發酵／B 糞尿管理</td><td>豬隻 Tier 2；建立腸胃發酵與糞尿處理本土係數</td></tr>
+<tr><td>C 水稻</td><td>更新八分區、兩期作 Tier 2 係數；累積多地點、多年度通量</td></tr>
+<tr><td>D 農地</td><td>建立主要作物直接 N₂O 本土係數，由 Tier 1 提升到 Tier 2</td></tr>
+</table></div>
+<p><b>重算案例</b>：農地土壤有機肥乾物率從 0.78 修正為 0.60（依肥料規範），並回溯到 1990 年。</p>
+<div class="box iso"><span class="tag">連結 ISO 14064-1</span><p>這就是 14064-1 的「基準年重新計算」：方法或數據有重大變更時，要回頭改基準年和歷年數字，才能和今年比較。</p></div>
+</section>
+
+<section id="policy">
+<h2><span class="no">11</span>Tier 提升、MRV 與政策應用</h2>
+<h3>農業部門的 Tier 提升路徑</h3>
+<div class="tbl"><table>
+<tr><th>類別</th><th>目前 → 目標</th><th>關鍵資料</th></tr>
+<tr><td>豬隻腸胃發酵</td><td>Tier 1 → Tier 2</td><td>生命期別、飼糧、體重與生產性能</td></tr>
+<tr><td>水稻田 CH₄</td><td>Tier 2 → 更新 Tier 2</td><td>八分區 × 兩期作 × 水管理；多地點多年通量</td></tr>
+<tr><td>農地直接 N₂O</td><td>Tier 1 → Tier 2</td><td>作物、施氮型態、土壤與氣候；密閉罩量測</td></tr>
+<tr><td>畜禽與糞尿</td><td>既有 Tier 3／混合 Tier → 更新</td><td>飼養結構、處理系統與本土 CH₄、N₂O 係數</td></tr>
+</table></div>
+<p>優先排序 ＝ 關鍵類別 × 不確定性 × 政策需求 × 資料可行性。需通過四道門檻：代表性、完整性、時間一致性、不確定性可量化。<mark>Tier 不是排名競賽，應選擇可長期維持的最高適當方法。</mark></p>
+
+<h3>清冊 vs. 自願減量專案</h3>
+<div class="tbl"><table>
+<tr><th></th><th>國家溫室氣體清冊</th><th>自願減量專案</th></tr>
+<tr><td>範圍</td><td>國家／部門／年度</td><td>專案邊界／基線／外加性</td></tr>
+<tr><td>回答</td><td>排放結構如何變化？</td><td>措施產生多少額外減量？</td></tr>
+<tr><td>結果</td><td>趨勢</td><td>核發減量額度</td></tr>
+</table></div>
+<p>自願減量專案的證據鏈：① 方法與邊界 → ② 基線與外加性 → ③ 計畫與確證 → ④ 註冊與執行 → ⑤ 監測與查證 → ⑥ 審查與核發。</p>
+<div class="tbl"><table>
+<tr><th>MRV</th><th>重點</th></tr>
+<tr><td>M 量測／監測</td><td>設備、頻率、抽樣與原始紀錄</td></tr>
+<tr><td>R 報告</td><td>計算式、參數、版本與異常說明</td></tr>
+<tr><td>V 查驗</td><td>獨立性、抽證、風險與保守性判斷</td></tr>
+</table></div>
+<div class="box key"><span class="tag">重點</span><p><b>確證看未來設計，查證看歷史成果。</b>清冊的趨勢不會自動變成額度；專案仍須符合方法學、外加性、MRV 並避免重複計算。</p></div>
+
+<h3>清冊如何驅動政策</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.4-4.4"/></svg><em class="tx">清冊證據<br><small>基線、熱點、不確定性</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15 9.5c-.5-1-1.6-1.5-3-1.5-1.7 0-3 .8-3 2s1.3 1.7 3 2 3 .8 3 2-1.3 2-3 2c-1.4 0-2.6-.6-3-1.6M12 6v2M12 16v2"/></svg><em class="tx">資源配置<br><small>預算、研發、示範輔導</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><em class="tx">措施組合<br><small>技術、制度、誘因與市場</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><em class="tx">追蹤校正<br><small>年度趨勢、重算與調整</small></em></span></div>
+<div class="tbl"><table>
+<tr><th>農業淨零主軸</th><th>與清冊的對應</th></tr>
+<tr><td>減量</td><td>稻田水分、精準施肥、飼養與糞尿管理</td></tr>
+<tr><td>增匯</td><td>森林、土壤與藍碳，依 LULUCF 邊界核算</td></tr>
+<tr><td>循環</td><td>殘體與糞尿資源化，跨部門防止重複計量</td></tr>
+<tr><td>綠趨勢</td><td>碳足跡、綠色採購、金融與自願減量專案</td></tr>
+</table></div>
+<p>完整循環：<b>清冊提供基線，政策創造改變，NDC 形成承諾，國際報告驗證進展。</b>臺灣 NDC 3.0 於 2025 年提出。</p>
+
+<h3>結語：清冊不是終點，而是農業淨零決策的共同語言</h3>
+<div class="flow"><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.4-4.4"/></svg><em class="tx">01 建立可信基線<br><small>界定邊界、完善 AD 與 EF、落實 QA/QC</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/></svg><em class="tx">02 聚焦減量重點<br><small>優先管理土壤、糞尿、腸胃發酵、水稻；逐步提升 Tier</small></em></span><i>→</i><span><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><em class="tx">03 形成政策閉環<br><small>支撐 NDC、MRV 驗證、年度追蹤</small></em></span></div>
+<p>資料可信 → 措施可量化 → 成效可驗證 → 政策可調整。</p>
+</section>
+
+<section id="quiz">
+<h2><span class="no">12</span>自我測驗</h2>
+<details class="q"><summary>1. NIR、NID、CRT 三者的關係？</summary><div class="a">NIR（國家清冊）＝ NID（方法與制度說明，解釋怎麼算）＋ CRT（共同報告表格，呈現數據）。NID 和 CRT 內容必須完全一致。</div></details>
+<details class="q"><summary>2. CRT 和 CTF 差在哪？</summary><div class="a">CRT 屬於 NIR，是清冊數據表；CTF 屬於 BTR，記錄 NDC 進展與支援資訊。</div></details>
+<details class="q"><summary>3. 講義 1 說農業占 2.38%，講義 2 說 1.21%，哪個對？</summary><div class="a">都對，邊界不同。2.38%（651 萬噸）含農業用電用油；1.21%（329 萬噸）是國家清冊 CRT Sector 3，燃料燃燒歸能源部門。</div></details>
+<details class="q"><summary>4. 一座養豬場的柴油、用電、腸胃發酵、糞尿，在國家清冊分別歸哪個部門？</summary><div class="a">柴油和用電 → 能源部門；腸胃發酵 → 農業部門的腸胃發酵；糞尿處理 → 農業部門的糞尿管理；糞肥施入農地後的 N₂O → 農業部門的農業土壤。</div></details>
+<details class="q"><summary>5. 10 公頃一期稻作，用臺灣係數 64 kg CH₄/ha/期、GWP 28，排放多少 tCO₂e？</summary><div class="a">10 × 64 ＝ 640 kg CH₄；640 × 28 ÷ 1,000 ＝ 17.92 tCO₂e。</div></details>
+<details class="q"><summary>6. Tier 3 一定比 Tier 2 準確嗎？</summary><div class="a">不一定。模型沒校正、樣本代表性不足或活動數據品質差時，Tier 3 反而可能增加偏差。Tier 是方法複雜度，不是重要性排名。</div></details>
+<details class="q"><summary>7. 糞肥的 N₂O 什麼時候算糞尿管理，什麼時候算農業土壤？</summary><div class="a">在場內貯存處理階段算糞尿管理；施入農地之後算農業土壤。要分開避免重複計算。</div></details>
+<details class="q"><summary>8. 臺灣稻田本土係數為什麼比 IPCC 東亞預設值低？</summary><div class="a">本土係數由田間量測建立，反映臺灣雙期作、區域差異與間歇灌溉；IPCC 預設值以持續淹水為基準。一期作 64、二期作 116，IPCC 東亞預設 147.84 kg CH₄/ha/期。</div></details>
+<details class="q"><summary>9. 本土農地 N₂O 研究數據為什麼還不能直接放進清冊？</summary><div class="a">國內研究多以面積排放（每公頃）表示，清冊需要「每公斤氮投入」的係數；而且要有零氮對照、實際氮投入、標準化量測、跨場域代表性與可量化不確定性。</div></details>
+<details class="q"><summary>10. 確證和查證的差別？</summary><div class="a">確證看未來設計（計畫書的方法、基線、監測計畫是否合理）；查證看歷史成果（實際監測數據與減量）。</div></details>
+<details class="q"><summary>11. 2024 年農業四大排放源依序是？</summary><div class="a">農業土壤 34.25%、糞尿處理 28.48%、腸胃發酵 18.89%、水稻種植 17.81%，合計 99.43%。</div></details>
+</section>
+
+<section id="gloss">
+<h2><span class="no">13</span>名詞表</h2>
+<dl class="gloss">
+  <dt>UNFCCC</dt><dd>聯合國氣候變化綱要公約。</dd>
+  <dt>NDC</dt><dd>國家自定貢獻，各國的減量承諾，每 5 年更新。</dd>
+  <dt>BTR</dt><dd>雙年透明度報告。</dd>
+  <dt>NIR</dt><dd>國家溫室氣體清冊報告 ＝ NID ＋ CRT。</dd>
+  <dt>NID</dt><dd>國家清冊文件，說明方法與制度。</dd>
+  <dt>CRT</dt><dd>共同報告表格，清冊數據表。</dd>
+  <dt>CTF</dt><dd>共同表格格式，BTR 中的進展與支援表格。</dd>
+  <dt>TER／FMCP</dt><dd>技術專家審查／促進性多邊進展審議。</dd>
+  <dt>CBAM</dt><dd>歐盟碳邊境調整機制。</dd>
+  <dt>TACCC</dt><dd>透明、準確、完整、一致、可比，IPCC 五大品質原則。</dd>
+  <dt>AD／EF</dt><dd>活動數據／排放係數。</dd>
+  <dt>Tier 1／2／3</dt><dd>IPCC 預設值／國家特定係數／模型或量測系統。</dd>
+  <dt>EFDB</dt><dd>IPCC 排放係數資料庫。</dd>
+  <dt>AFOLU</dt><dd>農業、林業及其他土地利用，IPCC 方法學整合框架。</dd>
+  <dt>LULUCF</dt><dd>土地利用、土地利用變化及林業，報告部門分類。</dd>
+  <dt>GE／Ym</dt><dd>總能攝取量／飼料總能轉為甲烷的比例。</dd>
+  <dt>VS／B₀／MCF</dt><dd>揮發性固體／最大甲烷生成潛勢／甲烷轉換係數。</dd>
+  <dt>Nex</dt><dd>每頭年排泄氮量。</dd>
+  <dt>EF1–EF5</dt><dd>N₂O 排放係數：EF1 施氮直接、EF2 有機土壤、EF3 糞尿或放牧、EF4 揮發沉降、EF5 淋洗逕流。</dd>
+  <dt>NO／NE／NA／IE／C</dt><dd>CRT 註記：未發生／未估算／不適用／已含於他處／機密。</dd>
+  <dt>QA／QC</dt><dd>品質保證（獨立審查）／品質管制（例行檢核）。</dd>
+  <dt>密閉罩法／渦流協變法</dt><dd>田間量測氣體通量的兩種方法：罩住一塊地測濃度變化／用高頻感測器測整片田的大氣交換。</dd>
+</dl>
+</section>
+
+<nav class="pager" aria-label="上一講／下一講"><a class="prev" href="01-net-zero.html"><small>← 上一講</small>1. 農業部門淨零排放</a><a class="next" href="03-blue-carbon.html"><small>下一講 →</small>3. 海洋碳匯策略</a></nav>
+</main>
+</div>
+<script>
+(function(){
+  var b=document.body,K='tocOff';
+  function set(off){b.classList.toggle('toc-off',off);try{localStorage.setItem(K,off?'1':'0')}catch(e){}}
+  try{if(localStorage.getItem(K)==='1')b.classList.add('toc-off')}catch(e){}
+  document.getElementById('tocHide').addEventListener('click',function(){set(true)});
+  document.getElementById('tocShow').addEventListener('click',function(){set(false)});
+})();
+</script>
+
+
+<script>
+(function(){
+  var a=document.getElementById('area'),e=document.getElementById('ef'),g=document.getElementById('gwp'),o=document.getElementById('out');
+  function fmt(n,d){return n.toLocaleString('zh-TW',{maximumFractionDigits:d})}
+  function run(){
+    var A=parseFloat(a.value)||0,EF=parseFloat(e.value),G=parseFloat(g.value);
+    var kg=A*EF,t=kg*G/1000;
+    o.innerHTML='CH₄ ＝ '+fmt(A,2)+' ha × '+fmt(EF,2)+' kg/ha ＝ '+fmt(kg,1)+' kg CH₄<br>CO₂e ＝ '+fmt(kg,1)+' × '+G+' ÷ 1,000 ＝ <b>'+fmt(t,2)+' tCO₂e</b>';
+  }
+  [a,e,g].forEach(function(x){x.addEventListener('input',run);x.addEventListener('change',run)});
+  run();
+})();
+</script>
+
+<script>
+(function(){
+  var NS='http://www.w3.org/2000/svg',n=0;
+  function rp(p,r){var d='M'+p[0][0]+','+p[0][1];for(var i=1;i<p.length-1;i++){var a=p[i-1],b=p[i],c=p[i+1];
+    var l1=Math.hypot(b[0]-a[0],b[1]-a[1]),l2=Math.hypot(c[0]-b[0],c[1]-b[1]),k=Math.min(r,l1/2,l2/2);
+    var x1=b[0]-(b[0]-a[0])/l1*k,y1=b[1]-(b[1]-a[1])/l1*k,x2=b[0]+(c[0]-b[0])/l2*k,y2=b[1]+(c[1]-b[1])/l2*k;
+    d+=' L'+x1+','+y1+' Q'+b[0]+','+b[1]+' '+x2+','+y2}
+    var e=p[p.length-1];return d+' L'+e[0]+','+e[1]}
+  function draw(c){
+    var old=c.querySelector(':scope>.loop-svg'); if(old) old.remove();
+    var spans=[].slice.call(c.querySelectorAll(':scope>span'));
+    var to=c.querySelector('[data-loop-to]')||spans[0], from=c.querySelector('[data-loop-from]')||spans[spans.length-1];
+    if(!to||!from) return;
+    var cr=c.getBoundingClientRect();
+    function R(el){var b=el.getBoundingClientRect();return{l:b.left-cr.left,r:b.right-cr.left,t:b.top-cr.top,b:b.bottom-cr.top,cx:(b.left+b.right)/2-cr.left,cy:(b.top+b.bottom)/2-cr.top}}
+    var a=R(to),z=R(from),maxB=0,minL=1e9,rowFirst=true;
+    spans.forEach(function(k){var r=R(k);if(r.l<minL)minL=r.l;if(k!==to&&Math.abs(r.t-a.t)<6&&r.l<a.l)rowFirst=false});
+    Array.prototype.forEach.call(c.children,function(k){if(k.classList.contains('loop-svg'))return;var b=k.getBoundingClientRect().bottom-cr.top;if(b>maxB)maxB=b});
+    var y=maxB+16,x=minL-18,d,lx;
+    if(Math.abs(a.t-z.t)<6){d=rp([[z.cx,z.b],[z.cx,y],[a.cx,y],[a.cx,a.b+4]],10);lx=(a.cx+z.cx)/2}
+    else if(rowFirst){d=rp([[z.cx,z.b],[z.cx,y],[x,y],[x,a.cy],[a.l-4,a.cy]],10);lx=(x+z.cx)/2}
+    else{var top=a.t-14;d=rp([[z.cx,z.b],[z.cx,y],[x,y],[x,top],[a.cx,top],[a.cx,a.t-4]],10);lx=(x+z.cx)/2}
+    var id='lh'+(++n),s=document.createElementNS(NS,'svg');
+    s.setAttribute('class','loop-svg');s.setAttribute('width',cr.width);s.setAttribute('height',y+24);s.setAttribute('aria-hidden','true');
+    s.innerHTML='<defs><marker id="'+id+'" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0L10,5L0,10z" fill="currentColor"/></marker></defs>'+
+      '<path d="'+d+'" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#'+id+')"/>'+
+      '<text x="'+Math.max(lx,60)+'" y="'+(y+18)+'" text-anchor="middle"></text>';
+    s.querySelector('text').textContent='↺ '+(c.getAttribute('data-loop-label')||'');
+    c.appendChild(s);
+  }
+  var els=document.querySelectorAll('.loop');
+  function all(){els.forEach(draw)}
+  all(); window.addEventListener('resize',all);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(all);
+  if(window.ResizeObserver){var w={};var ro=new ResizeObserver(function(es){es.forEach(function(e){var c=e.target,k=Math.round(e.contentRect.width);if(c._w!==k){c._w=k;draw(c)}})});els.forEach(function(c){ro.observe(c)})}
+})();
+</script>
+<!--gm-js--><script>
+/* 跳出式小遊戲引擎：右下角按鈕 → 對話框；題目、解釋、計分；場景由各頁提供 */
+window.GMRUN=function(C){
+  var NS='http://www.w3.org/2000/svg',D=document;
+  var reduce=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
+  function el(tag,a,html,par){var e=D.createElementNS(NS,tag);if(a)for(var k in a)e.setAttribute(k,a[k]);if(html)e.innerHTML=html;if(par)par.appendChild(e);return e}
+  function h(tag,cls,html,par){var e=D.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;if(par)par.appendChild(e);return e}
+
+  /* ---------- 介面 ---------- */
+  var ICON='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.2" r=".6" fill="currentColor"/><circle cx="17.6" cy="13.6" r=".6" fill="currentColor"/></svg>';
+  var fab=h('button','gm-fab',ICON+'<span>小遊戲</span>',D.body);fab.type='button';fab.setAttribute('aria-haspopup','dialog');
+  var tip=h('div','gm-tip','<button type="button" class="gm-tipx" aria-label="關閉提示">×</button><b>考考你</b><span></span>',D.body);
+  tip.querySelector('span').textContent=C.teaser;
+  var ov=h('div','gm-ov',null,D.body);ov.hidden=true;
+  var dlg=h('div','gm-dlg','<div class="gm-hd"><b id="gmTitle"></b><button type="button" class="gm-x" aria-label="關閉小遊戲">×</button></div>'+
+    '<svg class="gm-stage" viewBox="'+(C.vb||'0 0 880 260')+'" role="img"></svg>'+
+    '<div class="gm-card"><div class="gm-prog"></div><p class="gm-q"></p><div class="gm-opts"></div><div class="gm-fb" aria-live="polite"></div></div>',ov);
+  dlg.setAttribute('role','dialog');dlg.setAttribute('aria-modal','true');dlg.setAttribute('aria-labelledby','gmTitle');
+  dlg.querySelector('#gmTitle').textContent='小遊戲：'+C.title;
+  var st=dlg.querySelector('svg'),qEl=dlg.querySelector('.gm-q'),oEl=dlg.querySelector('.gm-opts'),fEl=dlg.querySelector('.gm-fb'),pEl=dlg.querySelector('.gm-prog');
+  st.setAttribute('aria-label',C.alt||C.title);
+
+  /* ---------- 動畫工具 ---------- */
+  var loops=[],touts=[],fx;
+  function stopAll(){loops.forEach(clearInterval);touts.forEach(clearTimeout);loops=[];touts=[]}
+  var api={svg:st,reduce:reduce,el:el,
+    C:{co2:'#86a8e6',ch4:'#c9a66b',n2o:'#d28bb4',gas:'#8fae9a',smoke:'#9aa0a6'},
+    loop:function(fn,ms){fn();loops.push(setInterval(fn,reduce?ms*1.6:ms))},
+    later:function(fn,ms){touts.push(setTimeout(fn,reduce?0:ms))},
+    A:function(e,fr,ms,o){o=o||{};if(!e||!e.animate)return null;if(reduce&&o.iter===Infinity)return null;
+      var an=e.animate(fr,{duration:reduce?1:ms,delay:reduce?0:(o.delay||0),easing:o.ease||'ease-out',fill:o.fill||'forwards',iterations:o.iter||1,direction:o.dir||'normal'});
+      if(o.done)an.onfinish=o.done;return an},
+    /* 放一個物件：外層定位，內層可動（原點在底部中央） */
+    put:function(par,x,y,s,html,origin){var g=el('g',{transform:'translate('+x+' '+y+')'+(s&&s!==1?' scale('+s+')':'')},null,par||st);
+      var i=el('g',{},html,g);i.style.transformBox='fill-box';i.style.transformOrigin=origin||'50% 100%';i.outer=g;i.x=x;i.y=y;i.s=s||1;return i},
+    top:function(){if(!fx)fx=el('g',{});st.appendChild(fx);return fx},
+    puff:function(x,y,o){o=o||{};var g=el('g',{class:'gas'},null,api.top()),n=o.n||3,r=o.r||11;
+      for(var i=0;i<n;i++)el('circle',{cx:x+(i-(n-1)/2)*r*.9,cy:y+(i%2?-r*.55:0),r:r+(i===1?3:0),fill:o.color||api.C.gas,opacity:.6},null,g);
+      if(o.label){var t=el('text',{x:x,y:y-1},null,g);t.textContent=o.label}
+      g.style.transformBox='fill-box';g.style.transformOrigin='50% 50%';
+      var dx=o.dx==null?0:o.dx,dy=o.dy==null?-60:o.dy;
+      api.A(g,[{transform:'translate(0,0) scale(.35)',opacity:0},{opacity:.95,offset:.15},{transform:'translate('+dx+'px,'+dy+'px) scale('+(o.grow||1.5)+')',opacity:0}],o.ms||2400,{done:function(){g.remove()},fill:'none'});
+      if(reduce)api.later(function(){g.remove()},1200);return g},
+    pop:function(x,y,txt,o){o=o||{};var t=el('text',{class:'pop',x:x,y:y},null,api.top());t.textContent=txt;if(o.color)t.style.fill=o.color;if(o.size)t.style.fontSize=o.size+'px';
+      t.style.transformBox='fill-box';t.style.transformOrigin='50% 100%';
+      api.A(t,[{opacity:0,transform:'scale(.4)'},{opacity:1,transform:'scale(1.15)',offset:.2},{opacity:1,transform:'scale(1)',offset:.7},{opacity:0,transform:'translateY(-10px)'}],o.ms||1300,{done:function(){t.remove()},fill:'none'});
+      if(reduce)api.later(function(){t.remove()},1200);return t},
+    pulse:function(e){return api.A(e,[{transform:'scale(1)'},{transform:'scale(1.12)'},{transform:'scale(1)'}],700,{fill:'none'})},
+    /* 背景：地面、草、圍籬、太陽 */
+    bg:function(o){o=o||{};var gy=o.ground==null?200:o.ground,W=880,s='';
+      if(o.sun)s+='<circle cx="'+(o.sun[0])+'" cy="'+(o.sun[1])+'" r="22" fill="#f2c94c" opacity=".85"/>';
+      if(o.hills)s+='<path d="M0 '+(gy-10)+' Q140 '+(gy-70)+' 300 '+(gy-24)+' T600 '+(gy-30)+' T880 '+(gy-40)+' V'+gy+' H0Z" fill="var(--accent-soft)" opacity=".7"/>';
+      if(o.fence){s+='<g stroke="var(--line)" stroke-width="4" stroke-linecap="round"><line x1="0" y1="'+(gy-48)+'" x2="'+W+'" y2="'+(gy-48)+'"/><line x1="0" y1="'+(gy-28)+'" x2="'+W+'" y2="'+(gy-28)+'"/>';
+        for(var x=60;x<W;x+=140)s+='<line x1="'+x+'" y1="'+(gy-62)+'" x2="'+x+'" y2="'+(gy+4)+'"/>';s+='</g>'}
+      s+='<rect x="0" y="'+gy+'" width="'+W+'" height="'+(400-gy)+'" fill="'+(o.color||'var(--accent-soft)')+'"/>';
+      (o.grass||[]).forEach(function(x,i){var y=gy+14+(i%3)*12;s+='<path d="M'+(x-5)+' '+y+' q0 -6 -4 -10 M'+x+' '+y+' q0 -8 2 -13 M'+(x+5)+' '+y+' q1 -6 5 -10" stroke="var(--accent)" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/>'});
+      return el('g',{},s,st)},
+    text:function(x,y,txt,cls,par){var t=el('text',{x:x,y:y,class:cls||'lbl'},null,par||st);t.textContent=txt;return t}
+  };
+
+  /* ---------- 共用圖形（原點在底部中央，面向右） ---------- */
+  var K='#2b2b2b';
+  api.SH={
+    conifer:function(c){c=c||'#3f7d58';return '<rect x="-5" y="-24" width="10" height="24" fill="#7a5a3a"/><path d="M0 -112 L-24 -66 L24 -66Z" fill="'+c+'"/><path d="M0 -92 L-31 -44 L31 -44Z" fill="'+c+'"/><path d="M0 -70 L-38 -20 L38 -20Z" fill="'+c+'"/>'},
+    broad:function(c){c=c||'#4f8f5f';return '<rect x="-6" y="-44" width="12" height="44" fill="#7a5a3a"/><circle cx="-20" cy="-56" r="22" fill="'+c+'"/><circle cx="20" cy="-56" r="22" fill="'+c+'"/><circle cx="0" cy="-74" r="30" fill="'+c+'"/>'},
+    cabbage:'<ellipse cx="0" cy="-13" rx="24" ry="14" fill="#6fae5c"/><ellipse cx="-10" cy="-16" rx="12" ry="10" fill="#86c46f"/><ellipse cx="10" cy="-16" rx="12" ry="10" fill="#86c46f"/><ellipse cx="0" cy="-19" rx="12" ry="10" fill="#b4e09a"/><path d="M-5 -22 q5 -5 10 0" stroke="#6fae5c" stroke-width="2" fill="none"/>',
+    bamboo:function(hh){var s='<rect x="-4" y="-'+hh+'" width="8" height="'+hh+'" rx="3" fill="#7fae4f"/>';for(var y=22;y<hh;y+=22)s+='<rect x="-5" y="-'+y+'" width="10" height="3" fill="#5f8f3a"/>';
+      s+='<path d="M0 -'+(hh-6)+' q16 -6 26 2 q-14 4 -26 -2z M0 -'+(hh-18)+' q-16 -6 -26 2 q14 4 26 -2z M0 -'+(hh-30)+' q16 -4 24 4 q-14 2 -24 -4z" fill="#5f9f4f"/>';return s},
+    rice:function(grain){return '<path d="M0 0 q-5 -28 -16 -44 M0 0 q0 -34 2 -56 M0 0 q5 -28 15 -42 M0 0 q-2 -20 -9 -30" stroke="#5f9f4f" stroke-width="3" fill="none" stroke-linecap="round"/>'+(grain?'<path d="M2 -56 q10 4 12 18" stroke="#d9b44a" stroke-width="4" fill="none" stroke-linecap="round" stroke-dasharray="3 2"/>':'')},
+    mangrove:'<path d="M-24 0 q4 -26 22 -34 M24 0 q-4 -26 -22 -34 M-10 0 q2 -18 8 -34 M10 0 q-2 -18 -8 -34" stroke="#6b4e34" stroke-width="3" fill="none"/><rect x="-3" y="-62" width="6" height="30" fill="#6b4e34"/><ellipse cx="-18" cy="-62" rx="20" ry="13" fill="#4f8f5f"/><ellipse cx="18" cy="-62" rx="20" ry="13" fill="#4f8f5f"/><ellipse cx="0" cy="-74" rx="32" ry="18" fill="#3f7d58"/>',
+    spoonbill:'<line x1="-4" y1="-20" x2="-6" y2="0" stroke="'+K+'" stroke-width="2"/><line x1="5" y1="-20" x2="7" y2="0" stroke="'+K+'" stroke-width="2"/><ellipse cx="2" cy="-28" rx="17" ry="10" fill="#fafafa" stroke="'+K+'" stroke-width="1.5"/><path d="M-11 -33 Q-18 -44 -14 -50" stroke="#fafafa" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M-11 -33 Q-18 -44 -14 -50" stroke="'+K+'" stroke-width="1" fill="none" opacity=".4"/><circle cx="-15" cy="-52" r="6" fill="#fafafa" stroke="'+K+'" stroke-width="1.5"/><path d="M-20 -52 L-36 -45" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/><ellipse cx="-37" cy="-44" rx="4.5" ry="3.2" fill="'+K+'"/><circle cx="-16" cy="-53" r="1.3" fill="'+K+'"/>',
+    pig:'<rect x="-30" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="-16" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="12" y="-24" width="9" height="24" rx="3" fill="#e993a6"/><rect x="26" y="-24" width="9" height="24" rx="3" fill="#e993a6"/>'+
+      '<path d="M-44 -42 q-10 -2 -8 -10 q2 -6 8 -2" stroke="'+K+'" stroke-width="2" fill="none"/><ellipse cx="0" cy="-38" rx="46" ry="26" fill="#f4b6c2" stroke="'+K+'" stroke-width="2"/>'+
+      '<circle cx="40" cy="-46" r="19" fill="#f4b6c2" stroke="'+K+'" stroke-width="2"/><path d="M30 -62 l4 -12 l8 9z" fill="#e993a6" stroke="'+K+'" stroke-width="1.5"/><ellipse cx="57" cy="-42" rx="8" ry="7" fill="#e993a6" stroke="'+K+'" stroke-width="2"/><circle cx="55" cy="-42" r="1.5" fill="'+K+'"/><circle cx="60" cy="-42" r="1.5" fill="'+K+'"/><circle cx="44" cy="-52" r="2.4" fill="'+K+'"/>',
+    tractor:'<rect x="-40" y="-42" width="58" height="22" rx="4" fill="#c0503a"/><rect x="-36" y="-74" width="30" height="34" rx="3" fill="none" stroke="'+K+'" stroke-width="3"/><rect x="10" y="-32" width="32" height="15" rx="3" fill="#c0503a"/><rect x="24" y="-56" width="5" height="26" fill="#555"/>'+
+      '<circle cx="-24" cy="-19" r="19" fill="#333"/><circle cx="-24" cy="-19" r="7" fill="#bbb"/><circle cx="32" cy="-12" r="12" fill="#333"/><circle cx="32" cy="-12" r="4.5" fill="#bbb"/>',
+    plow:'<path d="M-44 -26 L-64 -8 L-58 4 L-52 -6 M-58 -18 L-76 -2 L-70 8" stroke="#666" stroke-width="3.5" fill="none" stroke-linecap="round"/>',
+    pole:'<rect x="-3" y="-124" width="6" height="124" fill="#7a5a3a"/><rect x="-24" y="-116" width="48" height="5" fill="#7a5a3a"/><circle cx="-18" cy="-118" r="3" fill="#ccc"/><circle cx="18" cy="-118" r="3" fill="#ccc"/><path d="M4 -86 l-8 14 h7 l-5 14 l12 -18 h-7 l5 -10z" fill="#f2c94c" stroke="'+K+'" stroke-width="1"/>',
+    pond:'<ellipse cx="0" cy="-8" rx="52" ry="13" fill="#6b4e34"/><ellipse cx="0" cy="-10" rx="45" ry="8" fill="#9b7650"/>',
+    factory:'<rect x="30" y="-122" width="16" height="70" fill="#6f777f"/><rect x="-56" y="-60" width="112" height="60" fill="#8a929a"/><path d="M-56 -60 l28 -18 v18 l28 -18 v18 l28 -18 v18" fill="#8a929a"/>'+
+      '<rect x="-44" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="-18" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="8" y="-42" width="16" height="14" fill="#f2e3a6"/><rect x="-10" y="-20" width="20" height="20" fill="#5b636b"/>',
+    coin:function(t){return '<circle cx="0" cy="-13" r="13" fill="#e2b84a" stroke="#a7822a" stroke-width="2"/><text x="0" y="-8.5" text-anchor="middle" style="font:700 13px var(--font-num);fill:#7a5a1a">'+(t||'$')+'</text>'},
+    jar:'<path d="M-30 0 h60 v-58 q0 -8 -8 -8 h-44 q-8 0 -8 8z" fill="var(--paper)" stroke="var(--muted)" stroke-width="2.5"/><rect x="-24" y="-74" width="48" height="8" rx="3" fill="var(--muted)"/>',
+    bento:'<rect x="-62" y="-50" width="124" height="50" rx="6" fill="#b5764a" stroke="'+K+'" stroke-width="2"/><rect x="-56" y="-44" width="62" height="38" rx="3" fill="#fbf8ef"/><rect x="10" y="-44" width="46" height="18" rx="3" fill="#7fbf6a"/><rect x="10" y="-24" width="46" height="18" rx="3" fill="#f2d16b"/>'+
+      '<ellipse cx="-24" cy="-30" rx="26" ry="11" fill="#a0612f" stroke="#7a4520" stroke-width="2"/><path d="M-40 -32 h30 M-38 -27 h26" stroke="#7a4520" stroke-width="1.5"/>',
+    train:'<rect x="-110" y="-62" width="220" height="50" rx="10" fill="#e1e5ea" stroke="'+K+'" stroke-width="2"/><rect x="-110" y="-30" width="220" height="8" fill="#d0602f"/>'+
+      '<rect x="-96" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="-52" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="-8" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="36" y="-54" width="34" height="18" rx="3" fill="#7ea6c9"/><rect x="80" y="-54" width="22" height="18" rx="3" fill="#7ea6c9"/>'+
+      '<circle cx="-74" cy="-8" r="8" fill="#333"/><circle cx="-50" cy="-8" r="8" fill="#333"/><circle cx="50" cy="-8" r="8" fill="#333"/><circle cx="74" cy="-8" r="8" fill="#333"/>',
+    dome:'<path d="M-56 0 v-30 a56 44 0 0 1 112 0 v30z" fill="#a7adb3" stroke="'+K+'" stroke-width="2"/><path d="M-56 -30 h112" stroke="'+K+'" stroke-width="1.5" opacity=".5"/><rect x="-6" y="-84" width="12" height="12" fill="#6f777f"/>',
+    bee:'<g><ellipse cx="-2" cy="-10" rx="5" ry="4" fill="#fff" opacity=".85"/><ellipse cx="4" cy="-10" rx="5" ry="4" fill="#fff" opacity=".85"/><ellipse cx="0" cy="-3" rx="9" ry="6.5" fill="#f2c230" stroke="'+K+'" stroke-width="1.2"/><path d="M-2 -9 v12 M3 -8.5 v11" stroke="'+K+'" stroke-width="2"/><circle cx="8" cy="-4" r="1.3" fill="'+K+'"/></g>',
+    flower:function(c){return '<path d="M0 0 v-30" stroke="#5f9f4f" stroke-width="3"/><path d="M0 -14 q-10 -4 -12 -12 q8 0 12 8" fill="#5f9f4f"/><g fill="'+(c||'#e98fa3')+'"><circle cx="0" cy="-40" r="6"/><circle cx="-8" cy="-33" r="6"/><circle cx="8" cy="-33" r="6"/><circle cx="-5" cy="-25" r="6"/><circle cx="5" cy="-25" r="6"/></g><circle cx="0" cy="-32" r="4.5" fill="#f2c94c"/>'},
+    larva:'<ellipse cx="0" cy="-4" rx="11" ry="4.5" fill="#efe6c8" stroke="#8a7a50" stroke-width="1"/><path d="M-5 -8 v8 M0 -8.5 v9 M5 -8 v8" stroke="#8a7a50" stroke-width=".8"/>',
+    truck:'<rect x="-50" y="-48" width="64" height="36" rx="3" fill="#7fa7c9" stroke="'+K+'" stroke-width="2"/><path d="M14 -40 h20 l12 14 v14 h-32z" fill="#d0602f" stroke="'+K+'" stroke-width="2"/><rect x="20" y="-36" width="12" height="10" fill="#cfe3f2"/><circle cx="-30" cy="-10" r="9" fill="#333"/><circle cx="30" cy="-10" r="9" fill="#333"/>',
+    shop:'<rect x="-50" y="-70" width="100" height="70" fill="#e9e4d6" stroke="'+K+'" stroke-width="2"/><path d="M-56 -70 h112 l-8 -18 h-96z" fill="#d0602f" stroke="'+K+'" stroke-width="2"/><rect x="-36" y="-50" width="30" height="24" fill="#cfe3f2" stroke="'+K+'" stroke-width="1.5"/><rect x="10" y="-44" width="24" height="44" fill="#8a6a4a"/>',
+    log:'<rect x="-26" y="-14" width="52" height="14" rx="7" fill="#9b7650" stroke="#6b4e34" stroke-width="2"/><ellipse cx="26" cy="-7" rx="5" ry="7" fill="#d9b98a" stroke="#6b4e34" stroke-width="1.5"/>',
+    seagrass:'<path d="M-10 0 q-6 -20 2 -40 M-3 0 q4 -24 -2 -48 M4 0 q-4 -18 4 -38 M11 0 q6 -16 0 -32" stroke="#3f8f6a" stroke-width="3.5" fill="none" stroke-linecap="round"/>'
+  };
+  /* 牛、羊（左上原點畫，包一層移到底部中央） */
+  var COW='<path d="M14 30 q-14 12 -8 34" fill="none" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/>'+
+    [22,38,80,96].map(function(x,i){return '<g class="leg" data-b="'+(i==1||i==2?1:0)+'"><rect x="'+x+'" y="50" width="10" height="32" rx="3" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/><rect x="'+x+'" y="76" width="10" height="7" fill="'+K+'"/></g>'}).join('')+
+    '<rect x="12" y="20" width="100" height="42" rx="19" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/>'+
+    '<path d="M30 21 q10 12 26 6 q4 -4 2 -7z" fill="'+K+'"/><ellipse cx="82" cy="44" rx="12" ry="8" fill="'+K+'"/><ellipse cx="44" cy="50" rx="6" ry="4" fill="'+K+'"/>'+
+    '<path d="M108 10 q-6 -9 0 -12 M126 9 q6 -9 0 -12" fill="none" stroke="'+K+'" stroke-width="3" stroke-linecap="round"/><ellipse cx="102" cy="16" rx="8" ry="4" fill="#fbfaf6" stroke="'+K+'" stroke-width="2" transform="rotate(-20 102 16)"/>'+
+    '<rect x="102" y="6" width="34" height="32" rx="13" fill="#fbfaf6" stroke="'+K+'" stroke-width="2"/><rect x="118" y="23" width="24" height="17" rx="8" fill="#f0b8ad" stroke="'+K+'" stroke-width="2"/>'+
+    '<circle cx="114" cy="17" r="2.6" fill="'+K+'"/><circle cx="129" cy="30" r="1.8" fill="'+K+'"/><circle cx="137" cy="30" r="1.8" fill="'+K+'"/>';
+  var SHEEP=[24,36,66,78].map(function(x,i){return '<g class="leg" data-b="'+(i==1||i==2?1:0)+'"><rect x="'+x+'" y="50" width="7" height="30" rx="2" fill="#3b3631"/></g>'}).join('')+
+    [[24,38,14],[40,27,14],[60,25,14],[78,32,14],[32,52,12],[52,54,12],[72,50,12],[84,44,10]].map(function(c){return '<circle cx="'+c[0]+'" cy="'+c[1]+'" r="'+c[2]+'" fill="#f4f1e8" stroke="'+K+'" stroke-width="2"/>'}).join('')+
+    '<rect x="22" y="28" width="62" height="28" rx="14" fill="#f4f1e8"/><ellipse cx="92" cy="22" rx="8" ry="4" fill="#3b3631" transform="rotate(-25 92 22)"/>'+
+    '<ellipse cx="100" cy="32" rx="12" ry="14" fill="#3b3631"/><circle cx="96" cy="20" r="7" fill="#f4f1e8" stroke="'+K+'" stroke-width="2"/><circle cx="104" cy="28" r="2.6" fill="#fff"/><circle cx="104.5" cy="28.5" r="1.3" fill="'+K+'"/>';
+  api.SH.cow='<g transform="translate(-70 -83)">'+COW+'</g>';
+  api.SH.sheep='<g transform="translate(-56 -80)">'+SHEEP+'</g>';
+  api.SH.cowPts={mouth:[72,-47],nose:[74,-53],rear:[-62,-45]};
+  api.SH.sheepPts={mouth:[54,-40],nose:[56,-44],rear:[-44,-38]};
+  /* 跑步：腳擺動，回傳停止函式 */
+  api.legs=function(g){var a=[];g.querySelectorAll('.leg').forEach(function(l){l.style.transformBox='fill-box';l.style.transformOrigin='50% 0';
+      var an=api.A(l,[{transform:'rotate(20deg)'},{transform:'rotate(-20deg)'}],260,{iter:Infinity,dir:'alternate',ease:'ease-in-out',delay:l.getAttribute('data-b')==='1'?0:0,fill:'none'});
+      if(an&&l.getAttribute('data-b')==='1')an.currentTime=260;if(an)a.push(an)});
+    return function(){a.forEach(function(x){x.cancel()})}};
+
+  /* ---------- 遊戲流程 ---------- */
+  var Q=C.questions,idx=0,score=0,phase='idle',S=C.scene(api);
+  function act(n){if(n&&S.acts&&S.acts[n])S.acts[n]()}
+  function btn(t,cls,fn){var b=D.createElement('button');b.type='button';b.textContent=t;if(cls)b.className=cls;b.addEventListener('click',fn);return b}
+  function show(){phase='q';var q=Q[idx];pEl.textContent='第 '+(idx+1)+' 題／共 '+Q.length+' 題';qEl.textContent=q.q;oEl.innerHTML='';fEl.innerHTML='';
+    q.opts.forEach(function(o,i){oEl.appendChild(btn(o,'',function(){answer(i)}))});stopAll();act(q.act)}
+  function answer(i){phase='a';var q=Q[idx],right=i===q.ans;
+    oEl.querySelectorAll('button').forEach(function(b,j){b.disabled=true;b.classList.add(j===q.ans?'ok':j===i?'bad':'dim')});
+    if(right)score++;
+    if(q.after){stopAll();act(q.after)}
+    var why=typeof q.why==='object'?(q.why[i]||q.why.d):q.why;
+    var box=h('div','res '+(right?'ok':'bad'),'<b>'+(right?'答對了！':'答錯了')+'</b><p></p>',fEl);box.querySelector('p').textContent=right?q.ok:why;
+    var last=idx===Q.length-1,nx=btn(last?'看結果':(right?'下一題 →':'懂了，下一題 →'),'gm-next',function(){if(last)end();else{idx++;show()}});
+    fEl.appendChild(nx);try{nx.focus({preventScroll:true})}catch(e){}}
+  function end(){phase='end';stopAll();act('end');pEl.textContent='完成';
+    qEl.innerHTML='答對 <span class="gm-score">'+score+'／'+Q.length+'</span> 題';oEl.innerHTML='';fEl.innerHTML='';
+    var box=h('div','res ok','<b>重點</b><p></p>',fEl);box.querySelector('p').textContent=C.summary;
+    fEl.appendChild(btn('再玩一次','gm-next',function(){start()}))}
+  function start(){stopAll();idx=0;score=0;phase='enter';oEl.innerHTML='';fEl.innerHTML='';pEl.textContent='　';qEl.textContent=C.intro||'準備開始…';
+    S.enter(function(){if(phase==='enter')show()})}
+  var lastF=null;
+  function open(){hideTip();lastF=D.activeElement;ov.hidden=false;D.documentElement.classList.add('gm-lock');dlg.querySelector('.gm-x').focus();
+    if(phase==='idle'||phase==='enter')start();else if(phase==='q'||phase==='a')act(Q[idx].act)}
+  function close(){stopAll();ov.hidden=true;D.documentElement.classList.remove('gm-lock');if(phase==='enter')phase='idle';try{(lastF||fab).focus()}catch(e){}}
+  fab.addEventListener('click',open);
+  dlg.querySelector('.gm-x').addEventListener('click',close);
+  ov.addEventListener('click',function(e){if(e.target===ov)close()});
+  D.addEventListener('keydown',function(e){if(ov.hidden)return;
+    if(e.key==='Escape'){close();return}
+    if(e.key==='Tab'){var f=[].slice.call(dlg.querySelectorAll('button:not(:disabled)'));if(!f.length)return;var a=f[0],z=f[f.length-1];
+      if(e.shiftKey&&D.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&D.activeElement===z){e.preventDefault();a.focus()}}});
+
+  /* ---------- 提示泡泡：往下讀一段或停留 15 秒後出現一次 ---------- */
+  var tipDone=false,tipT;
+  function hideTip(){tip.classList.remove('on');clearTimeout(tipT)}
+  function showTip(){if(tipDone||!ov.hidden)return;tipDone=true;tip.classList.add('on');fab.classList.add('wig');tipT=setTimeout(hideTip,12000)}
+  tip.addEventListener('click',function(e){if(e.target.classList.contains('gm-tipx')){hideTip();return}open()});
+  setTimeout(showTip,15000);
+  window.addEventListener('scroll',function(){var m=D.scrollingElement||D.documentElement,max=m.scrollHeight-window.innerHeight;if(max>0&&(window.scrollY||m.scrollTop)>max*.25)showTip()},{passive:true});
+  api.open=open;return api;
+};
+GMRUN({title:'排放歸哪一格？',teaser:'養豬場的柴油，在國家清冊算哪個部門？點我玩玩看',alt:'養豬場的各種排放源和兩個部門箱子',intro:'養豬場開工囉…',
+summary:'國家清冊按「什麼活動」切：燃料燃燒（柴油、用電）歸能源部門；腸胃發酵、糞尿管理、農業土壤歸農業部門。糞肥在場內貯存時算糞尿管理，施進農地後算農業土壤。2024 年農業最大排放源是農業土壤 34.25%。',
+scene:function(G){
+  var SH=G.SH,GY=206,svg=G.svg;
+  G.bg({ground:GY,grass:[30,250,470,640]});
+  var it={tractor:G.put(null,80,GY,.95,SH.tractor),pole:G.put(null,190,GY,.9,SH.pole),pig:G.put(null,300,GY,.72,SH.pig),pond:G.put(null,430,GY+2,.95,SH.pond),
+    field:G.put(null,560,GY,1,'<rect x="-62" y="-6" width="124" height="8" rx="3" fill="#8a6a4a"/>'+[-44,-15,15,44].map(function(x){return '<g transform="translate('+x+' -4) scale(.7)">'+SH.cabbage+'</g>'}).join(''))};
+  G.text(80,GY+24,'柴油耕耘機','sub');G.text(190,GY+24,'用電','sub');G.text(300,GY+24,'豬','sub');G.text(430,GY+24,'糞尿貯存池','sub');G.text(560,GY+24,'施了糞肥的農地','sub');
+  function bin(x,lab,c){var b=G.put(null,x,GY,1,'<path d="M-42 0 L-48 -78 H48 L42 0Z" fill="'+c+'" opacity=".9"/><rect x="-52" y="-86" width="104" height="10" rx="3" fill="'+c+'"/>');
+    var t=G.text(0,-36,lab,'lbl',b.outer);t.style.fill='#fff';return b}
+  var B={energy:bin(712,'能源部門','#6f8fb8'),agri:bin(822,'農業部門','#5f9a6a')};
+  function rnd(a){return a[Math.floor(Math.random()*a.length)]}
+  function fx(k){var p=it[k];G.pulse(p);
+    if(k==='tractor')G.puff(105,GY-56,{dy:-50,dx:-10,n:3,r:8,color:G.C.smoke,label:'CO₂',ms:1800});
+    else if(k==='pole')G.pop(190,GY-134,'外購電力',{size:15});
+    else if(k==='pig')G.puff(342,GY-36,{dy:-50,dx:18,n:2,r:8,color:G.C.gas,label:'CH₄',ms:1800});
+    else if(k==='pond')G.puff(430+(Math.random()*50-25),GY-14,{dy:-55,n:2,r:8,color:rnd([G.C.ch4,G.C.n2o]),label:'',ms:1800});
+    else G.puff(560+(Math.random()*90-45),GY-12,{dy:-55,n:2,r:8,color:G.C.n2o,label:'N₂O',ms:1800})}
+  function fly(k,to,lab){var p=it[k],b=B[to],x0=p.x,y0=GY-60,x1=b.x,y1=GY-90;
+    var t=G.put(G.top(),x0,y0,1,'<rect x="-34" y="-24" width="68" height="24" rx="12" fill="var(--paper)" stroke="var(--accent)" stroke-width="2"/>','50% 50%');
+    var tx=G.text(0,-7,lab,'lbl',t);tx.style.fontSize='13px';
+    G.A(t,[{transform:'translate(0,0)'},{transform:'translate('+((x1-x0)/2)+'px,-80px)',offset:.5},{transform:'translate('+(x1-x0)+'px,'+(y1-y0)+'px) scale(.6)',opacity:1,offset:.9},{transform:'translate('+(x1-x0)+'px,'+(y1-y0+40)+'px) scale(.4)',opacity:0}],1500,{ease:'ease-in-out',done:function(){t.outer.remove();G.pulse(b)}});
+    if(G.reduce)G.later(function(){t.outer.remove()},600)}
+  return {
+    enter:function(done){var ks=Object.keys(it);ks.forEach(function(k,i){G.A(it[k],[{transform:'translateY(30px)',opacity:0},{transform:'none',opacity:1}],600,{delay:i*150,ease:'cubic-bezier(.3,1.4,.5,1)'})});
+      [B.energy,B.agri].forEach(function(b,i){G.A(b,[{transform:'scale(0)'},{transform:'scale(1)'}],500,{delay:900+i*150})});G.later(done,1400)},
+    acts:{
+      diesel:function(){G.loop(function(){fx('tractor')},1300)},
+      f1:function(){fly('tractor','energy','柴油')},
+      pig:function(){G.loop(function(){fx('pig')},1300)},
+      f2:function(){fly('pig','agri','腸胃發酵')},
+      field:function(){G.loop(function(){fx('field')},1000);G.loop(function(){fx('pond')},1700)},
+      f3:function(){fly('field','agri','農業土壤')},
+      all:function(){G.loop(function(){fx(rnd(['pig','pond','field']))},700)},
+      pct:function(){[['field','34.25%'],['pond','28.48%'],['pig','18.89%']].forEach(function(a,i){G.later(function(){G.pop(it[a[0]].x,GY-80,a[1],{size:20,ms:4000})},i*400)})}
+    }}},
+questions:[
+  {act:'diesel',after:'f1',q:'養豬場耕耘機燒的柴油，在國家清冊算哪個部門？',opts:['能源部門','農業部門','廢棄物部門'],ans:0,
+   ok:'國家清冊按「活動」切：燃料燃燒歸能源部門，就算發生在農場也一樣。',
+   why:'能源部門。國家清冊按「什麼活動」切：燃料燃燒（柴油、用電）歸能源部門，就算發生在農場。組織盤查才是按「誰」切，全部算在同一個組織。'},
+  {act:'pig',after:'f2',q:'那豬的腸胃發酵（CH₄）呢？',opts:['能源部門','農業部門'],ans:1,
+   ok:'腸胃發酵是農業部門的 A 類別。',
+   why:'農業部門。腸胃發酵是農業部門的 A 類別，糞尿處理是 B 類別。柴油和用電才歸能源部門。'},
+  {act:'field',after:'f3',q:'糞肥施進農地以後排出的 N₂O，算哪一項？',opts:['糞尿管理','農業土壤','能源部門'],ans:1,
+   ok:'場內貯存處理時算糞尿管理；施入農地之後算農業土壤。',
+   why:'農業土壤。糞肥在場內貯存處理階段算「糞尿管理」；施入農地之後算「農業土壤」。分開算是為了避免重複計算。'},
+  {act:'all',after:'pct',q:'2024 年農業部門排放，最大的來源是哪一項？',opts:['農業土壤','糞尿處理','腸胃發酵','水稻種植'],ans:0,
+   ok:'農業土壤 34.25%、糞尿處理 28.48%、腸胃發酵 18.89%、水稻種植 17.81%。',
+   why:'農業土壤，占 34.25%。接著是糞尿處理 28.48%、腸胃發酵 18.89%、水稻種植 17.81%，四項合計 99.43%。'}
+]});
+</script><!--/gm-js-->
+
+</body>
+</html>
